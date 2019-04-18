@@ -3,10 +3,10 @@
 /*                                                        ::::::::            */
 /*   test_main.c                                        :+:    :+:            */
 /*                                                     +:+                    */
-/*   By: omulder <omulder@student.codam.nl>           +#+                     */
+/*   By: tde-jong <tde-jong@student.codam.nl>         +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2019/04/18 16:37:32 by omulder        #+#    #+#                */
-/*   Updated: 2019/04/18 21:11:34 by omulder       ########   odam.nl         */
+/*   Updated: 2019/04/18 21:50:21 by tde-jong      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -20,7 +20,9 @@ int		test_prompt(void)
 
 int		main(void)
 {
-	test_prompt();
-	test_term_init_struct();
-	return (0);
+	if (test_prompt() == FUNCT_FAILURE)
+		return (EXIT_FAILURE);
+	if (test_term_init_struct() == FUNCT_FAILURE)
+		return (EXIT_FAILURE);
+	return (EXIT_SUCCESS);
 }
