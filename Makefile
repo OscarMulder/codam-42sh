@@ -6,7 +6,7 @@
 #    By: omulder <omulder@student.codam.nl>           +#+                      #
 #                                                    +#+                       #
 #    Created: 2019/04/10 20:30:07 by jbrinksm       #+#    #+#                 #
-#    Updated: 2019/04/18 20:29:19 by omulder       ########   odam.nl          #
+#    Updated: 2019/04/18 20:46:39 by omulder       ########   odam.nl          #
 #                                                                              #
 # **************************************************************************** #
 
@@ -85,4 +85,4 @@ test_coverage: $(TESTOBJECTS) $(OBJECTS)
 	@./test_coverage
 	@gcov $(SRCS)
 
-.PHONY: test_norm test_coverage
+.PHONY: test_norm test_coverage all clean fclean re test test_suc
