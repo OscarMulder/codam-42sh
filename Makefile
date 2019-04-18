@@ -6,7 +6,7 @@
 #    By: omulder <omulder@student.codam.nl>           +#+                      #
 #                                                    +#+                       #
 #    Created: 2019/04/10 20:30:07 by jbrinksm       #+#    #+#                 #
-#    Updated: 2019/04/18 20:46:39 by omulder       ########   odam.nl          #
+#    Updated: 2019/04/18 20:54:11 by omulder       ########   odam.nl          #
 #                                                                              #
 # **************************************************************************** #
 
@@ -56,17 +56,11 @@ fclean: clean
 re: fclean all
 
 test: $(TESTOBJECTS) $(OBJECTS)
-	@make
+	@make fclean
+	@make all
+	@make $(TESTOBJECTS)
 	@$(CC) $(FLAGS) $(COVERAGE) $(INCLUDES) $(LIB) -o vsh_tests $^
-	@./vsh_tests > /dev/null
-	@make test_suc
-
-test_suc:
-	@if [ $$? ]; then \
-		echo "All tests succeed"; \
-	else \
-		echo "Tests failed";\
-	fi\
+	@sh test/local_test.sh
 
 test_norm:
 	@make
@@ -85,4 +79,4 @@ test_coverage: $(TESTOBJECTS) $(OBJECTS)
 	@./test_coverage
 	@gcov $(SRCS)
 
-.PHONY: test_norm test_coverage all clean fclean re test test_suc
+.PHONY: test_norm test_coverage all clean fclean re test
