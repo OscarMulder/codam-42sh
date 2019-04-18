@@ -4,7 +4,7 @@ osx_image: xcode8.3
 
 env:
   global:
-    - CODECOV_TOKEN=:a725e35c-a6da-400e-a56f-ae7b630fc3b2
+    - CODECOV_TOKEN=a725e35c-a6da-400e-a56f-ae7b630fc3b2
 
 jobs:
   include:
