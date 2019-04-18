@@ -6,7 +6,7 @@
 /*   By: omulder <omulder@student.codam.nl>           +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2019/04/18 16:37:32 by omulder        #+#    #+#                */
-/*   Updated: 2019/04/18 21:01:00 by omulder       ########   odam.nl         */
+/*   Updated: 2019/04/18 21:11:34 by omulder       ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -22,5 +22,5 @@ int		main(void)
 {
 	test_prompt();
 	test_term_init_struct();
-	return (1);
+	return (0);
 }
