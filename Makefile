@@ -6,7 +6,7 @@
 #    By: omulder <omulder@student.codam.nl>           +#+                      #
 #                                                    +#+                       #
 #    Created: 2019/04/10 20:30:07 by jbrinksm       #+#    #+#                 #
-#    Updated: 2019/04/18 20:54:11 by omulder       ########   odam.nl          #
+#    Updated: 2019/04/18 22:06:39 by omulder       ########   odam.nl          #
 #                                                                              #
 # **************************************************************************** #
 
@@ -56,8 +56,7 @@ fclean: clean
 re: fclean all
 
 test: $(TESTOBJECTS) $(OBJECTS)
-	@make fclean
-	@make all
+	@make re
 	@make $(TESTOBJECTS)
 	@$(CC) $(FLAGS) $(COVERAGE) $(INCLUDES) $(LIB) -o vsh_tests $^
 	@sh test/local_test.sh
