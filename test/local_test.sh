@@ -1,11 +1,11 @@
 #!/bin/sh
-output=$(./vsh_tests | grep -E '^Error' -B 1)
-if [ "$output" == "" ]
+./vsh_tests
+return=$(echo $?)
+if [ "$return" == "0" ]
 then
 	echo "Test succeeded"
 	exit 0
 else
 	echo "Test failed"
-    echo $output
-    exit 0
+	exit 42
 fi
