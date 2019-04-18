@@ -3,10 +3,10 @@
 #                                                         ::::::::             #
 #    Makefile                                           :+:    :+:             #
 #                                                      +:+                     #
-#    By: omulder <omulder@student.codam.nl>           +#+                      #
+#    By: tde-jong <tde-jong@student.codam.nl>         +#+                      #
 #                                                    +#+                       #
 #    Created: 2019/04/10 20:30:07 by jbrinksm       #+#    #+#                 #
-#    Updated: 2019/04/18 20:54:11 by omulder       ########   odam.nl          #
+#    Updated: 2019/04/18 22:05:50 by tde-jong      ########   odam.nl          #
 #                                                                              #
 # **************************************************************************** #
 
@@ -20,7 +20,7 @@ LIB = -L./libft/ -lft -ltermcap
 VPATH = ./srcs ./test ./libft
 SRCS = shell_prompt builtin_exit input_read parser_lexer jornfuckup \
 term_prepare term_is_valid term_init_struct term_get_attributes \
-term_set_attributes term_reset_attributes term_free_struct 
+term_set_attributes term_reset_attributes term_free_struct
 TESTS = test_main \
 test_term_init_struct
 OBJECTS := $(SRCS:%=%.o)
@@ -46,7 +46,7 @@ clean:
 	@echo "[ - ] removed object files"
 	@rm -f *.gcno
 	@rm -f *.gcda
-	
+
 fclean: clean
 	@rm -f $(NAME) test_coverage vsh_tests
 	@$(MAKE) -C libft fclean
@@ -74,7 +74,6 @@ $(TESTOBJECTS): $(TESTS)
 
 test_coverage: $(TESTOBJECTS) $(OBJECTS)
 	@make re
-	@make $(TESTOBJECTS)
 	@$(CC) $(FLAGS) $(COVERAGE) $(INCLUDES) $(LIB) -o test_coverage $^
 	@./test_coverage
 	@gcov $(SRCS)
