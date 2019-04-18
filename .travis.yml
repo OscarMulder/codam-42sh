@@ -6,3 +6,5 @@ jobs:
   include:
     - stage: compile
       script: make
+    - stage: norminette+
+      script: make test_norm
