@@ -6,7 +6,7 @@
 #    By: tde-jong <tde-jong@student.codam.nl>         +#+                      #
 #                                                    +#+                       #
 #    Created: 2019/04/10 20:30:07 by jbrinksm       #+#    #+#                 #
-#    Updated: 2019/04/18 22:10:07 by tde-jong      ########   odam.nl          #
+#    Updated: 2019/04/18 22:17:41 by tde-jong      ########   odam.nl          #
 #                                                                              #
 # **************************************************************************** #
 
@@ -73,8 +73,9 @@ $(TESTOBJECTS): $(TESTS)
 
 test_coverage: $(TESTOBJECTS) $(OBJECTS)
 	@make re
+	@make $(TESTOBJECTS)
 	@$(CC) $(FLAGS) $(COVERAGE) $(INCLUDES) $(LIB) -o test_coverage $^
 	@./test_coverage
 	@gcov $(SRCS)
 
-.PHONY: test_norm test_coverage all clean fclean re test
+.PHONY: test_norm test_coverage all clean fclean re test $(TESTOBJECTS)
