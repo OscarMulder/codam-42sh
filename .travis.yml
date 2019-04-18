@@ -1,0 +1,8 @@
+language: c
+os: osx
+osx_image: xcode8.3
+
+jobs:
+  include:
+    - stage: compile
+      script: make
