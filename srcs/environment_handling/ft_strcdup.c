@@ -1,21 +1,32 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        ::::::::            */
-/*   ft_isspace.c                                       :+:    :+:            */
+/*   ft_strcdup.c                                       :+:    :+:            */
 /*                                                     +:+                    */
 /*   By: jbrinksm <jbrinksm@student.codam.nl>         +#+                     */
 /*                                                   +#+                      */
-/*   Created: 2019/01/13 13:39:22 by omulder        #+#    #+#                */
-/*   Updated: 2019/04/19 18:56:29 by jbrinksm      ########   odam.nl         */
+/*   Created: 2019/03/30 05:29:59 by jbrinksm       #+#    #+#                */
+/*   Updated: 2019/04/19 18:32:42 by jbrinksm      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
-int		ft_isspace(int c)
+#include "vsh.h"
+
+char	*ft_strcdup(char *str, char c)
 {
-	if (c == '\t' || c == '\n' || c == '\v' || c == '\f' || c == '\r'
-	|| c == ' ')
+	int		index;
+	char	*result;
+
+	index = 0;
+	while (str[index] != c && str[index] != '\0')
+		index++;
+	result = ft_strnew(index + 1);
+	index = 0;
+	while (str[index] != c && str[index] != '\0')
 	{
-		return (1);
+		result[index] = str[index];
+		index++;
 	}
-	return (0);
+	result[index] = '\0';
+	return (result);
 }

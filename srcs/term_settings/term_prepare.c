@@ -6,7 +6,7 @@
 /*   By: jbrinksm <jbrinksm@student.codam.nl>         +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2019/04/11 10:10:56 by jbrinksm       #+#    #+#                */
-/*   Updated: 2019/04/19 13:39:43 by jbrinksm      ########   odam.nl         */
+/*   Updated: 2019/04/19 18:26:15 by jbrinksm      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -31,7 +31,7 @@ t_term	*term_prepare(char **vshenviron)
 	/* Add specific alloc error here */
 	if (!term_p)
 		return (term_return(NULL, FUNCT_FAILURE));
-	if (!term_is_valid())
+	if (!term_is_valid(vshenviron))
 		return (term_return(term_p, FUNCT_FAILURE));
 	if (!term_get_attributes(term_p))
 		return (term_return(term_p, FUNCT_FAILURE));
