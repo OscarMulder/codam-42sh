@@ -1,35 +1,29 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        ::::::::            */
-/*   main.c                                             :+:    :+:            */
+/*   ft_freearray.c                                     :+:    :+:            */
 /*                                                     +:+                    */
 /*   By: jbrinksm <jbrinksm@student.codam.nl>         +#+                     */
 /*                                                   +#+                      */
-/*   Created: 2019/04/10 20:29:49 by jbrinksm       #+#    #+#                */
-/*   Updated: 2019/04/19 13:55:52 by jbrinksm      ########   odam.nl         */
+/*   Created: 2019/03/30 01:48:39 by jbrinksm       #+#    #+#                */
+/*   Updated: 2019/04/19 13:32:47 by jbrinksm      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "vsh.h"
 
-/*
-**	ft_printf alloc error handling
-*/
-
-int		main(int argc, char **argv)
+void	ft_freearray(char ***array_p)
 {
-	t_term	*term_p;
-	char	**vshenviron;
+	int index;
 
-	(void)argv;
-	(void)argc;
-	vshenviron = get_environ_cpy();
-	term_p = term_prepare(vshenviron);
-	/* if !term_p: send appropriate error message/log */
-	if (!term_p)
-		return (EXIT_FAILURE);
-	shell_start();
-	term_reset(term_p);
-	term_free_struct(term_p);
-	ft_freearray(&vshenviron);
+	index = 0;
+	if (*array_p)
+	{
+		while ((*array_p)[index] != NULL)
+		{
+			ft_strdel(&(*array_p)[index]);
+			index++;
+		}
+		free(*array_p);
+	}
 }

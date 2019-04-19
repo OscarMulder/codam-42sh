@@ -6,7 +6,7 @@
 #    By: jbrinksm <jbrinksm@student.codam.nl>         +#+                      #
 #                                                    +#+                       #
 #    Created: 2019/04/10 20:30:07 by jbrinksm       #+#    #+#                 #
-#    Updated: 2019/04/19 13:06:22 by jbrinksm      ########   odam.nl          #
+#    Updated: 2019/04/19 13:51:45 by jbrinksm      ########   odam.nl          #
 #                                                                              #
 # **************************************************************************** #
 
@@ -18,12 +18,14 @@ INCLUDES = -I./ -I./libft/ -I./includes -I../includes
 LIBFT= ./libft/libft.a
 LIB = -L./libft/ -lft -ltermcap
 VPATH = ./test ./libft ./srcs ./srcs/builtins ./srcs/input_handling \
-./srcs/parsing ./srcs/term_settings
+./srcs/parsing ./srcs/term_settings ./srcs/environment_handling
 SRCS = shell_prompt builtin_exit input_read parser_lexer jornfuckup \
 term_prepare term_is_valid term_init_struct term_get_attributes \
-term_set_attributes term_reset_attributes term_free_struct
+term_set_attributes term_reset_attributes term_free_struct \
+\
+get_environ_cpy ft_freearray ft_arraylen
 TESTS = test_main \
-test_term_init_struct
+test_term_init_struct test_get_environ_cpy
 OBJECTS := $(SRCS:%=%.o)
 TESTOBJECTS := $(TESTS:%=%.o)
 SRCS := $(SRCS:%=%.c)

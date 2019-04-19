@@ -1,35 +1,41 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        ::::::::            */
-/*   main.c                                             :+:    :+:            */
+/*   test_get_environ_cpy.c                             :+:    :+:            */
 /*                                                     +:+                    */
 /*   By: jbrinksm <jbrinksm@student.codam.nl>         +#+                     */
 /*                                                   +#+                      */
-/*   Created: 2019/04/10 20:29:49 by jbrinksm       #+#    #+#                */
-/*   Updated: 2019/04/19 13:55:52 by jbrinksm      ########   odam.nl         */
+/*   Created: 2019/04/19 13:43:01 by jbrinksm       #+#    #+#                */
+/*   Updated: 2019/04/19 13:50:06 by jbrinksm      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "vsh.h"
 
-/*
-**	ft_printf alloc error handling
-*/
-
-int		main(int argc, char **argv)
+int		test_get_environ_cpy(void)
 {
-	t_term	*term_p;
-	char	**vshenviron;
+	extern char **environ;
+	char		**vshenviron;
+	int			index;
 
-	(void)argv;
-	(void)argc;
 	vshenviron = get_environ_cpy();
-	term_p = term_prepare(vshenviron);
-	/* if !term_p: send appropriate error message/log */
-	if (!term_p)
-		return (EXIT_FAILURE);
-	shell_start();
-	term_reset(term_p);
-	term_free_struct(term_p);
+	index = 0;
+	if (!vshenviron)
+		return (FUNCT_FAILURE);
+	while (vshenviron[index] != NULL && environ[index] != NULL)
+	{
+		if (ft_strcmp(vshenviron[index], environ[index]))
+		{
+			ft_freearray(&vshenviron);
+			return (FUNCT_FAILURE);
+		}
+		index++;
+	}
+	if (vshenviron[index] != NULL || environ[index] != NULL)
+	{
+		ft_freearray(&vshenviron);
+		return (FUNCT_FAILURE);
+	}
 	ft_freearray(&vshenviron);
+	return (FUNCT_SUCCESS);
 }

@@ -6,7 +6,7 @@
 /*   By: jbrinksm <jbrinksm@student.codam.nl>         +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2019/04/18 16:37:32 by omulder        #+#    #+#                */
-/*   Updated: 2019/04/19 13:05:50 by jbrinksm      ########   odam.nl         */
+/*   Updated: 2019/04/19 13:55:09 by jbrinksm      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -21,6 +21,8 @@ int		test_prompt(void)
 int		main(void)
 {
 	if (test_prompt() == FUNCT_FAILURE)
+		return (EXIT_FAILURE);
+	if (test_get_environ_cpy() == FUNCT_FAILURE)
 		return (EXIT_FAILURE);
 	if (test_term_init_struct() == FUNCT_FAILURE)
 		return (EXIT_FAILURE);

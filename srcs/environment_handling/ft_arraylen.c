@@ -1,35 +1,25 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        ::::::::            */
-/*   main.c                                             :+:    :+:            */
+/*   ft_arraylen.c                                      :+:    :+:            */
 /*                                                     +:+                    */
 /*   By: jbrinksm <jbrinksm@student.codam.nl>         +#+                     */
 /*                                                   +#+                      */
-/*   Created: 2019/04/10 20:29:49 by jbrinksm       #+#    #+#                */
-/*   Updated: 2019/04/19 13:55:52 by jbrinksm      ########   odam.nl         */
+/*   Created: 2019/03/28 17:38:52 by jbrinksm       #+#    #+#                */
+/*   Updated: 2019/04/19 13:41:14 by jbrinksm      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "vsh.h"
 
-/*
-**	ft_printf alloc error handling
-*/
-
-int		main(int argc, char **argv)
+int		ft_arraylen(char **array)
 {
-	t_term	*term_p;
-	char	**vshenviron;
+	int i;
 
-	(void)argv;
-	(void)argc;
-	vshenviron = get_environ_cpy();
-	term_p = term_prepare(vshenviron);
-	/* if !term_p: send appropriate error message/log */
-	if (!term_p)
-		return (EXIT_FAILURE);
-	shell_start();
-	term_reset(term_p);
-	term_free_struct(term_p);
-	ft_freearray(&vshenviron);
+	i = 0;
+	if (!array)
+		return (0);
+	while (array[i] != NULL)
+		i++;
+	return (i);
 }

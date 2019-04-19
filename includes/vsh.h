@@ -6,7 +6,7 @@
 /*   By: jbrinksm <jbrinksm@student.codam.nl>         +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2019/04/10 20:29:42 by jbrinksm       #+#    #+#                */
-/*   Updated: 2019/04/18 19:48:06 by jbrinksm      ########   odam.nl         */
+/*   Updated: 2019/04/19 13:50:42 by jbrinksm      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -95,6 +95,18 @@ void	term_free_termp(t_term *term_p);
 int		shell_start(void);
 
 /*
+**---------------------------------environment----------------------------------
+*/
+
+/*
+**	get_environ_cpy.c
+*/
+
+char	**get_environ_cpy(void);
+void	ft_freearray(char ***array_p);
+int		ft_arraylen(char **array);
+
+/*
 **----------------------------------terminal------------------------------------
 */
 
@@ -102,7 +114,7 @@ int		shell_start(void);
 **	term_init.c
 */
 
-t_term	*term_prepare(void);
+t_term	*term_prepare(char **vshenviron);
 t_term	*term_return(t_term *term_p, int return_value);
 int		term_is_valid(void);
 t_term	*term_init_struct(void);
@@ -159,5 +171,6 @@ void	builtin_exit(t_term *term_p);
 
 int		test_prompt(void);
 int		test_term_init_struct(void);
+int		test_get_environ_cpy(void);
 
 #endif
