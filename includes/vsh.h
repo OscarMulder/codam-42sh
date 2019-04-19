@@ -6,7 +6,7 @@
 /*   By: jbrinksm <jbrinksm@student.codam.nl>         +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2019/04/10 20:29:42 by jbrinksm       #+#    #+#                */
-/*   Updated: 2019/04/19 19:20:17 by jbrinksm      ########   odam.nl         */
+/*   Updated: 2019/04/19 19:36:01 by jbrinksm      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -117,7 +117,7 @@ t_term	*term_prepare(char **vshenviron);
 t_term	*term_return(t_term *term_p, int return_value);
 int		term_is_valid(char **vshenviron);
 t_term	*term_init_struct(void);
-int		term_get_attributes(t_term *term_p);
+int		term_get_attributes(int fd, t_term *term_p);
 int		term_set_attributes(t_term *term_p);
 int		term_reset(t_term *term_p);
 void	term_free_struct(t_term **term_p);
@@ -182,6 +182,7 @@ int		test_param_to_env(void);
 int		test_term_is_valid(void);
 int		test_term_init_struct(void);
 int		test_term_free_struct(void);
+int		test_term_get_attributes(void);
 
 /*
 **--------------------------------prompt_testers--------------------------------
