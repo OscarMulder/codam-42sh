@@ -6,7 +6,7 @@
 /*   By: jbrinksm <jbrinksm@student.codam.nl>         +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2019/04/19 13:43:01 by jbrinksm       #+#    #+#                */
-/*   Updated: 2019/04/19 13:50:06 by jbrinksm      ########   odam.nl         */
+/*   Updated: 2019/04/19 20:34:06 by jbrinksm      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -20,7 +20,7 @@ int		test_get_environ_cpy(void)
 
 	vshenviron = get_environ_cpy();
 	index = 0;
-	if (!vshenviron)
+	if (vshenviron == NULL)
 		return (FUNCT_FAILURE);
 	while (vshenviron[index] != NULL && environ[index] != NULL)
 	{

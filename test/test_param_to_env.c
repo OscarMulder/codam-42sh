@@ -6,7 +6,7 @@
 /*   By: jbrinksm <jbrinksm@student.codam.nl>         +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2019/04/19 18:41:23 by jbrinksm       #+#    #+#                */
-/*   Updated: 2019/04/19 18:54:10 by jbrinksm      ########   odam.nl         */
+/*   Updated: 2019/04/19 20:34:20 by jbrinksm      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -20,7 +20,7 @@ int		test_param_to_env(void)
 
 	environ_cpy = get_environ_cpy();
 	buf = param_to_env("PATH", environ_cpy);
-	if (!buf)
+	if (buf == NULL)
 		return (FUNCT_FAILURE);
 	if (ft_strcmp(buf, getenv("PATH")))
 	{
