@@ -1,29 +1,32 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        ::::::::            */
-/*   ft_freearray.c                                     :+:    :+:            */
+/*   ft_strcdup.c                                       :+:    :+:            */
 /*                                                     +:+                    */
 /*   By: jbrinksm <jbrinksm@student.codam.nl>         +#+                     */
 /*                                                   +#+                      */
-/*   Created: 2019/03/30 01:48:39 by jbrinksm       #+#    #+#                */
-/*   Updated: 2019/04/19 13:32:47 by jbrinksm      ########   odam.nl         */
+/*   Created: 2019/03/30 05:29:59 by jbrinksm       #+#    #+#                */
+/*   Updated: 2019/04/19 19:05:31 by jbrinksm      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "vsh.h"
+#include "libft.h"
 
-void	ft_freearray(char ***array_p)
+char	*ft_strcdup(char *str, char c)
 {
-	int index;
+	int		index;
+	char	*result;
 
 	index = 0;
-	if (*array_p)
+	while (str[index] != c && str[index] != '\0')
+		index++;
+	result = ft_strnew(index + 1);
+	index = 0;
+	while (str[index] != c && str[index] != '\0')
 	{
-		while ((*array_p)[index] != NULL)
-		{
-			ft_strdel(&(*array_p)[index]);
-			index++;
-		}
-		free(*array_p);
+		result[index] = str[index];
+		index++;
 	}
+	result[index] = '\0';
+	return (result);
 }

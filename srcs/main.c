@@ -6,7 +6,7 @@
 /*   By: jbrinksm <jbrinksm@student.codam.nl>         +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2019/04/10 20:29:49 by jbrinksm       #+#    #+#                */
-/*   Updated: 2019/04/19 13:55:52 by jbrinksm      ########   odam.nl         */
+/*   Updated: 2019/04/19 19:17:40 by jbrinksm      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -30,6 +30,6 @@ int		main(int argc, char **argv)
 		return (EXIT_FAILURE);
 	shell_start();
 	term_reset(term_p);
-	term_free_struct(term_p);
+	term_free_struct(&term_p);
 	ft_freearray(&vshenviron);
 }

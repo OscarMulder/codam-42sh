@@ -6,7 +6,7 @@
 /*   By: jbrinksm <jbrinksm@student.codam.nl>         +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2019/04/10 20:29:42 by jbrinksm       #+#    #+#                */
-/*   Updated: 2019/04/19 18:52:17 by jbrinksm      ########   odam.nl         */
+/*   Updated: 2019/04/19 19:20:17 by jbrinksm      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -103,10 +103,7 @@ int		shell_start(void);
 */
 
 char	**get_environ_cpy(void);
-void	ft_freearray(char ***array_p);
-int		ft_arraylen(char **array);
 char	*param_to_env(char *parameter, char **vshenviron);
-char	*ft_strcdup(char *str, char c);
 
 /*
 **----------------------------------terminal------------------------------------
@@ -123,7 +120,7 @@ t_term	*term_init_struct(void);
 int		term_get_attributes(t_term *term_p);
 int		term_set_attributes(t_term *term_p);
 int		term_reset(t_term *term_p);
-void	term_free_struct(t_term *term_p);
+void	term_free_struct(t_term **term_p);
 
 /*
 **-----------------------------------input--------------------------------------
@@ -171,11 +168,33 @@ void	builtin_exit(t_term *term_p);
 **==================================TEST PROTOTYPES=============================
 */
 
-int		test_prompt(void);
-int		test_term_init_struct(void);
-int		test_term_is_valid(void);
+/*
+**----------------------------------environment_testers-------------------------
+*/
 
 int		test_get_environ_cpy(void);
 int		test_param_to_env(void);
+
+/*
+**--------------------------------term_testers----------------------------------
+*/
+
+int		test_term_is_valid(void);
+int		test_term_init_struct(void);
+int		test_term_free_struct(void);
+
+/*
+**--------------------------------prompt_testers--------------------------------
+*/
+
+int		test_prompt(void);
+
+/*
+**--------------------------------shell_testers---------------------------------
+*/
+
+/*
+**---------------------------------input_read_testers---------------------------
+*/
 
 #endif

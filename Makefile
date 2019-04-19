@@ -6,7 +6,7 @@
 #    By: jbrinksm <jbrinksm@student.codam.nl>         +#+                      #
 #                                                    +#+                       #
 #    Created: 2019/04/10 20:30:07 by jbrinksm       #+#    #+#                 #
-#    Updated: 2019/04/19 18:51:59 by jbrinksm      ########   odam.nl          #
+#    Updated: 2019/04/19 19:21:34 by jbrinksm      ########   odam.nl          #
 #                                                                              #
 # **************************************************************************** #
 
@@ -25,8 +25,9 @@ term_set_attributes term_reset_attributes term_free_struct \
 \
 get_environ_cpy ft_freearray ft_arraylen param_to_env ft_strcdup
 TESTS = test_main \
-test_term_init_struct test_get_environ_cpy test_term_is_valid \
-test_param_to_env
+test_prompt \
+test_get_environ_cpy test_param_to_env \
+test_term_is_valid test_term_init_struct test_term_free_struct
 OBJECTS := $(SRCS:%=%.o)
 TESTOBJECTS := $(TESTS:%=%.o)
 SRCS := $(SRCS:%=%.c)

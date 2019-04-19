@@ -1,32 +1,19 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        ::::::::            */
-/*   ft_strcdup.c                                       :+:    :+:            */
+/*   test_prompt.c                                      :+:    :+:            */
 /*                                                     +:+                    */
 /*   By: jbrinksm <jbrinksm@student.codam.nl>         +#+                     */
 /*                                                   +#+                      */
-/*   Created: 2019/03/30 05:29:59 by jbrinksm       #+#    #+#                */
-/*   Updated: 2019/04/19 18:32:42 by jbrinksm      ########   odam.nl         */
+/*   Created: 2019/04/19 19:08:33 by jbrinksm       #+#    #+#                */
+/*   Updated: 2019/04/19 19:08:47 by jbrinksm      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "vsh.h"
 
-char	*ft_strcdup(char *str, char c)
+int		test_prompt(void)
 {
-	int		index;
-	char	*result;
-
-	index = 0;
-	while (str[index] != c && str[index] != '\0')
-		index++;
-	result = ft_strnew(index + 1);
-	index = 0;
-	while (str[index] != c && str[index] != '\0')
-	{
-		result[index] = str[index];
-		index++;
-	}
-	result[index] = '\0';
-	return (result);
+	shell_display_prompt();
+	return (FUNCT_SUCCESS);
 }
