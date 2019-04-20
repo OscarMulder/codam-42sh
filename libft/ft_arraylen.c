@@ -17,7 +17,7 @@ int		ft_arraylen(char **array)
 	int i;
 
 	i = 0;
-	if (array != NULL)
+	if (array == NULL)
 		return (0);
 	while (array[i] != NULL)
 		i++;
