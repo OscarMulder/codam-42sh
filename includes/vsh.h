@@ -6,7 +6,7 @@
 /*   By: jbrinksm <jbrinksm@student.codam.nl>         +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2019/04/10 20:29:42 by jbrinksm       #+#    #+#                */
-/*   Updated: 2019/04/19 19:36:01 by jbrinksm      ########   odam.nl         */
+/*   Updated: 2019/04/22 18:57:13 by jbrinksm      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -151,7 +151,7 @@ void	shell_display_prompt(void);
 **	parser_lexer.c
 */
 
-int		parser_lexer(char ****cmd_tab, char *line);
+int		parser_lexer(char *line, char ***commands);
 
 /*
 **----------------------------------bultins-------------------------------------
