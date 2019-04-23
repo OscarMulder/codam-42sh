@@ -6,7 +6,7 @@
 /*   By: omulder <omulder@student.codam.nl>           +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2019/04/19 13:43:01 by jbrinksm       #+#    #+#                */
-/*   Updated: 2019/04/23 15:02:40 by omulder       ########   odam.nl         */
+/*   Updated: 2019/04/23 15:10:25 by omulder       ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -30,8 +30,14 @@ int		test_free_and_return_null(void)
 	char	**testenv;
 
 	testenv = (char**)ft_memalloc(sizeof(char*) * 3);
+	if (testenv == NULL)
+		return (FUNCT_FAILURE);
 	testenv[0] = ft_strdup("test");
+		if (testenv[0] == NULL)
+			return (FUNCT_FAILURE);
 	testenv[1] = ft_strdup("test");
+		if (testenv[1] == NULL)
+			return (FUNCT_FAILURE);
 	if (free_and_return_null(testenv) != NULL)
 		return (FUNCT_FAILURE);
 	if (testenv[0] != NULL)
