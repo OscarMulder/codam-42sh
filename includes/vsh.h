@@ -6,7 +6,7 @@
 /*   By: jbrinksm <jbrinksm@student.codam.nl>         +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2019/04/10 20:29:42 by jbrinksm       #+#    #+#                */
-/*   Updated: 2019/04/22 18:57:13 by jbrinksm      ########   odam.nl         */
+/*   Updated: 2019/04/23 15:31:57 by jbrinksm      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -86,10 +86,6 @@ typedef struct	s_term
 **=================================prototypes===================================
 */
 
-/*
-**	main.c
-*/
-
 int		term_reset(t_term *term_p);
 void	term_free_termp(t_term *term_p);
 int		shell_start(void);
@@ -98,19 +94,11 @@ int		shell_start(void);
 **---------------------------------environment----------------------------------
 */
 
-/*
-**	get_environ_cpy.c
-*/
-
 char	**get_environ_cpy(void);
 char	*param_to_env(char *parameter, char **vshenviron);
 
 /*
 **----------------------------------terminal------------------------------------
-*/
-
-/*
-**	term_init.c
 */
 
 t_term	*term_prepare(char **vshenviron);
@@ -126,19 +114,11 @@ void	term_free_struct(t_term **term_p);
 **-----------------------------------input--------------------------------------
 */
 
-/*
-**	input_read.c
-*/
-
 int		input_read(char **line);
 int		input_echo(char *buf);
 
 /*
 **----------------------------------shell---------------------------------------
-*/
-
-/*
-**	shell_prompt.c
 */
 
 void	shell_display_prompt(void);
@@ -147,22 +127,25 @@ void	shell_display_prompt(void);
 **----------------------------------parser--------------------------------------
 */
 
-/*
-**	parser_lexer.c
-*/
-
 int		parser_lexer(char *line, char ***commands);
+
+char	**parser_split_commands(char *line);
+int		parser_command_len_from_line(char *line, int *start_arg_index);
+int		parser_total_commands_from_line(char *line);
+char	*parser_strdup_command_from_line(char *line, int *start_arg_index);
 
 /*
 **----------------------------------bultins-------------------------------------
 */
 
-/*
-**	builtin_exit.c
-*/
-
 void	builtin_exit(t_term *term_p);
 
+/*
+**---------------------------------tools----------------------------------------
+*/
+
+int		is_char_escaped(char *line, int cur_index);
+int		update_quote_status(char *line, int cur_index, char *quote);
 
 /*
 **==================================TEST PROTOTYPES=============================
@@ -190,6 +173,16 @@ int		test_term_get_attributes(void);
 
 int		test_prompt(void);
 
+/*
+**--------------------------------test_parser_lexer-----------------------------
+*/
+
+int		test_parser_split_commands(void);
+int		test_parser_split_commands_1(void);
+int		test_parser_split_commands_2(void);
+int		test_parser_split_commands_3(void);
+
+int		test_parser_strdup_command_from_line(void);
 /*
 **--------------------------------shell_testers---------------------------------
 */
