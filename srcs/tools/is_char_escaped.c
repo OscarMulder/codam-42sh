@@ -6,7 +6,7 @@
 /*   By: jbrinksm <jbrinksm@student.codam.nl>         +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2019/04/23 13:59:19 by jbrinksm       #+#    #+#                */
-/*   Updated: 2019/04/23 19:10:47 by jbrinksm      ########   odam.nl         */
+/*   Updated: 2019/04/23 19:12:25 by jbrinksm      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -25,11 +25,11 @@ int	is_char_escaped(char *line, int cur_index)
 	int	total_escape_chars;
 
 	index = cur_index - 1;
-	total_escape_chars = 0;
 	if (index < 0 || index > (int)ft_strlen(line))
 		return (FUNCT_FAILURE);
 	if (line[index] == '\\')
 	{
+		total_escape_chars = 0;
 		while (line[index] == '\\' && index >= 0)
 		{
 			total_escape_chars++;
