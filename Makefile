@@ -6,7 +6,7 @@
 #    By: jbrinksm <jbrinksm@student.codam.nl>         +#+                      #
 #                                                    +#+                       #
 #    Created: 2019/04/10 20:30:07 by jbrinksm       #+#    #+#                 #
-#    Updated: 2019/04/23 16:24:23 by jbrinksm      ########   odam.nl          #
+#    Updated: 2019/04/23 17:12:08 by jbrinksm      ########   odam.nl          #
 #                                                                              #
 # **************************************************************************** #
 
@@ -38,8 +38,6 @@ test_parser_strdup_command_from_line \
 test_parser_command_len_from_line \
 test_parser_total_commands_from_line
 # test_parser_lexer
-# test_parser_total_commands
-# test_parser_command_len
 OBJECTS := $(SRCS:%=%.o)
 TESTOBJECTS := $(TESTS:%=%.o)
 SRCS := $(SRCS:%=%.c)
