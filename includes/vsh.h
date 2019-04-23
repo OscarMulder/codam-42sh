@@ -6,7 +6,7 @@
 /*   By: omulder <omulder@student.codam.nl>           +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2019/04/10 20:29:42 by jbrinksm       #+#    #+#                */
-/*   Updated: 2019/04/23 14:42:45 by omulder       ########   odam.nl         */
+/*   Updated: 2019/04/23 14:58:23 by omulder       ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -177,6 +177,7 @@ void	builtin_exit(t_term *term_p);
 int		test_get_environ_cpy(void);
 int		test_param_to_env(void);
 int		test_check_for_single_equalsign(void);
+int		test_free_and_return_null(void);
 
 /*
 **--------------------------------term_testers----------------------------------
