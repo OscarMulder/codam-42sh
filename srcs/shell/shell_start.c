@@ -1,12 +1,12 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        ::::::::            */
-/*   jornfuckup.c                                       :+:    :+:            */
+/*   shell_start.c                                      :+:    :+:            */
 /*                                                     +:+                    */
-/*   By: jbrinksm <jbrinksm@student.codam.nl>         +#+                     */
+/*   By: omulder <omulder@student.codam.nl>           +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2019/04/18 16:44:50 by omulder        #+#    #+#                */
-/*   Updated: 2019/04/18 18:19:35 by jbrinksm      ########   odam.nl         */
+/*   Updated: 2019/04/23 14:19:53 by omulder       ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -26,7 +26,7 @@ int		shell_start(void)
 		shell_display_prompt();
 		status = input_read(&line);
 		// if (status != CTRLD)
-		// 	status = parser_lexer(&cmd_tab, line);
+		// 	status = parser(&cmd_tab, line);ß
 		ft_strdel(&line);
 		ft_putendl("");
 	}
