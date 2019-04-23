@@ -6,13 +6,13 @@
 /*   By: omulder <omulder@student.codam.nl>           +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2019/04/18 16:37:32 by omulder        #+#    #+#                */
-/*   Updated: 2019/04/23 16:13:44 by omulder       ########   odam.nl         */
+/*   Updated: 2019/04/23 16:14:49 by omulder       ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "vsh.h"
 
-int		test_ret_fail(char *str)
+static int		test_ret_fail(char *str)
 {
 	ft_printf("%s\n", str);
 	return (EXIT_FAILURE);
