@@ -6,7 +6,7 @@
 /*   By: jbrinksm <jbrinksm@student.codam.nl>         +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2019/04/23 14:03:51 by jbrinksm       #+#    #+#                */
-/*   Updated: 2019/04/23 15:31:44 by jbrinksm      ########   odam.nl         */
+/*   Updated: 2019/04/23 17:36:30 by jbrinksm      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -109,7 +109,7 @@ char		**parser_split_commands(char *line)
 	int		start_arg_index;
 
 	total = parser_total_commands_from_line(line);
-	commands = (char**)malloc(sizeof(char*) * total + 1);
+	commands = (char**)ft_memalloc(sizeof(char*) * total + 1);
 	if (commands == NULL)
 		return (NULL);
 	arg_index = 0;
