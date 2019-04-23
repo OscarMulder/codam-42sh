@@ -6,7 +6,7 @@
 /*   By: omulder <omulder@student.codam.nl>           +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2019/04/19 13:43:01 by jbrinksm       #+#    #+#                */
-/*   Updated: 2019/04/23 14:41:21 by omulder       ########   odam.nl         */
+/*   Updated: 2019/04/23 14:47:18 by omulder       ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -21,6 +21,18 @@ int		test_check_for_single_equalsign(void)
 	if (check_for_single_equalsign("ENV=value=") != FUNCT_FAILURE)
 		return (FUNCT_FAILURE);
 	if (check_for_single_equalsign("") != FUNCT_FAILURE)
+		return (FUNCT_FAILURE);
+	return (FUNCT_SUCCESS);
+}
+
+int		test_free_and_return_null(void)
+{
+	char	**testenv;
+
+	testenv = (char**)ft_memalloc(sizeof(char*) * 3);
+	testenv[0] = ft_strdup("test");
+	testenv[1] = ft_strdup("test");
+	if (free_and_return_null(testenv) != NULL)
 		return (FUNCT_FAILURE);
 	return (FUNCT_SUCCESS);
 }
