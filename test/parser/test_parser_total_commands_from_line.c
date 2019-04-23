@@ -6,7 +6,7 @@
 /*   By: jbrinksm <jbrinksm@student.codam.nl>         +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2019/04/23 16:22:12 by jbrinksm       #+#    #+#                */
-/*   Updated: 2019/04/23 17:09:26 by jbrinksm      ########   odam.nl         */
+/*   Updated: 2019/04/23 19:03:44 by jbrinksm      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -25,7 +25,7 @@ static int	test_parser_total_commands_from_line_1(void)
 	int		result;
 
 	line = ft_strdup("simple;command;line");
-	if (!line)
+	if (line == NULL)
 		return (return_test(NULL, E_ALLOC));
 	result = parser_total_commands_from_line(line);
 	if (result != 3)
@@ -33,14 +33,14 @@ static int	test_parser_total_commands_from_line_1(void)
 	return (return_test(line, FUNCT_SUCCESS));
 	ft_strdel(&line);
 	line = ft_strdup("a;lot;of;commands;though;which;might;be;too;many;?");
-	if (!line)
+	if (line == NULL)
 		return (return_test(NULL, E_ALLOC));
 	result = parser_total_commands_from_line(line);
 	if (result != 11)
 		return (return_test(line, FUNCT_FAILURE));
 	ft_strdel(&line);
 	line = ft_strdup("");
-	if (!line)
+	if (line == NULL)
 		return (return_test(NULL, E_ALLOC));
 	result = parser_total_commands_from_line(line);
 	if (result != 1)
@@ -54,7 +54,7 @@ static int	test_parser_total_commands_from_line_2(void)
 	int		result;
 
 	line = ft_strdup("commandline;with;escaped\\;semi;colon");
-	if (!line)
+	if (line == NULL)
 		return (return_test(NULL, E_ALLOC));
 	result = parser_total_commands_from_line(line);
 	if (result != 4)
@@ -62,7 +62,7 @@ static int	test_parser_total_commands_from_line_2(void)
 	return (return_test(line, FUNCT_SUCCESS));
 	ft_strdel(&line);
 	line = ft_strdup("command\\;line\\;with;more\\;escaped;semi\\;colons");
-	if (!line)
+	if (line == NULL)
 		return (return_test(NULL, E_ALLOC));
 	result = parser_total_commands_from_line(line);
 	if (result != 3)
@@ -76,7 +76,7 @@ static int	test_parser_total_commands_from_line_3(void)
 	int		result;
 
 	line = ft_strdup("commandline;with\";quoted;\"semi;colons");
-	if (!line)
+	if (line == NULL)
 		return (return_test(NULL, E_ALLOC));
 	result = parser_total_commands_from_line(line);
 	if (result != 3)
@@ -84,7 +84,7 @@ static int	test_parser_total_commands_from_line_3(void)
 	return (return_test(line, FUNCT_SUCCESS));
 	ft_strdel(&line);
 	line = ft_strdup("\"nice;weird;\";quoted\"semi;colons\"");
-	if (!line)
+	if (line == NULL)
 		return (return_test(NULL, E_ALLOC));
 	result = parser_total_commands_from_line(line);
 	if (result != 4)

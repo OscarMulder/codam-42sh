@@ -6,7 +6,7 @@
 /*   By: jbrinksm <jbrinksm@student.codam.nl>         +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2019/04/23 13:59:55 by jbrinksm       #+#    #+#                */
-/*   Updated: 2019/04/23 14:00:46 by jbrinksm      ########   odam.nl         */
+/*   Updated: 2019/04/23 19:00:29 by jbrinksm      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -20,18 +20,16 @@
 **	'\0' if it was a closing quote. If line[cur_index] isn't a quote, nothing
 **	will happen.
 **
-**	Returns FUNCT_FAILURE if `char *quote` wasn't updated, FUNCT_SUCCESS if it
-**	updated.
+**	Returns FUNCT_FAILURE if `char *quote` wasn't updated, FUNCT_SUCCESS if
+**	quote updated.
 */
 
 int	update_quote_status(char *line, int cur_index, char *quote)
 {
-	int		is_escaped;
 	char	c;
 
-	is_escaped = is_char_escaped(line, cur_index);
 	c = line[cur_index];
-	if (is_escaped == 0)
+	if (is_char_escaped(line, cur_index) == 0)
 	{
 		if (*quote == '\0' && (c == '"' || c == '\''))
 			*quote = c;
