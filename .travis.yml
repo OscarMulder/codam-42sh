@@ -1,4 +1,6 @@
 language: c
+os: osx
+osx_image: xcode8.3
 
 env:
   global:
@@ -7,18 +9,12 @@ env:
 jobs:
   include:
     - stage: compile
-      os: osx
-      osx_image: xcode8.3
       script: make
     - stage: norminette+
       os: linux
       python: 2.7.10
       script: make test_norm
     - stage: tests
-      os: osx
-      osx_image: xcode8.3
       script: make test
     - stage: codecov
-      os: osx
-      osx_image: xcode8.3
       script: make test_coverage && bash <(curl -s https://codecov.io/bash)
