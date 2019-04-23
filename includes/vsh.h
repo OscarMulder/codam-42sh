@@ -6,7 +6,7 @@
 /*   By: jbrinksm <jbrinksm@student.codam.nl>         +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2019/04/10 20:29:42 by jbrinksm       #+#    #+#                */
-/*   Updated: 2019/04/23 15:31:57 by jbrinksm      ########   odam.nl         */
+/*   Updated: 2019/04/23 16:54:55 by jbrinksm      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -130,9 +130,9 @@ void	shell_display_prompt(void);
 int		parser_lexer(char *line, char ***commands);
 
 char	**parser_split_commands(char *line);
+char	*parser_strdup_command_from_line(char *line, int *start_arg_index);
 int		parser_command_len_from_line(char *line, int *start_arg_index);
 int		parser_total_commands_from_line(char *line);
-char	*parser_strdup_command_from_line(char *line, int *start_arg_index);
 
 /*
 **----------------------------------bultins-------------------------------------
@@ -178,11 +178,11 @@ int		test_prompt(void);
 */
 
 int		test_parser_split_commands(void);
-int		test_parser_split_commands_1(void);
-int		test_parser_split_commands_2(void);
-int		test_parser_split_commands_3(void);
-
 int		test_parser_strdup_command_from_line(void);
+int		test_parser_total_commands_from_line(void);
+int		test_parser_command_len_from_line(void);
+
+
 /*
 **--------------------------------shell_testers---------------------------------
 */

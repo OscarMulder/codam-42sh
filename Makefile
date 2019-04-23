@@ -6,7 +6,7 @@
 #    By: jbrinksm <jbrinksm@student.codam.nl>         +#+                      #
 #                                                    +#+                       #
 #    Created: 2019/04/10 20:30:07 by jbrinksm       #+#    #+#                 #
-#    Updated: 2019/04/23 15:22:04 by jbrinksm      ########   odam.nl          #
+#    Updated: 2019/04/23 16:24:23 by jbrinksm      ########   odam.nl          #
 #                                                                              #
 # **************************************************************************** #
 
@@ -34,7 +34,9 @@ test_get_environ_cpy test_param_to_env \
 test_term_is_valid test_term_init_struct test_term_free_struct \
 test_term_get_attributes \
 test_parser_split_commands \
-test_parser_strdup_command_from_line
+test_parser_strdup_command_from_line \
+test_parser_command_len_from_line \
+test_parser_total_commands_from_line
 # test_parser_lexer
 # test_parser_total_commands
 # test_parser_command_len

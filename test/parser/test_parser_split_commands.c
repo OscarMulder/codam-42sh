@@ -1,12 +1,12 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        ::::::::            */
-/*   test_parser_lexer.c                                :+:    :+:            */
+/*   test_parser_split_commands.c                       :+:    :+:            */
 /*                                                     +:+                    */
 /*   By: jbrinksm <jbrinksm@student.codam.nl>         +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2019/04/22 16:05:52 by jbrinksm       #+#    #+#                */
-/*   Updated: 2019/04/23 14:36:26 by jbrinksm      ########   odam.nl         */
+/*   Updated: 2019/04/23 16:24:55 by jbrinksm      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -24,7 +24,7 @@ static int	return_test(char **commands, int ret)
 	return (ret);
 }
 
-int			test_parser_split_commands_3(void)
+static int	test_parser_split_commands_3(void)
 {
 	char	*str;
 	char	**commands;
@@ -53,7 +53,7 @@ int			test_parser_split_commands_3(void)
 	return (return_test(commands, FUNCT_SUCCESS));
 }
 
-int			test_parser_split_commands_2(void)
+static int	test_parser_split_commands_2(void)
 {
 	char	*str;
 	char	**commands;
@@ -82,7 +82,7 @@ int			test_parser_split_commands_2(void)
 	return (return_test(commands, FUNCT_SUCCESS));
 }
 
-int			test_parser_split_commands_1(void)
+static int	test_parser_split_commands_1(void)
 {
 	char	*str;
 	char	**commands;
