@@ -18,12 +18,13 @@ char		*ft_itoa(int n)
 	int		tmp;
 	int		i;
 
-	i = (ft_intlen(n) - 1);
+	i = ft_intlen(n);
 	tmp = n;
-	num = (char*)ft_memalloc(sizeof(char) * (i + 1) + 1);
+	num = (char*)ft_memalloc(sizeof(char) * (i + 1);
 	if (num == NULL)
 		return (NULL);
-	num[i + 1] = '\0';
+	num[i] = '\0';
+	i--;
 	if (n == 0)
 		num[i] = '0';
 	while (tmp != 0)
