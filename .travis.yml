@@ -13,8 +13,3 @@ jobs:
       script: make && make test_norm
     - stage: "Tests & Coverage"
       script: make test_coverage && bash <(curl -s https://codecov.io/bash)
-    - stage: "Linux Compilation"
-      os: linux
-      script: make
-  allow_failures:
-    - os: linux
