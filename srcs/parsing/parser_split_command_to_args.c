@@ -6,7 +6,7 @@
 /*   By: jbrinksm <jbrinksm@student.codam.nl>         +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2019/04/24 15:47:28 by jbrinksm       #+#    #+#                */
-/*   Updated: 2019/04/24 16:58:47 by jbrinksm      ########   odam.nl         */
+/*   Updated: 2019/04/24 20:23:04 by jbrinksm      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -26,17 +26,23 @@ int			parser_total_args_from_command(char *command)
 	int		index;
 	int		total;
 	char	quote;
+	int		new_arg;
 
 	index = 0;
-	total = 1;
+	total = 0;
 	quote = '\0';
+	new_arg = 1;
 	while (command[index] != '\0')
 	{
 		update_quote_status(command, index, &quote);
-		if (quote == '\0' && (command[index] == ' ' || command[index] == '\t'))
+		if (!quote && (command[index] == ' ' || command[index] == '\t') \
+		&& is_char_escaped(command, index) == 0)
+			new_arg = 1;
+		else if (command[index] != ' ' && command[index] != '\t')
 		{
-			if (is_char_escaped(command, index) == FUNCT_FAILURE)
+			if (new_arg == 1)
 				total++;
+			new_arg = 0;
 		}
 		index++;
 	}
@@ -56,10 +62,12 @@ int			parser_arg_len_from_command(char *command, int *start_arg)
 	{
 		if (update_quote_status(command, index, &quote) == FUNCT_SUCCESS)
 			len--;
-		if (quote == '\0' && (command[index] == ' ' || command[index] == '\t') \
-		&& is_char_escaped(command, index) == FUNCT_FAILURE)
+		if (!quote && (command[index] == ' ' || command[index] == '\t') \
+		&& is_char_escaped(command, index) == 0)
 		{
-			while (command[index] == ' ' || command[index] == '\t')
+			while (!update_quote_status(command, index, &quote) \
+			&& (command[index] == ' ' || command[index] == '\t') \
+			&& is_char_escaped(command, index) == 0)
 				index++;
 			*start_arg = index;
 			break ;
