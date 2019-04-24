@@ -6,7 +6,7 @@
 /*   By: jbrinksm <jbrinksm@student.codam.nl>         +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2019/04/17 14:57:49 by jbrinksm       #+#    #+#                */
-/*   Updated: 2019/04/24 17:44:03 by jbrinksm      ########   odam.nl         */
+/*   Updated: 2019/04/24 18:50:24 by jbrinksm      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,6 +16,31 @@
 */
 
 #include "vsh.h"
+
+static void	freetable(char ****table)
+{
+	int index;
+
+	if (*table != NULL)
+	{
+		index = 0;
+		while ((*table)[index] != NULL)
+		{
+			ft_freearray(&((*table)[index]));
+			index++;
+		}
+		free(*table);
+		*table = NULL;
+	}
+}
+
+static int	return_free(char ****cmd_tab, char **commands, int ret)
+{
+	if (ret != FUNCT_SUCCESS)
+		freetable(cmd_tab);
+	ft_freearray(&commands);
+	return (ret);
+}
 
 int			parser_lexer(char *line, char ****cmd_tab)
 {
@@ -27,18 +52,17 @@ int			parser_lexer(char *line, char ****cmd_tab)
 	if (commands == NULL)
 		return (FUNCT_FAILURE);
 	len = ft_arraylen(commands);
-	*cmd_tab = (char***)ft_memalloc(sizeof(char**) * \
-	(len + 1));
+	*cmd_tab = (char***)ft_memalloc(sizeof(char**) * (len + 1));
+	if (*cmd_tab == NULL)
+		return (return_free(cmd_tab, commands, FUNCT_FAILURE));
 	index = 0;
 	while (index < len)
 	{
 		(*cmd_tab)[index] = parser_split_command_to_args(commands[index]);
 		if ((*cmd_tab)[index] == NULL)
-		{
-			ft_freearray(&commands);
-		}
+			return (return_free(cmd_tab, commands, FUNCT_FAILURE));
 		index++;
 	}
 	(*cmd_tab)[index] = NULL;
-	return (FUNCT_SUCCESS);
+	return (return_free(cmd_tab, commands, FUNCT_SUCCESS));
 }
