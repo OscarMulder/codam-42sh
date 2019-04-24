@@ -78,7 +78,6 @@ test: $(TESTOBJECTS) $(OBJECTS)
 	@sh test/local_test.sh
 
 test_norm:
-	@make
 	@echo "[ + ] cloning norminette+"
 	@git clone https://github.com/thijsdejong/codam-norminette-plus ~/norminette+
 	@echo "[...] running norminette+"
