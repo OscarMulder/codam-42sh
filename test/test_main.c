@@ -36,7 +36,7 @@ int		main(void)
 		return (test_ret_fail("test_term_free_struct failed!"));
 	if (test_term_get_attributes() != FUNCT_SUCCESS)
 		return (test_ret_fail("test_term_get_attributes failed!"));
-  	if (test_parser_split_commands() == FUNCT_FAILURE)
+	if (test_parser_split_commands() == FUNCT_FAILURE)
 		return (test_ret_fail("test_parser_split_commands failed!"));
 	if (test_parser_strdup_command_from_line() == FUNCT_FAILURE)
 		return (test_ret_fail("test_parser_strdup_command_from_line failed!"));
@@ -44,5 +44,7 @@ int		main(void)
 		return (test_ret_fail("test_parser_command_len_from_line failed!"));
 	if (test_parser_total_commands_from_line() == FUNCT_FAILURE)
 		return (test_ret_fail("test_parser_total_commands_from_line failed!"));
+	if (test_is_char_escaped() == FUNCT_FAILURE)
+		return (test_ret_fail("test_is_char_escaped failed!"));
 	return (EXIT_SUCCESS);
 }
