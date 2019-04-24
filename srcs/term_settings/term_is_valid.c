@@ -6,7 +6,7 @@
 /*   By: jbrinksm <jbrinksm@student.codam.nl>         +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2019/04/18 18:16:49 by jbrinksm       #+#    #+#                */
-/*   Updated: 2019/04/23 20:00:56 by tde-jong      ########   odam.nl         */
+/*   Updated: 2019/04/24 14:46:25 by jbrinksm      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -25,10 +25,12 @@ int		term_is_valid(char **vshenviron)
 	term_type = param_to_env("TERM", vshenviron);
 	if (term_type == NULL)
 	{
+		ft_strdel(&term_type);
 		ft_eprintf("Term env not set.\n");
 		return (FUNCT_FAILURE);
 	}
 	ret = tgetent(NULL, term_type);
+	ft_strdel(&term_type);
 	if (ret == -1)
 		ft_eprintf("Terminfo database could not be found.\n");
 	if (ret == 0)
