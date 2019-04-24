@@ -130,12 +130,18 @@ void	shell_display_prompt(void);
 **----------------------------------parser--------------------------------------
 */
 
-int		parser_lexer(char *line, char ***commands);
+int		parser_lexer(char *line, char ****cmd_tab);
 
 char	**parser_split_line_to_commands(char *line);
 char	*parser_strdup_command_from_line(char *line, int *start_arg_index);
 int		parser_command_len_from_line(char *line, int *start_arg_index);
 int		parser_total_commands_from_line(char *line);
+
+
+char	**parser_split_command_to_args(char *command);
+char	*parser_strdup_arg_from_command(char *command, int *start_arg);
+int		parser_arg_len_from_command(char *command, int *start_arg);
+int		parser_total_args_from_command(char *command);
 
 /*
 **----------------------------------bultins-------------------------------------
