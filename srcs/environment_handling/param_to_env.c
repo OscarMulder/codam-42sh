@@ -6,7 +6,7 @@
 /*   By: jbrinksm <jbrinksm@student.codam.nl>         +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2019/04/03 18:45:30 by jbrinksm       #+#    #+#                */
-/*   Updated: 2019/04/25 12:32:46 by mavan-he      ########   odam.nl         */
+/*   Updated: 2019/04/25 12:52:38 by mavan-he      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -24,9 +24,9 @@ char		*param_to_env(char *parameter, char **vshenviron)
 	char	*value;
 
 	env_index = 0;
-	index = 0;
 	while (vshenviron[env_index] != NULL)
 	{
+		index = 0;
 		name = ft_strcdup(vshenviron[env_index], '=');
 		if (name == NULL)
 			return (NULL);
@@ -38,7 +38,6 @@ char		*param_to_env(char *parameter, char **vshenviron)
 			ft_strdel(&name);
 			return (value);
 		}
-		index = 0;
 		ft_strdel(&name);
 		env_index++;
 	}
