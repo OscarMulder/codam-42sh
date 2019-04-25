@@ -1,33 +1,13 @@
 # codam-42sh [![Build Status](https://travis-ci.com/OscarMulder/codam-42sh.svg?token=npJorzrMuT9oxn5xXSyd&branch=master)](https://travis-ci.com/OscarMulder/codam-42sh) [![codecov](https://codecov.io/gh/OscarMulder/codam-42sh/branch/master/graph/badge.svg?token=hg6wEBSVIc)](https://codecov.io/gh/OscarMulder/codam-42sh)
 
-## Naming functions
-1. Functions names should start with the shell-category they belong to.
-- General shell related -> shell_
-- Terminal configuaration -> term_
-- Input converter -> input_
-- Parser -> parser_
-- Executor -> exec_
-- Builtins -> builtin_
-- Libft -> ft_
-- Tests -> test_
-2. Function names have to give a good estimation of their purpose.
-- Example: name it **parser_replace_wildcards** not **parser_wildcards**.
-3. Function names have to as concise as possible whilst still being readable.
-- Example: name it **parser_replace_wildcards**, not **prsr_rep_wldcrds**.
-
-## Naming branches
-Branch names should be clear and concise
-- Structure: (**suggestions are needed**)
-
 ## Pillars of VSH
 1. Test EVERYTHING.
 2. Write clear and concise comments above functions that need it.
-3. Only allocate heap memory when you really have to. (i.e. do you really need to 
-strdup when you just need to compare??)
-1. ... (**suggestions are needed**)
+3. Only allocate heap memory when you really have to. (i.e. don't duplicate a string when you aren't changing it in your function.)
+4. ... (**suggestions are needed**)
 
 ## Structure of the shell
-We will structure the shell based on Bash: 3.1.1 Shell Operation
+We will structure the shell based on `Bash: 3.1.1 Shell Operation`
 
 The following is a brief description of the shell’s operation when it reads and executes a command. Basically, the shell does the following:
 
@@ -41,11 +21,11 @@ The following is a brief description of the shell’s operation when it reads an
 
 ## Adding tests
 
-1. Create a new file in test/ called test_NAME_OF_FUNCTION.c
-2. Add function prototype to test.h header
-3. Add test to test_main.c
-4. Add name of testfile to "TESTS" variable in Makefile
-5. Test if the test passes with 'make test'
+1. Create a new file in `test/` called `test_`*NAME_OF_FUNCTION*`.c`
+2. Add function prototype to `test.h` header
+3. Add test to `test_main.c`
+4. Add name of testfile to "`TESTS`" variable in Makefile
+5. Test if the test passes with '`make test`'
 6. Travis wil automatically run the test on push.
 
 ## Github workflow
@@ -59,3 +39,28 @@ Because we want to make sure we have a good experience working on this project t
 - After succesfully merging a branch, delete it (after pressing the merge button, a delete button will appear).
 - Travis will run a lot! Please wait for it to finish before merging to master.
 - Commit messages have to be in English, they should also make sense. Especially while merging.
+
+Naming conventions
+===
+## Naming: branches
+Branch names should be clear and concise
+- Structure: (**suggestions are needed**)
+## Naming: files
+- `.c` files should have the same name as the most important function they contain.
+## Naming: functions
+3. Additionally, functions names should start with the category that they belong to.
+- General shell related -> `shell_`
+- Terminal configuaration -> `term_`
+- Input converter -> `input_`
+- Parser -> `parser_`
+- Executor -> `exec_`
+- Builtins -> `builtin_`
+- Libft -> `ft_`
+- Tests -> `test_`
+## Naming: functions and variables
+1. Names should make sense and give a good indication of their purpose.
+- Example: name functions `parser_replace_wildcards` **instead of** `parser_wildcards`.
+- Example: name variables `int count_words` and `int count_chars` **instead of** `int counter1` and `int counter2`.
+1. Names should be as concise as possible whilst still being readable.
+- Example: name functions `parser_replace_wildcards`, **instead of** `prsr_rep_wldcrds**`.
+- Example: name variables `int index` **instead of** `int i`.
