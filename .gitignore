@@ -1,0 +1,13 @@
+# Object files
+*.o
+
+# Libraries
+*.a
+
+# Code coverage
+*.gcno
+*.gcda
+
+# Executable
+vsh
+vsh_tests
