@@ -4,10 +4,10 @@
 # Libraries
 *.a
 
-# Code coverage
+# Code coverage files
 *.gcno
 *.gcda
 
-# Executable
+# Executables
 vsh
 vsh_tests
