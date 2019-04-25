@@ -6,9 +6,14 @@
 /*   By: jbrinksm <jbrinksm@student.codam.nl>         +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2019/04/24 15:47:28 by jbrinksm       #+#    #+#                */
-/*   Updated: 2019/04/25 17:30:28 by jbrinksm      ########   odam.nl         */
+/*   Updated: 2019/04/25 20:14:31 by jbrinksm      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
+
+/*
+**	NOTE: This code is nowhere near from perfect and any help and/or suggestions
+**	are appreciated.
+*/
 
 #include "vsh.h"
 
@@ -100,6 +105,12 @@ char		*parser_strdup_arg_from_command(char *command, int *start_arg)
 	return (arg);
 }
 
+static char	**return_and_free(char ***args)
+{
+	ft_freearray(args);
+	return (NULL);
+}
+
 char		**parser_split_command_to_args(char *command)
 {
 	char	**args;
@@ -115,12 +126,12 @@ char		**parser_split_command_to_args(char *command)
 	start_arg = 0;
 	while (args_index < total)
 	{
+		while ((command[start_arg] == ' ' || command[start_arg] == '\t') && \
+		is_char_escaped(command, start_arg) == 0)
+			start_arg++;
 		args[args_index] = parser_strdup_arg_from_command(command, &start_arg);
 		if (args[args_index] == NULL)
-		{
-			ft_freearray(&args);
-			return (NULL);
-		}
+			return (return_and_free(&args));
 		args_index++;
 	}
 	args[args_index] = NULL;

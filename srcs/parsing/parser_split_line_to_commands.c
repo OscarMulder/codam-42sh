@@ -6,9 +6,14 @@
 /*   By: jbrinksm <jbrinksm@student.codam.nl>         +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2019/04/23 14:03:51 by jbrinksm       #+#    #+#                */
-/*   Updated: 2019/04/24 17:40:57 by jbrinksm      ########   odam.nl         */
+/*   Updated: 2019/04/25 19:59:00 by jbrinksm      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
+
+/*
+**	NOTE: This code is nowhere near from perfect and any help and/or suggestions
+**	are appreciated.
+*/
 
 #include "vsh.h"
 

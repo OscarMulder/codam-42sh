@@ -6,7 +6,7 @@
 /*   By: jbrinksm <jbrinksm@student.codam.nl>         +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2019/04/18 16:37:32 by omulder        #+#    #+#                */
-/*   Updated: 2019/04/25 14:13:03 by jbrinksm      ########   odam.nl         */
+/*   Updated: 2019/04/25 20:18:34 by jbrinksm      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -48,6 +48,8 @@ int		main(void)
 		return (test_ret_fail("test_parser_total_args_from_command failed!"));
 	if (test_parser_arg_len_from_command() == FUNCT_FAILURE)
 		return (test_ret_fail("test_parser_arg_len_from_command failed!"));
+	if (test_parser_strdup_arg_from_command() == FUNCT_FAILURE)
+		return (test_ret_fail("test_parser_strdup_arg_from_command failed!"));
 	if (test_is_char_escaped() == FUNCT_FAILURE)
 		return (test_ret_fail("test_is_char_escaped failed!"));
 	if (test_update_quote_status() == FUNCT_FAILURE)
