@@ -1,12 +1,12 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        ::::::::            */
-/*   test_parser_split_commands.c                       :+:    :+:            */
+/*   test_parser_split_line_to_commands.c               :+:    :+:            */
 /*                                                     +:+                    */
 /*   By: jbrinksm <jbrinksm@student.codam.nl>         +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2019/04/22 16:05:52 by jbrinksm       #+#    #+#                */
-/*   Updated: 2019/04/24 15:15:38 by jbrinksm      ########   odam.nl         */
+/*   Updated: 2019/04/25 12:29:38 by jbrinksm      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -26,12 +26,9 @@ static int	return_test(char **commands, int ret)
 
 static int	test_parser_split_line_to_commands_3(void)
 {
-	char	*str;
 	char	**commands;
 
-	str = ft_strdup("123;456\\\\\\;123;456;");
-	parser_lexer(str, &commands);
-	ft_strdel(&str);
+	commands = parser_split_line_to_commands("123;456\\\\\\;123;456;");
 	if (commands == NULL)
 		return (FUNCT_FAILURE);
 	if (commands[0] == NULL)
@@ -55,12 +52,10 @@ static int	test_parser_split_line_to_commands_3(void)
 
 static int	test_parser_split_line_to_commands_2(void)
 {
-	char	*str;
 	char	**commands;
 
-	str = ft_strdup("lalalaffffdsdg;asdgasdgas\\;dg as; dga sgas \\\";@");
-	parser_lexer(str, &commands);
-	ft_strdel(&str);
+	commands = parser_split_line_to_commands("lalalaffffdsdg;asdgasdgas\\;dg as"
+	"; dga sgas \\\";@");
 	if (commands == NULL)
 		return (FUNCT_FAILURE);
 	if (commands[0] == NULL)
@@ -84,12 +79,9 @@ static int	test_parser_split_line_to_commands_2(void)
 
 static int	test_parser_split_line_to_commands_1(void)
 {
-	char	*str;
 	char	**commands;
 
-	str = ft_strdup("\"\";1'22'3'4';'1;';");
-	parser_lexer(str, &commands);
-	ft_strdel(&str);
+	commands = parser_split_line_to_commands("\"\";1'22'3'4';'1;';");
 	if (commands == NULL)
 		return (FUNCT_FAILURE);
 	if (commands[0] == NULL)

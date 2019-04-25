@@ -192,6 +192,8 @@ int		test_parser_strdup_command_from_line(void);
 int		test_parser_total_commands_from_line(void);
 int		test_parser_command_len_from_line(void);
 
+int		test_parser_total_args_from_command(void);
+int		test_parser_arg_len_from_command(void);
 
 /*
 **--------------------------------tools_testers---------------------------------

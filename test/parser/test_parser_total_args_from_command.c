@@ -6,7 +6,7 @@
 /*   By: jbrinksm <jbrinksm@student.codam.nl>         +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2019/04/23 16:22:12 by jbrinksm       #+#    #+#                */
-/*   Updated: 2019/04/24 20:31:28 by jbrinksm      ########   odam.nl         */
+/*   Updated: 2019/04/25 13:52:28 by jbrinksm      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,17 +16,15 @@ static int	test_parser_total_args_from_command_easy(void)
 {
 	int		result;
 
-	result = parser_total_args_from_command\
-("simple command line");
+	result = parser_total_args_from_command("simple command line");
 	if (result != 3)
 		return (FUNCT_FAILURE);
-	result = parser_total_args_from_command\
-("a lot\t of  args though\twhich   \t might be too many ?");
+	result = parser_total_args_from_command("a lot\t of  args though\twhich   "
+	"\t might be too many ?");
 	if (result != 11)
 		return (FUNCT_FAILURE);
-	result = parser_total_args_from_command\
-("\t\t   \t\t");
-	if (result != 1)
+	result = parser_total_args_from_command("\t\t   \t\t");
+	if (result != 0)
 		return (FUNCT_FAILURE);
 	return (FUNCT_SUCCESS);
 }
@@ -35,13 +33,11 @@ static int	test_parser_total_args_from_command_moderate(void)
 {
 	int		result;
 
-	result = parser_total_args_from_command\
-("commandlinewith\\ escape" "and quote");
-	if (result != 4)
-		return (FUNCT_FAILURE);
-	result = parser_total_args_from_command\
-("command\\;line\\;with;more\\;escaped;semi\\;colons");
+	result = parser_total_args_from_command("so many different\\ args");
 	if (result != 3)
+		return (FUNCT_FAILURE);
+	result = parser_total_args_from_command("1 2 3\t4\t5 6\t7 8\t9\\ ");
+	if (result != 9)
 		return (FUNCT_FAILURE);
 	return (FUNCT_SUCCESS);
 }
@@ -50,14 +46,15 @@ static int	test_parser_total_args_from_command_hard(void)
 {
 	int		result;
 
-	result = parser_total_args_from_command\
-("commandline;with\";quoted;\"semi;colons");
+	result = parser_total_args_from_command("\\ \\ \\\t\\ dd  two"
+	"olons");
+	if (result != 2)
+		return (FUNCT_FAILURE);
+	result = parser_total_args_from_command("\"ff ff\"   \t \\  \\ ffff"
+	"s\"");
 	if (result != 3)
 		return (FUNCT_FAILURE);
-	result = parser_total_args_from_command\
-("\"nice;weird;\";quoted\"semi;colons\"");
-	if (result != 4)
-		return (FUNCT_FAILURE);
+	ft_printf("TEST");
 	return (FUNCT_SUCCESS);
 }
 

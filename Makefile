@@ -6,7 +6,7 @@
 #    By: jbrinksm <jbrinksm@student.codam.nl>         +#+                      #
 #                                                    +#+                       #
 #    Created: 2019/04/10 20:30:07 by jbrinksm       #+#    #+#                 #
-#    Updated: 2019/04/24 20:32:19 by jbrinksm      ########   odam.nl          #
+#    Updated: 2019/04/25 14:13:19 by jbrinksm      ########   odam.nl          #
 #                                                                              #
 # **************************************************************************** #
 
@@ -38,8 +38,9 @@ test_parser_strdup_command_from_line \
 test_parser_command_len_from_line \
 test_parser_total_commands_from_line \
 test_parser_total_args_from_command \
+test_parser_arg_len_from_command \
 test_is_char_escaped test_update_quote_status
-# test_parser_lexer
+#test_parser_lexer
 OBJECTS := $(SRCS:%=%.o)
 TESTOBJECTS := $(TESTS:%=%.o)
 SRCS := $(SRCS:%=%.c)
