@@ -27,6 +27,8 @@ int		test_free_and_return_null(void)
 		return (FUNCT_FAILURE);
 	if (free_and_return_null(&testenv) != NULL)
 		return (FUNCT_FAILURE);
+if (testenv != NULL)
+    return (FUNCT_FAILURE);
 	return (FUNCT_SUCCESS);
 }
 
