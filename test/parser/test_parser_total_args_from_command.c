@@ -6,7 +6,7 @@
 /*   By: jbrinksm <jbrinksm@student.codam.nl>         +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2019/04/23 16:22:12 by jbrinksm       #+#    #+#                */
-/*   Updated: 2019/04/25 13:52:28 by jbrinksm      ########   odam.nl         */
+/*   Updated: 2019/04/25 17:16:38 by jbrinksm      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -54,7 +54,6 @@ static int	test_parser_total_args_from_command_hard(void)
 	"s\"");
 	if (result != 3)
 		return (FUNCT_FAILURE);
-	ft_printf("TEST");
 	return (FUNCT_SUCCESS);
 }
 
