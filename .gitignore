@@ -7,7 +7,9 @@
 # Code coverage files
 *.gcno
 *.gcda
+*.gcov
 
 # Executables
 vsh
 vsh_tests
+test_coverage
