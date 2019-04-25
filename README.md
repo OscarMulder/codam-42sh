@@ -1,7 +1,7 @@
 # codam-42sh [![Build Status](https://travis-ci.com/OscarMulder/codam-42sh.svg?token=npJorzrMuT9oxn5xXSyd&branch=master)](https://travis-ci.com/OscarMulder/codam-42sh) [![codecov](https://codecov.io/gh/OscarMulder/codam-42sh/branch/master/graph/badge.svg?token=hg6wEBSVIc)](https://codecov.io/gh/OscarMulder/codam-42sh)
 
-## Definitions of functions
-Functions names should start with the shell-category they belong to.
+## Naming functions
+1. Functions names should start with the shell-category they belong to.
 - General shell related -> shell_
 - Terminal configuaration -> term_
 - Input converter -> input_
@@ -10,6 +10,21 @@ Functions names should start with the shell-category they belong to.
 - Builtins -> builtin_
 - Libft -> ft_
 - Tests -> test_
+2. Function names have to give a good estimation of their purpose.
+- Example: name it **parser_replace_wildcards** not **parser_wildcards**.
+3. Function names have to as concise as possible whilst still being readable.
+- Example: name it **parser_replace_wildcards**, not **prsr_rep_wldcrds**.
+
+## Naming branches
+Branch names should be clear and concise
+- Structure: (**suggestions are needed**)
+
+## Pillars of VSH
+1. Test EVERYTHING.
+2. Write clear and concise comments above functions that need it.
+3. Only allocate heap memory when you really have to. (i.e. do you really need to 
+strdup when you just need to compare??)
+1. ... (**suggestions are needed**)
 
 ## Structure of the shell
 We will structure the shell based on Bash: 3.1.1 Shell Operation
