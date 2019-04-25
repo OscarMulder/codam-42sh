@@ -6,7 +6,7 @@
 /*   By: jbrinksm <jbrinksm@student.codam.nl>         +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2019/04/03 18:45:30 by jbrinksm       #+#    #+#                */
-/*   Updated: 2019/04/25 12:17:06 by mavan-he      ########   odam.nl         */
+/*   Updated: 2019/04/25 12:32:46 by mavan-he      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,14 +15,6 @@
 /*
 ** add errno here
 */
-
-static char	*return_free(char **name, char **value)
-{
-	ft_strdel(name);
-	if (*value == NULL)
-		return (NULL);
-	return (*value);
-}
 
 char		*param_to_env(char *parameter, char **vshenviron)
 {
@@ -43,7 +35,8 @@ char		*param_to_env(char *parameter, char **vshenviron)
 			while (vshenviron[env_index][index] != '=')
 				index++;
 			value = ft_strdup(&(vshenviron[env_index][index + 1]));
-			return (return_free(&name, &value));
+			ft_strdel(&name);
+			return (value);
 		}
 		index = 0;
 		ft_strdel(&name);
