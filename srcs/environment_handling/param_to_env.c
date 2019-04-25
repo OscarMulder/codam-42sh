@@ -6,7 +6,7 @@
 /*   By: jbrinksm <jbrinksm@student.codam.nl>         +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2019/04/03 18:45:30 by jbrinksm       #+#    #+#                */
-/*   Updated: 2019/04/25 15:07:39 by mavan-he      ########   odam.nl         */
+/*   Updated: 2019/04/25 17:08:11 by mavan-he      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,22 +15,22 @@
 char		*param_to_env(char *parameter, char **vshenviron)
 {
 	int		param_len;
-	int		env_index;
-	int		index;
+	int		env_i;
+	int		i;
 
 	param_len = ft_strlen(parameter);
-	env_index = 0;
-	while (vshenviron[env_index] != NULL)
+	env_i = 0;
+	while (vshenviron[env_i] != NULL)
 	{
-		if (ft_strncmp(parameter, vshenviron[env_index], param_len) == 0 &&
-			vshenviron[env_index][param_len] == '=')
+		if (ft_strncmp(parameter, vshenviron[env_i], param_len) == 0 &&
+			vshenviron[env_i][param_len] == '=')
 		{
-			index = 0;
-			while (vshenviron[env_index][index] != '=')
-				index++;
-			return (&vshenviron[env_index][index + 1]);
+			i = 0;
+			while (vshenviron[env_i][i] != '=')
+				i++;
+			return (&vshenviron[env_i][i + 1]);
 		}
-		env_index++;
+		env_i++;
 	}
 	return (NULL);
 }
