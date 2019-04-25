@@ -6,7 +6,7 @@
 /*   By: tde-jong <tde-jong@student.codam.nl>         +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2019/04/19 13:43:01 by jbrinksm       #+#    #+#                */
-/*   Updated: 2019/04/25 08:13:03 by tde-jong      ########   odam.nl         */
+/*   Updated: 2019/04/25 08:21:52 by tde-jong      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -25,8 +25,10 @@ int		test_free_and_return_null(void)
 	testenv[1] = ft_strdup("test");
 	if (testenv[1] == NULL)
 		return (FUNCT_FAILURE);
+	ft_printf("before:\n%p\n%p\n", testenv[0], testenv[1]);
 	if (free_and_return_null(testenv) != NULL)
 		return (FUNCT_FAILURE);
+	ft_printf("after:\n%p\n%p\n", testenv[0], testenv[1]);
 	if (testenv[0] != NULL)
 		return (FUNCT_FAILURE);
 	if (testenv[1] != NULL)
