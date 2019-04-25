@@ -6,7 +6,7 @@
 /*   By: tde-jong <tde-jong@student.codam.nl>         +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2019/04/19 13:43:01 by jbrinksm       #+#    #+#                */
-/*   Updated: 2019/04/25 08:21:52 by tde-jong      ########   odam.nl         */
+/*   Updated: 2019/04/25 09:14:45 by tde-jong      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,7 +16,7 @@ int		test_free_and_return_null(void)
 {
 	char	**testenv;
 
-	testenv = (char**)ft_memalloc(sizeof(char*) * 3);
+	testenv = (char**)ft_memalloc(sizeof(char*) * 4);
 	if (testenv == NULL)
 		return (FUNCT_FAILURE);
 	testenv[0] = ft_strdup("test");
