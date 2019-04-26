@@ -6,35 +6,31 @@
 /*   By: jbrinksm <jbrinksm@student.codam.nl>         +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2019/04/03 18:45:30 by jbrinksm       #+#    #+#                */
-/*   Updated: 2019/04/19 20:31:36 by jbrinksm      ########   odam.nl         */
+/*   Updated: 2019/04/25 17:08:11 by mavan-he      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "vsh.h"
 
-char	*param_to_env(char *parameter, char **vshenviron)
+char		*param_to_env(char *parameter, char **vshenviron)
 {
-	int		env_index;
-	int		index;
-	char	*name;
-	char	*value;
+	int		param_len;
+	int		env_i;
+	int		i;
 
-	env_index = 0;
-	index = 0;
-	while (vshenviron[env_index] != NULL)
+	param_len = ft_strlen(parameter);
+	env_i = 0;
+	while (vshenviron[env_i] != NULL)
 	{
-		name = ft_strcdup(vshenviron[env_index], '=');
-		if (ft_strcmp(parameter, name) == 0)
+		if (ft_strncmp(parameter, vshenviron[env_i], param_len) == 0 &&
+			vshenviron[env_i][param_len] == '=')
 		{
-			while (vshenviron[env_index][index] != '=')
-				index++;
-			value = ft_strdup(&(vshenviron[env_index][index + 1]));
-			ft_strdel(&name);
-			return (value);
+			i = 0;
+			while (vshenviron[env_i][i] != '=')
+				i++;
+			return (&vshenviron[env_i][i + 1]);
 		}
-		index = 0;
-		ft_strdel(&name);
-		env_index++;
+		env_i++;
 	}
 	return (NULL);
 }
