@@ -151,7 +151,7 @@ int		parser_total_commands_from_line(char *line);
 
 void	builtin_exit(t_term *term_p);
 int		builtin_echo(char **args);
-void	echo_set_flags(char **args, char *flags, int *arg_i);
+char	echo_set_flags(char **args, int *arg_i);
 
 /*
 **---------------------------------tools----------------------------------------
@@ -203,5 +203,11 @@ int		test_parser_command_len_from_line(void);
 
 int		test_is_char_escaped(void);
 int		test_update_quote_status(void);
+
+/*
+**-----------------------------------builtins-----------------------------------
+*/
+
+int		test_echo(void);
 
 #endif

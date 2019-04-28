@@ -6,7 +6,7 @@
 /*   By: jbrinksm <jbrinksm@student.codam.nl>         +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2019/03/28 10:21:20 by jbrinksm       #+#    #+#                */
-/*   Updated: 2019/04/28 13:13:04 by mavan-he      ########   odam.nl         */
+/*   Updated: 2019/04/28 17:15:21 by mavan-he      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -72,8 +72,16 @@ static void	echo_escape_chars(char *arg)
 		i_new++;
 		i++;
 	}
-	arg[i_new] = '\0';
+	while (arg[i_new] != '\0')
+	{
+		arg[i_new] = '\0';
+		i_new++;
+	}
 }
+
+/*
+** if option xpg_echo is set, turn on -e, need env for this ?
+*/
 
 int			builtin_echo(char **args)
 {
@@ -81,17 +89,15 @@ int			builtin_echo(char **args)
 	char	flags;
 
 	arg_i = 1;
-	flags = 0;
-	/*if option xpg_echo is set, turn on -e, need env for this ?*/
-	echo_set_flags(args, &flags, &arg_i);
+	flags = echo_set_flags(args, &arg_i);
 	while (args[arg_i])
 	{
 		if (flags & OPT_E)
 			echo_escape_chars(args[arg_i]);
 		ft_putstr(args[arg_i]);
-		arg_i++;
-		if (args[arg_i] != NULL)
+		if (args[arg_i + 1] != NULL)
 			ft_putchar(' ');
+		arg_i++;
 	}
 	if ((flags & OPT_N) == 0)
 		ft_putchar('\n');
