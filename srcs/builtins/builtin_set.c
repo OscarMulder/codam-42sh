@@ -1,21 +1,77 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        ::::::::            */
-/*   builtin_setenv.c                                   :+:    :+:            */
+/*   builtin_set.c                                      :+:    :+:            */
 /*                                                     +:+                    */
-/*   By: mavan-he <mavan-he@student.codam.nl>         +#+                     */
+/*   By: jbrinksm <jbrinksm@student.codam.nl>         +#+                     */
 /*                                                   +#+                      */
-/*   Created: 2019/04/25 17:17:59 by mavan-he       #+#    #+#                */
-/*   Updated: 2019/04/25 17:40:35 by mavan-he      ########   odam.nl         */
+/*   Created: 2019/03/28 16:47:15 by jbrinksm       #+#    #+#                */
+/*   Updated: 2019/04/28 13:31:02 by mavan-he      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
-/*
-** WORK IN PROGRESS
-*/
-
 #include "vsh.h"
 
+/*
+** WIP
+**
+** set with no args lists intern variable lst
+** set can also be called like set [name] [value]
+*/
+
+int			builtin_set(char **args, char **env)
+{
+	size_t i;
+
+	if (args[1] != NULL)
+	{
+		ft_putstr("set: too many arguments\n"); // set this to error output
+		return (FUNCT_ERROR);
+	}
+	i = 0;
+	while (env[i])
+	{
+		ft_putendl(env[i]);
+		i++;
+	}
+	return (FUNCT_SUCCESS);
+}
+
+/* void	builtin_setenv(char **args, char ***env)
+{
+	int	argc;
+
+	if (args[1] == NULL)
+	// What happens when no args are given
+	else if (args[2] == NULL)
+	// set NAME to NULL
+	// or if NAME does not exists create NAME and set to NULL
+	else if (args[3] != NULL)
+	{
+		ft_putendl_fd("Too many arguments", 2);
+		return (FUNCT_FAILURE);
+	}
+	// return error TOO many arguments
+	else
+	// set NAME to VALUE
+	// or if NAME does not exists create NAME and set to VALUE
+	return (FUNCT_SUCCESS)
+}
+ */
+
+
+
+
+
+
+/* 	argc = vsh_count_args(command_row);
+	if (argc == 1)
+		vsh_env_list(*vshenviron);
+	else if (argc == 2 || argc == 3)
+		vsh_setenv_add(command_row[1], command_row[2], vshenviron);
+	else
+		vsh_error(E_TOOMNYARGS, command_row[0]);
+} */
 /* int		vsh_setenv_checkinput(char *variable, char *value)
 {
 	int index;
@@ -69,16 +125,4 @@ int		vsh_setenv_add(char *variable, char *value, char ***vshenviron)
 	return (FUNCT_SUCCESS);
 }
 
-void	vsh_setenv(char **command_row, char ***vshenviron)
-{
-	int	argc;
-
-	argc = vsh_count_args(command_row);
-	if (argc == 1)
-		vsh_env_list(*vshenviron);
-	else if (argc == 2 || argc == 3)
-		vsh_setenv_add(command_row[1], command_row[2], vshenviron);
-	else
-		vsh_error(E_TOOMNYARGS, command_row[0]);
-}
  */

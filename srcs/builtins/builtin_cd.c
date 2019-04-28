@@ -6,15 +6,29 @@
 /*   By: mavan-he <mavan-he@student.codam.nl>         +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2019/04/25 17:17:25 by mavan-he       #+#    #+#                */
-/*   Updated: 2019/04/25 17:31:02 by mavan-he      ########   odam.nl         */
+/*   Updated: 2019/04/28 13:22:26 by mavan-he      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
 /*
 ** WORK IN PROGRESS
+**
+**
+** CD changes directory
+** 1. no args:
+** change to homedir
+** 2. 1 arg
+** change dir to arg[1]
 */
 
 #include "vsh.h"
+
+int			builtin_cd(char **args, char **env)
+{
+	(void)args;
+	(void)env;
+	return (FUNCT_SUCCESS);
+}
 
 /* void	vsh_cd_replace(char **command_row)
 {

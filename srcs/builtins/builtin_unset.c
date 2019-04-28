@@ -1,12 +1,12 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        ::::::::            */
-/*   builtin_unsetenv.c                                 :+:    :+:            */
+/*   builtin_unset.c                                    :+:    :+:            */
 /*                                                     +:+                    */
 /*   By: jbrinksm <jbrinksm@student.codam.nl>         +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2019/03/28 21:49:00 by jbrinksm       #+#    #+#                */
-/*   Updated: 2019/04/25 17:40:44 by mavan-he      ########   odam.nl         */
+/*   Updated: 2019/04/28 13:27:17 by mavan-he      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,7 +14,16 @@
 ** WORK IN PROGRESS
 */
 
+// 1 valid argument otherwise invalid
+
 #include "vsh.h"
+
+int			builtin_unset(char **args, char ***env)
+{
+	(void)args;
+	(void)env;
+	return (FUNCT_SUCCESS);
+}
 
 /* int		vsh_unsetenv_checkinput(char *variable)
 {
