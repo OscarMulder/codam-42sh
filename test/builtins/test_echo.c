@@ -6,7 +6,7 @@
 /*   By: mavan-he <mavan-he@student.codam.nl>         +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2019/04/28 16:14:29 by mavan-he       #+#    #+#                */
-/*   Updated: 2019/04/28 17:38:35 by mavan-he      ########   odam.nl         */
+/*   Updated: 2019/04/28 17:42:58 by mavan-he      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -31,6 +31,10 @@ int		test_echo(void)
 	builtin_echo(args);
 	args[0] = "echo";
 	args[1] = "-nE";
+	args[2] = NULL;
+	builtin_echo(args);
+	args[0] = "echo";
+	args[1] = "-nEa";
 	args[2] = NULL;
 	builtin_echo(args);
 	return (FUNCT_SUCCESS);
