@@ -152,9 +152,6 @@ int		parser_total_commands_from_line(char *line);
 void	builtin_exit(t_term *term_p);
 int		builtin_echo(char **args);
 void	echo_set_flags(char **args, char *flags, int *arg_i);
-int		builtin_cd(char **args, char **env);
-int		builtin_set(char **args, char **env);
-int		builtin_unset(char **args, char ***env);
 
 /*
 **---------------------------------tools----------------------------------------

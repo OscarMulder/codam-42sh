@@ -6,7 +6,7 @@
 #    By: jbrinksm <jbrinksm@student.codam.nl>         +#+                      #
 #                                                    +#+                       #
 #    Created: 2019/04/10 20:30:07 by jbrinksm       #+#    #+#                 #
-#    Updated: 2019/04/28 13:30:28 by mavan-he      ########   odam.nl          #
+#    Updated: 2019/04/28 16:02:57 by mavan-he      ########   odam.nl          #
 #                                                                              #
 # **************************************************************************** #
 
@@ -28,10 +28,7 @@ term_set_attributes term_reset_attributes term_free_struct \
 get_environ_cpy param_to_env \
 parser_lexer parser_split_line_to_commands \
 is_char_escaped update_quote_status \
-builtin_echo builtin_echo_set_flags \
-builtin_cd \
-builtin_set \
-builtin_unset
+builtin_echo builtin_echo_set_flags
 TESTS = test_main \
 test_prompt \
 test_get_environ_cpy test_param_to_env \
