@@ -6,7 +6,7 @@
 /*   By: jbrinksm <jbrinksm@student.codam.nl>         +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2019/03/28 10:21:20 by jbrinksm       #+#    #+#                */
-/*   Updated: 2019/04/28 17:15:21 by mavan-he      ########   odam.nl         */
+/*   Updated: 2019/04/28 18:17:38 by mavan-he      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -36,7 +36,7 @@ static int	echo_isspecial(char c)
 	return (FUNCT_FAILURE);
 }
 
-static int	echo_replacespecial(char c)
+static char	echo_replacespecial(char c)
 {
 	if (c == 't')
 		return ('\t');
