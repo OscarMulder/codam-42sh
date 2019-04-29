@@ -26,6 +26,9 @@
 # define CTRLD -1
 # define CR 0
 
+# define VAR_READONLY	(1<<0)
+# define VAR_INTERN		(1<<1)
+
 /*
 **------------------------------------echo--------------------------------------
 */
@@ -91,6 +94,12 @@ typedef struct	s_term
 	struct termios	*old_termios_p;
 	struct termios	*termios_p;
 }				t_term;
+
+typedef struct	s_env_var
+{
+	char		*data;
+	char		flags:2;
+}				t_env_var;
 
 /*
 **=================================prototypes===================================
