@@ -6,7 +6,7 @@
 /*   By: jbrinksm <jbrinksm@student.codam.nl>         +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2019/01/09 11:10:09 by omulder        #+#    #+#                */
-/*   Updated: 2019/04/29 19:58:04 by jbrinksm      ########   odam.nl         */
+/*   Updated: 2019/04/29 20:32:08 by jbrinksm      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,7 +18,7 @@
 # include <unistd.h>
 # include "ft_printf.h"
 
-typedef struct  t_list
+typedef struct  s_list
 {
     void            *content;
     size_t          content_size;

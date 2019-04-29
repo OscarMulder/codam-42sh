@@ -6,7 +6,7 @@
 /*   By: jbrinksm <jbrinksm@student.codam.nl>         +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2019/04/24 15:47:28 by jbrinksm       #+#    #+#                */
-/*   Updated: 2019/04/29 19:58:41 by jbrinksm      ########   odam.nl         */
+/*   Updated: 2019/04/29 20:34:27 by jbrinksm      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -32,8 +32,7 @@ int		parser_arg_len_from_command(char *command)
 	quote = '\0';
 	while (command[i] != '\0')
 	{
-		if (update_quote_status(command, i, &quote) == FUNCT_SUCCESS)
-			len--;
+		update_quote_status(command, i, &quote);
 		if (!quote && ft_isblank(command[i]) \
 		&& is_char_escaped(command, i) == 0)
 			break ;
@@ -51,8 +50,8 @@ char	*parser_strdup_arg_from_command(char *command)
 	int		len;
 	int		arg_index;
 
-	command_index = *start_arg;
-	len = parser_arg_len_from_command(command, start_arg);
+	command_index = 0;
+	len = parser_arg_len_from_command(command);
 	arg = ft_strnew(len);
 	if (arg == NULL)
 		return (NULL);
@@ -60,9 +59,6 @@ char	*parser_strdup_arg_from_command(char *command)
 	quote = '\0';
 	while (arg_index < len)
 	{
-		if (update_quote_status(command, command_index, &quote) \
-		== FUNCT_SUCCESS)
-			command_index++;
 		arg[arg_index] = command[command_index];
 		command_index++;
 		arg_index++;
@@ -76,36 +72,58 @@ int			is_char_inhibited(char *command, int i)
 
 	quote = '\0';
 	if (is_char_escaped(command, i) == FUNCT_SUCCESS)
-		return (FUNCT_FAILURE);
+		return (FUNCT_SUCCESS);
 	if (update_quote_status(command, i, &quote) == FUNCT_SUCCESS)
-		return (FUNCT_FAILURE);
+		return (FUNCT_SUCCESS);
+	return (FUNCT_FAILURE);
 }
 
-
-void		add_arg(char *command, int len, ARG_LIST **args)
+void		add_arg(char *command, ARG_LIST **args)
 {
-	char	*arg;
+	char		*arg;
+	ARG_LIST	*probe;
 
-	arg = ft_strndup(command, len);
+	arg = parser_strdup_arg_from_command(command);
 	if (arg == NULL)
 		return ;
+	if (*args == NULL)
+	{
+		*args = ft_lstnew(arg, ft_strlen(arg + 1));
+		if (*args == NULL)
+			free(arg);
+	}
+	else
+	{
+		probe = *args;
+		while (probe->next != NULL)
+			probe = probe->next;
+		probe->next = ft_lstnew(arg, ft_strlen(arg + 1));
+		if (probe->next == NULL)
+			free(arg);
+	}
 }
 
 ARG_LIST	*parser_split_command_to_args(char *command)
 {
 	int			i;
-	int			len;
 	ARG_LIST	*args;
+	int			len;
 
 	i = 0;
-	len = 0;
 	args = NULL;
 	while (command[i] != '\0')
 	{
 		while (is_char_inhibited(command, i) == 0 && ft_isblank(command[i]))
 			i++;
 		len = parser_arg_len_from_command(&command[i]);
-		add_arg(&command[i], len, &args);
-
+		add_arg(&command[i], &args);
+		i += len;
 	}
+	return (args);
 }
+
+/*
+**	Will have to rewrite parser_lexer where it doesn't remove quotes because of
+**	index issues. Otherwise it will be messy, and this way we can stay
+**	consistent when removing escape chars.
+*/
