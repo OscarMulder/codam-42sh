@@ -15,6 +15,9 @@
 #ifndef VSH_H
 # define VSH_H
 
+# define CMD_LIST t_list
+# define ARG_LIST t_list
+
 /*
 **==================================defines=====================================
 */
@@ -138,7 +141,7 @@ void	shell_display_prompt(void);
 **----------------------------------parser--------------------------------------
 */
 
-int		parser_lexer(char *line, char ***commands);
+int		parser_lexer(char *line, CMD_LIST **cmd_tab);
 
 char	**parser_split_line_to_commands(char *line);
 char	*parser_strdup_command_from_line(char *line, int *start_arg_index);

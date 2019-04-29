@@ -1,14 +1,19 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        ::::::::            */
-/*   parser_split_commands.c                            :+:    :+:            */
+/*   parser_split_line_to_commands.c                    :+:    :+:            */
 /*                                                     +:+                    */
 /*   By: jbrinksm <jbrinksm@student.codam.nl>         +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2019/04/23 14:03:51 by jbrinksm       #+#    #+#                */
-/*   Updated: 2019/04/24 15:12:39 by jbrinksm      ########   odam.nl         */
+/*   Updated: 2019/04/29 16:42:03 by jbrinksm      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
+
+/*
+**	NOTE: This code is nowhere near from perfect and any help and/or suggestions
+**	are appreciated.
+*/
 
 #include "vsh.h"
 
@@ -18,22 +23,22 @@
 
 int			parser_total_commands_from_line(char *line)
 {
-	int		index;
+	int		i;
 	int		total;
 	char	quote;
 
-	index = 0;
+	i = 0;
 	total = 1;
 	quote = '\0';
-	while (line[index] != '\0')
+	while (line[i] != '\0')
 	{
-		update_quote_status(line, index, &quote);
-		if (quote == '\0' && line[index] == ';')
+		update_quote_status(line, i, &quote);
+		if (quote == '\0' && line[i] == ';')
 		{
-			if (is_char_escaped(line, index) == FUNCT_FAILURE)
+			if (is_char_escaped(line, i) == FUNCT_FAILURE)
 				total++;
 		}
-		index++;
+		i++;
 	}
 	return (total);
 }
@@ -41,24 +46,24 @@ int			parser_total_commands_from_line(char *line)
 int			parser_command_len_from_line(char *line, int *start_arg_index)
 {
 	int		len;
-	int		index;
+	int		i;
 	char	quote;
 
 	len = 0;
-	index = *start_arg_index;
+	i = *start_arg_index;
 	quote = '\0';
-	while (line[index] != '\0')
+	while (line[i] != '\0')
 	{
-		if (update_quote_status(line, index, &quote) == FUNCT_SUCCESS)
+		if (update_quote_status(line, i, &quote) == FUNCT_SUCCESS)
 			len--;
-		if (quote == '\0' && line[index] == ';' && \
-		is_char_escaped(line, index) == FUNCT_FAILURE)
+		if (quote == '\0' && line[i] == ';' && \
+		is_char_escaped(line, i) == FUNCT_FAILURE)
 		{
-			*start_arg_index = index + 1;
+			*start_arg_index = i + 1;
 			break ;
 		}
 		len++;
-		index++;
+		i++;
 	}
 	return (len);
 }
