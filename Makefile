@@ -27,7 +27,7 @@ term_prepare term_is_valid term_init_struct term_get_attributes \
 term_set_attributes term_reset_attributes term_free_struct \
 get_environ_cpy param_to_env \
 parser_lexer parser_split_line_to_commands parser_split_command_to_args \
-is_char_escaped update_quote_status
+is_char_escaped update_quote_status \
 builtin_echo builtin_echo_set_flags
 TESTS = test_main \
 test_prompt \
