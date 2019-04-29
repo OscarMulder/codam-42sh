@@ -10,5 +10,6 @@ matrix:
       env: MAKE_TRAVIS=travis_linux
   allow_failures:
     - env: MAKE_TRAVIS=travis_linux
+  fast_finish: true
 
 script: make $MAKE_TRAVIS
