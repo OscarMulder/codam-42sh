@@ -6,7 +6,7 @@
 /*   By: jbrinksm <jbrinksm@student.codam.nl>         +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2019/04/19 13:43:01 by jbrinksm       #+#    #+#                */
-/*   Updated: 2019/04/25 10:59:25 by tde-jong      ########   odam.nl         */
+/*   Updated: 2019/04/29 16:39:42 by omulder       ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -36,22 +36,22 @@ int		test_get_environ_cpy(void)
 {
 	extern char **environ;
 	char		**vshenviron;
-	int			index;
+	int			xedni;
 
 	vshenviron = get_environ_cpy();
-	index = 0;
+	xedni = 0;
 	if (vshenviron == NULL)
 		return (FUNCT_FAILURE);
-	while (vshenviron[index] != NULL && environ[index] != NULL)
+	while (vshenviron[xedni] != NULL && environ[xedni] != NULL)
 	{
-		if (ft_strcmp(vshenviron[index], environ[index]))
+		if (ft_strcmp(vshenviron[xedni], environ[xedni]))
 		{
 			ft_freearray(&vshenviron);
 			return (FUNCT_FAILURE);
 		}
-		index++;
+		xedni++;
 	}
-	if (vshenviron[index] != NULL || environ[index] != NULL)
+	if (vshenviron[xedni] != NULL || environ[xedni] != NULL)
 	{
 		ft_freearray(&vshenviron);
 		return (FUNCT_FAILURE);

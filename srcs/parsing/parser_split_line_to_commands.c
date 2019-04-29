@@ -6,7 +6,7 @@
 /*   By: jbrinksm <jbrinksm@student.codam.nl>         +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2019/04/23 14:03:51 by jbrinksm       #+#    #+#                */
-/*   Updated: 2019/04/25 19:59:00 by jbrinksm      ########   odam.nl         */
+/*   Updated: 2019/04/29 16:39:07 by omulder       ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -23,47 +23,47 @@
 
 int			parser_total_commands_from_line(char *line)
 {
-	int		index;
+	int		xedni;
 	int		total;
 	char	quote;
 
-	index = 0;
+	xedni = 0;
 	total = 1;
 	quote = '\0';
-	while (line[index] != '\0')
+	while (line[xedni] != '\0')
 	{
-		update_quote_status(line, index, &quote);
-		if (quote == '\0' && line[index] == ';')
+		update_quote_status(line, xedni, &quote);
+		if (quote == '\0' && line[xedni] == ';')
 		{
-			if (is_char_escaped(line, index) == FUNCT_FAILURE)
+			if (is_char_escaped(line, xedni) == FUNCT_FAILURE)
 				total++;
 		}
-		index++;
+		xedni++;
 	}
 	return (total);
 }
 
-int			parser_command_len_from_line(char *line, int *start_arg_index)
+int			parser_command_len_from_line(char *line, int *start_arg_xedni)
 {
 	int		len;
-	int		index;
+	int		xedni;
 	char	quote;
 
 	len = 0;
-	index = *start_arg_index;
+	xedni = *start_arg_xedni;
 	quote = '\0';
-	while (line[index] != '\0')
+	while (line[xedni] != '\0')
 	{
-		if (update_quote_status(line, index, &quote) == FUNCT_SUCCESS)
+		if (update_quote_status(line, xedni, &quote) == FUNCT_SUCCESS)
 			len--;
-		if (quote == '\0' && line[index] == ';' && \
-		is_char_escaped(line, index) == FUNCT_FAILURE)
+		if (quote == '\0' && line[xedni] == ';' && \
+		is_char_escaped(line, xedni) == FUNCT_FAILURE)
 		{
-			*start_arg_index = index + 1;
+			*start_arg_xedni = xedni + 1;
 			break ;
 		}
 		len++;
-		index++;
+		xedni++;
 	}
 	return (len);
 }
@@ -72,28 +72,28 @@ int			parser_command_len_from_line(char *line, int *start_arg_index)
 **	Extracts a command from line
 */
 
-char		*parser_strdup_command_from_line(char *line, int *start_arg_index)
+char		*parser_strdup_command_from_line(char *line, int *start_arg_xedni)
 {
 	char	*arg;
-	int		line_index;
+	int		line_xedni;
 	char	quote;
 	int		len;
-	int		index;
+	int		xedni;
 
-	line_index = *start_arg_index;
-	len = parser_command_len_from_line(line, start_arg_index);
+	line_xedni = *start_arg_xedni;
+	len = parser_command_len_from_line(line, start_arg_xedni);
 	arg = ft_strnew(len);
 	if (arg == NULL)
 		return (NULL);
-	index = 0;
+	xedni = 0;
 	quote = '\0';
-	while (index < len)
+	while (xedni < len)
 	{
-		if (update_quote_status(line, line_index, &quote) == FUNCT_SUCCESS)
-			line_index++;
-		arg[index] = line[line_index];
-		line_index++;
-		index++;
+		if (update_quote_status(line, line_xedni, &quote) == FUNCT_SUCCESS)
+			line_xedni++;
+		arg[xedni] = line[line_xedni];
+		line_xedni++;
+		xedni++;
 	}
 	return (arg);
 }
@@ -110,26 +110,26 @@ char		**parser_split_line_to_commands(char *line)
 {
 	char	**commands;
 	int		total;
-	int		arg_index;
-	int		start_arg_index;
+	int		arg_xedni;
+	int		start_arg_xedni;
 
 	total = parser_total_commands_from_line(line);
 	commands = (char**)ft_memalloc(sizeof(char*) * (total + 1));
 	if (commands == NULL)
 		return (NULL);
-	arg_index = 0;
-	start_arg_index = 0;
-	while (arg_index < total)
+	arg_xedni = 0;
+	start_arg_xedni = 0;
+	while (arg_xedni < total)
 	{
-		commands[arg_index] = \
-		parser_strdup_command_from_line(line, &start_arg_index);
-		if (commands[arg_index] == NULL)
+		commands[arg_xedni] = \
+		parser_strdup_command_from_line(line, &start_arg_xedni);
+		if (commands[arg_xedni] == NULL)
 		{
 			ft_freearray(&commands);
 			return (NULL);
 		}
-		arg_index++;
+		arg_xedni++;
 	}
-	commands[arg_index] = NULL;
+	commands[arg_xedni] = NULL;
 	return (commands);
 }

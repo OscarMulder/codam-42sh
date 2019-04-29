@@ -6,7 +6,7 @@
 /*   By: jbrinksm <jbrinksm@student.codam.nl>         +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2019/04/23 15:29:24 by jbrinksm       #+#    #+#                */
-/*   Updated: 2019/04/24 20:26:08 by jbrinksm      ########   odam.nl         */
+/*   Updated: 2019/04/29 16:39:18 by omulder       ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -23,20 +23,20 @@ static int	test_parser_command_len_from_line_1(void)
 {
 	char	*line;
 	int		result;
-	int		index;
+	int		xedni;
 
-	index = 0;
+	xedni = 0;
 	line = ft_strdup("123456789");
 	if (line == NULL)
 		return (return_test(NULL, E_ALLOC));
-	result = parser_command_len_from_line(line, &index);
+	result = parser_command_len_from_line(line, &xedni);
 	if (result != 9)
 		return (return_test(line, FUNCT_FAILURE));
 	ft_strdel(&line);
 	line = ft_strdup("1;2");
 	if (line == NULL)
 		return (return_test(NULL, E_ALLOC));
-	result = parser_command_len_from_line(line, &index);
+	result = parser_command_len_from_line(line, &xedni);
 	if (result != 1)
 		return (return_test(line, FUNCT_FAILURE));
 	return (return_test(line, FUNCT_SUCCESS));
@@ -46,20 +46,20 @@ static int	test_parser_command_len_from_line_2(void)
 {
 	char	*line;
 	int		result;
-	int		index;
+	int		xedni;
 
-	index = 0;
+	xedni = 0;
 	line = ft_strdup("123456\\;9");
 	if (line == NULL)
 		return (return_test(NULL, E_ALLOC));
-	result = parser_command_len_from_line(line, &index);
+	result = parser_command_len_from_line(line, &xedni);
 	if (result != 9)
 		return (return_test(line, FUNCT_FAILURE));
 	ft_strdel(&line);
 	line = ft_strdup("1\\;\\;67");
 	if (line == NULL)
 		return (return_test(NULL, E_ALLOC));
-	result = parser_command_len_from_line(line, &index);
+	result = parser_command_len_from_line(line, &xedni);
 	if (result != 7)
 		return (return_test(line, FUNCT_FAILURE));
 	return (return_test(line, FUNCT_SUCCESS));
@@ -69,20 +69,20 @@ static int	test_parser_command_len_from_line_3(void)
 {
 	char	*line;
 	int		result;
-	int		index;
+	int		xedni;
 
-	index = 0;
+	xedni = 0;
 	line = ft_strdup("123\"5;7\"");
 	if (line == NULL)
 		return (return_test(NULL, E_ALLOC));
-	result = parser_command_len_from_line(line, &index);
+	result = parser_command_len_from_line(line, &xedni);
 	if (result != 6)
 		return (return_test(line, FUNCT_FAILURE));
 	ft_strdel(&line);
 	line = ft_strdup("\"2\"\\;;aaa");
 	if (line == NULL)
 		return (return_test(NULL, E_ALLOC));
-	result = parser_command_len_from_line(line, &index);
+	result = parser_command_len_from_line(line, &xedni);
 	if (result != 3)
 		return (return_test(line, FUNCT_FAILURE));
 	return (return_test(line, FUNCT_SUCCESS));

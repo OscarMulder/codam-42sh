@@ -6,7 +6,7 @@
 /*   By: jbrinksm <jbrinksm@student.codam.nl>         +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2019/04/23 15:29:24 by jbrinksm       #+#    #+#                */
-/*   Updated: 2019/04/25 17:33:50 by jbrinksm      ########   odam.nl         */
+/*   Updated: 2019/04/29 16:39:13 by omulder       ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,18 +15,18 @@
 static int	test_parser_arg_len_from_command_easy(void)
 {
 	int		result;
-	int		index;
+	int		xedni;
 
-	index = 0;
-	result = parser_arg_len_from_command("123456789", &index);
+	xedni = 0;
+	result = parser_arg_len_from_command("123456789", &xedni);
 	if (result != 9)
 		return (FUNCT_FAILURE);
-	index = 0;
-	result = parser_arg_len_from_command("123", &index);
+	xedni = 0;
+	result = parser_arg_len_from_command("123", &xedni);
 	if (result != 3)
 		return (FUNCT_FAILURE);
-	index = 0;
-	result = parser_arg_len_from_command("", &index);
+	xedni = 0;
+	result = parser_arg_len_from_command("", &xedni);
 	if (result != 0)
 		return (FUNCT_FAILURE);
 	return (FUNCT_SUCCESS);
@@ -35,22 +35,22 @@ static int	test_parser_arg_len_from_command_easy(void)
 static int	test_parser_arg_len_from_command_moderate(void)
 {
 	int		result;
-	int		index;
+	int		xedni;
 
-	index = 0;
-	result = parser_arg_len_from_command("12345 6789", &index);
+	xedni = 0;
+	result = parser_arg_len_from_command("12345 6789", &xedni);
 	if (result != 5)
 		return (FUNCT_FAILURE);
-	index = 0;
-	result = parser_arg_len_from_command("\"12345 6789\"", &index);
+	xedni = 0;
+	result = parser_arg_len_from_command("\"12345 6789\"", &xedni);
 	if (result != 10)
 		return (FUNCT_FAILURE);
-	index = 0;
-	result = parser_arg_len_from_command("123\t", &index);
+	xedni = 0;
+	result = parser_arg_len_from_command("123\t", &xedni);
 	if (result != 3)
 		return (FUNCT_FAILURE);
-	index = 0;
-	result = parser_arg_len_from_command("\t", &index);
+	xedni = 0;
+	result = parser_arg_len_from_command("\t", &xedni);
 	if (result != 0)
 		return (FUNCT_FAILURE);
 	return (FUNCT_SUCCESS);
@@ -59,18 +59,18 @@ static int	test_parser_arg_len_from_command_moderate(void)
 static int	test_parser_arg_len_from_command_hard(void)
 {
 	int		result;
-	int		index;
+	int		xedni;
 
-	index = 0;
-	result = parser_arg_len_from_command("\"1234\"5 6789\"", &index);
+	xedni = 0;
+	result = parser_arg_len_from_command("\"1234\"5 6789\"", &xedni);
 	if (result != 5)
 		return (FUNCT_FAILURE);
-	index = 0;
-	result = parser_arg_len_from_command("123\t", &index);
+	xedni = 0;
+	result = parser_arg_len_from_command("123\t", &xedni);
 	if (result != 3)
 		return (FUNCT_FAILURE);
-	index = 0;
-	result = parser_arg_len_from_command("\\ \t", &index);
+	xedni = 0;
+	result = parser_arg_len_from_command("\\ \t", &xedni);
 	if (result != 2)
 		return (FUNCT_FAILURE);
 	return (FUNCT_SUCCESS);
