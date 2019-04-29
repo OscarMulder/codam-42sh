@@ -6,7 +6,7 @@
 #    By: jbrinksm <jbrinksm@student.codam.nl>         +#+                      #
 #                                                    +#+                       #
 #    Created: 2019/04/10 20:30:07 by jbrinksm       #+#    #+#                 #
-#    Updated: 2019/04/29 15:01:30 by tde-jong      ########   odam.nl          #
+#    Updated: 2019/04/29 15:08:36 by tde-jong      ########   odam.nl          #
 #                                                                              #
 # **************************************************************************** #
 
@@ -96,7 +96,7 @@ test_coverage: $(TESTOBJECTS) $(OBJECTS)
 	@gcov $(SRCS)
 
 travis_run:
-	make && make test_norm && make test_coverage && bash <(curl -s https://codecov.io/bash)
+	@sh ${TRAVIS_BUILD_DIR}/test/travis.sh
 
 travis_linux:
 	make
