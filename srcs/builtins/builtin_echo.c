@@ -6,7 +6,7 @@
 /*   By: jbrinksm <jbrinksm@student.codam.nl>         +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2019/03/28 10:21:20 by jbrinksm       #+#    #+#                */
-/*   Updated: 2019/04/28 18:17:38 by mavan-he      ########   odam.nl         */
+/*   Updated: 2019/04/29 12:33:11 by mavan-he      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,23 +18,6 @@
 */
 
 #include "vsh.h"
-
-static int	echo_isspecial(char c)
-{
-	if (c == 't')
-		return (FUNCT_SUCCESS);
-	if (c == 'n')
-		return (FUNCT_SUCCESS);
-	if (c == 'v')
-		return (FUNCT_SUCCESS);
-	if (c == 'f')
-		return (FUNCT_SUCCESS);
-	if (c == 'r')
-		return (FUNCT_SUCCESS);
-	if (c == '\\')
-		return (FUNCT_SUCCESS);
-	return (FUNCT_FAILURE);
-}
 
 static char	echo_replacespecial(char c)
 {
@@ -55,17 +38,19 @@ static char	echo_replacespecial(char c)
 
 static void	echo_escape_chars(char *arg)
 {
-	int i;
-	int i_new;
+	int		i;
+	int		i_new;
+	char	replace_char;
 
 	i = 0;
 	i_new = 0;
 	while (arg[i] != '\0')
 	{
-		if (arg[i] == '\\' && echo_isspecial(arg[i + 1]))
+		replace_char = echo_replacespecial(arg[i]);
+		if (arg[i] == '\\' && replace_char != 0)
 		{
 			i++;
-			arg[i_new] = echo_replacespecial(arg[i]);
+			arg[i_new] = replace_char;
 		}
 		else
 			arg[i_new] = arg[i];
