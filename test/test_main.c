@@ -14,7 +14,7 @@
 
 static int		test_ret_fail(char *str)
 {
-	ft_printf("%s\n", str);
+	ft_eprintf("%s\n", str);
 	return (EXIT_FAILURE);
 }
 
@@ -54,5 +54,7 @@ int		main(void)
 		return (test_ret_fail("test_is_char_escaped failed!"));
 	if (test_update_quote_status() == FUNCT_FAILURE)
 		return (test_ret_fail("test_is_char_escaped failed!"));
+	if (test_echo() == FUNCT_FAILURE)
+		return (test_ret_fail("test_echo failed!"));
 	return (EXIT_SUCCESS);
 }
