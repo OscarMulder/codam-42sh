@@ -41,7 +41,7 @@ test_parser_total_commands_from_line \
 test_parser_total_args_from_command \
 test_parser_arg_len_from_command \
 test_parser_strdup_arg_from_command \
-test_is_char_escaped test_update_quote_status
+test_is_char_escaped test_update_quote_status \
 test_echo
 #test_parser_lexer
 
