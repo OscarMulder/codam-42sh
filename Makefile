@@ -6,7 +6,7 @@
 #    By: jbrinksm <jbrinksm@student.codam.nl>         +#+                      #
 #                                                    +#+                       #
 #    Created: 2019/04/10 20:30:07 by jbrinksm       #+#    #+#                 #
-#    Updated: 2019/04/30 20:07:31 by jbrinksm      ########   odam.nl          #
+#    Updated: 2019/04/30 21:06:50 by tde-jong      ########   odam.nl          #
 #                                                                              #
 # **************************************************************************** #
 
@@ -63,12 +63,6 @@ fclean: clean
 
 re: fclean all
 
-test: $(TESTOBJECTS) $(OBJECTS)
-	@make re
-	@make $(TESTOBJECTS)
-	@$(CC) $(FLAGS) $^ $(COVERAGE) $(INCLUDES) $(LIB) -o vsh_tests
-	@sh test/local_test.sh
-
 test_norm: fclean
 	@echo "[ + ] cloning norminette+"
 	@git clone https://github.com/thijsdejong/codam-norminette-plus ~/norminette+
@@ -78,17 +72,13 @@ test_norm: fclean
 $(TESTOBJECTS): $(TESTS)
 	@$(CC) $(FLAGS) $^ $(INCLUDES) -c
 
-test_coverage: $(TESTOBJECTS) $(OBJECTS)
+test: $(TESTOBJECTS) $(OBJECTS)
 	@make re
 	@make $(TESTOBJECTS)
-	@$(CC) $(FLAGS) $^ $(COVERAGE) $(INCLUDES) -o test_coverage $(LIB)
-	@./test_coverage
+	@$(CC) $(FLAGS) $^ $(COVERAGE) $(INCLUDES) $(LIB) -o vsh_tests
+	@./vsh_tests
+
+test_coverage: test
 	@gcov $(SRCS)
-
-travis_run:
-	@bash ${TRAVIS_BUILD_DIR}/test/travis.sh
-
-travis_linux:
-	make && make fclean && make test
 
 .PHONY: test_norm test_coverage all clean fclean re test $(TESTOBJECTS)
