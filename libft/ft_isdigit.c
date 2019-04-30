@@ -5,14 +5,12 @@
 /*                                                     +:+                    */
 /*   By: omulder <omulder@student.codam.nl>           +#+                     */
 /*                                                   +#+                      */
-/*   Created: 2019/01/10 11:53:34 by omulder       #+#    #+#                 */
-/*   Updated: 2019/01/10 11:53:36 by omulder       ########   odam.nl         */
+/*   Created: 2019/01/10 11:53:34 by omulder        #+#    #+#                */
+/*   Updated: 2019/04/30 10:06:29 by tde-jong      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
 int		ft_isdigit(int c)
 {
-	if (c >= '0' && c <= '9')
-		return (1);
-	return (0);
+	return (c >= '0' && c <= '9');
 }
