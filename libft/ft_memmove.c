@@ -6,7 +6,7 @@
 /*   By: omulder <omulder@student.codam.nl>           +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2019/01/10 16:03:08 by omulder        #+#    #+#                */
-/*   Updated: 2019/04/30 11:40:20 by tde-jong      ########   odam.nl         */
+/*   Updated: 2019/04/30 11:54:46 by tde-jong      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,10 +15,10 @@
 void	*ft_memmove(void *dst, const void *src, size_t len)
 {
 	unsigned char		*d;
-	const unsigned char	*s;
+	unsigned char		*s;
 
-	d = dst;
-	s = src;
+	d = (unsigned char*)dst;
+	s = (unsigned char*)src;
 	if (d == s)
 		return (dst);
 	if (d < s)
