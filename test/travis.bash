@@ -12,7 +12,7 @@ os=$1
 
 if [ $os == "macos" ]
 then
-	brew install snaipe/soft/criterion
+	HOMEBREW_NO_AUTO_UPDATE=1 brew install snaipe/soft/criterion
 	make test_norm
 	make test_coverage
 	bash <(curl -s https://codecov.io/bash)
