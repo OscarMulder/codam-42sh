@@ -6,10 +6,6 @@ matrix:
       osx_image: xcode8.3
       python: 2.7.10
       env: OS=macos
-      addons:
-      homebrew:
-        packages:
-        - criterion
     - os: linux
       env: OS=linux
   allow_failures:
