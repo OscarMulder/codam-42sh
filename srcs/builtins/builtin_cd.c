@@ -6,7 +6,7 @@
 /*   By: mavan-he <mavan-he@student.codam.nl>         +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2019/04/25 17:17:25 by mavan-he       #+#    #+#                */
-/*   Updated: 2019/04/30 12:44:43 by mavan-he      ########   odam.nl         */
+/*   Updated: 2019/04/30 15:12:33 by mavan-he      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -54,7 +54,7 @@
 #include "vsh.h"
 #include <sys/param.h>
 
-static int		cd_change_dir(char *path, int p)
+static int		cd_change_dir(char *path, char **env, int print)
 {
 	char *cwd;
 	char buf[MAXPATHLEN];
@@ -64,7 +64,7 @@ static int		cd_change_dir(char *path, int p)
 	// 	return (error_funct());
 	if (chdir(path) == 0)
 	{
-		if (p)
+		if (print)
 			ft_putendl(path);
 		env_setkeyval("OLDPWD", cwd);
 		cwd = getcwd(buf, MAXPATHLEN);
@@ -74,6 +74,7 @@ static int		cd_change_dir(char *path, int p)
 	}
 	else
 	{
+		// error function here instead
 		ft_putstr_fd("cd: ", 2);
 		if (access(path, F_OK) == -1)
 			ft_putstr_fd("no such file or directory: ", 2);
