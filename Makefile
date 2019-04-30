@@ -6,7 +6,7 @@
 #    By: jbrinksm <jbrinksm@student.codam.nl>         +#+                      #
 #                                                    +#+                       #
 #    Created: 2019/04/10 20:30:07 by jbrinksm       #+#    #+#                 #
-#    Updated: 2019/04/30 11:49:09 by tde-jong      ########   odam.nl          #
+#    Updated: 2019/04/30 12:07:13 by tde-jong      ########   odam.nl          #
 #                                                                              #
 # **************************************************************************** #
 
@@ -99,6 +99,6 @@ travis_run:
 	@bash ${TRAVIS_BUILD_DIR}/test/travis.sh
 
 travis_linux:
-	make && make fclean && make test
+	make test
 
 .PHONY: test_norm test_coverage all clean fclean re test $(TESTOBJECTS)
