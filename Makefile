@@ -6,7 +6,7 @@
 #    By: jbrinksm <jbrinksm@student.codam.nl>         +#+                      #
 #                                                    +#+                       #
 #    Created: 2019/04/10 20:30:07 by jbrinksm       #+#    #+#                 #
-#    Updated: 2019/04/30 12:07:13 by tde-jong      ########   odam.nl          #
+#    Updated: 2019/04/30 17:10:37 by mavan-he      ########   odam.nl          #
 #                                                                              #
 # **************************************************************************** #
 
@@ -19,19 +19,21 @@ LIBFT= ./libft/libft.a
 LIB = -L./libft/ -lft -ltermcap
 VPATH = ./test ./libft ./srcs ./srcs/builtins ./srcs/input_handling \
 ./srcs/parsing ./srcs/term_settings ./srcs/environment_handling ./srcs/shell \
-./srcs/tools ./test/parser ./test/tools ./test/builtins
+./srcs/tools ./test/parser ./test/tools ./test/builtins \
+./test/environment_handling
 SRCS = shell_start shell_prompt \
 builtin_exit \
 input_read \
 term_prepare term_is_valid term_init_struct term_get_attributes \
 term_set_attributes term_reset_attributes term_free_struct \
-get_environ_cpy param_to_env \
+get_environ_cpy env_get_value env_set_value env_join_name_value \
 parser_lexer parser_split_line_to_commands \
 is_char_escaped update_quote_status \
 builtin_echo builtin_echo_set_flags
 TESTS = test_main \
 test_prompt \
-test_get_environ_cpy test_param_to_env \
+test_get_environ_cpy test_env_get_value test_env_set_value \
+test_env_join_name_value \
 test_term_is_valid test_term_init_struct test_term_free_struct \
 test_term_get_attributes \
 test_parser_split_line_to_commands \

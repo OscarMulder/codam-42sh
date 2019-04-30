@@ -105,7 +105,9 @@ int		shell_start(void);
 */
 
 char	**get_environ_cpy(void);
-char	*param_to_env(char *parameter, char **vshenviron);
+char	*env_get_value(char *var_name, char **env);
+char	*env_join_name_value(char *name, char *value);
+int		env_set_value(char *var_name, char *value, char **env);
 char	**free_and_return_null(char ***vshenviron);
 
 /*
@@ -169,8 +171,10 @@ int		update_quote_status(char *line, int cur_index, char *quote);
 */
 
 int		test_get_environ_cpy(void);
-int		test_param_to_env(void);
+int		test_env_get_value(void);
 int		test_free_and_return_null(void);
+int		test_env_set_value(void);
+int		test_env_join_name_value(void);
 
 /*
 **--------------------------------term_testers----------------------------------

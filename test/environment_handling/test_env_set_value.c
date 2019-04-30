@@ -1,36 +1,29 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        ::::::::            */
-/*   test_param_to_env.c                                :+:    :+:            */
+/*   test_env_set_value.c                               :+:    :+:            */
 /*                                                     +:+                    */
-/*   By: jbrinksm <jbrinksm@student.codam.nl>         +#+                     */
+/*   By: mavan-he <mavan-he@student.codam.nl>         +#+                     */
 /*                                                   +#+                      */
-/*   Created: 2019/04/19 18:41:23 by jbrinksm       #+#    #+#                */
-/*   Updated: 2019/04/25 07:54:07 by tde-jong      ########   odam.nl         */
+/*   Created: 2019/04/30 16:39:13 by mavan-he       #+#    #+#                */
+/*   Updated: 2019/04/30 16:49:31 by mavan-he      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "vsh.h"
 
-int		test_param_to_env(void)
+int		test_env_set_value(void)
 {
 	char		**environ_cpy;
-	char		*buf;
+	char		*value;
 
 	environ_cpy = get_environ_cpy();
-	buf = param_to_env("PATH", environ_cpy);
-	if (buf == NULL)
+	if (env_set_value("PATH", "CHECK", environ_cpy) != 1)
 		return (FUNCT_FAILURE);
-	if (ft_strcmp(buf, getenv("PATH")))
-	{
-		ft_strdel(&buf);
+	if (env_set_value("fail", "CHECK", environ_cpy) != 0)
 		return (FUNCT_FAILURE);
-	}
-	buf = param_to_env("NO_EXIST", environ_cpy);
-	if (buf)
-	{
-		ft_strdel(&buf);
+	value = env_get_value("PATH", environ_cpy);
+	if (ft_strequ(value, "CHECK") == 0)
 		return (FUNCT_FAILURE);
-	}
 	return (FUNCT_SUCCESS);
 }

@@ -1,39 +1,36 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        ::::::::            */
-/*   term_is_valid.c                                    :+:    :+:            */
+/*   test_env_get_value.c                               :+:    :+:            */
 /*                                                     +:+                    */
 /*   By: jbrinksm <jbrinksm@student.codam.nl>         +#+                     */
 /*                                                   +#+                      */
-/*   Created: 2019/04/18 18:16:49 by jbrinksm       #+#    #+#                */
-/*   Updated: 2019/04/30 15:45:05 by mavan-he      ########   odam.nl         */
+/*   Created: 2019/04/19 18:41:23 by jbrinksm       #+#    #+#                */
+/*   Updated: 2019/04/30 17:12:18 by mavan-he      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "vsh.h"
 
-/*
-**	Checks whether the termcaps database can be found for the current env_var
-**	named 'TERM'.
-*/
-
-int		term_is_valid(char **vshenviron)
+int		test_env_get_value(void)
 {
-	char	*term_type;
-	int		ret;
+	char		**environ_cpy;
+	char		*buf;
 
-	term_type = env_get_value("TERM", vshenviron);
-	if (term_type == NULL)
+	environ_cpy = get_environ_cpy();
+	buf = env_get_value("PATH", environ_cpy);
+	if (buf == NULL)
+		return (FUNCT_FAILURE);
+	if (ft_strcmp(buf, getenv("PATH")))
 	{
-		ft_eprintf("Term env not set.\n");
+		ft_strdel(&buf);
 		return (FUNCT_FAILURE);
 	}
-	ret = tgetent(NULL, term_type);
-	if (ret == -1)
-		ft_eprintf("Terminfo database could not be found.\n");
-	if (ret == 0)
-		ft_eprintf("No such TERM entry in the database\n");
-	if (ret == -1 || ret == 0)
+	buf = env_get_value("NO_EXIST", environ_cpy);
+	if (buf)
+	{
+		ft_strdel(&buf);
 		return (FUNCT_FAILURE);
+	}
 	return (FUNCT_SUCCESS);
 }

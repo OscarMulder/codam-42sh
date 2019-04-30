@@ -6,7 +6,7 @@
 /*   By: jbrinksm <jbrinksm@student.codam.nl>         +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2019/04/19 13:43:01 by jbrinksm       #+#    #+#                */
-/*   Updated: 2019/04/25 10:59:25 by tde-jong      ########   odam.nl         */
+/*   Updated: 2019/04/30 17:11:56 by mavan-he      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -28,7 +28,7 @@ int		test_free_and_return_null(void)
 	if (free_and_return_null(&testenv) != NULL)
 		return (FUNCT_FAILURE);
 	if (testenv != NULL)
-    	return (FUNCT_FAILURE);
+		return (FUNCT_FAILURE);
 	return (FUNCT_SUCCESS);
 }
 
