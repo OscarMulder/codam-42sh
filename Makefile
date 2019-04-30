@@ -6,7 +6,7 @@
 #    By: jbrinksm <jbrinksm@student.codam.nl>         +#+                      #
 #                                                    +#+                       #
 #    Created: 2019/04/10 20:30:07 by jbrinksm       #+#    #+#                 #
-#    Updated: 2019/04/29 16:36:25 by tde-jong      ########   odam.nl          #
+#    Updated: 2019/04/30 20:07:31 by jbrinksm      ########   odam.nl          #
 #                                                                              #
 # **************************************************************************** #
 
@@ -14,9 +14,10 @@ NAME = vsh
 CC = gcc
 FLAGS = -Wall -Werror -Wextra
 COVERAGE = -coverage
-INCLUDES = -I./ -I./libft/ -I./includes -I../includes
+INCLUDES = -I./libft/ -I./includes -I../includes \
+-I$(HOME)/.brew/include
 LIBFT= ./libft/libft.a
-LIB = -L./libft/ -lft -ltermcap
+LIB = -L./libft/ -lft -ltermcap -L$(HOME)/.brew/lib -lcriterion
 VPATH = ./test ./libft ./srcs ./srcs/builtins ./srcs/input_handling \
 ./srcs/parsing ./srcs/term_settings ./srcs/environment_handling ./srcs/shell \
 ./srcs/tools ./test/parser ./test/tools ./test/builtins
@@ -29,18 +30,7 @@ get_environ_cpy param_to_env \
 parser_lexer parser_split_line_to_commands \
 is_char_escaped update_quote_status \
 builtin_echo builtin_echo_set_flags
-TESTS = test_main \
-test_prompt \
-test_get_environ_cpy test_param_to_env \
-test_term_is_valid test_term_init_struct test_term_free_struct \
-test_term_get_attributes \
-test_parser_split_line_to_commands \
-test_parser_strdup_command_from_line \
-test_parser_command_len_from_line \
-test_parser_total_commands_from_line \
-test_is_char_escaped test_update_quote_status \
-test_echo
-# test_parser_lexer
+TESTS = unit_test
 OBJECTS := $(SRCS:%=%.o)
 TESTOBJECTS := $(TESTS:%=%.o)
 SRCS := $(SRCS:%=%.c)
@@ -91,7 +81,7 @@ $(TESTOBJECTS): $(TESTS)
 test_coverage: $(TESTOBJECTS) $(OBJECTS)
 	@make re
 	@make $(TESTOBJECTS)
-	@$(CC) $(FLAGS) $^ $(COVERAGE) $(INCLUDES) $(LIB) -o test_coverage
+	@$(CC) $(FLAGS) $^ $(COVERAGE) $(INCLUDES) -o test_coverage $(LIB)
 	@./test_coverage
 	@gcov $(SRCS)
 
