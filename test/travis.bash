@@ -12,7 +12,6 @@ os=$1
 
 if [ $os == "macos" ]
 then
-	brew install criterion
 	make test_norm
 	make test_coverage
 	bash <(curl -s https://codecov.io/bash)
