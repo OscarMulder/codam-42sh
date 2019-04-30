@@ -6,13 +6,13 @@
 #    By: jbrinksm <jbrinksm@student.codam.nl>         +#+                      #
 #                                                    +#+                       #
 #    Created: 2019/01/09 11:10:43 by omulder        #+#    #+#                 #
-#    Updated: 2019/04/29 18:12:47 by mavan-he      ########   odam.nl          #
+#    Updated: 2019/04/30 11:49:25 by tde-jong      ########   odam.nl          #
 #                                                                              #
 # **************************************************************************** #
 
 NAME = libft.a
 CC = gcc
-FLAGS = -Wall -Werror -Wextra
+FLAGS = -Wall -Werror -Wextra -Wunreachable-code
 INCLUDES = -I./includes
 FILES = ft_atoi.c ft_itoa.c ft_memalloc.c ft_memdel.c ft_memmove.c \
 	ft_putstrarr.c ft_putstrarri.c ft_strdel.c ft_strdup.c ft_strjoin.c \
