@@ -6,7 +6,7 @@
 /*   By: omulder <omulder@student.codam.nl>           +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2019/01/11 21:44:34 by omulder        #+#    #+#                */
-/*   Updated: 2019/04/30 11:06:44 by tde-jong      ########   odam.nl         */
+/*   Updated: 2019/04/30 12:42:37 by tde-jong      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -31,9 +31,7 @@ int	ft_atoi(const char *str)
 	result = 0;
 	while (ft_isdigit(str[i]))
 	{
-		result = result + str[i] - '0';
-		if (ft_isdigit(str[i + 1]))
-			result = result * 10;
+		result = (result * 100) + (str[i] - '0');
 		i++;
 	}
 	return (result * sign);
