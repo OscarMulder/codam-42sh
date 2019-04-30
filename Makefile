@@ -6,13 +6,13 @@
 #    By: jbrinksm <jbrinksm@student.codam.nl>         +#+                      #
 #                                                    +#+                       #
 #    Created: 2019/04/10 20:30:07 by jbrinksm       #+#    #+#                 #
-#    Updated: 2019/04/30 21:06:50 by tde-jong      ########   odam.nl          #
+#    Updated: 2019/04/30 21:39:20 by tde-jong      ########   odam.nl          #
 #                                                                              #
 # **************************************************************************** #
 
 NAME = vsh
 CC = gcc
-FLAGS = -Wall -Werror -Wextra
+FLAGS = -Wall -Werror -Wextra -Wunreachable-code
 COVERAGE = -coverage
 INCLUDES = -I./libft/ -I./includes -I../includes \
 -I$(HOME)/.brew/include
