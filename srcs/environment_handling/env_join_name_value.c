@@ -6,21 +6,21 @@
 /*   By: mavan-he <mavan-he@student.codam.nl>         +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2019/04/30 16:00:15 by mavan-he       #+#    #+#                */
-/*   Updated: 2019/04/30 16:37:08 by mavan-he      ########   odam.nl         */
+/*   Updated: 2019/05/01 15:23:14 by rkuijper      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "vsh.h"
 
-char	*env_join_name_value(char *name, char *value)
+char	*env_join_key_value(char *var_key, char *var_value)
 {
-	char *str;
+	char *var_pair;
 
-	str = ft_strnew(ft_strlen(name) + ft_strlen(value) + 1);
-	if (str == NULL)
+	var_pair = ft_strnew(ft_strlen(var_key) + ft_strlen(var_value) + 1);
+	if (var_pair == NULL)
 		return (NULL);
-	ft_strcpy(str, name);
-	ft_strcat(str, "=");
-	ft_strcat(str, value);
-	return (str);
+	ft_strcpy(var_pair, var_key);
+	ft_strcat(var_pair, "=");
+	ft_strcat(var_pair, var_value);
+	return (var_pair);
 }
