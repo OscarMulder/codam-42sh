@@ -6,7 +6,7 @@
 /*   By: jbrinksm <jbrinksm@student.codam.nl>         +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2019/04/18 16:37:32 by omulder        #+#    #+#                */
-/*   Updated: 2019/04/30 17:04:10 by mavan-he      ########   odam.nl         */
+/*   Updated: 2019/05/01 15:31:43 by rkuijper      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -52,7 +52,7 @@ int		main(void)
 		return (test_ret_fail("test_echo failed!"));
 	if (test_env_set_value() == FUNCT_FAILURE)
 		return (test_ret_fail("test_env_set_value failed!"));
-	if (test_env_join_name_value() == FUNCT_FAILURE)
+	if (test_env_join_key_value() == FUNCT_FAILURE)
 		return (test_ret_fail("test_env_join_name_value failed!"));
 	return (EXIT_SUCCESS);
 }
