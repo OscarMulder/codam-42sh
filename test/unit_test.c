@@ -6,7 +6,7 @@
 /*   By: jbrinksm <jbrinksm@student.codam.nl>         +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2019/04/18 16:37:32 by omulder        #+#    #+#                */
-/*   Updated: 2019/05/01 21:05:25 by jbrinksm      ########   odam.nl         */
+/*   Updated: 2019/05/01 21:29:26 by jbrinksm      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -186,6 +186,7 @@ Test(parser_strdup_command_from_line, basic)
 
 	result = parser_strdup_command_from_line("simple;command;line", &index);
 	index = 0;
+	cr_assert(result != NULL);
 	cr_expect_str_eq(result, "simple");
 
 	/* Do I have to free? forked program should exit here */
@@ -199,6 +200,7 @@ Test(parser_strdup_command_from_line, moderate)
 
 	result = parser_strdup_command_from_line("more\\;complicated;line", &index);
 	index = 0;
+	cr_assert(result != NULL);
 	cr_expect_str_eq(result, "more\\;complicated");
 
 	/* Do I have to free? forked program should exit here */
@@ -212,6 +214,7 @@ Test(parser_strdup_command_from_line, quoted_command_seperator)
 
 	result = parser_strdup_command_from_line("\"quoted;command;line\"", &index);
 	index = 0;
+	cr_assert(result != NULL);
 	cr_expect_str_eq(result, "quoted;command;line");
 
 	/* Do I have to free? forked program should exit here */
