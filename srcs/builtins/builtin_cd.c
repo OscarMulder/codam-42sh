@@ -6,7 +6,7 @@
 /*   By: mavan-he <mavan-he@student.codam.nl>         +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2019/04/25 17:17:25 by mavan-he       #+#    #+#                */
-/*   Updated: 2019/05/01 15:16:59 by rkuijper      ########   odam.nl         */
+/*   Updated: 2019/05/02 10:21:19 by rkuijper      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,9 +15,6 @@
 **
 ** Are we going to handle -L -P -e ??
 ** -P always overrules -L
-** Arguments like `cd -P -L -P -L -P -L path/to/dir` are valid.
-** Arguments like `cd -LPPLLLPPLLLLLPPL path/to/dir` are also valid.
-** Arguments like `cd -P -L path/to/dir -P -L` are not.
 **
 ** usage: cd cd [-L|[-P [-e]] [directory]
 **
@@ -91,7 +88,7 @@ static int		cd_change_dir(char *path, char **env, char cd_flag, int print)
 		return (FUNCT_ERROR);
 	if (cd_flag & CD_OPT_LP) // Check if this works.
 	{
-		if (!lstat(path, &info))
+		if (lstat(path, &info))
 			return (FUNCT_ERROR);
 		if ((info.st_mode & S_IFMT) == S_IFLNK)
 		{
@@ -115,65 +112,38 @@ static int		cd_change_dir(char *path, char **env, char cd_flag, int print)
 }
 
 /*
-** @brief			Parses all -L and -P flags; returns on other non-valid flags.
+** @brief			Parses all -L and -P flags; returns on non-valid flags.
 ** @param args		Reference to the original builtin_cd args list.
 ** @param cd_flag	Reference to a character datatype used for option flagging.
 */
-static void	cd_parse_flags(char ***args, char *cd_flag)
+static int	cd_parse_flags(char ***args, char *cd_flag)
 {
 	int i;
 
+	*cd_flag = CD_OPT_LL;
 	while ((*args)[0] && (*args)[0][0] == '-')
 	{
 		i = 1;
+		if ((*args)[0][0] == '-' && !(*args)[0][1] ||
+			ft_strequ((*args)[0], "--"))
+			return (FUNCT_SUCCESS);
 		while ((*args)[0][i])
 		{
 			if ((*args)[0][i] == 'P')
-				(*cd_flag) |= CD_OPT_LP;
+				(*cd_flag) = CD_OPT_LP;
 			else if ((*args)[0][i] == 'L')
-				(*cd_flag) |= CD_OPT_LL;
+				(*cd_flag) = CD_OPT_LL;
 			else
-				return ;
+			{
+				ft_dprintf(2, "minishell: cd: -%c: invalid option\n\
+				cd: usage: cd [-L|-P] [dir]\n", (*args)[0][i]);
+				return (FUNCT_FAILURE);
+			}
 			i++;
 		}
 		(*args)++;
 	}
-}
-
-static int	cd_multi_arg(char **args, char **environ, char cd_flag)
-{
-	int		result;
-	char	*cwd;
-	char	*tmp;
-	char	buf[MAXPATHLEN];
-
-	// If there's no second parameter.
-	if (!args[1])
-		return (FUNCT_FAILURE);
-
-	// If there's too many arguments.
-	if (args[2])
-	{
-		ft_putendl_fd("cd: too many arguments", 2);
-		return (FUNCT_ERROR);
-	}
-
-	cwd = getcwd(buf, MAXPATHLEN);
-	// if (!cwd)
-	tmp = ft_strreplace(cwd, args[0], args[1]);
-
-	// If tmp was not created or no string substitution took place.
-	if (!tmp)
-	{
-		ft_dprintf(2, "cd: string not in pwd: %s\n", args[0]);
-		free(tmp);
-		return (FUNCT_ERROR);
-	}
-
-	// Change directories with the newly created string.
-	result = cd_change_dir(tmp, environ, cd_flag, 1);
-	free(tmp);
-	return (result);
+	return (FUNCT_SUCCESS);
 }
 
 /*
@@ -193,22 +163,19 @@ int			builtin_cd(char **args, char **env)
 	if (!home)
 		home = "/";
 
-	// Parse cd flags. -L flag on by default.
-	cd_flag = 0 | CD_OPT_LL;
-	cd_parse_flags(&args, &cd_flag);
+	// The flag parse loop stops either when an invalid option is encountered, or when there are no more parameters starting with '-'.
+	if (!cd_parse_flags(&args, &cd_flag))
+		return (FUNCT_ERROR);
+
+	// No multiple arguments need to be parsed!
+	// First argument after flag parsing is used as a path to cd.
 
 	// cd home dir if no additional arguments.
 	if (!args[0])
-		return (cd_change_dir(home, env, cd_flag, 0));
-		
-	// Parse two cd arguments if there are any.
-	result = cd_multi_arg(args, env, cd_flag);
-	if (result)
-		return (result);
-	
+		return (cd_change_dir(home, env, cd_flag, 0));	
 	if (ft_strequ(args[0], "--")) // cd home dir.
 		return (cd_change_dir(home, env, cd_flag, 0));
-	else if (args[0][0] == '-' && !args[0][1]) // cd last accessed directory.
+	if (args[0][0] == '-' && !args[0][1]) // cd last accessed directory.
 		return (cd_change_dir(env_get_value("OLDPWD=", env), env, cd_flag, 1));
 		
 	// If all 'special' cd tests fail, try to cd the given argument.
