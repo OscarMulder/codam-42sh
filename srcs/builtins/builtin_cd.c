@@ -6,7 +6,7 @@
 /*   By: mavan-he <mavan-he@student.codam.nl>         +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2019/04/25 17:17:25 by mavan-he       #+#    #+#                */
-/*   Updated: 2019/05/02 11:11:51 by rkuijper      ########   odam.nl         */
+/*   Updated: 2019/05/02 13:14:34 by rkuijper      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -20,23 +20,25 @@
 **
 ** TODO:
 **	- Handling -L and -P flags when changing dirs. - (Semi done: untested).
+**	- Parsing -L and -P flags correctly.
 **
 ** DONE:
-**	- Handling multiple arguments.
-**	- Parsing -L and -P flags correctly.
-**	- When HOME env variable is not present, change default home to `/`.
+**	- Handling multiple arguments. <- DEPRECATED
+**	- When HOME env variable is not present, change default home to `/`. <- DEPRECATED
 **	- Changing to home dir when no args are given.
 **
 ** - NO ARGS:
 ** 	Change to HOME
 ** - DISPLAY DIRECTORY:
-** 	If CDPATH is used or - is the first arg. Write path to stdout if chdir was succesful.
+** 	If CDPATH is used or - is the first arg.
+**	Write path to stdout if chdir was succesful.
 ** - CD -:
 ** 	cd to oldpwd
 ** - MORE THAN ONE ARG:
 ** 	Any additional arguments following directory are ignored.
 ** - SHELL VAR CDPATH:
-** 	If CDPATH exists, search for directory in CDAPTH (only if directory does not start with a /)
+** 	If CDPATH exists, search for directory in CDAPTH
+**	(only if directory does not start with a /)
 ** - FLAG P:
 ** 	Do not follow symbolic links
 ** - RETURN:
@@ -48,14 +50,18 @@
 ** before processing an instance of ‘..’ in directory.
 **
 ** By default, or when the -L option is supplied,
-** symbolic links in directory are resolved after cd processes an instance of ‘..’ in directory.
+** symbolic links in directory are resolved after cd processes
+** an instance of ‘..’ in directory.
 **
 ** If ‘..’ appears in directory,
-** it is processed by removing the immediately preceding pathname component,
+** it is processed by removing the immediately preceding
+** pathname component,
 ** back to a slash or the beginning of directory.
 **
-** If the -e option is supplied with -P and the current working directory
-** cannot be successfully determined after a successful directory change,
+** If the -e option is supplied with -P and the current
+** working directory
+** cannot be successfully determined after a successful
+** directory change,
 ** cd will return an unsuccessful status.
 */
 
@@ -109,16 +115,12 @@ static int		cd_change_dir(char *path, char **env, char cd_flag, int print)
 	return (FUNCT_SUCCESS);
 }
 
-/*
-** @brief			Parses all -L and -P flags; returns on non-valid flags.
-** @param args		Reference to the original builtin_cd args list.
-** @param cd_flag	Reference to a character datatype used for option flagging.
-*/
 static int	cd_parse_flags(char ***args, char *cd_flag)
 {
 	int i;
 
-	*cd_flag = CD_OPT_LL;
+	// PROCESS SPACES CORRECTLY!
+
 	while ((*args)[0] && (*args)[0][0] == '-')
 	{
 		i = 1;
@@ -144,30 +146,17 @@ static int	cd_parse_flags(char ***args, char *cd_flag)
 	return (FUNCT_SUCCESS);
 }
 
-/*
-** @brief		Builtin cd functionality with flags and extern environment variables.
-** @param args 	Arguments for the builtin-cd functionality (split command).
-** @param env	Environment/extern variables of the current shell instance.
-** @return		Returns FUNCT_SUCCESS or FUNCT_ERROR depending on process.
-*/
 int			builtin_cd(char **args, char **env)
 {
 	int		result;
 	char	cd_flag;
 	char	*home;
 
-	args++; // Get rid of the preliminary cd arg, we don't need that.
+	args++;
+	cd_flag = CD_OPT_LL;
 	home = var_get_value("HOME=", env);
-
-	// The flag parse loop stops either when an invalid option is encountered,
-	// or when a directory reference is encountered.
 	if (!cd_parse_flags(&args, &cd_flag))
 		return (FUNCT_ERROR);
-
-	// No multiple arguments need to be parsed!
-	// First argument after flag parsing is used as a path to cd.
-
-	// cd home dir if no additional arguments.
 	if (!args[0] || ft_strequ(args[0], "--"))
 	{
 		if (!home)
@@ -175,10 +164,9 @@ int			builtin_cd(char **args, char **env)
 			ft_putendl_fd("42sh: cd: HOME not set", 2);
 			return (FUNCT_ERROR);
 		}
-		return (cd_change_dir(home, env, cd_flag, 0));	
+		return (cd_change_dir(home, env, cd_flag, 0));
 	}
-	if (args[0][0] == '-' && !args[0][1]) // cd last accessed directory.
-		return (cd_change_dir(var_get_value("OLDPWD=", env), env, cd_flag, 1));		
-	// If all 'special' cd tests fail, try to cd the given argument.
+	if (args[0][0] == '-' && !args[0][1])
+		return (cd_change_dir(var_get_value("OLDPWD=", env), env, cd_flag, 1));
 	return (cd_change_dir(args[0], env, cd_flag, 0));
 }
