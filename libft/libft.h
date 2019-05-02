@@ -6,7 +6,7 @@
 /*   By: jbrinksm <jbrinksm@student.codam.nl>         +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2019/01/09 11:10:09 by omulder        #+#    #+#                */
-/*   Updated: 2019/04/29 20:32:08 by jbrinksm      ########   odam.nl         */
+/*   Updated: 2019/05/02 16:49:00 by jbrinksm      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -35,6 +35,7 @@ int				ft_atoi(const char *str);
 size_t			ft_strlen(const char *s);
 void			*ft_memalloc(size_t size);
 void			*ft_memmove(void *dst, const void *src, size_t len);
+void			*ft_memset(void *b, int c, size_t len);
 void			ft_memdel(void **as);
 void			ft_putstrarr(char **arr);
 void			ft_putstrarri(char **arr);
@@ -48,6 +49,7 @@ void			ft_putstr(char const *s);
 void			ft_putnbr(int n);
 char			*ft_strcat(char *s1, const char *s2);
 char			*ft_strcpy(char *dst, const char *src);
+char			*ft_strncpy(char *dst, const char *src, size_t len);
 char			*ft_strstr(const char *haystack, const char *needle);
 void			ft_putchar(unsigned int c);
 void			ft_bzero(void *s, size_t n);
@@ -63,5 +65,10 @@ t_list	        *ft_lstnew(void *content, size_t content_size);
 void	        ft_lstadd(t_list **alst, t_list *new);
 void	        ft_lstaddback(t_list *alst, t_list *new);
 char	        *ft_strndup(const char *s1, size_t n);
+int				ft_strequ(char const *s1, char const *s2);
+void			ft_putchar_fd(char c, int fd);
+void			ft_putstr_fd(char const *s, int fd);
+void			ft_putendl_fd(char const *s, int fd);
+void			ft_putnbr_fd(int n, int fd);
 
 #endif

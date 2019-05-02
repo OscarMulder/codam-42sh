@@ -1,19 +1,28 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        ::::::::            */
-/*   test_prompt.c                                      :+:    :+:            */
+/*   ft_memset.c                                        :+:    :+:            */
 /*                                                     +:+                    */
-/*   By: jbrinksm <jbrinksm@student.codam.nl>         +#+                     */
+/*   By: tde-jong <tde-jong@student.codam.nl>         +#+                     */
 /*                                                   +#+                      */
-/*   Created: 2019/04/19 19:08:33 by jbrinksm       #+#    #+#                */
-/*   Updated: 2019/04/19 19:08:47 by jbrinksm      ########   odam.nl         */
+/*   Created: 2019/01/09 14:14:16 by tde-jong       #+#    #+#                */
+/*   Updated: 2019/04/30 10:31:35 by tde-jong      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "vsh.h"
+#include "libft.h"
 
-int		test_prompt(void)
+void	*ft_memset(void *b, int c, size_t len)
 {
-	shell_display_prompt();
-	return (FUNCT_SUCCESS);
+	size_t			i;
+	unsigned char	*d;
+
+	d = b;
+	i = 0;
+	while (i < len)
+	{
+		d[i] = (unsigned char)c;
+		i++;
+	}
+	return ((void *)b);
 }

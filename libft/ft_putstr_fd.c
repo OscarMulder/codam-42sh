@@ -1,24 +1,20 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        ::::::::            */
-/*   test_term_free_struct.c                            :+:    :+:            */
+/*   ft_putstr_fd.c                                     :+:    :+:            */
 /*                                                     +:+                    */
-/*   By: jbrinksm <jbrinksm@student.codam.nl>         +#+                     */
+/*   By: mavan-he <mavan-he@student.codam.nl>         +#+                     */
 /*                                                   +#+                      */
-/*   Created: 2019/04/19 19:13:07 by jbrinksm       #+#    #+#                */
-/*   Updated: 2019/04/19 19:21:40 by jbrinksm      ########   odam.nl         */
+/*   Created: 2019/01/12 16:51:48 by mavan-he       #+#    #+#                */
+/*   Updated: 2019/04/30 13:51:22 by mavan-he      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "vsh.h"
+#include "libft.h"
 
-int		test_term_free_struct(void)
+void	ft_putstr_fd(char const *s, int fd)
 {
-	t_term	*term_p;
-
-	term_p = term_init_struct();
-	term_free_struct(&term_p);
-	if (term_p != NULL)
-		return (FUNCT_FAILURE);
-	return (FUNCT_SUCCESS);
+	if (s == NULL)
+		return ;
+	write(fd, s, ft_strlen(s));
 }

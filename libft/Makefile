@@ -6,13 +6,13 @@
 #    By: jbrinksm <jbrinksm@student.codam.nl>         +#+                      #
 #                                                    +#+                       #
 #    Created: 2019/01/09 11:10:43 by omulder        #+#    #+#                 #
-#    Updated: 2019/04/29 19:57:58 by jbrinksm      ########   odam.nl          #
+#    Updated: 2019/05/02 16:49:35 by jbrinksm      ########   odam.nl          #
 #                                                                              #
 # **************************************************************************** #
 
 NAME = libft.a
 CC = gcc
-FLAGS = -Wall -Werror -Wextra
+FLAGS = -Wall -Werror -Wextra -Wunreachable-code
 INCLUDES = -I./includes
 FILES = ft_atoi.c ft_itoa.c ft_memalloc.c ft_memdel.c ft_memmove.c \
 	ft_putstrarr.c ft_putstrarri.c ft_strdel.c ft_strdup.c ft_strjoin.c \
@@ -20,7 +20,9 @@ FILES = ft_atoi.c ft_itoa.c ft_memalloc.c ft_memdel.c ft_memmove.c \
 	ft_isspace.c ft_intlen.c ft_memcpy.c ft_putendl.c ft_putstr.c ft_putnbr.c \
 	ft_strcpy.c ft_strcat.c ft_strstr.c ft_putchar.c ft_bzero.c ft_isblank.c \
 	ft_strjoinfree.c ft_strcmp.c ft_isprint.c ft_freearray.c ft_arraylen.c \
-	ft_strcdup.c ft_strncmp.c ft_lstnew.c ft_strndup.c
+	ft_strcdup.c ft_strncmp.c ft_lstnew.c ft_strndup.c \
+	ft_strequ.c ft_strncpy.c ft_memset.c \
+	ft_putchar_fd.c ft_putstr_fd.c ft_putendl_fd.c ft_putnbr_fd.c
 OBJECTS = $(FILES:.c=.o)
 
 all: $(OBJECTS) $(NAME)
