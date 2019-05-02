@@ -38,6 +38,13 @@
 # define OPT_N		(1<<2)
 
 /*
+**-------------------------------------cd---------------------------------------
+*/
+
+# define CD_OPT_LL	0
+# define CD_OPT_LP	1
+
+/*
 **===============================personal headers===============================
 */
 
@@ -160,6 +167,7 @@ int		parser_total_commands_from_line(char *line);
 
 void	builtin_exit(t_term *term_p);
 int		builtin_echo(char **args);
+int		builtin_cd(char **args, char **env);
 char	echo_set_flags(char **args, int *arg_i);
 
 /*
