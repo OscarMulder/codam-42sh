@@ -6,7 +6,7 @@
 #    By: jbrinksm <jbrinksm@student.codam.nl>         +#+                      #
 #                                                    +#+                       #
 #    Created: 2019/04/10 20:30:07 by jbrinksm       #+#    #+#                 #
-#    Updated: 2019/05/02 10:27:03 by rkuijper      ########   odam.nl          #
+#    Updated: 2019/05/02 11:48:39 by jbrinksm      ########   odam.nl          #
 #                                                                              #
 # **************************************************************************** #
 
@@ -14,9 +14,10 @@ NAME = vsh
 CC = gcc
 FLAGS = -Wall -Werror -Wextra -Wunreachable-code
 COVERAGE = -coverage
-INCLUDES = -I./ -I./libft/ -I./includes -I../includes
+INCLUDES = -I./libft/ -I./includes -I../includes \
+-I$(HOME)/.brew/include
 LIBFT= ./libft/libft.a
-LIB = -L./libft/ -lft -ltermcap
+LIB = -L./libft/ -lft -ltermcap -L$(HOME)/.brew/lib -lcriterion
 VPATH = ./test ./libft ./srcs ./srcs/builtins ./srcs/input_handling \
 ./srcs/parsing ./srcs/term_settings ./srcs/environment_handling ./srcs/shell \
 ./srcs/tools ./test/parser ./test/tools ./test/builtins \
@@ -30,19 +31,7 @@ get_environ_cpy var_get_value var_set_value var_join_key_value \
 parser_lexer parser_split_line_to_commands \
 is_char_escaped update_quote_status \
 builtin_echo builtin_echo_set_flags
-TESTS = test_main \
-test_prompt \
-test_get_environ_cpy test_var_get_value test_var_set_value \
-test_var_join_key_value \
-test_term_is_valid test_term_init_struct test_term_free_struct \
-test_term_get_attributes \
-test_parser_split_line_to_commands \
-test_parser_strdup_command_from_line \
-test_parser_command_len_from_line \
-test_parser_total_commands_from_line \
-test_is_char_escaped test_update_quote_status \
-test_echo
-# test_parser_lexer
+TESTS = unit_test
 OBJECTS := $(SRCS:%=%.o)
 TESTOBJECTS := $(TESTS:%=%.o)
 SRCS := $(SRCS:%=%.c)
@@ -75,12 +64,6 @@ fclean: clean
 
 re: fclean all
 
-test: $(TESTOBJECTS) $(OBJECTS)
-	@make re
-	@make $(TESTOBJECTS)
-	@$(CC) $(FLAGS) $^ $(COVERAGE) $(INCLUDES) $(LIB) -o vsh_tests
-	@sh test/local_test.sh
-
 test_norm: fclean
 	@echo "[ + ] cloning norminette+"
 	@git clone https://github.com/thijsdejong/codam-norminette-plus ~/norminette+
@@ -90,17 +73,13 @@ test_norm: fclean
 $(TESTOBJECTS): $(TESTS)
 	@$(CC) $(FLAGS) $^ $(INCLUDES) -c
 
-test_coverage: $(TESTOBJECTS) $(OBJECTS)
+test: $(TESTOBJECTS) $(OBJECTS)
 	@make re
 	@make $(TESTOBJECTS)
-	@$(CC) $(FLAGS) $^ $(COVERAGE) $(INCLUDES) $(LIB) -o test_coverage
-	@./test_coverage
+	@$(CC) $(FLAGS) $^ $(COVERAGE) $(INCLUDES) $(LIB) -o vsh_tests
+	@./vsh_tests
+
+test_coverage: test
 	@gcov $(SRCS)
-
-travis_run:
-	@bash ${TRAVIS_BUILD_DIR}/test/travis.sh
-
-travis_linux:
-	make test
 
 .PHONY: test_norm test_coverage all clean fclean re test $(TESTOBJECTS)
