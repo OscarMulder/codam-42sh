@@ -1,12 +1,12 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        ::::::::            */
-/*   parser_split_commands.c                            :+:    :+:            */
+/*   parser_split_line_to_commands.c                    :+:    :+:            */
 /*                                                     +:+                    */
 /*   By: jbrinksm <jbrinksm@student.codam.nl>         +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2019/04/23 14:03:51 by jbrinksm       #+#    #+#                */
-/*   Updated: 2019/04/24 15:12:39 by jbrinksm      ########   odam.nl         */
+/*   Updated: 2019/05/02 10:41:13 by jbrinksm      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -77,9 +77,13 @@ char		*parser_strdup_command_from_line(char *line, int *start_arg_index)
 
 	line_index = *start_arg_index;
 	len = parser_command_len_from_line(line, start_arg_index);
+	ft_printf("length >%i<", len);
 	arg = ft_strnew(len);
 	if (arg == NULL)
+	{
+		ft_printf("BAD\n");
 		return (NULL);
+	}
 	index = 0;
 	quote = '\0';
 	while (index < len)
@@ -90,6 +94,7 @@ char		*parser_strdup_command_from_line(char *line, int *start_arg_index)
 		line_index++;
 		index++;
 	}
+	ft_printf("GOOD\n");
 	return (arg);
 }
 
