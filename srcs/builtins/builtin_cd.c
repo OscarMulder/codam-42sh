@@ -6,7 +6,7 @@
 /*   By: mavan-he <mavan-he@student.codam.nl>         +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2019/04/25 17:17:25 by mavan-he       #+#    #+#                */
-/*   Updated: 2019/05/02 14:01:36 by mavan-he      ########   odam.nl         */
+/*   Updated: 2019/05/02 14:08:46 by rkuijper      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -36,6 +36,7 @@
 ** ERRORS
 ** - When OLDPWD is not set
 ** - When HOME is not set
+** - When cwd doesn't return correctly.
 **
 */
 
@@ -64,7 +65,7 @@ static int		cd_change_dir(char *path, char **env, char cd_flag, int print)
 	char		link_buf[MAXPATHLEN];
 
 	cwd = getcwd(buf, MAXPATHLEN);
-	if (!cwd) // WHAT ERROR?
+	if (!cwd)
 		return (FUNCT_ERROR);
 	if (cd_flag & CD_OPT_LP) // Check if this works.
 	{
@@ -80,7 +81,7 @@ static int		cd_change_dir(char *path, char **env, char cd_flag, int print)
 			ft_putendl(path);
 		var_set_value("OLDPWD", cwd, env);
 		cwd = getcwd(buf, MAXPATHLEN);
-		if (!cwd) // WHAT ERROR?
+		if (!cwd)
 			return (FUNCT_ERROR);
 		var_set_value("PWD", cwd, env);
 	}
@@ -93,12 +94,10 @@ static int	cd_parse_flags(char ***args, char *cd_flag)
 {
 	int i;
 
-	// PROCESS SPACES CORRECTLY!
-
 	while ((*args)[0] && (*args)[0][0] == '-')
 	{
 		i = 1;
-		if ((*args)[0][0] == '-' && !(*args)[0][1] ||
+		if (((*args)[0][0] == '-' && !(*args)[0][1]) ||
 			ft_strequ((*args)[0], "--"))
 			return (FUNCT_SUCCESS);
 		while ((*args)[0][i])
@@ -122,7 +121,6 @@ static int	cd_parse_flags(char ***args, char *cd_flag)
 
 int			builtin_cd(char **args, char **env)
 {
-	int		result;
 	char	cd_flag;
 	char	*home;
 
