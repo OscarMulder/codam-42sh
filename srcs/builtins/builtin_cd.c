@@ -6,63 +6,37 @@
 /*   By: mavan-he <mavan-he@student.codam.nl>         +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2019/04/25 17:17:25 by mavan-he       #+#    #+#                */
-/*   Updated: 2019/05/02 13:14:34 by rkuijper      ########   odam.nl         */
+/*   Updated: 2019/05/02 14:01:36 by mavan-he      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
 /*
-** WORK IN PROGRESS
-**
-** Are we going to handle -L -P -e ??
-** -P always overrules -L
-**
-** usage: cd cd [-L|[-P [-e]] [directory]
+** cd: usage: cd [-L|-P] [dir]
 **
 ** TODO:
 **	- Handling -L and -P flags when changing dirs. - (Semi done: untested).
 **	- Parsing -L and -P flags correctly.
 **
-** DONE:
-**	- Handling multiple arguments. <- DEPRECATED
-**	- When HOME env variable is not present, change default home to `/`. <- DEPRECATED
-**	- Changing to home dir when no args are given.
-**
+** FUNCTIONALITY:
 ** - NO ARGS:
-** 	Change to HOME
-** - DISPLAY DIRECTORY:
-** 	If CDPATH is used or - is the first arg.
-**	Write path to stdout if chdir was succesful.
+** 	cd to HOME
 ** - CD -:
-** 	cd to oldpwd
-** - MORE THAN ONE ARG:
+** 	cd to OLDPWD
+** - CD --:
+** 	cd to HOME
+** - DISPLAY DIRECTORY:
+**	Only when cd -: Write path to stdout if chdir was succesful.
+** - MORE THAN ONE DIR:
 ** 	Any additional arguments following directory are ignored.
-** - SHELL VAR CDPATH:
-** 	If CDPATH exists, search for directory in CDAPTH
-**	(only if directory does not start with a /)
 ** - FLAG P:
 ** 	Do not follow symbolic links
 ** - RETURN:
 ** 	0 on success, else -1
 **
+** ERRORS
+** - When OLDPWD is not set
+** - When HOME is not set
 **
-** The -P option means to not follow symbolic links:
-** symbolic links are resolved while cd is traversing directory and
-** before processing an instance of ‘..’ in directory.
-**
-** By default, or when the -L option is supplied,
-** symbolic links in directory are resolved after cd processes
-** an instance of ‘..’ in directory.
-**
-** If ‘..’ appears in directory,
-** it is processed by removing the immediately preceding
-** pathname component,
-** back to a slash or the beginning of directory.
-**
-** If the -e option is supplied with -P and the current
-** working directory
-** cannot be successfully determined after a successful
-** directory change,
-** cd will return an unsuccessful status.
 */
 
 #include "vsh.h"
