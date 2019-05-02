@@ -6,7 +6,7 @@
 /*   By: mavan-he <mavan-he@student.codam.nl>         +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2019/04/25 17:17:25 by mavan-he       #+#    #+#                */
-/*   Updated: 2019/05/02 10:21:19 by rkuijper      ########   odam.nl         */
+/*   Updated: 2019/05/02 11:11:51 by rkuijper      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -84,13 +84,11 @@ static int		cd_change_dir(char *path, char **env, char cd_flag, int print)
 	char		link_buf[MAXPATHLEN];
 
 	cwd = getcwd(buf, MAXPATHLEN);
-	if (!cwd)
+	if (!cwd) // WHAT ERROR?
 		return (FUNCT_ERROR);
 	if (cd_flag & CD_OPT_LP) // Check if this works.
 	{
-		if (lstat(path, &info))
-			return (FUNCT_ERROR);
-		if ((info.st_mode & S_IFMT) == S_IFLNK)
+		if (!lstat(path, &info) && (info.st_mode & S_IFMT) == S_IFLNK)
 		{
 			link_buf[readlink(path, buf, MAXPATHLEN)] = '\0';
 			path =  link_buf;
@@ -100,11 +98,11 @@ static int		cd_change_dir(char *path, char **env, char cd_flag, int print)
 	{
 		if (print)
 			ft_putendl(path);
-		env_set_value("OLDPWD", cwd, env);
+		var_set_value("OLDPWD", cwd, env);
 		cwd = getcwd(buf, MAXPATHLEN);
-		if (!cwd)
+		if (!cwd) // WHAT ERROR?
 			return (FUNCT_ERROR);
-		env_set_value("PWD", cwd, env);
+		var_set_value("PWD", cwd, env);
 	}
 	else
 		return (cd_change_dir_error(path));
@@ -159,11 +157,10 @@ int			builtin_cd(char **args, char **env)
 	char	*home;
 
 	args++; // Get rid of the preliminary cd arg, we don't need that.
-	home = env_get_value("HOME=", env);
-	if (!home)
-		home = "/";
+	home = var_get_value("HOME=", env);
 
-	// The flag parse loop stops either when an invalid option is encountered, or when there are no more parameters starting with '-'.
+	// The flag parse loop stops either when an invalid option is encountered,
+	// or when a directory reference is encountered.
 	if (!cd_parse_flags(&args, &cd_flag))
 		return (FUNCT_ERROR);
 
@@ -171,13 +168,17 @@ int			builtin_cd(char **args, char **env)
 	// First argument after flag parsing is used as a path to cd.
 
 	// cd home dir if no additional arguments.
-	if (!args[0])
+	if (!args[0] || ft_strequ(args[0], "--"))
+	{
+		if (!home)
+		{
+			ft_putendl_fd("42sh: cd: HOME not set", 2);
+			return (FUNCT_ERROR);
+		}
 		return (cd_change_dir(home, env, cd_flag, 0));	
-	if (ft_strequ(args[0], "--")) // cd home dir.
-		return (cd_change_dir(home, env, cd_flag, 0));
+	}
 	if (args[0][0] == '-' && !args[0][1]) // cd last accessed directory.
-		return (cd_change_dir(env_get_value("OLDPWD=", env), env, cd_flag, 1));
-		
+		return (cd_change_dir(var_get_value("OLDPWD=", env), env, cd_flag, 1));		
 	// If all 'special' cd tests fail, try to cd the given argument.
 	return (cd_change_dir(args[0], env, cd_flag, 0));
 }
