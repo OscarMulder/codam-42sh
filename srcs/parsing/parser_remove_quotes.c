@@ -6,11 +6,15 @@
 /*   By: jbrinksm <marvin@codam.nl>                   +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2019/05/02 20:07:16 by jbrinksm       #+#    #+#                */
-/*   Updated: 2019/05/02 20:20:18 by jbrinksm      ########   odam.nl         */
+/*   Updated: 2019/05/02 20:40:54 by jbrinksm      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "vsh.h"
+
+/*
+**	Removes any unescaped quotes from the cmdstr_lst
+*/
 
 void	parser_remove_quotes(t_list *cmdstr_lst)
 {

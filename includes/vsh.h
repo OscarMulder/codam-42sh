@@ -152,6 +152,7 @@ int		parser_total_commands_from_line(char *line);
 
 void	parser_remove_quotes(t_list *cmdstr_lst);
 void	parser_rem_esc_char_quotes(t_list *cmdstr_lst);
+void	parser_rem_esc_char_semicolons(t_list *cmdstr_lst);
 /*
 **----------------------------------bultins-------------------------------------
 */
