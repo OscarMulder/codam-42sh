@@ -6,7 +6,7 @@
 /*   By: jbrinksm <jbrinksm@student.codam.nl>         +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2019/04/17 14:57:49 by jbrinksm       #+#    #+#                */
-/*   Updated: 2019/04/29 18:49:19 by jbrinksm      ########   odam.nl         */
+/*   Updated: 2019/05/02 17:20:21 by jbrinksm      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -44,17 +44,8 @@ void		add_command(char *command, CMD_LIST **cmd_tab)
 
 int			parser_lexer(char *line, CMD_LIST **cmd_tab)
 {
-	char		**commands;
-	int			i;
+	t_list		*commands;
 
 	commands = parser_split_line_to_commands(line);
-	ft_putendl("");
-	ft_putstrarri(commands);
-	i = 0;
-	while (commands[i] != NULL)
-	{
-		add_command(commands[i], cmd_tab);
-		i++;
-	}
 	return (FUNCT_SUCCESS);
 }

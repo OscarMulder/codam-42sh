@@ -6,7 +6,7 @@
 /*   By: jbrinksm <jbrinksm@student.codam.nl>         +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2019/04/24 15:47:28 by jbrinksm       #+#    #+#                */
-/*   Updated: 2019/04/29 20:34:27 by jbrinksm      ########   odam.nl         */
+/*   Updated: 2019/05/02 17:35:06 by jbrinksm      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -66,7 +66,7 @@ char	*parser_strdup_arg_from_command(char *command)
 	return (arg);
 }
 
-int			is_char_inhibited(char *command, int i)
+int			is_blankshellchar(char *command, int i)
 {
 	char	quote;
 
@@ -121,9 +121,3 @@ ARG_LIST	*parser_split_command_to_args(char *command)
 	}
 	return (args);
 }
-
-/*
-**	Will have to rewrite parser_lexer where it doesn't remove quotes because of
-**	index issues. Otherwise it will be messy, and this way we can stay
-**	consistent when removing escape chars.
-*/

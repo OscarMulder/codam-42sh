@@ -6,11 +6,7 @@
 #    By: jbrinksm <jbrinksm@student.codam.nl>         +#+                      #
 #                                                    +#+                       #
 #    Created: 2019/04/10 20:30:07 by jbrinksm       #+#    #+#                 #
-<<<<<<< HEAD
-#    Updated: 2019/04/29 20:33:09 by jbrinksm      ########   odam.nl          #
-=======
-#    Updated: 2019/05/02 11:48:39 by jbrinksm      ########   odam.nl          #
->>>>>>> f6b5c1ebc211193d1c4cc57aa2e0e14631e3facd
+#    Updated: 2019/05/02 16:53:34 by jbrinksm      ########   odam.nl          #
 #                                                                              #
 # **************************************************************************** #
 
@@ -31,13 +27,8 @@ builtin_exit \
 input_read \
 term_prepare term_is_valid term_init_struct term_get_attributes \
 term_set_attributes term_reset_attributes term_free_struct \
-<<<<<<< HEAD
-get_environ_cpy param_to_env \
-parser_lexer parser_split_line_to_commands parser_split_command_to_args \
-=======
 get_environ_cpy var_get_value var_set_value var_join_key_value \
-parser_lexer parser_split_line_to_commands \
->>>>>>> f6b5c1ebc211193d1c4cc57aa2e0e14631e3facd
+parser_lexer parser_split_line_to_commands parser_split_command_to_args \
 is_char_escaped update_quote_status \
 builtin_echo builtin_echo_set_flags
 TESTS = unit_test
