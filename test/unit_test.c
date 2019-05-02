@@ -6,7 +6,7 @@
 /*   By: jbrinksm <jbrinksm@student.codam.nl>         +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2019/04/18 16:37:32 by omulder        #+#    #+#                */
-/*   Updated: 2019/05/01 21:29:26 by jbrinksm      ########   odam.nl         */
+/*   Updated: 2019/05/02 11:34:36 by jbrinksm      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -184,8 +184,8 @@ Test(parser_strdup_command_from_line, basic)
 	char	*result;
 	int		index;
 
-	result = parser_strdup_command_from_line("simple;command;line", &index);
 	index = 0;
+	result = parser_strdup_command_from_line("simple;command;line", &index);
 	cr_assert(result != NULL);
 	cr_expect_str_eq(result, "simple");
 
@@ -198,8 +198,8 @@ Test(parser_strdup_command_from_line, moderate)
 	char	*result;
 	int		index;
 
-	result = parser_strdup_command_from_line("more\\;complicated;line", &index);
 	index = 0;
+	result = parser_strdup_command_from_line("more\\;complicated;line", &index);
 	cr_assert(result != NULL);
 	cr_expect_str_eq(result, "more\\;complicated");
 
@@ -212,8 +212,8 @@ Test(parser_strdup_command_from_line, quoted_command_seperator)
 	char	*result;
 	int		index;
 
-	result = parser_strdup_command_from_line("\"quoted;command;line\"", &index);
 	index = 0;
+	result = parser_strdup_command_from_line("\"quoted;command;line\"", &index);
 	cr_assert(result != NULL);
 	cr_expect_str_eq(result, "quoted;command;line");
 
