@@ -6,7 +6,7 @@
 /*   By: jbrinksm <jbrinksm@student.codam.nl>         +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2019/03/28 10:21:20 by jbrinksm       #+#    #+#                */
-/*   Updated: 2019/05/02 18:14:25 by mavan-he      ########   odam.nl         */
+/*   Updated: 2019/05/02 18:43:54 by mavan-he      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -72,14 +72,14 @@ int			builtin_echo(char **args)
 	flags = echo_set_flags(args, &arg_i);
 	while (args[arg_i])
 	{
-		if (flags & OPT_EL)
+		if (flags & ECHO_OPT_EL)
 			echo_escape_chars(args[arg_i]);
 		ft_putstr(args[arg_i]);
 		if (args[arg_i + 1] != NULL)
 			ft_putchar(' ');
 		arg_i++;
 	}
-	if ((flags & OPT_NL) == 0)
+	if ((flags & ECHO_OPT_NL) == 0)
 		ft_putchar('\n');
 	return (FUNCT_SUCCESS);
 }

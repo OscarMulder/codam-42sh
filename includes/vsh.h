@@ -30,9 +30,9 @@
 **------------------------------------echo--------------------------------------
 */
 
-# define OPT_EL		(1 << 0)
-# define OPT_EU		(1 << 1)
-# define OPT_NL		(1 << 2)
+# define ECHO_OPT_EL		(1 << 0)
+# define ECHO_OPT_EU		(1 << 1)
+# define ECHO_OPT_NL		(1 << 2)
 
 /*
 **===============================personal headers===============================
