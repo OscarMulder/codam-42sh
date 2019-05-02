@@ -6,7 +6,7 @@
 /*   By: jbrinksm <jbrinksm@student.codam.nl>         +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2019/04/18 16:37:32 by omulder        #+#    #+#                */
-/*   Updated: 2019/05/02 13:22:52 by jbrinksm      ########   odam.nl         */
+/*   Updated: 2019/05/02 15:59:13 by rkuijper      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -402,6 +402,31 @@ Test(var_set_value, basic)
 	cr_expect(var_set_value("PATH", "changed", fakenv) == FUNCT_SUCCESS);
 	cr_expect(var_set_value("LI", "changed", fakenv) == FUNCT_FAILURE);
 	cr_expect_str_eq(fakenv[1], "PATH=changed");
+}
+
+TestSuite(builtin_cd);
+
+Test(builtin_cd, basic_builtin_cd)
+{	
+	char	*fakenv[4];
+	fakenv[0] = ft_strdup("HOME=/");
+	fakenv[1] = ft_strdup("PWD=/");
+	fakenv[2] = ft_strdup("OLDPWD=");
+	fakenv[3] = NULL;
+	cr_assert(fakenv[0] != NULL && fakenv[1] != NULL && fakenv[2] != NULL, "Failed to allocate test strings");
+	
+	builtin_cd( (char*[2]){ "cd", NULL }, fakenv );
+	builtin_cd( (char*[3]){ "cd", "Users", NULL }, fakenv );
+	cr_expect_str_eq(var_get_value("PWD", fakenv), "/Users");
+	cr_expect_str_eq(var_get_value("OLDPWD", fakenv), "/");
+
+	builtin_cd( (char*[2]){ "cd", NULL }, fakenv );
+	builtin_cd( (char*[4]){ "cd", "-L", "/Users/rkuijper/goinfre", NULL }, fakenv );
+	cr_expect_str_eq(var_get_value("PWD", fakenv), "/Users/rkuijper/goinfre");
+	
+	builtin_cd( (char*[2]){ "cd", NULL }, fakenv );
+	builtin_cd( (char*[4]){ "cd", "-P", "/Users/rkuijper/goinfre", NULL }, fakenv );
+	cr_expect_str_eq(var_get_value("PWD", fakenv), "/Volumes/Storage/goinfre/rkuijper");
 }
 
 // return (test_ret_fail("test_prompt failed!"));
