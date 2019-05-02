@@ -6,16 +6,9 @@
 /*   By: jbrinksm <jbrinksm@student.codam.nl>         +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2019/03/28 10:21:20 by jbrinksm       #+#    #+#                */
-/*   Updated: 2019/04/29 12:33:11 by mavan-he      ########   odam.nl         */
+/*   Updated: 2019/05/02 18:14:25 by mavan-he      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
-
-/*
-** WORK IN PROGRESS
-** Not all escape characters have been added
-** how far do we want to go ?
-** builtin_echo can receive options in env ?
-*/
 
 #include "vsh.h"
 
@@ -33,6 +26,12 @@ static char	echo_replacespecial(char c)
 		return ('\r');
 	if (c == '\\')
 		return ('\\');
+	if (c == 'f')
+		return (12);
+	if (c == 'b')
+		return (8);
+	if (c == 'e' || c == 'E')
+		return (27);
 	return (0);
 }
 
@@ -46,7 +45,7 @@ static void	echo_escape_chars(char *arg)
 	i_new = 0;
 	while (arg[i] != '\0')
 	{
-		replace_char = echo_replacespecial(arg[i]);
+		replace_char = echo_replacespecial(arg[i + 1]);
 		if (arg[i] == '\\' && replace_char != 0)
 		{
 			i++;
@@ -64,10 +63,6 @@ static void	echo_escape_chars(char *arg)
 	}
 }
 
-/*
-** if option xpg_echo is set, turn on -e, need env for this ?
-*/
-
 int			builtin_echo(char **args)
 {
 	int		arg_i;
@@ -77,14 +72,14 @@ int			builtin_echo(char **args)
 	flags = echo_set_flags(args, &arg_i);
 	while (args[arg_i])
 	{
-		if (flags & OPT_E)
+		if (flags & OPT_EL)
 			echo_escape_chars(args[arg_i]);
 		ft_putstr(args[arg_i]);
 		if (args[arg_i + 1] != NULL)
 			ft_putchar(' ');
 		arg_i++;
 	}
-	if ((flags & OPT_N) == 0)
+	if ((flags & OPT_NL) == 0)
 		ft_putchar('\n');
 	return (FUNCT_SUCCESS);
 }
