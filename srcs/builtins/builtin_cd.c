@@ -6,7 +6,7 @@
 /*   By: mavan-he <mavan-he@student.codam.nl>         +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2019/04/25 17:17:25 by mavan-he       #+#    #+#                */
-/*   Updated: 2019/05/02 14:08:46 by rkuijper      ########   odam.nl         */
+/*   Updated: 2019/05/02 16:19:14 by mavan-he      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -67,7 +67,7 @@ static int		cd_change_dir(char *path, char **env, char cd_flag, int print)
 	cwd = getcwd(buf, MAXPATHLEN);
 	if (!cwd)
 		return (FUNCT_ERROR);
-	if (cd_flag & CD_OPT_LP) // Check if this works.
+	if (cd_flag & CD_OPT_PU) // Check if this works.
 	{
 		if (!lstat(path, &info) && (info.st_mode & S_IFMT) == S_IFLNK)
 		{
@@ -96,16 +96,16 @@ static int	cd_parse_flags(char ***args, char *cd_flag)
 
 	while ((*args)[0] && (*args)[0][0] == '-')
 	{
-		i = 1;
-		if (((*args)[0][0] == '-' && !(*args)[0][1]) ||
+		if (((*args)[0][0] == '-' && (*args)[0][1]) == 0 ||
 			ft_strequ((*args)[0], "--"))
 			return (FUNCT_SUCCESS);
+		i = 1;
 		while ((*args)[0][i])
 		{
 			if ((*args)[0][i] == 'P')
-				(*cd_flag) = CD_OPT_LP;
+				(*cd_flag) = CD_OPT_PU; // moeten die haakjes om (*cd_flag) ?
 			else if ((*args)[0][i] == 'L')
-				(*cd_flag) = CD_OPT_LL;
+				(*cd_flag) = CD_OPT_LU;
 			else
 			{
 				ft_dprintf(2, "minishell: cd: -%c: invalid option\n\
@@ -125,8 +125,8 @@ int			builtin_cd(char **args, char **env)
 	char	*home;
 
 	args++;
-	cd_flag = CD_OPT_LL;
-	home = var_get_value("HOME=", env);
+	cd_flag = CD_OPT_LU;
+	home = var_get_value("HOME", env);
 	if (!cd_parse_flags(&args, &cd_flag))
 		return (FUNCT_ERROR);
 	if (!args[0] || ft_strequ(args[0], "--"))

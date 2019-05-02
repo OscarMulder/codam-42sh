@@ -26,23 +26,23 @@
 # define CTRLD -1
 # define CR 0
 
-# define VAR_READONLY	(1<<0)
-# define VAR_INTERN		(1<<1)
+# define VAR_READONLY	(1 << 0)
+# define VAR_INTERN		(1 << 1)
 
 /*
 **------------------------------------echo--------------------------------------
 */
 
-# define OPT_E		(1<<0)
-# define OPT_CE		(1<<1)
-# define OPT_N		(1<<2)
+# define OPT_E		(1 << 0)
+# define OPT_CE		(1 << 1)
+# define OPT_N		(1 << 2)
 
 /*
 **-------------------------------------cd---------------------------------------
 */
 
-# define CD_OPT_LL	0
-# define CD_OPT_LP	1
+# define CD_OPT_LU	(1 << 0)
+# define CD_OPT_PU	(1 << 1)
 
 /*
 **===============================personal headers===============================
