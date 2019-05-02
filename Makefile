@@ -6,7 +6,7 @@
 #    By: jbrinksm <jbrinksm@student.codam.nl>         +#+                      #
 #                                                    +#+                       #
 #    Created: 2019/04/10 20:30:07 by jbrinksm       #+#    #+#                 #
-#    Updated: 2019/05/01 15:32:19 by rkuijper      ########   odam.nl          #
+#    Updated: 2019/05/02 10:27:03 by rkuijper      ########   odam.nl          #
 #                                                                              #
 # **************************************************************************** #
 
@@ -26,14 +26,14 @@ builtin_exit \
 input_read \
 term_prepare term_is_valid term_init_struct term_get_attributes \
 term_set_attributes term_reset_attributes term_free_struct \
-get_environ_cpy env_get_value env_set_value env_join_key_value \
+get_environ_cpy var_get_value var_set_value var_join_key_value \
 parser_lexer parser_split_line_to_commands \
 is_char_escaped update_quote_status \
 builtin_echo builtin_echo_set_flags
 TESTS = test_main \
 test_prompt \
-test_get_environ_cpy test_env_get_value test_env_set_value \
-test_env_join_key_value \
+test_get_environ_cpy test_var_get_value test_var_set_value \
+test_var_join_key_value \
 test_term_is_valid test_term_init_struct test_term_free_struct \
 test_term_get_attributes \
 test_parser_split_line_to_commands \
