@@ -6,7 +6,7 @@
 /*   By: mavan-he <mavan-he@student.codam.nl>         +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2019/04/25 17:17:25 by mavan-he       #+#    #+#                */
-/*   Updated: 2019/05/02 16:19:14 by mavan-he      ########   odam.nl         */
+/*   Updated: 2019/05/02 18:35:03 by mavan-he      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,7 +14,7 @@
 ** cd: usage: cd [-L|-P] [dir]
 **
 ** TODO:
-**	- Handling -L and -P flags when changing dirs. - (Semi done: untested).
+**	- Handling -L and -P flags when changing dirs.
 **	- Parsing -L and -P flags correctly.
 **
 ** FUNCTIONALITY:
@@ -69,19 +69,19 @@ static int		cd_change_dir(char *path, char **env, char cd_flag, int print)
 		return (FUNCT_ERROR);
 	if (cd_flag & CD_OPT_PU) // Check if this works.
 	{
-		if (!lstat(path, &info) && (info.st_mode & S_IFMT) == S_IFLNK)
+		if (lstat(path, &info) == 0 && (info.st_mode & S_IFMT) == S_IFLNK)
 		{
 			link_buf[readlink(path, buf, MAXPATHLEN)] = '\0';
 			path =  link_buf;
 		}
 	}
-	if (!chdir(path))
+	if (chdir(path) == 0)
 	{
 		if (print)
 			ft_putendl(path);
 		var_set_value("OLDPWD", cwd, env);
 		cwd = getcwd(buf, MAXPATHLEN);
-		if (!cwd)
+		if (cwd == NULL)
 			return (FUNCT_ERROR);
 		var_set_value("PWD", cwd, env);
 	}
@@ -103,7 +103,7 @@ static int	cd_parse_flags(char ***args, char *cd_flag)
 		while ((*args)[0][i])
 		{
 			if ((*args)[0][i] == 'P')
-				(*cd_flag) = CD_OPT_PU; // moeten die haakjes om (*cd_flag) ?
+				(*cd_flag) = CD_OPT_PU;
 			else if ((*args)[0][i] == 'L')
 				(*cd_flag) = CD_OPT_LU;
 			else
@@ -127,9 +127,9 @@ int			builtin_cd(char **args, char **env)
 	args++;
 	cd_flag = CD_OPT_LU;
 	home = var_get_value("HOME", env);
-	if (!cd_parse_flags(&args, &cd_flag))
+	if (cd_parse_flags(&args, &cd_flag) == 0)
 		return (FUNCT_ERROR);
-	if (!args[0] || ft_strequ(args[0], "--"))
+	if (args[0] == NULL || ft_strequ(args[0], "--"))
 	{
 		if (!home)
 		{
@@ -138,7 +138,7 @@ int			builtin_cd(char **args, char **env)
 		}
 		return (cd_change_dir(home, env, cd_flag, 0));
 	}
-	if (args[0][0] == '-' && !args[0][1])
+	if (args[0][0] == '-' && args[0][1] == 0)
 		return (cd_change_dir(var_get_value("OLDPWD=", env), env, cd_flag, 1));
 	return (cd_change_dir(args[0], env, cd_flag, 0));
 }
