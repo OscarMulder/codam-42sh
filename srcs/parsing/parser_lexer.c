@@ -6,7 +6,7 @@
 /*   By: jbrinksm <jbrinksm@student.codam.nl>         +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2019/04/17 14:57:49 by jbrinksm       #+#    #+#                */
-/*   Updated: 2019/05/02 20:17:15 by jbrinksm      ########   odam.nl         */
+/*   Updated: 2019/05/02 20:34:16 by jbrinksm      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -24,6 +24,7 @@ int		parser_lexer(char *line, CMD_LIST **cmd_tab)
 	(void)cmd_tab;
 	cmdstr_lst = parser_split_line_to_commands(line);
 	parser_remove_quotes(cmdstr_lst);
+	parser_rem_esc_char_quotes(cmdstr_lst);
 
 	int i = 0;
 	ft_putendl("");
