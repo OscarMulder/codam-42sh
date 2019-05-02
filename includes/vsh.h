@@ -121,7 +121,9 @@ int		shell_start(void);
 */
 
 char	**get_environ_cpy(void);
-char	*param_to_env(char *parameter, char **vshenviron);
+char	*var_get_value(char *var_key, char **vararray);
+char	*var_join_key_value(char *var_key, char *var_value);
+int		var_set_value(char *var_key, char *var_value, char **vararray);
 char	**free_and_return_null(char ***vshenviron);
 
 /*
@@ -176,55 +178,5 @@ char	echo_set_flags(char **args, int *arg_i);
 
 int		is_char_escaped(char *line, int cur_index);
 int		update_quote_status(char *line, int cur_index, char *quote);
-
-/*
-**==================================TEST PROTOTYPES=============================
-*/
-
-/*
-**----------------------------------environment_testers-------------------------
-*/
-
-int		test_get_environ_cpy(void);
-int		test_param_to_env(void);
-int		test_free_and_return_null(void);
-
-/*
-**--------------------------------term_testers----------------------------------
-*/
-
-int		test_term_is_valid(void);
-int		test_term_init_struct(void);
-int		test_term_free_struct(void);
-int		test_term_get_attributes(void);
-
-/*
-**--------------------------------prompt_testers--------------------------------
-*/
-
-int		test_prompt(void);
-
-/*
-**--------------------------------test_parser_lexer-----------------------------
-*/
-
-int		test_parser_split_line_to_commands(void);
-int		test_parser_strdup_command_from_line(void);
-int		test_parser_total_commands_from_line(void);
-int		test_parser_command_len_from_line(void);
-
-
-/*
-**--------------------------------tools_testers---------------------------------
-*/
-
-int		test_is_char_escaped(void);
-int		test_update_quote_status(void);
-
-/*
-**-----------------------------------builtins-----------------------------------
-*/
-
-int		test_echo(void);
 
 #endif

@@ -1,27 +1,36 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        ::::::::            */
-/*   test_term_is_valid.c                               :+:    :+:            */
+/*   var_get_value.c                                    :+:    :+:            */
 /*                                                     +:+                    */
 /*   By: jbrinksm <jbrinksm@student.codam.nl>         +#+                     */
 /*                                                   +#+                      */
-/*   Created: 2019/04/19 18:33:51 by jbrinksm       #+#    #+#                */
-/*   Updated: 2019/04/19 18:38:35 by jbrinksm      ########   odam.nl         */
+/*   Created: 2019/04/03 18:45:30 by jbrinksm       #+#    #+#                */
+/*   Updated: 2019/05/02 10:23:53 by rkuijper      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "vsh.h"
 
-int		test_term_is_valid(void)
+char		*var_get_value(char *var_key, char **vararray)
 {
-	char *test1;
-	char *test2;
+	int		var_len;
+	int		env_i;
+	int		i;
 
-	test1 = "TERM=non_valid_term";
-	test2 = "TERM=vt100";
-	if (term_is_valid(&test1) != FUNCT_FAILURE)
-		return (FUNCT_FAILURE);
-	if (term_is_valid(&test2) != FUNCT_SUCCESS)
-		return (FUNCT_FAILURE);
-	return (FUNCT_SUCCESS);
+	var_len = ft_strlen(var_key);
+	env_i = 0;
+	while (vararray[env_i] != NULL)
+	{
+		if (ft_strncmp(var_key, vararray[env_i], var_len) == 0 &&
+			vararray[env_i][var_len] == '=')
+		{
+			i = 0;
+			while (vararray[env_i][i] != '=')
+				i++;
+			return (&vararray[env_i][i + 1]);
+		}
+		env_i++;
+	}
+	return (NULL);
 }
