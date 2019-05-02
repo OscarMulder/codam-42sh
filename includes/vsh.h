@@ -145,17 +145,11 @@ void	shell_display_prompt(void);
 
 int		parser_lexer(char *line, CMD_LIST **cmd_tab);
 
-char	**parser_split_line_to_commands(char *line);
+t_list	*parser_split_line_to_commands(char *line);
 char	*parser_strdup_command_from_line(char *line, int *start_arg_index);
 int		parser_command_len_from_line(char *line, int *start_arg_index);
 int		parser_total_commands_from_line(char *line);
 
-ARG_LIST *parser_split_command_to_args(char *command);
-char	*parser_strdup_arg_from_command(char *command);
-int		parser_arg_len_from_command(char *command);
-void	add_command(char *command, CMD_LIST **cmd_tab);
-void	add_arg(char *command, ARG_LIST **args);;
-;
 /*
 **----------------------------------bultins-------------------------------------
 */

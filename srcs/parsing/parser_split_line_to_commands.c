@@ -6,7 +6,7 @@
 /*   By: jbrinksm <jbrinksm@student.codam.nl>         +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2019/04/23 14:03:51 by jbrinksm       #+#    #+#                */
-/*   Updated: 2019/05/02 17:35:06 by jbrinksm      ########   odam.nl         */
+/*   Updated: 2019/05/02 20:04:11 by jbrinksm      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,46 +17,82 @@
 
 #include "vsh.h"
 
-void		parser_add_command_to_lst(char *command, ARG_LIST **args)
+void	parser_add_command_to_lst(char *command, ARG_LIST **args)
 {
 	ARG_LIST	*probe;
 
 	if (*args == NULL)
-		*args = ft_lstnew(command, ft_strlen(command));
+		*args = ft_lstnew(command, ft_strlen(command) + 1);
 	else
 	{
 		probe = *args;
 		while (probe->next != NULL)
 			probe = probe->next;
-		probe->next = ft_lstnew(command, ft_strlen(command));
+		probe->next = ft_lstnew(command, ft_strlen(command) + 1);
 	}
 }
 
-int			is_uninhibited_blank(char *command, int i)
+int		is_uninhibited_blank(char *str, int i)
 {
-	char	quote;
-
-	quote = '\0';
-	if (is_char_escaped(command, i) == FUNCT_SUCCESS)
+	if (str[i] == ' ' || str[i] == '\t')
+	{
+		if (is_char_escaped(str, i) == FUNCT_SUCCESS)
+			return (FUNCT_FAILURE);
 		return (FUNCT_SUCCESS);
-	if (update_quote_status(command, i, &quote) == FUNCT_SUCCESS)
-		return (FUNCT_SUCCESS);
+	}
 	return (FUNCT_FAILURE);
 }
 
-CMD_LIST	*parser_split_line_to_commands(char *line)
+int		is_uninhibited_semicolon(char *str, int i, char quote)
 {
-	t_list	*commands;
+	if (str[i] == ';' && quote == '\0')
+	{
+		if (is_char_escaped(str, i) == FUNCT_SUCCESS)
+			return (FUNCT_FAILURE);
+		return (FUNCT_SUCCESS);
+	}
+	return (FUNCT_FAILURE);
+}
+
+int		parser_strlen_cmd(char *line)
+{
+	int		i;
+	char	quote;
+
+	i = 0;
+	quote = '\0';
+	update_quote_status(line, i, &quote);
+	while (line[i] != '\0' && is_uninhibited_semicolon(line, i, quote) != 1)
+	{
+		i++;
+		update_quote_status(line, i, &quote);
+	}
+	return (i);
+}
+
+t_list	*parser_split_line_to_commands(char *line)
+{
+	t_list	*command_lst;
 	char	*command;
 	int		i;
+	int		len;
 
+	command_lst = NULL;
+	i = 0;
 	while (line[i] != '\0')
 	{
-		if (is_uninhibited_blank(line, i) == 1)
+		while (is_uninhibited_blank(line, i) == true)
 			i++;
-		else
+		len = parser_strlen_cmd(&line[i]);
+		if (len > 0)
 		{
-			command = parser_
+			command = ft_strndup(&line[i], len);
+			parser_add_command_to_lst(command, &command_lst);
+			ft_strdel(&command);
+			i += len;
 		}
+		else
+			i++;
 	}
+	return (command_lst);
 }
