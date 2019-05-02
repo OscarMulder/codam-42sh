@@ -150,6 +150,7 @@ char	*parser_strdup_command_from_line(char *line, int *start_arg_index);
 int		parser_command_len_from_line(char *line, int *start_arg_index);
 int		parser_total_commands_from_line(char *line);
 
+void	parser_remove_quotes(t_list *cmdstr_lst);
 /*
 **----------------------------------bultins-------------------------------------
 */
