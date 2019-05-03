@@ -6,7 +6,7 @@
 /*   By: jbrinksm <jbrinksm@student.codam.nl>         +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2019/03/28 10:21:20 by jbrinksm       #+#    #+#                */
-/*   Updated: 2019/05/02 18:43:54 by mavan-he      ########   odam.nl         */
+/*   Updated: 2019/05/03 14:34:46 by mavan-he      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -62,6 +62,15 @@ static void	echo_escape_chars(char *arg)
 		i_new++;
 	}
 }
+
+/*
+** ECHO:
+** Output the args, seperated by spaces, followed by a newline.
+** If -n is specified, the trailing newline is not printed.
+** The -e option will enable interpretation of the following escape characters:
+** \t \v \r \f \n \b \f \E \e.
+** Option -E disables interpretation of escape characters.
+*/
 
 int			builtin_echo(char **args)
 {
