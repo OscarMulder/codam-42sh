@@ -6,7 +6,7 @@
 /*   By: jbrinksm <jbrinksm@student.codam.nl>         +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2019/03/28 10:21:20 by jbrinksm       #+#    #+#                */
-/*   Updated: 2019/05/03 14:34:46 by mavan-he      ########   odam.nl         */
+/*   Updated: 2019/05/03 16:50:01 by mavan-he      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,6 +14,8 @@
 
 static char	echo_replacespecial(char c)
 {
+	if (c == 'b')
+		return (BS);
 	if (c == 't')
 		return ('\t');
 	if (c == 'n')
@@ -26,12 +28,8 @@ static char	echo_replacespecial(char c)
 		return ('\r');
 	if (c == '\\')
 		return ('\\');
-	if (c == 'f')
-		return (12);
-	if (c == 'b')
-		return (8);
 	if (c == 'e' || c == 'E')
-		return (27);
+		return (ESC);
 	return (0);
 }
 

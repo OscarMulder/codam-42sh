@@ -6,7 +6,7 @@
 /*   By: mavan-he <mavan-he@student.codam.nl>         +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2019/04/28 11:03:19 by mavan-he       #+#    #+#                */
-/*   Updated: 2019/05/02 18:43:54 by mavan-he      ########   odam.nl         */
+/*   Updated: 2019/05/03 16:46:12 by mavan-he      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -28,19 +28,19 @@ static void	echo_merge_flags(char *flags, char tmp_flags)
 	}
 }
 
-static int	echo_validate_flag(char *tmp_flags, char c)
+static int	echo_validate_flag(char *tmp_flags, char flag)
 {
-	if (c == 'E')
+	if (flag == 'E')
 	{
 		*tmp_flags |= ECHO_OPT_EU;
 		*tmp_flags &= ~ECHO_OPT_EL;
 	}
-	else if (c == 'e')
+	else if (flag == 'e')
 	{
 		*tmp_flags |= ECHO_OPT_EL;
 		*tmp_flags &= ~ECHO_OPT_EU;
 	}
-	else if (c == 'n')
+	else if (flag == 'n')
 		*tmp_flags |= ECHO_OPT_NL;
 	else
 		return (FUNCT_FAILURE);
