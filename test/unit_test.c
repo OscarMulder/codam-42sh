@@ -6,7 +6,7 @@
 /*   By: jbrinksm <jbrinksm@student.codam.nl>         +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2019/04/18 16:37:32 by omulder        #+#    #+#                */
-/*   Updated: 2019/05/03 17:06:29 by mavan-he      ########   odam.nl         */
+/*   Updated: 2019/05/03 20:19:12 by mavan-he      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -411,6 +411,28 @@ Test(var_set_value, basic)
 	cr_expect(var_set_value("PATH", "changed", fakenv) == FUNCT_SUCCESS);
 	cr_expect(var_set_value("LI", "changed", fakenv) == FUNCT_FAILURE);
 	cr_expect_str_eq(fakenv[1], "PATH=changed");
+}
+
+/*
+**------------------------------------------------------------------------------
+*/
+
+TestSuite(var_add_value);
+
+Test(var_add_value, basic)
+{
+
+	char	**fakenv;
+	fakenv = ft_memalloc(sizeof(char*) * 4);
+	fakenv[0] = ft_strdup("LOL=didi");
+	fakenv[1] = ft_strdup("PATH=lala");
+	fakenv[2] = ft_strdup("PAT=lolo");
+	fakenv[3] = NULL;
+	cr_assert(fakenv[0] != NULL && fakenv[1] != NULL && fakenv[2] != NULL, "Failed to allocate test strings");
+	cr_expect(var_add_value("PATH", "changed", &fakenv) == FUNCT_SUCCESS);
+	cr_expect_str_eq(fakenv[1], "PATH=changed");
+	cr_expect(var_add_value("TEST", "success", &fakenv) == FUNCT_SUCCESS);
+	cr_expect_str_eq(fakenv[3], "TEST=success");
 }
 
 // return (test_ret_fail("test_prompt failed!"));
