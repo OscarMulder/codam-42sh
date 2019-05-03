@@ -6,7 +6,7 @@
 /*   By: jbrinksm <jbrinksm@student.codam.nl>         +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2019/04/18 16:37:32 by omulder        #+#    #+#                */
-/*   Updated: 2019/05/02 18:02:37 by mavan-he      ########   odam.nl         */
+/*   Updated: 2019/05/03 17:06:29 by mavan-he      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -343,7 +343,7 @@ Test(builtin_echo, basic, .init=redirect_all_stdout)
 
 	args[0] = ft_strdup("echo");
 	args[1] = ft_strdup("-nEe");
-	args[2] = ft_strdup("\\\\abc\\t\\v\\r\\f\\n\\b\\f\\E");
+	args[2] = ft_strdup("\\\\test\\a\\t\\v\\r\\n\\b\\f\\E");
 	args[3] = NULL;
 	builtin_echo(args);
 	args[0] = ft_strdup("echo");
@@ -359,7 +359,7 @@ Test(builtin_echo, basic, .init=redirect_all_stdout)
 	args[1] = ft_strdup("-E");
 	args[2] = NULL;
 	builtin_echo(args);
-	cr_expect_stdout_eq_str("\\abc\t\v\r\f\n\b\f\e-Eea \n\n\n");
+	cr_expect_stdout_eq_str("\\test\a\t\v\r\n\b\f\e-Eea \n\n\n");
 }
 
 /*

@@ -6,7 +6,7 @@
 /*   By: jbrinksm <jbrinksm@student.codam.nl>         +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2019/03/28 10:21:20 by jbrinksm       #+#    #+#                */
-/*   Updated: 2019/05/03 16:50:01 by mavan-he      ########   odam.nl         */
+/*   Updated: 2019/05/03 17:03:19 by mavan-he      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,22 +14,24 @@
 
 static char	echo_replacespecial(char c)
 {
+	if (c == 'a')
+		return ('\a');
 	if (c == 'b')
 		return (BS);
-	if (c == 't')
-		return ('\t');
-	if (c == 'n')
-		return ('\n');
-	if (c == 'v')
-		return ('\v');
-	if (c == 'f')
-		return ('\f');
-	if (c == 'r')
-		return ('\r');
-	if (c == '\\')
-		return ('\\');
 	if (c == 'e' || c == 'E')
 		return (ESC);
+	if (c == 'f')
+		return ('\f');
+	if (c == 'n')
+		return ('\n');
+	if (c == 'r')
+		return ('\r');
+	if (c == 't')
+		return ('\t');
+	if (c == 'v')
+		return ('\v');
+	if (c == '\\')
+		return ('\\');
 	return (0);
 }
 
@@ -66,7 +68,7 @@ static void	echo_escape_chars(char *arg)
 ** Output the args, seperated by spaces, followed by a newline.
 ** If -n is specified, the trailing newline is not printed.
 ** The -e option will enable interpretation of the following escape characters:
-** \t \v \r \f \n \b \f \E \e.
+** \a \b \E \e \f \n \r \t \v \\.
 ** Option -E disables interpretation of escape characters.
 */
 
