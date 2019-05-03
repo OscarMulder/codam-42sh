@@ -6,7 +6,7 @@
 /*   By: jbrinksm <jbrinksm@student.codam.nl>         +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2019/04/18 16:37:32 by omulder        #+#    #+#                */
-/*   Updated: 2019/05/02 15:59:13 by rkuijper      ########   odam.nl         */
+/*   Updated: 2019/05/03 13:03:59 by mavan-he      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -41,7 +41,7 @@ TestSuite(term_init_struct);
 Test(term_init_struct, basic)
 {
 	t_term	*term_p;
-	
+
 	term_p = term_init_struct();
 	cr_assert(term_p != NULL);
 	cr_expect_neq(term_p->termios_p, NULL);
@@ -286,7 +286,7 @@ TestSuite(update_quote_status);
 Test(update_quote_status, basic)
 {
 	char quote;
-	
+
 	quote = '\0';
 	cr_expect_eq(update_quote_status("easy\"line\"", 3, &quote), 0);
 	cr_expect_eq(quote, '\0');
@@ -310,7 +310,7 @@ Test(update_quote_status, basic)
 Test(update_quote_status, edge_cases)
 {
 	char quote;
-	
+
 	quote = '\'';
 	cr_expect_eq(update_quote_status("h'arde\\'rline'", 7, &quote), 0);
 	cr_expect_eq(quote, '\'');
@@ -407,25 +407,26 @@ Test(var_set_value, basic)
 TestSuite(builtin_cd);
 
 Test(builtin_cd, basic_builtin_cd)
-{	
-	char	*fakenv[4];
+{
+	char	**fakenv;
+	fakenv = malloc(sizeof(char*) * 4);
 	fakenv[0] = ft_strdup("HOME=/");
 	fakenv[1] = ft_strdup("PWD=/");
 	fakenv[2] = ft_strdup("OLDPWD=");
 	fakenv[3] = NULL;
 	cr_assert(fakenv[0] != NULL && fakenv[1] != NULL && fakenv[2] != NULL, "Failed to allocate test strings");
-	
-	builtin_cd( (char*[2]){ "cd", NULL }, fakenv );
-	builtin_cd( (char*[3]){ "cd", "Users", NULL }, fakenv );
+
+	builtin_cd( (char*[2]){ "cd", NULL }, &fakenv );
+	builtin_cd( (char*[3]){ "cd", "Users", NULL }, &fakenv );
 	cr_expect_str_eq(var_get_value("PWD", fakenv), "/Users");
 	cr_expect_str_eq(var_get_value("OLDPWD", fakenv), "/");
 
-	builtin_cd( (char*[2]){ "cd", NULL }, fakenv );
-	builtin_cd( (char*[4]){ "cd", "-L", "/Users/rkuijper/goinfre", NULL }, fakenv );
+	builtin_cd( (char*[2]){ "cd", NULL }, &fakenv );
+	builtin_cd( (char*[4]){ "cd", "-L", "/Users/rkuijper/goinfre", NULL }, &fakenv );
 	cr_expect_str_eq(var_get_value("PWD", fakenv), "/Users/rkuijper/goinfre");
-	
-	builtin_cd( (char*[2]){ "cd", NULL }, fakenv );
-	builtin_cd( (char*[4]){ "cd", "-P", "/Users/rkuijper/goinfre", NULL }, fakenv );
+
+	builtin_cd( (char*[2]){ "cd", NULL }, &fakenv );
+	builtin_cd( (char*[4]){ "cd", "-P", "/Users/rkuijper/goinfre", NULL }, &fakenv );
 	cr_expect_str_eq(var_get_value("PWD", fakenv), "/Volumes/Storage/goinfre/rkuijper");
 }
 

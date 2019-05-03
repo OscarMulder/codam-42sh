@@ -169,7 +169,7 @@ int		parser_total_commands_from_line(char *line);
 
 void	builtin_exit(t_term *term_p);
 int		builtin_echo(char **args);
-int		builtin_cd(char **args, char **env);
+int		builtin_cd(char **args, char ***env);
 char	echo_set_flags(char **args, int *arg_i);
 
 /*
