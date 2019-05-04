@@ -145,14 +145,19 @@ void	shell_display_prompt(void);
 
 int		parser_lexer(char *line, CMD_LIST **cmd_tab);
 
+int		is_uninhibited_semicolon(char *str, int i, char quote);
+int		is_uninhibited_blank(char *str, int i);
+
 t_list	*parser_split_line_to_commands(char *line);
-char	*parser_strdup_command_from_line(char *line, int *start_arg_index);
-int		parser_command_len_from_line(char *line, int *start_arg_index);
-int		parser_total_commands_from_line(char *line);
+void	parser_add_command_to_lst(char *command, ARG_LIST **args);
+int		parser_strlen_cmd(char *line);
 
 void	parser_remove_quotes(t_list *cmdstr_lst);
 void	parser_rem_esc_char_quotes(t_list *cmdstr_lst);
 void	parser_rem_esc_char_semicolons(t_list *cmdstr_lst);
+
+t_list	*parser_split_command_to_args(char *cmd);
+
 /*
 **----------------------------------bultins-------------------------------------
 */
