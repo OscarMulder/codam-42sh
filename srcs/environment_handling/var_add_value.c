@@ -6,7 +6,7 @@
 /*   By: mavan-he <mavan-he@student.codam.nl>         +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2019/05/03 15:13:44 by mavan-he       #+#    #+#                */
-/*   Updated: 2019/05/04 13:39:44 by mavan-he      ########   odam.nl         */
+/*   Updated: 2019/05/04 13:56:03 by mavan-he      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -21,7 +21,8 @@ int		var_add_value(char *var_key, char *var_value, char ***vararray)
 	ret = var_set_value(var_key, var_value, *vararray);
 	if (ret != FUNCT_FAILURE)
 		return (ret == FUNCT_SUCCESS ? FUNCT_SUCCESS : FUNCT_ERROR);
-	new_vararray = ft_memalloc(sizeof(char*) * (ft_arraylen(*vararray) + 2));
+	new_vararray = (char**)ft_memalloc(sizeof(char*) *
+	(ft_arraylen(*vararray) + 2));
 	if (new_vararray == NULL)
 		return (FUNCT_ERROR);
 	i = 0;
