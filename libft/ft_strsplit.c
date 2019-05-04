@@ -5,8 +5,8 @@
 /*                                                     +:+                    */
 /*   By: rkuijper <marvin@codam.nl>                   +#+                     */
 /*                                                   +#+                      */
-/*   Created: 2019/01/09 14:21:43 by rkuijper      #+#    #+#                 */
-/*   Updated: 2019/01/09 17:08:46 by rkuijper      ########   odam.nl         */
+/*   Created: 2019/01/09 14:21:43 by rkuijper       #+#    #+#                */
+/*   Updated: 2019/05/04 13:36:18 by mavan-he      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -59,7 +59,7 @@ char		**ft_strsplit(const char *s, char c)
 		return (NULL);
 	j = 0;
 	len = ft_split_count(s, c);
-	res = (char**)malloc(sizeof(char*) * (len + 1));
+	res = ft_memalloc(sizeof(char*) * (len + 1));
 	if (!res)
 		return (NULL);
 	while (len)

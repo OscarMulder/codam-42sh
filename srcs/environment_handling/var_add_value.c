@@ -6,7 +6,7 @@
 /*   By: mavan-he <mavan-he@student.codam.nl>         +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2019/05/03 15:13:44 by mavan-he       #+#    #+#                */
-/*   Updated: 2019/05/03 20:23:01 by mavan-he      ########   odam.nl         */
+/*   Updated: 2019/05/04 13:39:44 by mavan-he      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -34,7 +34,6 @@ int		var_add_value(char *var_key, char *var_value, char ***vararray)
 	if (new_vararray[i] == NULL)
 		return (FUNCT_ERROR);
 	i++;
-	new_vararray[i] = NULL;
 	free(*vararray);
 	*vararray = new_vararray;
 	return (FUNCT_SUCCESS);
