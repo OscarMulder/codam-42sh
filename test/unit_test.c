@@ -6,7 +6,7 @@
 /*   By: jbrinksm <jbrinksm@student.codam.nl>         +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2019/04/18 16:37:32 by omulder        #+#    #+#                */
-/*   Updated: 2019/05/03 13:03:59 by mavan-he      ########   odam.nl         */
+/*   Updated: 2019/05/04 14:04:19 by mavan-he      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,6 +18,7 @@
 
 #include "vsh.h"
 #include <criterion/criterion.h>
+#include <criterion/redirect.h>
 
 TestSuite(term_is_valid);
 
@@ -328,29 +329,37 @@ Test(update_quote_status, edge_cases)
 /*
 **------------------------------------------------------------------------------
 */
+void redirect_all_stdout(void)
+{
+        cr_redirect_stdout();
+        cr_redirect_stderr();
+}
 
 TestSuite(builtin_echo);
 
-Test(builtin_echo, basic)
+Test(builtin_echo, basic, .init=redirect_all_stdout)
 {
-	/* Will need to use functions to change stdout to a tmp file from which
-	we can strcmp the output and clear and reset afterwards */
+	char	*args[4];
 
-	// builtin_echo({"echo", "-nEa", "\n"});
-	// builtin_echo({"echo", "-nE", "\\n"});
-	// builtin_echo({"echo", "-nEe", "\\\\abc\\t\\v\\r\\f\\n"});
-	// builtin_echo({"echo", "-nEe"});
-	// builtin_echo({"echo", "-E"});
-	// builtin_echo({"echo"});
-	cr_log_warn("Please read comments at builtin_echo testsuite (basic)");
-}
-
-Test(builtin_echo, return_values)
-{
-	/* Please add proper return values for echo (invalid flags/arguments etc) */
-
-	// builtin_echo({"echo", "-nEaZ", "\n"});
-	cr_log_warn("Please read comments at builtin_echo testsuite (return_values)");
+	args[0] = ft_strdup("echo");
+	args[1] = ft_strdup("-nEe");
+	args[2] = ft_strdup("\\\\test\\a\\t\\v\\r\\n\\b\\f\\E");
+	args[3] = NULL;
+	builtin_echo(args);
+	args[0] = ft_strdup("echo");
+	args[1] = ft_strdup("-Eea");
+	args[2] = ft_strdup("\n");
+	args[3] = NULL;
+	builtin_echo(args);
+	args[0] = ft_strdup("echo");
+	args[1] = ft_strdup("-nEe");
+	args[2] = NULL;
+	builtin_echo(args);
+	args[0] = ft_strdup("echo");
+	args[1] = ft_strdup("-E");
+	args[2] = NULL;
+	builtin_echo(args);
+	cr_expect_stdout_eq_str("\\test\a\t\v\r\n\b\f\e-Eea \n\n\n");
 }
 
 /*
