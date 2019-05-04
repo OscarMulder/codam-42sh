@@ -18,10 +18,21 @@
 
 #include "vsh.h"
 #include <criterion/criterion.h>
+#include <criterion/redirect.h>
+
+void redirect_all_stdout(void)
+{
+        cr_redirect_stdout();
+        cr_redirect_stderr();
+}
+
+/*
+**------------------------------------------------------------------------------
+*/
 
 TestSuite(term_is_valid);
 
-Test(term_is_valid, basic)
+Test(term_is_valid, basic, .init=redirect_all_stdout)
 {
 	char *env1;
 	char *env2;
@@ -41,7 +52,7 @@ TestSuite(term_init_struct);
 Test(term_init_struct, basic)
 {
 	t_term	*term_p;
-	
+
 	term_p = term_init_struct();
 	cr_assert(term_p != NULL);
 	cr_expect_neq(term_p->termios_p, NULL);
@@ -96,7 +107,23 @@ Test(get_environ_cpy, basic)
 
 TestSuite(term_get_attributes);
 
+
+
 Test(term_get_attributes, basic)
+{
+	t_term	*term_p;
+
+	term_p = term_init_struct();
+
+	/* not sure how to have this as prerequisite as test any other way */
+	cr_assert(term_p != NULL, "prerequisite failed: term_init_struct");
+
+	// cr_expect_eq(term_get_attributes(STDIN_FILENO, term_p), FUNCT_SUCCESS);
+	cr_expect_eq(term_get_attributes(STDOUT_FILENO, term_p), FUNCT_SUCCESS);
+	cr_expect_eq(term_get_attributes(STDERR_FILENO, term_p), FUNCT_SUCCESS);
+}
+
+Test(term_get_attributes, invalid_fd, .init=redirect_all_stdout)
 {
 	t_term	*term_p;
 
@@ -106,9 +133,6 @@ Test(term_get_attributes, basic)
 	/* not sure how to have this as prerequisite as test any other way */
 	cr_assert(term_p != NULL, "prerequisite failed: term_init_struct");
 
-	// cr_expect_eq(term_get_attributes(STDIN_FILENO, term_p), FUNCT_SUCCESS);
-	cr_expect_eq(term_get_attributes(STDOUT_FILENO, term_p), FUNCT_SUCCESS);
-	cr_expect_eq(term_get_attributes(STDERR_FILENO, term_p), FUNCT_SUCCESS);
 	cr_expect_eq(term_get_attributes(10101, term_p), FUNCT_FAILURE);
 }
 
@@ -142,7 +166,7 @@ TestSuite(update_quote_status);
 Test(update_quote_status, basic)
 {
 	char quote;
-	
+
 	quote = '\0';
 	cr_expect_eq(update_quote_status("easy\"line\"", 3, &quote), 0);
 	cr_expect_eq(quote, '\0');
@@ -166,7 +190,7 @@ Test(update_quote_status, basic)
 Test(update_quote_status, edge_cases)
 {
 	char quote;
-	
+
 	quote = '\'';
 	cr_expect_eq(update_quote_status("h'arde\\'rline'", 7, &quote), 0);
 	cr_expect_eq(quote, '\'');
@@ -184,29 +208,24 @@ Test(update_quote_status, edge_cases)
 /*
 **------------------------------------------------------------------------------
 */
-
 TestSuite(builtin_echo);
 
-Test(builtin_echo, basic)
+Test(builtin_echo, basic, .init=redirect_all_stdout)
 {
-	/* Will need to use functions to change stdout to a tmp file from which
-	we can strcmp the output and clear and reset afterwards */
+	char	**args;
 
-	// builtin_echo({"echo", "-nEa", "\n"});
-	// builtin_echo({"echo", "-nE", "\\n"});
-	// builtin_echo({"echo", "-nEe", "\\\\abc\\t\\v\\r\\f\\n"});
-	// builtin_echo({"echo", "-nEe"});
-	// builtin_echo({"echo", "-E"});
-	// builtin_echo({"echo"});
-	cr_log_warn("Please read comments at builtin_echo testsuite (basic)");
-}
-
-Test(builtin_echo, return_values)
-{
-	/* Please add proper return values for echo (invalid flags/arguments etc) */
-
-	// builtin_echo({"echo", "-nEaZ", "\n"});
-	cr_log_warn("Please read comments at builtin_echo testsuite (return_values)");
+	args = ft_strsplit("echo|-nEe|\\\\test\\a\\t\\v\\r\\n\\b\\f\\E", '|');
+	builtin_echo(args);
+	ft_freearray(&args);
+	args = ft_strsplit("echo|-Eea|\n", '|');
+	builtin_echo(args);
+	ft_freearray(&args);
+	args = ft_strsplit("echo|-nEe", '|');
+	builtin_echo(args);
+	ft_freearray(&args);
+	args = ft_strsplit("echo|-E", '|');
+	builtin_echo(args);
+	cr_expect_stdout_eq_str("\\test\a\t\v\r\n\b\f\e-Eea \n\n\n");
 }
 
 /*
@@ -248,16 +267,32 @@ TestSuite(var_set_value);
 
 Test(var_set_value, basic)
 {
-	char	*fakenv[4];
-	fakenv[0] = ft_strdup("LOL=didi");
-	fakenv[1] = ft_strdup("PATH=lala");
-	fakenv[2] = ft_strdup("PAT=lolo");
-	fakenv[3] = NULL;
-	cr_assert(fakenv[0] != NULL && fakenv[1] != NULL && fakenv[2] != NULL, "Failed to allocate test strings");
+	char	**fakenv;
+
+	fakenv = ft_strsplit("LOL=didi|PATH=lala|PAT=lolo", '|');
+	cr_assert(fakenv != NULL, "Failed to allocate test strings");
 	var_set_value("PATH", "lala", fakenv);
 	cr_expect(var_set_value("PATH", "changed", fakenv) == FUNCT_SUCCESS);
 	cr_expect(var_set_value("LI", "changed", fakenv) == FUNCT_FAILURE);
 	cr_expect_str_eq(fakenv[1], "PATH=changed");
+}
+
+/*
+**------------------------------------------------------------------------------
+*/
+
+TestSuite(var_add_value);
+
+Test(var_add_value, basic)
+{
+
+	char	**fakenv;
+	fakenv = ft_strsplit("LOL=didi|PATH=lala|PAT=lolo", '|');
+	cr_assert(fakenv != NULL, "Failed to allocate test strings");
+	cr_expect(var_add_value("PATH", "changed", &fakenv) == FUNCT_SUCCESS);
+	cr_expect_str_eq(fakenv[1], "PATH=changed");
+	cr_expect(var_add_value("TEST", "success", &fakenv) == FUNCT_SUCCESS);
+	cr_expect_str_eq(fakenv[3], "TEST=success");
 }
 
 // return (test_ret_fail("test_prompt failed!"));

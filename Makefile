@@ -27,7 +27,7 @@ builtin_exit \
 input_read \
 term_prepare term_is_valid term_init_struct term_get_attributes \
 term_set_attributes term_reset_attributes term_free_struct \
-get_environ_cpy var_get_value var_set_value var_join_key_value \
+get_environ_cpy var_get_value var_set_value var_join_key_value var_add_value \
 parser_lexer parser_split_line_to_commands parser_split_command_to_args \
 parser_remove_quotes \
 parser_rem_esc_char_quotes parser_rem_esc_char_semicolons \
