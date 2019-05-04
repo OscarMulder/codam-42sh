@@ -6,7 +6,7 @@
 /*   By: omulder <omulder@student.codam.nl>           +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2019/04/18 16:44:50 by omulder        #+#    #+#                */
-/*   Updated: 2019/04/29 20:36:51 by jbrinksm      ########   odam.nl         */
+/*   Updated: 2019/05/04 13:37:12 by jbrinksm      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -27,6 +27,7 @@ int		shell_start(void)
 		status = input_read(&line);
 		parser_lexer(line, &cmd_tab);
 		ft_strdel(&line);
+		cmd_tab = NULL;
 		ft_putendl("");
 	}
 	return (FUNCT_SUCCESS);

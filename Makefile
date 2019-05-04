@@ -6,13 +6,13 @@
 #    By: jbrinksm <jbrinksm@student.codam.nl>         +#+                      #
 #                                                    +#+                       #
 #    Created: 2019/04/10 20:30:07 by jbrinksm       #+#    #+#                 #
-#    Updated: 2019/05/02 20:43:09 by jbrinksm      ########   odam.nl          #
+#    Updated: 2019/05/04 14:33:19 by jbrinksm      ########   odam.nl          #
 #                                                                              #
 # **************************************************************************** #
 
 NAME = vsh
 CC = gcc
-FLAGS = -Wall -Werror -Wextra -Wunreachable-code
+FLAGS = -Wall -Werror -Wextra -Wunreachable-code -g
 COVERAGE = -coverage
 INCLUDES = -I./libft/ -I./includes -I../includes \
 -I$(HOME)/.brew/include
@@ -28,7 +28,8 @@ input_read \
 term_prepare term_is_valid term_init_struct term_get_attributes \
 term_set_attributes term_reset_attributes term_free_struct \
 get_environ_cpy var_get_value var_set_value var_join_key_value \
-parser_lexer parser_split_line_to_commands parser_remove_quotes \
+parser_lexer parser_split_line_to_commands parser_split_command_to_args \
+parser_remove_quotes \
 parser_rem_esc_char_quotes parser_rem_esc_char_semicolons \
 is_char_escaped update_quote_status \
 builtin_echo builtin_echo_set_flags

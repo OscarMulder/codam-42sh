@@ -6,7 +6,7 @@
 /*   By: jbrinksm <jbrinksm@student.codam.nl>         +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2019/04/23 14:03:51 by jbrinksm       #+#    #+#                */
-/*   Updated: 2019/05/02 20:04:11 by jbrinksm      ########   odam.nl         */
+/*   Updated: 2019/05/04 13:00:25 by jbrinksm      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,30 +17,19 @@
 
 #include "vsh.h"
 
-void	parser_add_command_to_lst(char *command, ARG_LIST **args)
+void	parser_add_str_to_lst(char *arg, t_list **args)
 {
-	ARG_LIST	*probe;
+	t_list	*probe;
 
 	if (*args == NULL)
-		*args = ft_lstnew(command, ft_strlen(command) + 1);
+		*args = ft_lstnew(arg, ft_strlen(arg) + 1);
 	else
 	{
 		probe = *args;
 		while (probe->next != NULL)
 			probe = probe->next;
-		probe->next = ft_lstnew(command, ft_strlen(command) + 1);
+		probe->next = ft_lstnew(arg, ft_strlen(arg) + 1);
 	}
-}
-
-int		is_uninhibited_blank(char *str, int i)
-{
-	if (str[i] == ' ' || str[i] == '\t')
-	{
-		if (is_char_escaped(str, i) == FUNCT_SUCCESS)
-			return (FUNCT_FAILURE);
-		return (FUNCT_SUCCESS);
-	}
-	return (FUNCT_FAILURE);
 }
 
 int		is_uninhibited_semicolon(char *str, int i, char quote)
@@ -62,7 +51,7 @@ int		parser_strlen_cmd(char *line)
 	i = 0;
 	quote = '\0';
 	update_quote_status(line, i, &quote);
-	while (line[i] != '\0' && is_uninhibited_semicolon(line, i, quote) != 1)
+	while (line[i] != '\0' && is_uninhibited_semicolon(line, i, quote) != true)
 	{
 		i++;
 		update_quote_status(line, i, &quote);
@@ -81,13 +70,13 @@ t_list	*parser_split_line_to_commands(char *line)
 	i = 0;
 	while (line[i] != '\0')
 	{
-		while (is_uninhibited_blank(line, i) == true)
+		while (ft_isblank(line[i]) == true)
 			i++;
 		len = parser_strlen_cmd(&line[i]);
 		if (len > 0)
 		{
 			command = ft_strndup(&line[i], len);
-			parser_add_command_to_lst(command, &command_lst);
+			parser_add_str_to_lst(command, &command_lst);
 			ft_strdel(&command);
 			i += len;
 		}
