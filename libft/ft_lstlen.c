@@ -1,21 +1,26 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        ::::::::            */
-/*   ft_lstaddback.c                                    :+:    :+:            */
+/*   ft_lstlen.c                                        :+:    :+:            */
 /*                                                     +:+                    */
-/*   By: tde-jong <tde-jong@student.codam.nl>         +#+                     */
+/*   By: mavan-he <mavan-he@student.codam.nl>         +#+                     */
 /*                                                   +#+                      */
-/*   Created: 2019/01/16 13:03:09 by tde-jong       #+#    #+#                */
-/*   Updated: 2019/04/29 18:26:48 by jbrinksm      ########   odam.nl         */
+/*   Created: 2019/05/04 15:57:05 by mavan-he       #+#    #+#                */
+/*   Updated: 2019/05/04 15:59:22 by mavan-he      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "libft.h"
 
-void	ft_lstaddback(t_list *alst, t_list *new)
+int		ft_lstlen(t_list *lst)
 {
-	if (alst->next != NULL)
-		ft_lstaddback(alst->next, new);
-	else
-		alst->next = new;
+	int len;
+
+	len = 0;
+	while (lst)
+	{
+		lst = lst->next;
+		len++;
+	}
+	return (len);
 }

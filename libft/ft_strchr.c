@@ -1,21 +1,28 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        ::::::::            */
-/*   ft_lstaddback.c                                    :+:    :+:            */
+/*   ft_strchr.c                                        :+:    :+:            */
 /*                                                     +:+                    */
-/*   By: tde-jong <tde-jong@student.codam.nl>         +#+                     */
+/*   By: mavan-he <mavan-he@student.codam.nl>         +#+                     */
 /*                                                   +#+                      */
-/*   Created: 2019/01/16 13:03:09 by tde-jong       #+#    #+#                */
-/*   Updated: 2019/04/29 18:26:48 by jbrinksm      ########   odam.nl         */
+/*   Created: 2019/01/10 14:38:00 by mavan-he       #+#    #+#                */
+/*   Updated: 2019/05/03 15:58:37 by mavan-he      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "libft.h"
 
-void	ft_lstaddback(t_list *alst, t_list *new)
+char	*ft_strchr(const char *s, int c)
 {
-	if (alst->next != NULL)
-		ft_lstaddback(alst->next, new);
-	else
-		alst->next = new;
+	if (s == NULL)
+		return (NULL);
+	while (*s)
+	{
+		if (*s == (char)c)
+			return ((char *)s);
+		s++;
+	}
+	if (c == 0)
+		return ((char *)s);
+	return (NULL);
 }
