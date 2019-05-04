@@ -6,7 +6,7 @@
 /*   By: jbrinksm <jbrinksm@student.codam.nl>         +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2019/04/17 14:57:49 by jbrinksm       #+#    #+#                */
-/*   Updated: 2019/05/04 16:22:24 by jbrinksm      ########   odam.nl         */
+/*   Updated: 2019/05/04 20:41:08 by jbrinksm      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,6 +16,10 @@
 */
 
 #include "vsh.h"
+
+/*
+**	Be sure that the t_list* is initialized to NULL if it doesnt exist yet.
+*/
 
 void	parser_add_lst_to_lst(t_list *content_lst, t_list **lst)
 {

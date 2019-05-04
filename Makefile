@@ -6,15 +6,15 @@
 #    By: jbrinksm <jbrinksm@student.codam.nl>         +#+                      #
 #                                                    +#+                       #
 #    Created: 2019/04/10 20:30:07 by jbrinksm       #+#    #+#                 #
-#    Updated: 2019/05/04 14:33:19 by jbrinksm      ########   odam.nl          #
+#    Updated: 2019/05/04 17:17:09 by jbrinksm      ########   odam.nl          #
 #                                                                              #
 # **************************************************************************** #
 
 NAME = vsh
 CC = gcc
-FLAGS = -Wall -Werror -Wextra -Wunreachable-code -g
+FLAGS = -Wall -Werror -Wextra -Wunreachable-code
 COVERAGE = -coverage
-INCLUDES = -I./libft/ -I./includes -I../includes \
+INCLUDES = -I./libft/ -I./includes \
 -I$(HOME)/.brew/include
 LIBFT= ./libft/libft.a
 LIB = -L./libft/ -lft -ltermcap -L$(HOME)/.brew/lib -lcriterion
@@ -33,7 +33,7 @@ parser_remove_quotes \
 parser_rem_esc_char_quotes parser_rem_esc_char_semicolons \
 is_char_escaped update_quote_status \
 builtin_echo builtin_echo_set_flags
-TESTS = unit_test
+TESTS = unit_test parser_tests
 OBJECTS := $(SRCS:%=%.o)
 TESTOBJECTS := $(TESTS:%=%.o)
 SRCS := $(SRCS:%=%.c)

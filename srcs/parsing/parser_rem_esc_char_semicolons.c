@@ -1,12 +1,12 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        ::::::::            */
-/*   parser_rem_esc_char_semicolon.c                    :+:    :+:            */
+/*   parser_rem_esc_char_semicolons.c                   :+:    :+:            */
 /*                                                     +:+                    */
 /*   By: jbrinksm <marvin@codam.nl>                   +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2019/05/02 20:24:50 by jbrinksm       #+#    #+#                */
-/*   Updated: 2019/05/02 20:43:04 by jbrinksm      ########   odam.nl         */
+/*   Updated: 2019/05/04 19:51:58 by jbrinksm      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -21,6 +21,7 @@ void	parser_rem_esc_char_semicolons(t_list *cmdstr_lst)
 	int		i;
 	char	*cmd;
 	int		len;
+	char	quote;
 
 	while (cmdstr_lst != NULL)
 	{
@@ -28,9 +29,11 @@ void	parser_rem_esc_char_semicolons(t_list *cmdstr_lst)
 		{
 			i = 0;
 			cmd = cmdstr_lst->content;
+			quote = '\0';
 			while (cmd[i] != '\0')
 			{
-				if (cmd[i] == ';' && is_char_escaped(cmd, i) == true)
+				update_quote_status(cmd, i, &quote);
+				if (cmd[i] == ';' && is_char_escaped(cmd, i) == true && !quote)
 				{
 					len = ft_strlen(&cmd[i]);
 					ft_memmove(&cmd[i - 1], &cmd[i], len + 1);

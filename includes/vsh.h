@@ -156,7 +156,6 @@ void	parser_add_str_to_lst(char *arg, t_list **args);
 void	parser_add_lst_to_lst(t_list *content_lst, t_list **lst);
 
 t_list	*parser_split_line_to_commands(char *line);
-void	parser_add_command_to_lst(char *command, ARG_LIST **args);
 int		parser_strlen_cmd(char *line);
 
 t_list	*parser_split_command_to_args(char *cmd);
