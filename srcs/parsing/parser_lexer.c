@@ -6,7 +6,7 @@
 /*   By: jbrinksm <jbrinksm@student.codam.nl>         +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2019/04/17 14:57:49 by jbrinksm       #+#    #+#                */
-/*   Updated: 2019/05/04 20:41:08 by jbrinksm      ########   odam.nl         */
+/*   Updated: 2019/05/04 21:53:58 by jbrinksm      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -54,6 +54,9 @@ int		parser_lexer(char *line, CMD_LIST **cmd_tab)
 		if (probe->content != NULL)
 		{
 			content = parser_split_command_to_args(probe->content);
+			parser_remove_quotes(content);
+			parser_rem_esc_char_quotes(content);
+			parser_rem_esc_char_blanks(content);
 			parser_add_lst_to_lst(content, cmd_tab);
 		}
 		probe = probe->next;

@@ -6,13 +6,93 @@
 /*   By: jbrinksm <marvin@codam.nl>                   +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2019/05/04 16:38:04 by jbrinksm       #+#    #+#                */
-/*   Updated: 2019/05/04 20:49:56 by jbrinksm      ########   odam.nl         */
+/*   Updated: 2019/05/04 21:59:24 by jbrinksm      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "vsh.h"
 #include <criterion/criterion.h>
 #include <criterion/redirect.h>
+
+TestSuite(parser_lexer);
+
+Test(parser_lexer, basic)
+{
+	t_list	*expected;
+	t_list	*lst = NULL;
+	t_list	*content1;
+	t_list	*content2;
+	char	*str1;
+	char	*str2;
+	t_list	*exp_content;
+	t_list	*lst_content;
+
+	str1 = ft_strdup("string1\\\\");
+	str2 = ft_strdup("string2");
+	content1 = ft_lstnew(str1, ft_strlen(str1) + 1);
+	content1->next = ft_lstnew(str2, ft_strlen(str2) + 1);
+	content2 = ft_lstnew(str2, ft_strlen(str2) + 1);
+
+	expected = ft_lstnew(NULL, 0);
+	expected->content = content1;
+	expected->next = ft_lstnew(NULL, 0);
+	expected->next->content = content2;
+
+	parser_lexer("string1\\\\ string2;string2", &lst);
+
+	exp_content = expected->content;
+	lst_content = lst->content;
+	cr_expect_str_eq(lst_content->content, exp_content->content);
+	cr_expect_str_eq(lst_content->next->content, exp_content->next->content);
+	cr_expect_eq(lst_content->next->next, NULL);
+
+	exp_content = expected->next->content;
+	lst_content = lst->next->content;
+	cr_expect_str_eq(lst_content->content, exp_content->content);
+	cr_expect_eq(lst_content->next, NULL);
+}
+
+Test(parser_lexer, escaped_or_quoted)
+{
+	t_list	*expected;
+	t_list	*lst = NULL;
+	t_list	*content1;
+	t_list	*content2;
+	char	*str1;
+	char	*str2;
+	char	*str3;
+	t_list	*exp_content;
+	t_list	*lst_content;
+
+	str1 = ft_strdup("text;something");
+	str2 = ft_strdup(";lala;ala");
+	str3 = ft_strdup("more\\\\wei rd;shit");
+	content1 = ft_lstnew(str1, ft_strlen(str1) + 1);
+	content1->next = ft_lstnew(str2, ft_strlen(str2) + 1);
+	content2 = ft_lstnew(str3, ft_strlen(str3) + 1);
+
+	expected = ft_lstnew(NULL, 0);
+	expected->content = content1;
+	expected->next = ft_lstnew(NULL, 0);
+	expected->next->content = content2;
+
+	parser_lexer("text\\;something \\;\"lala\\;ala\";more\\\\wei\\ rd\\;shit", &lst);
+
+	exp_content = expected->content;
+	lst_content = lst->content;
+	cr_expect_str_eq(lst_content->content, exp_content->content);
+	cr_expect_str_eq(lst_content->next->content, exp_content->next->content);
+	cr_expect_eq(lst_content->next->next, NULL);
+
+	exp_content = expected->next->content;
+	lst_content = lst->next->content;
+	cr_expect_str_eq(lst_content->content, exp_content->content);
+	cr_expect_eq(lst_content->next, NULL);
+}
+
+/*
+**------------------------------------------------------------------------------
+*/
 
 TestSuite(parser_split_line_to_commands);
 
@@ -167,6 +247,45 @@ Test(parser_remove_quotes, basic)
 **------------------------------------------------------------------------------
 */
 
+TestSuite(parser_rem_esc_char_blanks);
+
+Test(parser_rem_esc_char_blanks, single_quoted)
+{
+	t_list	*lst;
+	char	*lst_str;
+
+	lst_str = ft_strdup("'\\ \\\\ '");
+	lst = ft_lstnew(lst_str, ft_strlen(lst_str) + 1);
+	parser_rem_esc_char_blanks(lst);
+	cr_expect_str_eq(lst->content, "'\\ \\\\ '");
+}
+
+Test(parser_rem_esc_char_blanks, double_quoted)
+{
+	t_list	*lst;
+	char	*lst_str;
+
+	lst_str = ft_strdup("\"lala\\ lala\\\\ \"");
+	lst = ft_lstnew(lst_str, ft_strlen(lst_str) + 1);
+	parser_rem_esc_char_blanks(lst);
+	cr_expect_str_eq(lst->content, "\"lala\\ lala\\\\ \"");
+}
+
+Test(parser_rem_esc_char_blanks, not_quoted)
+{
+	t_list	*lst;
+	char	*lst_str;
+
+	lst_str = ft_strdup("dudu\\\tdu\\ dududu\\\\ ");
+	lst = ft_lstnew(lst_str, ft_strlen(lst_str) + 1);
+	parser_rem_esc_char_blanks(lst);
+	cr_expect_str_eq(lst->content, "dudu\tdu dududu\\\\ ");
+}
+
+/*
+**------------------------------------------------------------------------------
+*/
+
 TestSuite(parser_rem_esc_char_quotes);
 
 Test(parser_rem_esc_char_quotes, basic)
@@ -285,52 +404,4 @@ Test(parser_rem_esc_char_semicolons, not_quoted)
 	lst = ft_lstnew(lst_str, ft_strlen(lst_str) + 1);
 	parser_rem_esc_char_semicolons(lst);
 	cr_expect_str_eq(lst->content, "dada;dede\\\\;dydy\\\\;ddd");
-}
-
-/*
-**------------------------------------------------------------------------------
-*/
-
-TestSuite(is_uninhibited_semicolon);
-
-Test(is_uninhibited_semicolon, basic_escaped)
-{
-	char	*str = "x\\\\\\;xx\\;xxx\\\\;";
-
-	cr_expect_str_eq(ft_itoa(is_uninhibited_semicolon(str, 4, '\0')), "0");
-	cr_expect_str_eq(ft_itoa(is_uninhibited_semicolon(str, 8, '\0')), "0");
-	cr_expect_str_eq(ft_itoa(is_uninhibited_semicolon(str, 14, '\0')), "1");
-}
-
-Test(is_uninhibited_semicolon, basic_quoted)
-{
-	char	*str = "x\";\"xx\"\";\"\"xxx;";
-
-	cr_expect_str_eq(ft_itoa(is_uninhibited_semicolon(str, 2, '"')), "0");
-	cr_expect_str_eq(ft_itoa(is_uninhibited_semicolon(str, 8, '\0')), "1");
-	cr_expect_str_eq(ft_itoa(is_uninhibited_semicolon(str, 14, '\0')), "1");
-}
-
-/*
-**------------------------------------------------------------------------------
-*/
-
-TestSuite(is_uninhibited_blank);
-
-Test(is_uninhibited_blank, basic_escaped)
-{
-	char	*str = "x\\\\\\ xx\\ xxx\\\\ ";
-
-	cr_expect_str_eq(ft_itoa(is_uninhibited_blank(str, 4, '\0')), "0");
-	cr_expect_str_eq(ft_itoa(is_uninhibited_blank(str, 8, '\0')), "0");
-	cr_expect_str_eq(ft_itoa(is_uninhibited_blank(str, 14, '\0')), "1");
-}
-
-Test(is_uninhibited_blank, basic_quoted)
-{
-	char	*str = "x\" \"xx\"\" \"\"xxx ";
-
-	cr_expect_str_eq(ft_itoa(is_uninhibited_blank(str, 2, '"')), "0");
-	cr_expect_str_eq(ft_itoa(is_uninhibited_blank(str, 8, '\0')), "1");
-	cr_expect_str_eq(ft_itoa(is_uninhibited_blank(str, 14, '\0')), "1");
 }

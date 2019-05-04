@@ -151,6 +151,7 @@ int		is_uninhibited_blank(char *str, int i, char quote);
 void	parser_remove_quotes(t_list *cmdstr_lst);
 void	parser_rem_esc_char_quotes(t_list *cmdstr_lst);
 void	parser_rem_esc_char_semicolons(t_list *cmdstr_lst);
+void	parser_rem_esc_char_blanks(t_list *cmdstr_lst);
 
 void	parser_add_str_to_lst(char *arg, t_list **args);
 void	parser_add_lst_to_lst(t_list *content_lst, t_list **lst);
