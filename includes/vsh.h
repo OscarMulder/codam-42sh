@@ -6,17 +6,12 @@
 /*   By: omulder <omulder@student.codam.nl>           +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2019/04/10 20:29:42 by jbrinksm       #+#    #+#                */
-
-/*   Updated: 2019/04/23 16:54:55 by jbrinksm      ########   odam.nl         */
-
+/*   Updated: 2019/05/05 12:26:35 by jbrinksm      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
 #ifndef VSH_H
 # define VSH_H
-
-# define CMD_LIST t_list
-# define ARG_LIST t_list
 
 /*
 **==================================defines=====================================
@@ -43,7 +38,7 @@
 **===============================personal headers===============================
 */
 
-#include "libft.h"
+# include "libft.h"
 
 /*
 **==================================headers=====================================
@@ -146,7 +141,7 @@ void	shell_display_prompt(void);
 **----------------------------------parser--------------------------------------
 */
 
-int		parser_lexer(char *line, CMD_LIST **cmd_tab);
+int		parser_lexer(char *line, t_list **cmd_tab);
 
 int		is_uninhibited_semicolon(char *str, int i, char quote);
 int		is_uninhibited_blank(char *str, int i, char quote);
@@ -157,7 +152,7 @@ void	parser_rem_esc_char_semicolons(t_list *cmdstr_lst);
 void	parser_rem_esc_char_blanks(t_list *cmdstr_lst);
 
 void	parser_add_str_to_lst(char *arg, t_list **args);
-void	parser_add_lst_to_lst(t_list *content_lst, t_list **lst);
+void	parser_add_lst_to_lst(t_list *args, t_list **cmd_tab);
 
 t_list	*parser_split_line_to_commands(char *line);
 int		parser_strlen_cmd(char *line);

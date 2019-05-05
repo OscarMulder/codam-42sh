@@ -6,7 +6,7 @@
 /*   By: omulder <omulder@student.codam.nl>           +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2019/04/18 16:44:50 by omulder        #+#    #+#                */
-/*   Updated: 2019/05/04 13:37:12 by jbrinksm      ########   odam.nl         */
+/*   Updated: 2019/05/05 12:27:43 by jbrinksm      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,7 +16,7 @@ int		shell_start(void)
 {
 	int			status;
 	char		*line;
-	CMD_LIST	*cmd_tab;
+	t_list		*cmd_tab;
 
 	status = 1;
 	line = NULL;

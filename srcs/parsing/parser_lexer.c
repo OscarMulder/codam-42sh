@@ -6,7 +6,7 @@
 /*   By: jbrinksm <jbrinksm@student.codam.nl>         +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2019/04/17 14:57:49 by jbrinksm       #+#    #+#                */
-/*   Updated: 2019/05/05 12:06:32 by jbrinksm      ########   odam.nl         */
+/*   Updated: 2019/05/05 12:26:52 by jbrinksm      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,25 +18,29 @@
 #include "vsh.h"
 
 /*
-**	Be sure that the t_list* is initialized to NULL if it doesnt exist yet.
+**	Function to get the result of the split_command_to_args into the cmd_tab
+**	list.
+**
+**	Make sure that the cmd_tab pointer is initialized to NULL if it doesnt exist
+**	yet.
 */
 
-void	parser_add_lst_to_lst(t_list *content_lst, t_list **lst)
+void	parser_add_lst_to_lst(t_list *args, t_list **cmd_tab)
 {
 	t_list	*probe;
 
-	if (*lst == NULL)
+	if (*cmd_tab == NULL)
 	{
-		*lst = ft_lstnew(NULL, 0);
-		(*lst)->content = content_lst;
+		*cmd_tab = ft_lstnew(NULL, 0);
+		(*cmd_tab)->content = args;
 	}
 	else
 	{
-		probe = *lst;
+		probe = *cmd_tab;
 		while (probe->next != NULL)
 			probe = probe->next;
 		probe->next = ft_lstnew(NULL, 0);
-		probe->next->content = content_lst;
+		probe->next->content = args;
 	}
 }
 
@@ -48,23 +52,12 @@ void	parser_add_lst_to_lst(t_list *content_lst, t_list **lst)
 **	The uninhibited(!) ';', '\'', '"', \t', and ' ' chars are removed, as are
 **	the escape chars that escaped one of those chars, since they no longer
 **	serve a special meaning in the parser after this.
-**	The resulting CMD_LIST command table is structured as follows:
+**	The resulting cmd_tab is structured as follows:
 **
-**	CMD_LIST(cmd_tab)--> content(ARG_LST of command 1) -> content(char* of arg1)
+**	t_list* cmd_tab----> content(t_list* args)----------> content(char* of arg1)
 **			|								|
 **			|							next|
-**			|		(1st lst_item)		item|-----------> content(char* of arg2)
-**			|								|
-**			|							next|
-**			|							item|-----------> content(char* of arg3)
-**			|								|
-**			|							next|
-**			|							item= NULL
-**		next|
-**		item|----------> content(ARG_LST of command 2) -> content(char* of arg1)
-**			|								|
-**			|							next|
-**			|		(2nd lst_item)		item|-----------> content(char* of arg2)
+**			|		(1st command)		item|-----------> content(char* of arg2)
 **			|								|
 **			|							next|
 **			|							item|-----------> content(char* of arg3)
@@ -72,19 +65,30 @@ void	parser_add_lst_to_lst(t_list *content_lst, t_list **lst)
 **			|							next|
 **			|							item= NULL
 **		next|
-**		item|----------> content(ARG_LST of command 3) -> content(char* of arg1)
+**		item|----------> content(t_list* args)----------> content(char* of arg1)
 **			|								|
 **			|							next|
-**			|		(3rd lst_item)		item|-----------> content(char* of arg2)
+**			|		(2nd command)		item|-----------> content(char* of arg2)
+**			|								|
+**			|							next|
+**			|							item|-----------> content(char* of arg3)
+**			|								|
+**			|							next|
+**			|							item= NULL
+**		next|
+**		item|----------> content(t_list* args)----------> content(char* of arg1)
+**			|								|
+**			|							next|
+**			|		(3rd command)		item|-----------> content(char* of arg2)
 **			|								|
 **		   ...							   ...
 */
 
-int		parser_lexer(char *line, CMD_LIST **cmd_tab)
+int		parser_lexer(char *line, t_list **cmd_tab)
 {
 	t_list		*cmdstr_lst;
 	t_list		*probe;
-	t_list		*content;
+	t_list		*args;
 
 	cmdstr_lst = parser_split_line_to_commands(line);
 	parser_rem_esc_char_semicolons(cmdstr_lst);
@@ -93,11 +97,11 @@ int		parser_lexer(char *line, CMD_LIST **cmd_tab)
 	{
 		if (probe->content != NULL)
 		{
-			content = parser_split_command_to_args(probe->content);
-			parser_remove_quotes(content);
-			parser_rem_esc_char_quotes(content);
-			parser_rem_esc_char_blanks(content);
-			parser_add_lst_to_lst(content, cmd_tab);
+			args = parser_split_command_to_args(probe->content);
+			parser_remove_quotes(args);
+			parser_rem_esc_char_quotes(args);
+			parser_rem_esc_char_blanks(args);
+			parser_add_lst_to_lst(args, cmd_tab);
 		}
 		probe = probe->next;
 	}

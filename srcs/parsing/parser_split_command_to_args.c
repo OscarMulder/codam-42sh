@@ -6,11 +6,15 @@
 /*   By: jbrinksm <marvin@codam.nl>                   +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2019/05/02 20:48:21 by jbrinksm       #+#    #+#                */
-/*   Updated: 2019/05/04 20:28:03 by jbrinksm      ########   odam.nl         */
+/*   Updated: 2019/05/05 12:25:02 by jbrinksm      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "vsh.h"
+
+/*
+**	Useful function to check 
+*/
 
 int		is_uninhibited_blank(char *str, int i, char quote)
 {
@@ -41,7 +45,7 @@ int		parser_strlen_arg(char *cmd)
 
 t_list	*parser_split_command_to_args(char *cmd)
 {
-	CMD_LIST	*arg_lst;
+	t_list		*arg_lst;
 	char		*arg;
 	int			i;
 	int			len;
