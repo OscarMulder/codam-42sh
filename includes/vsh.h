@@ -6,7 +6,7 @@
 /*   By: omulder <omulder@student.codam.nl>           +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2019/04/10 20:29:42 by jbrinksm       #+#    #+#                */
-/*   Updated: 2019/05/05 12:26:35 by jbrinksm      ########   odam.nl         */
+/*   Updated: 2019/05/05 12:52:35 by jbrinksm      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -151,8 +151,8 @@ void	parser_rem_esc_char_quotes(t_list *cmdstr_lst);
 void	parser_rem_esc_char_semicolons(t_list *cmdstr_lst);
 void	parser_rem_esc_char_blanks(t_list *cmdstr_lst);
 
-void	parser_add_str_to_lst(char *arg, t_list **args);
-void	parser_add_lst_to_lst(t_list *args, t_list **cmd_tab);
+void	add_str_to_lst(char *arg, t_list **args);
+void	add_lst_to_lst(t_list *lst_content, t_list **lst_lst);
 
 t_list	*parser_split_line_to_commands(char *line);
 int		parser_strlen_cmd(char *line);

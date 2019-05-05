@@ -6,9 +6,14 @@
 /*   By: jbrinksm <jbrinksm@student.codam.nl>         +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2019/04/17 14:57:49 by jbrinksm       #+#    #+#                */
-/*   Updated: 2019/05/05 12:26:52 by jbrinksm      ########   odam.nl         */
+/*   Updated: 2019/05/05 12:53:45 by jbrinksm      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
+
+/*
+**	NOTE: This code is nowhere near from perfect and any help and/or suggestions
+**	are appreciated.
+*/
 
 /*
 **	IMPORTANT: add check for more than one subsequent ';' command seperator.
@@ -18,30 +23,37 @@
 #include "vsh.h"
 
 /*
-**	Function to get the result of the split_command_to_args into the cmd_tab
-**	list.
-**
-**	Make sure that the cmd_tab pointer is initialized to NULL if it doesnt exist
-**	yet.
+**	Useful function to check wether a character is ';' and also outside
+**	of any quotes or escape char. (the quote argument is used to check if
+**	you're currently in a quote, see update_quote_char).
 */
 
-void	parser_add_lst_to_lst(t_list *args, t_list **cmd_tab)
+int		is_uninhibited_semicolon(char *str, int i, char quote)
 {
-	t_list	*probe;
+	if (str[i] == ';' && quote == '\0')
+	{
+		if (is_char_escaped(str, i) == true)
+			return (false);
+		return (true);
+	}
+	return (false);
+}
 
-	if (*cmd_tab == NULL)
+/*
+**	Useful function to check wether a character is ' ' || '\t' and also outside
+**	of any quotes or escape char. (the quote argument is used to check if
+**	you're currently in a quote, see update_quote_char).
+*/
+
+int		is_uninhibited_blank(char *str, int i, char quote)
+{
+	if ((str[i] == ' ' || str[i] == '\t') && quote == '\0')
 	{
-		*cmd_tab = ft_lstnew(NULL, 0);
-		(*cmd_tab)->content = args;
+		if (is_char_escaped(str, i) == true)
+			return (false);
+		return (true);
 	}
-	else
-	{
-		probe = *cmd_tab;
-		while (probe->next != NULL)
-			probe = probe->next;
-		probe->next = ft_lstnew(NULL, 0);
-		probe->next->content = args;
-	}
+	return (false);
 }
 
 /*
@@ -101,7 +113,7 @@ int		parser_lexer(char *line, t_list **cmd_tab)
 			parser_remove_quotes(args);
 			parser_rem_esc_char_quotes(args);
 			parser_rem_esc_char_blanks(args);
-			parser_add_lst_to_lst(args, cmd_tab);
+			add_lst_to_lst(args, cmd_tab);
 		}
 		probe = probe->next;
 	}

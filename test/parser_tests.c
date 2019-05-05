@@ -6,7 +6,7 @@
 /*   By: jbrinksm <marvin@codam.nl>                   +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2019/05/04 16:38:04 by jbrinksm       #+#    #+#                */
-/*   Updated: 2019/05/04 21:59:24 by jbrinksm      ########   odam.nl         */
+/*   Updated: 2019/05/05 12:51:07 by jbrinksm      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -303,9 +303,9 @@ Test(parser_rem_esc_char_quotes, basic)
 **------------------------------------------------------------------------------
 */
 
-TestSuite(parser_add_str_to_lst);
+TestSuite(add_str_to_lst);
 
-Test(parser_add_str_to_lst, basic)
+Test(add_str_to_lst, basic)
 {
 	t_list	*expected;
 	t_list	*lst;
@@ -317,8 +317,8 @@ Test(parser_add_str_to_lst, basic)
 	str2 = ft_strdup("string2");
 	expected = ft_lstnew(str1, ft_strlen(str1) + 1);
 	expected->next = ft_lstnew(str2, ft_strlen(str2) + 1);
-	parser_add_str_to_lst(str1, &lst);
-	parser_add_str_to_lst(str2, &lst);
+	add_str_to_lst(str1, &lst);
+	add_str_to_lst(str2, &lst);
 	cr_expect_str_eq(lst->content, expected->content);
 	cr_expect_str_eq(lst->next->content, expected->next->content);
 	cr_expect_eq(lst->next->next, NULL);
@@ -328,9 +328,9 @@ Test(parser_add_str_to_lst, basic)
 **------------------------------------------------------------------------------
 */
 
-TestSuite(parser_add_lst_to_lst);
+TestSuite(add_lst_to_lst);
 
-Test(parser_add_lst_to_lst, basic)
+Test(add_lst_to_lst, basic)
 {
 	t_list	*expected;
 	t_list	*lst = NULL;
@@ -352,8 +352,8 @@ Test(parser_add_lst_to_lst, basic)
 	expected->next = ft_lstnew(NULL, 0);
 	expected->next->content = content2;
 
-	parser_add_lst_to_lst(content1, &lst);
-	parser_add_lst_to_lst(content2, &lst);
+	add_lst_to_lst(content1, &lst);
+	add_lst_to_lst(content2, &lst);
 
 	exp_content = expected->content;
 	lst_content = lst->content;

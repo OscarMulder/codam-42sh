@@ -6,26 +6,21 @@
 /*   By: jbrinksm <marvin@codam.nl>                   +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2019/05/02 20:48:21 by jbrinksm       #+#    #+#                */
-/*   Updated: 2019/05/05 12:25:02 by jbrinksm      ########   odam.nl         */
+/*   Updated: 2019/05/05 12:54:16 by jbrinksm      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
+
+/*
+**	NOTE: This code is nowhere near from perfect and any help and/or suggestions
+**	are appreciated.
+*/
 
 #include "vsh.h"
 
 /*
-**	Useful function to check 
+**	Returns the amount of characters before reaching a '\0' char or a
+**	uninhibited ';' char.
 */
-
-int		is_uninhibited_blank(char *str, int i, char quote)
-{
-	if ((str[i] == ' ' || str[i] == '\t') && quote == '\0')
-	{
-		if (is_char_escaped(str, i) == FUNCT_SUCCESS)
-			return (FUNCT_FAILURE);
-		return (FUNCT_SUCCESS);
-	}
-	return (FUNCT_FAILURE);
-}
 
 int		parser_strlen_arg(char *cmd)
 {
@@ -42,6 +37,11 @@ int		parser_strlen_arg(char *cmd)
 	}
 	return (i);
 }
+
+/*
+**	Splits one command into it's arguments (which are delimited by uninhibited
+**	'\t' and ' ' chars) as strings.
+*/
 
 t_list	*parser_split_command_to_args(char *cmd)
 {
@@ -60,7 +60,7 @@ t_list	*parser_split_command_to_args(char *cmd)
 		if (len > 0)
 		{
 			arg = ft_strndup(&cmd[i], len);
-			parser_add_str_to_lst(arg, &arg_lst);
+			add_str_to_lst(arg, &arg_lst);
 			ft_strdel(&arg);
 			i += len;
 		}

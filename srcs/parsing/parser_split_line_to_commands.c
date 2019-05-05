@@ -6,7 +6,7 @@
 /*   By: jbrinksm <jbrinksm@student.codam.nl>         +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2019/04/23 14:03:51 by jbrinksm       #+#    #+#                */
-/*   Updated: 2019/05/04 20:40:56 by jbrinksm      ########   odam.nl         */
+/*   Updated: 2019/05/05 12:51:14 by jbrinksm      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,34 +18,9 @@
 #include "vsh.h"
 
 /*
-**	Be sure that the t_list* is initialized to NULL if it doesnt exist yet.
+**	Returns the amount of characters before reaching a '\0' char or a
+**	uninhibited ';' char.
 */
-
-void	parser_add_str_to_lst(char *arg, t_list **args)
-{
-	t_list	*probe;
-
-	if (*args == NULL)
-		*args = ft_lstnew(arg, ft_strlen(arg) + 1);
-	else
-	{
-		probe = *args;
-		while (probe->next != NULL)
-			probe = probe->next;
-		probe->next = ft_lstnew(arg, ft_strlen(arg) + 1);
-	}
-}
-
-int		is_uninhibited_semicolon(char *str, int i, char quote)
-{
-	if (str[i] == ';' && quote == '\0')
-	{
-		if (is_char_escaped(str, i) == FUNCT_SUCCESS)
-			return (FUNCT_FAILURE);
-		return (FUNCT_SUCCESS);
-	}
-	return (FUNCT_FAILURE);
-}
 
 int		parser_strlen_cmd(char *line)
 {
@@ -62,6 +37,11 @@ int		parser_strlen_cmd(char *line)
 	}
 	return (i);
 }
+
+/*
+**	Splits the line input into a list of seperate commands (which are delimited
+**	by uninhibited ';' chars) into a string form.
+*/
 
 t_list	*parser_split_line_to_commands(char *line)
 {
@@ -80,7 +60,7 @@ t_list	*parser_split_line_to_commands(char *line)
 		if (len > 0)
 		{
 			command = ft_strndup(&line[i], len);
-			parser_add_str_to_lst(command, &command_lst);
+			add_str_to_lst(command, &command_lst);
 			ft_strdel(&command);
 			i += len;
 		}
