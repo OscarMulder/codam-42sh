@@ -6,7 +6,7 @@
 /*   By: jbrinksm <jbrinksm@student.codam.nl>         +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2019/04/18 16:37:32 by omulder        #+#    #+#                */
-/*   Updated: 2019/05/04 17:22:15 by mavan-he      ########   odam.nl         */
+/*   Updated: 2019/05/06 14:42:12 by rkuijper      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -427,24 +427,41 @@ Test(builtin_cd, basic_builtin_cd)
 {
 	char	**fakenv;
 	fakenv = malloc(sizeof(char*) * 4);
-	fakenv[0] = ft_strdup("HOME=/");
+	fakenv[0] = ft_strdup("HOME=/Users/rkuijper");
 	fakenv[1] = ft_strdup("PWD=/");
 	fakenv[2] = ft_strdup("OLDPWD=");
 	fakenv[3] = NULL;
 	cr_assert(fakenv[0] != NULL && fakenv[1] != NULL && fakenv[2] != NULL, "Failed to allocate test strings");
 
 	builtin_cd( (char*[2]){ "cd", NULL }, &fakenv );
-	builtin_cd( (char*[3]){ "cd", "Users", NULL }, &fakenv );
-	cr_expect_str_eq(var_get_value("PWD", fakenv), "/Users");
+	cr_expect_str_eq(var_get_value("PWD", fakenv), "/Users/rkuijper");
 	cr_expect_str_eq(var_get_value("OLDPWD", fakenv), "/");
 
-	builtin_cd( (char*[2]){ "cd", NULL }, &fakenv );
-	builtin_cd( (char*[4]){ "cd", "-L", "/Users/rkuijper/goinfre", NULL }, &fakenv );
+	builtin_cd( (char*[4]){ "cd", "-L", "goinfre", NULL }, &fakenv );
 	cr_expect_str_eq(var_get_value("PWD", fakenv), "/Users/rkuijper/goinfre");
 
 	builtin_cd( (char*[2]){ "cd", NULL }, &fakenv );
-	builtin_cd( (char*[4]){ "cd", "-P", "/Users/rkuijper/goinfre", NULL }, &fakenv );
+	builtin_cd( (char*[4]){ "cd", "-P", "goinfre", NULL }, &fakenv );
 	cr_expect_str_eq(var_get_value("PWD", fakenv), "/Volumes/Storage/goinfre/rkuijper");
+	
+	builtin_cd( (char*[4]){ "cd", "-P", "..", NULL }, &fakenv );
+	cr_expect_str_eq(var_get_value("PWD", fakenv), "/Volumes/Storage/goinfre");
+	
+	builtin_cd( (char*[4]){ "cd", "-P", "rkuijper/../././../goinfre/.", NULL }, &fakenv );
+	cr_expect_str_eq(var_get_value("PWD", fakenv), "/Volumes/Storage/goinfre");
+
+	builtin_cd( (char*[2]){ "cd", NULL }, &fakenv );
+	builtin_cd( (char*[4]){ "cd", "-L", "goinfre", NULL }, &fakenv );
+	cr_expect_str_eq(var_get_value("PWD", fakenv), "/Users/rkuijper/goinfre");
+
+	builtin_cd( (char*[4]){ "cd", "-P", "..", NULL }, &fakenv );
+	cr_expect_str_eq(var_get_value("PWD", fakenv), "/Volumes/Storage/goinfre");
+
+	builtin_cd( (char*[4]){ "cd", "dingetje", NULL }, &fakenv );
+	cr_expect_str_eq(var_get_value("PWD", fakenv), "/Volumes/Storage/goinfre");
+
+	builtin_cd( (char*[4]){ "cd", "datje", NULL }, &fakenv );
+	cr_expect_str_eq(var_get_value("PWD", fakenv), "/Volumes/Storage/goinfre");
 }
 /*
 **------------------------------------------------------------------------------
