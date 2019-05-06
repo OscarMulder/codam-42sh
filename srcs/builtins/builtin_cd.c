@@ -6,7 +6,7 @@
 /*   By: mavan-he <mavan-he@student.codam.nl>         +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2019/04/25 17:17:25 by mavan-he       #+#    #+#                */
-/*   Updated: 2019/05/06 14:37:04 by rkuijper      ########   odam.nl         */
+/*   Updated: 2019/05/06 16:53:02 by rkuijper      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -76,8 +76,6 @@ static char		*cd_get_correct_path(char *old_path, char *path)
 	
 	i = 0;
 	j = ft_strlen(old_path);
-	if (old_path[j] == '/')
-		j--;
 	while (path[i])
 	{
 		// Stay in the current directory.
@@ -105,7 +103,7 @@ static char		*cd_get_correct_path(char *old_path, char *path)
 		{
 			// Append the filename in the current 'path' index to the new path.
 			tmp_path2 = ft_strsub(tmp_path, 0, j);
-			if (tmp_path2[ft_strlen(tmp_path2)] != '/')
+			if (tmp_path2[j - 1] != '/')
 				tmp_path2 = ft_strjoinchrfree(tmp_path2, '/', 1);
 			
 			while (path[i] && path[i] != '/')
@@ -140,9 +138,10 @@ static int		cd_change_dir(char *path, char ***env, char cd_flag, int print)
 {
 	char		*old_path;
 	
+	old_path = NULL;
 	if (cd_flag == CD_OPT_PU)
 		old_path = getcwd(NULL, 0);
-	else
+	else if (var_get_value("PWD", *env))
 		old_path = ft_strdup(var_get_value("PWD", *env));
 	if (old_path == NULL)
 		return (cd_change_dir_error(NULL));

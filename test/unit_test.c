@@ -6,7 +6,7 @@
 /*   By: jbrinksm <jbrinksm@student.codam.nl>         +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2019/04/18 16:37:32 by omulder        #+#    #+#                */
-/*   Updated: 2019/05/06 14:42:12 by rkuijper      ########   odam.nl         */
+/*   Updated: 2019/05/06 16:56:28 by rkuijper      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -457,11 +457,23 @@ Test(builtin_cd, basic_builtin_cd)
 	builtin_cd( (char*[4]){ "cd", "-P", "..", NULL }, &fakenv );
 	cr_expect_str_eq(var_get_value("PWD", fakenv), "/Volumes/Storage/goinfre");
 
-	builtin_cd( (char*[4]){ "cd", "dingetje", NULL }, &fakenv );
+	builtin_cd( (char*[3]){ "cd", "dingetje", NULL }, &fakenv );
 	cr_expect_str_eq(var_get_value("PWD", fakenv), "/Volumes/Storage/goinfre");
 
-	builtin_cd( (char*[4]){ "cd", "datje", NULL }, &fakenv );
+	builtin_cd( (char*[3]){ "cd", "datje", NULL }, &fakenv );
 	cr_expect_str_eq(var_get_value("PWD", fakenv), "/Volumes/Storage/goinfre");
+
+	// No PWD crash tests.
+	fakenv[1] = NULL;
+	builtin_cd( (char*[3]){ "cd", "..", NULL }, &fakenv );
+	fakenv[1] = ft_strdup("PWD=/");
+
+	// No OLDPWD crash tests.
+	fakenv[2] = NULL;
+	builtin_cd( (char*[3]){ "cd", "-", NULL }, &fakenv );
+	builtin_cd( (char*[3]){ "cd", "/", NULL }, &fakenv );
+	builtin_cd( (char*[3]){ "cd", "Users", NULL }, &fakenv );
+	cr_expect_str_eq(var_get_value("PWD", fakenv), "/Users");
 }
 /*
 **------------------------------------------------------------------------------
