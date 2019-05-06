@@ -77,5 +77,7 @@ void			ft_lstaddback(t_list *alst, t_list *new);
 t_list			*ft_lstnew(void *content, size_t content_size);
 char			*ft_strchr(const char *s, int c);
 char			**ft_strsplit(const char *s, char c);
+char			*ft_strjoinchr(char const *s1, char c);
+char			*ft_strjoinchrfree(char *s1, char c, int i);
 
 #endif
