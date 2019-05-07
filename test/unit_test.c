@@ -6,7 +6,7 @@
 /*   By: jbrinksm <jbrinksm@student.codam.nl>         +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2019/04/18 16:37:32 by omulder        #+#    #+#                */
-/*   Updated: 2019/05/06 16:56:28 by rkuijper      ########   odam.nl         */
+/*   Updated: 2019/05/07 14:40:49 by rkuijper      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -429,44 +429,58 @@ Test(builtin_cd, basic_builtin_cd)
 	fakenv = malloc(sizeof(char*) * 4);
 	fakenv[0] = ft_strdup("HOME=/Users/rkuijper");
 	fakenv[1] = ft_strdup("PWD=/");
-	fakenv[2] = ft_strdup("OLDPWD=");
+	fakenv[2] = ft_strdup("OLDPWD=/");
 	fakenv[3] = NULL;
 	cr_assert(fakenv[0] != NULL && fakenv[1] != NULL && fakenv[2] != NULL, "Failed to allocate test strings");
 
+	// cd without param test.
 	builtin_cd( (char*[2]){ "cd", NULL }, &fakenv );
-	cr_expect_str_eq(var_get_value("PWD", fakenv), "/Users/rkuijper");
+	cr_expect_str_eq(var_get_value("PWD", fakenv), var_get_value("HOME", fakenv));
 	cr_expect_str_eq(var_get_value("OLDPWD", fakenv), "/");
 
+	// Basic symlink address cd test.
 	builtin_cd( (char*[4]){ "cd", "-L", "goinfre", NULL }, &fakenv );
 	cr_expect_str_eq(var_get_value("PWD", fakenv), "/Users/rkuijper/goinfre");
 
+	// Basic physical address cd test.
 	builtin_cd( (char*[2]){ "cd", NULL }, &fakenv );
 	builtin_cd( (char*[4]){ "cd", "-P", "goinfre", NULL }, &fakenv );
 	cr_expect_str_eq(var_get_value("PWD", fakenv), "/Volumes/Storage/goinfre/rkuijper");
 	
+	// Basic previous directory test.
 	builtin_cd( (char*[4]){ "cd", "-P", "..", NULL }, &fakenv );
 	cr_expect_str_eq(var_get_value("PWD", fakenv), "/Volumes/Storage/goinfre");
 	
+	// Advanced directory traversal test.
 	builtin_cd( (char*[4]){ "cd", "-P", "rkuijper/../././../goinfre/.", NULL }, &fakenv );
 	cr_expect_str_eq(var_get_value("PWD", fakenv), "/Volumes/Storage/goinfre");
 
+	// Basic symlink address test.
 	builtin_cd( (char*[2]){ "cd", NULL }, &fakenv );
 	builtin_cd( (char*[4]){ "cd", "-L", "goinfre", NULL }, &fakenv );
 	cr_expect_str_eq(var_get_value("PWD", fakenv), "/Users/rkuijper/goinfre");
 
+	// PWD of symlink to physical address on current directory test.
+	builtin_cd( (char*[4]){ "cd", "-P", ".", NULL }, &fakenv );
+	cr_expect_str_eq(var_get_value("PWD", fakenv), "/Volumes/Storage/goinfre/rkuijper");
+
+	// Checking if PWD is indeed set correctly with basic traversal test.
 	builtin_cd( (char*[4]){ "cd", "-P", "..", NULL }, &fakenv );
 	cr_expect_str_eq(var_get_value("PWD", fakenv), "/Volumes/Storage/goinfre");
 
+	// Non existing directory test 1.
 	builtin_cd( (char*[3]){ "cd", "dingetje", NULL }, &fakenv );
 	cr_expect_str_eq(var_get_value("PWD", fakenv), "/Volumes/Storage/goinfre");
 
+	// Non existing directory test 2.
 	builtin_cd( (char*[3]){ "cd", "datje", NULL }, &fakenv );
 	cr_expect_str_eq(var_get_value("PWD", fakenv), "/Volumes/Storage/goinfre");
 
 	// No PWD crash tests.
 	fakenv[1] = NULL;
 	builtin_cd( (char*[3]){ "cd", "..", NULL }, &fakenv );
-	fakenv[1] = ft_strdup("PWD=/");
+	cr_expect_str_eq(var_get_value("PWD", fakenv), "/Volumes/Storage");
+	builtin_cd( (char*[3]){ "cd", "/", NULL }, &fakenv );
 
 	// No OLDPWD crash tests.
 	fakenv[2] = NULL;
@@ -474,6 +488,7 @@ Test(builtin_cd, basic_builtin_cd)
 	builtin_cd( (char*[3]){ "cd", "/", NULL }, &fakenv );
 	builtin_cd( (char*[3]){ "cd", "Users", NULL }, &fakenv );
 	cr_expect_str_eq(var_get_value("PWD", fakenv), "/Users");
+	cr_expect_str_eq(var_get_value("OLDPWD", fakenv), "/");
 }
 /*
 **------------------------------------------------------------------------------

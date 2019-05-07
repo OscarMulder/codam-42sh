@@ -6,7 +6,7 @@
 /*   By: mavan-he <mavan-he@student.codam.nl>         +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2019/04/25 17:17:25 by mavan-he       #+#    #+#                */
-/*   Updated: 2019/05/06 16:53:02 by rkuijper      ########   odam.nl         */
+/*   Updated: 2019/05/07 14:49:14 by rkuijper      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -62,76 +62,58 @@ static int		cd_change_dir_error(char *path)
 	return (FUNCT_ERROR);
 }
 
+/*
+**		REWORK ME, PLZ!!!!!
+*/
 static char		*cd_get_correct_path(char *old_path, char *path)
 {
 	int i;
-	int j;	
-	char *tmp_path;
-	char *tmp_path2;
+	int j;
+	char buf[MAXPATHLEN];
 
-	if (*path == '/') // Direct/absolute reference.
+	if (*path == '/')
 		return (ft_strdup(path));
-
-	tmp_path = ft_strdup(old_path);
-	
+	ft_strcpy(buf, old_path);
 	i = 0;
-	j = ft_strlen(old_path);
+	j = ft_strlen(buf);
 	while (path[i])
 	{
-		// Stay in the current directory.
-		if (path[i] == '.' && (path[i + 1] == '\0' || path[i + i] == '/'))
+		if (path[i] == '.' && (!path[i + 1] || path[i + 1] == '.' || path[i + 1] == '/'))
 		{
 			i++;
-			if (path[i] == '/')
+			if (path[i] == '.')
+			{
 				i++;
+				while (buf[j] != '/')
+					j--;
+			}
 			continue ;
 		}
-		// Move up one directory.
-		if (ft_strncmp(&path[i], "..\0", 3) == 0 || ft_strncmp(&path[i], "../", 3) == 0)
-		{
-			// Move the begin index (j) back to the previous '/'.
-			while (old_path[j] != '/')
-				j--;
-			j--;
-			i += 2;
-			if (path[i] == '/')
-				i++;
-			continue;
-		}
-
 		if (path[i] != '/')
 		{
-			// Append the filename in the current 'path' index to the new path.
-			tmp_path2 = ft_strsub(tmp_path, 0, j);
-			if (tmp_path2[j - 1] != '/')
-				tmp_path2 = ft_strjoinchrfree(tmp_path2, '/', 1);
-			
+			if (buf[j-1] != '/')
+				buf[j++] = '/';
 			while (path[i] && path[i] != '/')
 			{
-				tmp_path2 = ft_strjoinchrfree(tmp_path2, path[i], 1);
+				buf[j++] = path[i];
 				i++;
 			}
-			free(tmp_path);
-			tmp_path = tmp_path2;
 		}
-		if (!path[i])
-			break ;
-		i++;
+		if (path[i])
+			i++;
 	}
-	return (tmp_path);
+	return (ft_strsub(buf, 0, j));
 }
 
-static void		cd_post_process_var(char *old_path, char *path, char **env, char cd_flag)
+static void		cd_post_process_var(char *old_path, char *path, char ***env, char cd_flag)
 {
-	char *correct_path;
-
-	correct_path = cd_get_correct_path(old_path, path);
-	var_set_value("OLDPWD", var_get_value("PWD", env), env);
+	path = cd_get_correct_path(old_path, path);
+	var_add_value("OLDPWD", old_path, env);
 	if (cd_flag == CD_OPT_PU)
-		var_set_value("PWD", getcwd(NULL, 0), env);
+		var_add_value("PWD", getcwd(NULL, 0), env);
 	else
-		var_set_value("PWD", correct_path, env);
-	free(correct_path);
+		var_add_value("PWD", path, env);
+	free(path);
 }
 
 static int		cd_change_dir(char *path, char ***env, char cd_flag, int print)
@@ -139,17 +121,17 @@ static int		cd_change_dir(char *path, char ***env, char cd_flag, int print)
 	char		*old_path;
 	
 	old_path = NULL;
-	if (cd_flag == CD_OPT_PU)
-		old_path = getcwd(NULL, 0);
-	else if (var_get_value("PWD", *env))
+	if (cd_flag == CD_OPT_LU && var_get_value("PWD", *env))
 		old_path = ft_strdup(var_get_value("PWD", *env));
+	else
+		old_path = getcwd(NULL, 0);
 	if (old_path == NULL)
 		return (cd_change_dir_error(NULL));
 	if (chdir(path) != 0)
 		return (cd_change_dir_error(path));
 	if (print)
 		ft_putendl(path);
-	cd_post_process_var(old_path, path, *env, cd_flag);
+	cd_post_process_var(old_path, path, env, cd_flag);
 	free(old_path);
 	return (FUNCT_SUCCESS);
 }
