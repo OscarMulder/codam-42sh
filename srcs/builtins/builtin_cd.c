@@ -6,7 +6,7 @@
 /*   By: mavan-he <mavan-he@student.codam.nl>         +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2019/04/25 17:17:25 by mavan-he       #+#    #+#                */
-/*   Updated: 2019/05/07 14:49:14 by rkuijper      ########   odam.nl         */
+/*   Updated: 2019/05/07 15:34:24 by rkuijper      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -29,7 +29,7 @@
 ** - MORE THAN ONE DIR:
 ** 	Any additional arguments following directory are ignored.
 ** - FLAG P:
-** 	Do not follow symbolic links
+** 	Do not follow symbolic links (parse physical address).
 ** - RETURN:
 ** 	0 on success, else -1
 **
@@ -48,11 +48,8 @@ static int		cd_change_dir_error(char *path)
 {
 	ft_putstr_fd("cd: ", 2);
 	if (path == NULL)
-	{
-		ft_putendl_fd("could not get current working directory", 2);
-		return (FUNCT_ERROR);
-	}
-	if (access(path, F_OK) == -1)
+		ft_putendl_fd("could not get current working directory parsing: ", 2);
+	else if (access(path, F_OK) == -1)
 		ft_putstr_fd("no such file or directory: ", 2);
 	else if (access(path, R_OK) == -1)
 		ft_putstr_fd("permission denied: ", 2);
@@ -62,14 +59,11 @@ static int		cd_change_dir_error(char *path)
 	return (FUNCT_ERROR);
 }
 
-/*
-**		REWORK ME, PLZ!!!!!
-*/
 static char		*cd_get_correct_path(char *old_path, char *path)
 {
-	int i;
-	int j;
-	char buf[MAXPATHLEN];
+	int		i;
+	int		j;
+	char	buf[MAXPATHLEN];
 
 	if (*path == '/')
 		return (ft_strdup(path));
@@ -78,7 +72,8 @@ static char		*cd_get_correct_path(char *old_path, char *path)
 	j = ft_strlen(buf);
 	while (path[i])
 	{
-		if (path[i] == '.' && (!path[i + 1] || path[i + 1] == '.' || path[i + 1] == '/'))
+		if (path[i] == '.' &&
+			(path[i + 1] != '\0' || path[i + 1] == '.' || path[i + 1] == '/'))
 		{
 			i++;
 			if (path[i] == '.')
@@ -91,7 +86,7 @@ static char		*cd_get_correct_path(char *old_path, char *path)
 		}
 		if (path[i] != '/')
 		{
-			if (buf[j-1] != '/')
+			if (buf[j - 1] != '/')
 				buf[j++] = '/';
 			while (path[i] && path[i] != '/')
 			{
@@ -142,7 +137,7 @@ static int	cd_parse_flags(char ***args, char *cd_flag)
 
 	while ((*args)[0] != NULL && (*args)[0][0] == '-')
 	{
-		if ((*args)[0][1] == 0 || ft_strequ((*args)[0], "--"))
+		if ((*args)[0][1] == '\0' || ft_strequ((*args)[0], "--"))
 			return (FUNCT_SUCCESS);
 		i = 1;
 		while ((*args)[0][i] != 0)
@@ -155,7 +150,7 @@ static int	cd_parse_flags(char ***args, char *cd_flag)
 			{
 				ft_dprintf(2, "minishell: cd: -%c: invalid option\n\
 				cd: usage: cd [-L|-P] [dir]\n", (*args)[0][i]);
-				return (FUNCT_FAILURE);
+				return (FUNCT_ERROR);
 			}
 			i++;
 		}
@@ -191,7 +186,7 @@ int			builtin_cd(char **args, char ***env)
 		path = var_get_value("HOME", *env);
 		return (cd_parse_dash(path, env, cd_flag, "HOME"));
 	}
-	if (args[0][0] == '-' && args[0][1] == 0)
+	if (args[0][0] == '-' && args[0][1] == '\0')
 	{
 		path = var_get_value("OLDPWD", *env);
 		return (cd_parse_dash(path, env, cd_flag, "OLDPWD"));
