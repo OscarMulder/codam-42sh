@@ -6,7 +6,7 @@
 /*   By: mavan-he <mavan-he@student.codam.nl>         +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2019/04/25 17:17:25 by mavan-he       #+#    #+#                */
-/*   Updated: 2019/05/07 15:34:24 by rkuijper      ########   odam.nl         */
+/*   Updated: 2019/05/08 10:58:26 by rkuijper      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -102,22 +102,29 @@ static char		*cd_get_correct_path(char *old_path, char *path)
 
 static void		cd_post_process_var(char *old_path, char *path, char ***env, char cd_flag)
 {
-	path = cd_get_correct_path(old_path, path);
+	char *correct_path;
+
+	correct_path = cd_get_correct_path(old_path, path);
 	var_add_value("OLDPWD", old_path, env);
 	if (cd_flag == CD_OPT_PU)
-		var_add_value("PWD", getcwd(NULL, 0), env);
+	{
+		free(correct_path);
+		correct_path = getcwd(NULL, 0);
+		var_add_value("PWD", correct_path, env);
+	}
 	else
-		var_add_value("PWD", path, env);
-	free(path);
+		var_add_value("PWD", correct_path, env);
+	free(correct_path);
 }
 
 static int		cd_change_dir(char *path, char ***env, char cd_flag, int print)
 {
+	char		*pwd;
 	char		*old_path;
 	
-	old_path = NULL;
-	if (cd_flag == CD_OPT_LU && var_get_value("PWD", *env))
-		old_path = ft_strdup(var_get_value("PWD", *env));
+	pwd = var_get_value("PWD", *env);
+	if (cd_flag == CD_OPT_LU && pwd)
+		old_path = ft_strdup(pwd);
 	else
 		old_path = getcwd(NULL, 0);
 	if (old_path == NULL)

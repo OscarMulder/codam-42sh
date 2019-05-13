@@ -6,7 +6,7 @@
 /*   By: jbrinksm <jbrinksm@student.codam.nl>         +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2019/04/18 16:37:32 by omulder        #+#    #+#                */
-/*   Updated: 2019/05/07 14:40:49 by rkuijper      ########   odam.nl         */
+/*   Updated: 2019/05/08 10:44:54 by rkuijper      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -477,18 +477,21 @@ Test(builtin_cd, basic_builtin_cd)
 	cr_expect_str_eq(var_get_value("PWD", fakenv), "/Volumes/Storage/goinfre");
 
 	// No PWD crash tests.
+	free(fakenv[1]);
 	fakenv[1] = NULL;
 	builtin_cd( (char*[3]){ "cd", "..", NULL }, &fakenv );
 	cr_expect_str_eq(var_get_value("PWD", fakenv), "/Volumes/Storage");
 	builtin_cd( (char*[3]){ "cd", "/", NULL }, &fakenv );
 
 	// No OLDPWD crash tests.
+	free(fakenv[2]);
 	fakenv[2] = NULL;
 	builtin_cd( (char*[3]){ "cd", "-", NULL }, &fakenv );
 	builtin_cd( (char*[3]){ "cd", "/", NULL }, &fakenv );
 	builtin_cd( (char*[3]){ "cd", "Users", NULL }, &fakenv );
 	cr_expect_str_eq(var_get_value("PWD", fakenv), "/Users");
 	cr_expect_str_eq(var_get_value("OLDPWD", fakenv), "/");
+	getchar();
 }
 /*
 **------------------------------------------------------------------------------
