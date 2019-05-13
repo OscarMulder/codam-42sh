@@ -6,7 +6,7 @@
 /*   By: omulder <omulder@student.codam.nl>           +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2019/04/10 20:29:42 by jbrinksm       #+#    #+#                */
-/*   Updated: 2019/05/05 12:52:35 by jbrinksm      ########   odam.nl         */
+/*   Updated: 2019/05/13 19:03:38 by mavan-he      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -91,6 +91,37 @@ typedef struct	s_term
 	struct termios	*old_termios_p;
 	struct termios	*termios_p;
 }				t_term;
+
+
+/*
+**===================================ENUMS======================================
+*/
+
+/*
+**---------------------------------lexer----------------------------------------
+*/
+
+typedef enum	e_tokens
+{
+	WORD,
+	ASSIGNMENT_WORD,
+	NAME,
+	NEWLINE,
+	IO_NUMBER,
+	AND_IF,
+	OR_IF,
+	DLESS,
+	DGREAT,
+	LESSAND,
+	GREATAND,
+	LESSGREAT,
+	LBRACE,
+	RBRACE,
+	BANG,
+	END,
+	INVAL
+}				t_tokens;
+
 
 /*
 **=================================prototypes===================================
