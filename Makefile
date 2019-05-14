@@ -6,7 +6,7 @@
 #    By: jbrinksm <jbrinksm@student.codam.nl>         +#+                      #
 #                                                    +#+                       #
 #    Created: 2019/04/10 20:30:07 by jbrinksm       #+#    #+#                 #
-#    Updated: 2019/05/05 12:51:21 by jbrinksm      ########   odam.nl          #
+#    Updated: 2019/05/14 17:30:20 by mavan-he      ########   odam.nl          #
 #                                                                              #
 # **************************************************************************** #
 
@@ -21,7 +21,7 @@ LIB = -L./libft/ -lft -ltermcap -L$(HOME)/.brew/lib -lcriterion
 VPATH = ./test ./libft ./srcs ./srcs/builtins ./srcs/input_handling \
 ./srcs/parsing ./srcs/term_settings ./srcs/environment_handling ./srcs/shell \
 ./srcs/tools ./test/parser ./test/tools ./test/builtins \
-./test/environment_handling
+./test/environment_handling ./srcs/lexer
 SRCS = shell_start shell_prompt \
 builtin_exit \
 input_read \
@@ -33,7 +33,8 @@ parser_remove_quotes \
 parser_rem_esc_char_quotes parser_rem_esc_char_semicolons \
 parser_rem_esc_char_blanks \
 is_char_escaped update_quote_status add_str_to_lst add_lst_to_lst \
-builtin_echo builtin_echo_set_flags
+builtin_echo builtin_echo_set_flags \
+lexer
 TESTS = unit_test parser_tests is_uninhibited_tests
 OBJECTS := $(SRCS:%=%.o)
 TESTOBJECTS := $(TESTS:%=%.o)

@@ -6,7 +6,7 @@
 /*   By: omulder <omulder@student.codam.nl>           +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2019/04/10 20:29:42 by jbrinksm       #+#    #+#                */
-/*   Updated: 2019/05/13 19:03:38 by mavan-he      ########   odam.nl         */
+/*   Updated: 2019/05/14 17:29:27 by mavan-he      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -83,7 +83,7 @@
 # include <sys/param.h>
 
 /*
-**=================================structs======================================
+**=================================typedefs======================================
 */
 
 typedef struct	s_term
@@ -92,17 +92,13 @@ typedef struct	s_term
 	struct termios	*termios_p;
 }				t_term;
 
-
 /*
-**===================================ENUMS======================================
-*/
-
-/*
-**---------------------------------lexer----------------------------------------
+**----------------------------------lexer----------------------------------------
 */
 
 typedef enum	e_tokens
 {
+	START,
 	WORD,
 	ASSIGNMENT_WORD,
 	NAME,
@@ -122,6 +118,17 @@ typedef enum	e_tokens
 	INVAL
 }				t_tokens;
 
+typedef union	u_tk_value
+{
+	char		*str;
+	char		c;
+}				t_tk_value;
+
+typedef struct	s_token
+{
+	t_tokens	type;
+	t_tk_value	value;
+}				t_token;
 
 /*
 **=================================prototypes===================================
@@ -167,6 +174,11 @@ int		input_echo(char *buf);
 */
 
 void	shell_display_prompt(void);
+
+/*
+**----------------------------------lexer---------------------------------------
+*/
+int		lexer(char *line, t_list **token_lst);
 
 /*
 **----------------------------------parser--------------------------------------
