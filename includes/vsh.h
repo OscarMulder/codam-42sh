@@ -6,7 +6,7 @@
 /*   By: omulder <omulder@student.codam.nl>           +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2019/04/10 20:29:42 by jbrinksm       #+#    #+#                */
-/*   Updated: 2019/05/05 12:52:35 by jbrinksm      ########   odam.nl         */
+/*   Updated: 2019/05/16 14:14:25 by rkuijper      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -129,7 +129,19 @@ void	term_free_struct(t_term **term_p);
 */
 
 int		input_read(char **line);
-int		input_echo(char *buf);
+void	input_clear_char_at(char **line, unsigned index);
+
+int		input_parse_escape(char c, int *input_state);
+void	input_parse_char(char c, unsigned *index, char **line);
+int		input_parse_home(char c, int *input_state, unsigned *index);
+int		input_parse_backspace(char c, unsigned *index, char **line);
+int		input_parse_end(char c, int *input_state, unsigned *index, char **line);
+int		input_parse_next(char c, int *input_state, unsigned *index, char **line);
+int		input_parse_prev(char c, int *input_state, unsigned *index, char **line);
+int		input_parse_delete(char c, int *input_state, unsigned *index,
+			char **line);
+int		input_parse_ctrl_d(char c, unsigned *index, char **line);
+int		input_parse_ctrl_k(char c, unsigned *index, char **line);
 
 /*
 **----------------------------------shell---------------------------------------
