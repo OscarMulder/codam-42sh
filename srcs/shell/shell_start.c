@@ -6,11 +6,9 @@
 /*   By: omulder <omulder@student.codam.nl>           +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2019/04/18 16:44:50 by omulder        #+#    #+#                */
-/*   Updated: 2019/05/14 17:28:50 by mavan-he      ########   odam.nl         */
+/*   Updated: 2019/05/16 17:56:38 by mavan-he      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
-
-#include "vsh.h"
 
 #include "vsh.h"
 
@@ -33,15 +31,14 @@ int		shell_start(void)
 			continue ;
 		}
 		#ifdef DEBUG
-		ft_printf("Line: \n%s\n\n", line);
-		ft_putstr("Token lst:\n");
-		//ft_lstiter(lst, print_content); ADD PRINT LST FUNC
+		ft_printf("\n>>>> LINE <<<<\n%s\n\n>>>> TOKEN_LST <<<<\n", line);
+		ft_lstiter(token_lst, print_node);
 		#endif
 		/* ADD EXPANSION FUNC ? */
 		/* ADD PARSER */
 		/* ADD EVALUATOR */
-		/* ADD LST DEL */
 		/* ADD AST DEL */
+		ft_lstdel(&token_lst, del_tk_node);
 		ft_strdel(&line);
 		ft_putendl("");
 	}

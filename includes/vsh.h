@@ -6,12 +6,13 @@
 /*   By: omulder <omulder@student.codam.nl>           +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2019/04/10 20:29:42 by jbrinksm       #+#    #+#                */
-/*   Updated: 2019/05/14 17:29:27 by mavan-he      ########   odam.nl         */
+/*   Updated: 2019/05/16 19:13:27 by mavan-he      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
 #ifndef VSH_H
 # define VSH_H
+# define DEBUG
 
 /*
 **==================================defines=====================================
@@ -95,33 +96,53 @@ typedef struct	s_term
 /*
 **----------------------------------lexer----------------------------------------
 */
-
+/*
+**	START,
+**	WORD, // bascially any string
+**	ASSIGN, WORD=[WORD]
+**	EXPAND // if we need to expand WORD or ASSIGN
+**	NEWLINE, // not sure if we need this
+**	IO_NUM, // FD ? only with > <
+**	AND_IF, // &&
+**	OR_IF, // ||
+**	DLESS, // <<
+**	DGREAT, // >>
+**	SLESS, // <
+**	SGREAT, // >
+**	LESSAND, // <&
+**	GREATAND, // >&
+**	BG // & in background
+**	PIPE,
+**	END,
+**	ERROR
+*/
 typedef enum	e_tokens
 {
 	START,
 	WORD,
-	ASSIGNMENT_WORD,
-	NAME,
+	ASSIGN,
+	EXPAND,
 	NEWLINE,
-	IO_NUMBER,
+	IO_NUM,
 	AND_IF,
 	OR_IF,
-	DLESS,
+	DLESS, 
 	DGREAT,
+	SLESS, 
+	SGREAT,
 	LESSAND,
 	GREATAND,
-	LESSGREAT,
-	LBRACE,
-	RBRACE,
-	BANG,
+	BG,
+	PIPE,
+	SEMICOLON,
 	END,
-	INVAL
+	ERROR
 }				t_tokens;
 
 typedef union	u_tk_value
 {
 	char		*str;
-	char		c;
+	int			io;
 }				t_tk_value;
 
 typedef struct	s_token
@@ -179,6 +200,14 @@ void	shell_display_prompt(void);
 **----------------------------------lexer---------------------------------------
 */
 int		lexer(char *line, t_list **token_lst);
+int		add_tk_to_lst(t_list **lst, t_token *token);
+void	del_tk_node(void *content, size_t size);
+int		is_tk_char(char c);
+int		lexer_error(t_list **token_lst);
+int		lexer_double_char_tks(char *line, int *i, t_token *token);
+int		lexer_single_char_tks(char *line, int *i, t_token *token);
+int		lexer_io_tk(char *line, int *i, t_token *token);
+int		lexer_word_tk(char *line, int *i, t_token *token);
 
 /*
 **----------------------------------parser--------------------------------------
@@ -215,7 +244,13 @@ char	echo_set_flags(char **args, int *arg_i);
 **---------------------------------tools----------------------------------------
 */
 
-int		is_char_escaped(char *line, int cur_index);
+int		is_char_escaped(char *line, int i);
 int		update_quote_status(char *line, int cur_index, char *quote);
+
+/*
+**----------------------------------debugging-----------------------------------
+*/
+
+void	print_node(t_list *node);
 
 #endif

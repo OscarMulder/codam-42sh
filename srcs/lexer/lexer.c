@@ -6,41 +6,47 @@
 /*   By: mavan-he <mavan-he@student.codam.nl>         +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2019/05/14 15:14:31 by mavan-he       #+#    #+#                */
-/*   Updated: 2019/05/14 17:32:05 by mavan-he      ########   odam.nl         */
+/*   Updated: 2019/05/16 19:18:14 by mavan-he      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "vsh.h"
 
-int		add_tk_to_lst(t_list **lst, t_token *token)
+int			lex_line(char *line, t_list *token_lst)
 {
-	t_list *new;
+	t_token	token;
+	int		i;
 
-	new = ft_lstnew(&token, sizeof(t_token));
-	if (new == NULL)
+	i = 0;
+	while (line[i])
 	{
-		// del lst
-		// malloc error
-		return (FUNCT_ERROR);
+		token.type = START;
+		if (line[i] == ' ' || line[i] == '\t')
+			i++;
+		else if (lexer_double_char_tks(line, &i, &token))
+			add_tk_to_lst(&token_lst, &token);
+		else if (lexer_single_char_tks(line, &i, &token))
+			add_tk_to_lst(&token_lst, &token);
+		else if (lexer_io_tk(line, &i, &token))
+			add_tk_to_lst(&token_lst, &token);
+		else if (lexer_word_tk(line, &i, &token))
+			add_tk_to_lst(&token_lst, &token);
+		if (token.type == ERROR)
+			return (FUNCT_ERROR);
 	}
-	ft_lstaddback(*lst, new);
 	return (FUNCT_SUCCESS);
-
 }
 
-int		lexer(char *line, t_list **token_lst)
+int			lexer(char *line, t_list **token_lst)
 {
 	t_token token;
 
-	(void)line;
 	token.type = START;
-	token.value.c = 0;
-	if (add_tk_to_lst(token_lst, &token))
-		return (FUNCT_ERROR);
-	// lex line
+	ft_lstadd(token_lst, ft_lstnew(&token, sizeof(t_token)));
+	if (*token_lst == NULL || lex_line(line, *token_lst) == FUNCT_ERROR)
+		return (lexer_error(token_lst));
 	token.type = END;
-	token.value.c = 0;
-	if (add_tk_to_lst(token_lst, &token))
-		return (FUNCT_ERROR);
+	if (add_tk_to_lst(token_lst, &token) == FUNCT_ERROR)
+		return (lexer_error(token_lst));
 	return (FUNCT_SUCCESS);
 }
