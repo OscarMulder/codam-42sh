@@ -6,7 +6,7 @@
 /*   By: mavan-he <mavan-he@student.codam.nl>         +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2019/05/14 15:14:31 by mavan-he       #+#    #+#                */
-/*   Updated: 2019/05/16 19:18:14 by mavan-he      ########   odam.nl         */
+/*   Updated: 2019/05/17 14:46:52 by mavan-he      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -21,7 +21,7 @@ int			lex_line(char *line, t_list *token_lst)
 	while (line[i])
 	{
 		token.type = START;
-		if (line[i] == ' ' || line[i] == '\t')
+		if (ft_isblank(line[i]) == true)
 			i++;
 		else if (lexer_double_char_tks(line, &i, &token))
 			add_tk_to_lst(&token_lst, &token);
@@ -40,10 +40,14 @@ int			lex_line(char *line, t_list *token_lst)
 int			lexer(char *line, t_list **token_lst)
 {
 	t_token token;
+	t_list	*new;
 
 	token.type = START;
-	ft_lstadd(token_lst, ft_lstnew(&token, sizeof(t_token)));
-	if (*token_lst == NULL || lex_line(line, *token_lst) == FUNCT_ERROR)
+	new = ft_lstnew(&token, sizeof(t_token));
+	if (new == NULL)
+		return (lexer_error(token_lst));
+	ft_lstadd(token_lst, new);
+	if (lex_line(line, *token_lst) == FUNCT_ERROR)
 		return (lexer_error(token_lst));
 	token.type = END;
 	if (add_tk_to_lst(token_lst, &token) == FUNCT_ERROR)

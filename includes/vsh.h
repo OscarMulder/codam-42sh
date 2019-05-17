@@ -6,7 +6,7 @@
 /*   By: omulder <omulder@student.codam.nl>           +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2019/04/10 20:29:42 by jbrinksm       #+#    #+#                */
-/*   Updated: 2019/05/16 19:13:27 by mavan-he      ########   odam.nl         */
+/*   Updated: 2019/05/17 14:41:00 by mavan-he      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -100,9 +100,7 @@ typedef struct	s_term
 **	START,
 **	WORD, // bascially any string
 **	ASSIGN, WORD=[WORD]
-**	EXPAND // if we need to expand WORD or ASSIGN
-**	NEWLINE, // not sure if we need this
-**	IO_NUM, // FD ? only with > <
+**	IO_NUM, // NUM followed by > or <
 **	AND_IF, // &&
 **	OR_IF, // ||
 **	DLESS, // <<
@@ -112,17 +110,16 @@ typedef struct	s_term
 **	LESSAND, // <&
 **	GREATAND, // >&
 **	BG // & in background
-**	PIPE,
+**	PIPE, // |
+**	SEMICOL // ;
 **	END,
-**	ERROR
+**	ERROR // malloc fail
 */
 typedef enum	e_tokens
 {
 	START,
 	WORD,
 	ASSIGN,
-	EXPAND,
-	NEWLINE,
 	IO_NUM,
 	AND_IF,
 	OR_IF,
@@ -134,7 +131,7 @@ typedef enum	e_tokens
 	GREATAND,
 	BG,
 	PIPE,
-	SEMICOLON,
+	SEMICOL,
 	END,
 	ERROR
 }				t_tokens;

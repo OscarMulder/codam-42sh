@@ -6,7 +6,7 @@
 /*   By: mavan-he <mavan-he@student.codam.nl>         +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2019/01/16 11:00:46 by mavan-he       #+#    #+#                */
-/*   Updated: 2019/05/16 17:01:48 by mavan-he      ########   odam.nl         */
+/*   Updated: 2019/05/17 13:54:16 by mavan-he      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,7 +14,7 @@
 
 void	ft_lstdelone(t_list **alst, void (*del)(void *, size_t))
 {
-	if (alst == NULL || del == NULL)
+	if (alst == NULL || *alst == NULL || del == NULL)
 		return ;
 	del((*alst)->content, alst[0]->content_size);
 	free(*alst);

@@ -6,7 +6,7 @@
 /*   By: mavan-he <mavan-he@student.codam.nl>         +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2019/05/16 10:23:43 by mavan-he       #+#    #+#                */
-/*   Updated: 2019/05/16 20:34:35 by mavan-he      ########   odam.nl         */
+/*   Updated: 2019/05/17 13:56:35 by mavan-he      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,7 +18,10 @@ int		add_tk_to_lst(t_list **lst, t_token *token)
 
 	new = ft_lstnew(token, sizeof(t_token));
 	if (new == NULL)
+	{
+		token->type = ERROR;
 		return (FUNCT_ERROR);
+	}
 	ft_lstaddback(*lst, new);
 	return (FUNCT_SUCCESS);
 }

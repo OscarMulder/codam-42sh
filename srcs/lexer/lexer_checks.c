@@ -6,7 +6,7 @@
 /*   By: mavan-he <mavan-he@student.codam.nl>         +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2019/05/16 17:45:31 by mavan-he       #+#    #+#                */
-/*   Updated: 2019/05/16 19:07:53 by mavan-he      ########   odam.nl         */
+/*   Updated: 2019/05/17 14:38:10 by mavan-he      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -43,7 +43,7 @@ int		lexer_single_char_tks(char *line, int *i, t_token *token)
 	else if (line[*i] == '>')
 		token->type = SGREAT;
 	else if (line[*i] == ';')
-		token->type = SEMICOLON;
+		token->type = SEMICOL;
 	else
 		return (FUNCT_FAILURE);
 	*i += 1;
@@ -56,6 +56,9 @@ int		lexer_io_tk(char *line, int *i, t_token *token)
 
 	i_tmp = *i;
 	if (ft_isdigit(line[i_tmp]) == false)
+		return (FUNCT_FAILURE);
+	if (line[i_tmp] == '0' && (line[i_tmp + 1] != '>' &&
+		line[i_tmp + 1] != '<'))
 		return (FUNCT_FAILURE);
 	while (ft_isdigit(line[i_tmp]) == true)
 		i_tmp++;

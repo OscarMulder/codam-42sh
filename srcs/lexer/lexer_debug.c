@@ -6,7 +6,7 @@
 /*   By: mavan-he <mavan-he@student.codam.nl>         +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2019/05/16 16:06:49 by mavan-he       #+#    #+#                */
-/*   Updated: 2019/05/16 19:19:01 by mavan-he      ########   odam.nl         */
+/*   Updated: 2019/05/17 14:40:58 by mavan-he      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -22,10 +22,6 @@ void	put_token(t_token *node)
 		ft_putstr("ASSIGN");
 	else if (node->type == WORD)
 		ft_putstr("WORD");
-	else if (node->type == EXPAND)
-		ft_putstr("EXPAND");
-	else if (node->type == NEWLINE)
-		ft_putstr("NEWLINE");
 	else if (node->type == IO_NUM)
 		ft_putstr("IO_NUM");
 	else if (node->type == AND_IF)
@@ -48,8 +44,8 @@ void	put_token(t_token *node)
 		ft_putstr("BG");
 	else if (node->type == PIPE)
 		ft_putstr("PIPE");
-	else if (node->type == SEMICOLON)
-		ft_putstr("SEMICOLON");
+	else if (node->type == SEMICOL)
+		ft_putstr("SEMICOL");
 	else if (node->type == END)
 		ft_putstr("END");
 	else if (node->type == ERROR)
