@@ -6,7 +6,7 @@
 /*   By: rkuijper <rkuijper@student.codam.nl>         +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2019/05/16 13:48:04 by rkuijper       #+#    #+#                */
-/*   Updated: 2019/05/17 11:02:16 by rkuijper      ########   odam.nl         */
+/*   Updated: 2019/05/17 14:35:33 by rkuijper      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,7 +16,7 @@ int				input_parse_ctrl_k(char c, unsigned *index, char **line)
 {
 	unsigned i;
 
-	if (c == 11)
+	if (c == '\v')
 	{
 		if (*index < ft_strlen(*line))
 		{

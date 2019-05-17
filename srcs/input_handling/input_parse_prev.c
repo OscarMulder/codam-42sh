@@ -6,7 +6,7 @@
 /*   By: rkuijper <rkuijper@student.codam.nl>         +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2019/05/16 13:39:59 by rkuijper       #+#    #+#                */
-/*   Updated: 2019/05/17 13:45:23 by rkuijper      ########   odam.nl         */
+/*   Updated: 2019/05/17 14:53:32 by rkuijper      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -22,9 +22,7 @@ static void		parse_prev_move_word(unsigned *index, char **line)
 		return ;
 	while (i > 0)
 	{
-		if ((*line)[i] > 32 && (*line)[i] < 127 &&
-			((*line)[i - 1] == ' ' || (*line)[i - 1] == '\t') &&
-			i != *index)
+		if (input_is_word_start(*line, i - 1, i) &&	i != *index)
 			break ;
 		i--;
 	}
@@ -35,19 +33,20 @@ static void		parse_prev_move_word(unsigned *index, char **line)
 int				input_parse_prev(char c, int *input_state,
 	unsigned *index, char **line)
 {
-	if (((*input_state == 2 || *input_state == 5) && c == 'D') || c == 2)
+	if (((*input_state == INPUT_BRACE || *input_state == INPUT_D_BRACE) &&
+		c == 'D') || c == '\2')
 	{
 		if (*input_state == 2)
 		{
-			if ((*index) > 0)
+			if (*index > 0)
 			{
 				ft_printf("\e[D");
-				(*index) -= 1;
+				*index -= 1;
 			}
 		}
 		else
 			parse_prev_move_word(index, line);
-		*input_state = 0;
+		*input_state = INPUT_NONE;
 		return (FUNCT_SUCCESS);
 	}
 	return (FUNCT_FAILURE);

@@ -6,7 +6,7 @@
 /*   By: rkuijper <rkuijper@student.codam.nl>         +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2019/05/16 13:33:54 by rkuijper       #+#    #+#                */
-/*   Updated: 2019/05/17 13:41:51 by rkuijper      ########   odam.nl         */
+/*   Updated: 2019/05/17 14:52:08 by rkuijper      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,6 +19,8 @@ static void		add_char_at(char **line, int index, char c)
 
 	i = ft_strlen(*line);
 	tmp = ft_strnew(i + 1);
+	if (tmp == NULL)
+		return ;
 	ft_strncpy(tmp, *line, i);
 	i--;
 	while (i >= index)

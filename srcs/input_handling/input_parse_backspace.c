@@ -6,7 +6,7 @@
 /*   By: rkuijper <rkuijper@student.codam.nl>         +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2019/05/16 13:43:07 by rkuijper       #+#    #+#                */
-/*   Updated: 2019/05/17 13:36:53 by rkuijper      ########   odam.nl         */
+/*   Updated: 2019/05/17 14:30:46 by rkuijper      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,7 +16,7 @@ int				input_parse_backspace(char c, unsigned *index, char **line)
 {
 	unsigned len;
 
-	if (c == 127)
+	if (c == '\b')
 	{
 		if (*index > 0)
 		{
