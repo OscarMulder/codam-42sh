@@ -6,7 +6,7 @@
 /*   By: rkuijper <rkuijper@student.codam.nl>         +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2019/05/16 13:33:54 by rkuijper       #+#    #+#                */
-/*   Updated: 2019/05/17 14:52:08 by rkuijper      ########   odam.nl         */
+/*   Updated: 2019/05/17 14:59:59 by rkuijper      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -29,7 +29,7 @@ static void		add_char_at(char **line, int index, char c)
 		i--;
 	}
 	tmp[index] = c;
-	free(*line);
+	ft_strdel(line);
 	*line = tmp;
 }
 

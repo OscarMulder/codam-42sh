@@ -6,17 +6,19 @@
 /*   By: rkuijper <rkuijper@student.codam.nl>         +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2019/05/16 13:43:07 by rkuijper       #+#    #+#                */
-/*   Updated: 2019/05/17 14:30:46 by rkuijper      ########   odam.nl         */
+/*   Updated: 2019/05/17 15:03:34 by rkuijper      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "vsh.h"
 
+# define INPUT_BACKSPACE	127
+
 int				input_parse_backspace(char c, unsigned *index, char **line)
 {
 	unsigned len;
 
-	if (c == '\b')
+	if (c == INPUT_BACKSPACE)
 	{
 		if (*index > 0)
 		{
