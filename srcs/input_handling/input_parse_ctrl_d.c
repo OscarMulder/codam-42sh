@@ -6,7 +6,7 @@
 /*   By: rkuijper <rkuijper@student.codam.nl>         +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2019/05/16 13:46:55 by rkuijper       #+#    #+#                */
-/*   Updated: 2019/05/16 14:26:15 by rkuijper      ########   odam.nl         */
+/*   Updated: 2019/05/17 13:42:42 by rkuijper      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -21,17 +21,13 @@ int				input_parse_ctrl_d(char c, unsigned *index, char **line)
 	{
 		len = ft_strlen(*line);
 		if (len == 0)
-			exit(0); // Builtin exit, plz!!!
+			exit(0); // Builtin exit, plz!!! Can't right now because of parameter; make it a global struct?
 		if (*index < len)
 		{
 			i = 0;
-			input_clear_char_at(line, (*index));
-			ft_printf("%s ", (*line) + (*index));
-			while (i <= ft_strlen(&(*line)[(*index)]))
-			{
-				ft_putchar('\b');
-				i++;
-			}
+			input_clear_char_at(line, *index);
+			ft_printf("%s ", *line + *index);
+			ft_printf("\e[%dD", ft_strlen(*line + *index) + 1);
 		}
 		return (FUNCT_SUCCESS);
 	}

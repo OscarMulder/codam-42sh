@@ -6,7 +6,7 @@
 /*   By: rkuijper <rkuijper@student.codam.nl>         +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2019/05/16 13:44:53 by rkuijper       #+#    #+#                */
-/*   Updated: 2019/05/16 14:24:18 by rkuijper      ########   odam.nl         */
+/*   Updated: 2019/05/17 13:44:18 by rkuijper      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -22,13 +22,9 @@ int				input_parse_delete(char c, int *input_state,
 		if (*index < ft_strlen(*line))
 		{
 			i = 0;
-			input_clear_char_at(line, (*index));
-			ft_printf("%s ", (*line) + (*index));
-			while (i <= ft_strlen(&(*line)[(*index)]))
-			{
-				ft_putchar('\b');
-				i++;
-			}
+			input_clear_char_at(line, *index);
+			ft_printf("%s ", *line + *index);
+			ft_printf("\e[%dD", ft_strlen(*line + *index) + 1);
 		}
 		*input_state = 0;
 		return (FUNCT_SUCCESS);

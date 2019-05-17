@@ -6,7 +6,7 @@
 /*   By: omulder <omulder@student.codam.nl>           +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2019/04/10 20:29:42 by jbrinksm       #+#    #+#                */
-/*   Updated: 2019/05/16 14:14:25 by rkuijper      ########   odam.nl         */
+/*   Updated: 2019/05/17 13:21:53 by rkuijper      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -136,12 +136,18 @@ void	input_parse_char(char c, unsigned *index, char **line);
 int		input_parse_home(char c, int *input_state, unsigned *index);
 int		input_parse_backspace(char c, unsigned *index, char **line);
 int		input_parse_end(char c, int *input_state, unsigned *index, char **line);
-int		input_parse_next(char c, int *input_state, unsigned *index, char **line);
-int		input_parse_prev(char c, int *input_state, unsigned *index, char **line);
+int		input_parse_next(char c, int *input_state, unsigned *index,
+			char **line);
+int		input_parse_prev(char c, int *input_state, unsigned *index,
+			char **line);
 int		input_parse_delete(char c, int *input_state, unsigned *index,
 			char **line);
 int		input_parse_ctrl_d(char c, unsigned *index, char **line);
 int		input_parse_ctrl_k(char c, unsigned *index, char **line);
+int		input_parse_ctrl_up(char c, int *input_state, unsigned *index,
+			char **line);
+int		input_parse_ctrl_down(char c, int *input_state,	unsigned *index,
+			char **line);
 
 /*
 **----------------------------------shell---------------------------------------

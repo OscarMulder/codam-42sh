@@ -6,7 +6,7 @@
 /*   By: rkuijper <rkuijper@student.codam.nl>         +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2019/05/16 13:41:00 by rkuijper       #+#    #+#                */
-/*   Updated: 2019/05/16 14:27:33 by rkuijper      ########   odam.nl         */
+/*   Updated: 2019/05/17 11:11:54 by rkuijper      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -26,13 +26,12 @@ static void		parse_next_move_word(unsigned *index, char **line)
 		if ((*line)[i] == ' ' && (*line)[i + 1] > 32 &&
 			(*line)[i + 1] < 127 && i != *index)
 		{
-			ft_putchar((*line)[i]);
 			i++;
 			break ;
 		}
-		ft_putchar((*line)[i]);
 		i++;
 	}
+	ft_printf("%.*s", i - *index, *line + *index);
 	*index = i;
 }
 

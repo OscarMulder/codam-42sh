@@ -6,7 +6,7 @@
 /*   By: jbrinksm <jbrinksm@student.codam.nl>         +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2019/04/17 14:03:16 by jbrinksm       #+#    #+#                */
-/*   Updated: 2019/05/16 14:23:19 by rkuijper      ########   odam.nl         */
+/*   Updated: 2019/05/17 13:45:58 by rkuijper      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -40,14 +40,16 @@ int			input_read(char **line)
 			break ;
 		status = 0;
 		status |= input_parse_escape(c, &input_state);
+		status |= input_parse_home(c, &input_state, &index);
+		status |= input_parse_end(c, &input_state, &index, line);
 		status |= input_parse_prev(c, &input_state, &index, line);
 		status |= input_parse_next(c, &input_state, &index, line);
 		status |= input_parse_delete(c, &input_state, &index, line);
-		status |= input_parse_home(c, &input_state, &index);
-		status |= input_parse_end(c, &input_state, &index, line);
+		status |= input_parse_ctrl_up(c, &input_state, &index, line);
+		status |= input_parse_ctrl_down(c, &input_state, &index, line);
 		if (status == 0)
 			input_state = 0;
-		// Clear?
+		// Clear terminal when ascii 12?
 		status |= input_parse_backspace(c, &index, line);
 		status |= input_parse_ctrl_d(c, &index, line);
 		status |= input_parse_ctrl_k(c, &index, line);

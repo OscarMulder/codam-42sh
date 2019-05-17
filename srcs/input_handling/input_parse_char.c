@@ -6,7 +6,7 @@
 /*   By: rkuijper <rkuijper@student.codam.nl>         +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2019/05/16 13:33:54 by rkuijper       #+#    #+#                */
-/*   Updated: 2019/05/16 14:25:51 by rkuijper      ########   odam.nl         */
+/*   Updated: 2019/05/17 13:41:51 by rkuijper      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -33,19 +33,15 @@ static void		add_char_at(char **line, int index, char c)
 
 void			input_parse_char(char c, unsigned *index, char **line)
 {
-	unsigned i;
-
+	unsigned len;
+	
 	if (ft_isprint(c))
 	{
 		add_char_at(line, *index, c);
-		ft_printf("%s", (*line) + (*index));
-		i = 0;
-		while (i < ft_strlen((*line) + (*index)))
-		{
-			ft_putchar('\b');
-			i++;
-		}
-		ft_putchar(c);
+		len = ft_strlen(*line + *index);
+		ft_printf("%s", *line + *index);
+		if (len - 1 > 0)
+			ft_printf("\e[%dD", len - 1);
 		(*index) += 1;
 	}
 }
