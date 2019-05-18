@@ -6,7 +6,7 @@
 #    By: jbrinksm <jbrinksm@student.codam.nl>         +#+                      #
 #                                                    +#+                       #
 #    Created: 2019/04/10 20:30:07 by jbrinksm       #+#    #+#                 #
-#    Updated: 2019/05/16 18:53:16 by mavan-he      ########   odam.nl          #
+#    Updated: 2019/05/17 14:57:37 by mavan-he      ########   odam.nl          #
 #                                                                              #
 # **************************************************************************** #
 
@@ -34,7 +34,7 @@ parser_rem_esc_char_quotes parser_rem_esc_char_semicolons \
 parser_rem_esc_char_blanks \
 is_char_escaped update_quote_status add_str_to_lst add_lst_to_lst \
 builtin_echo builtin_echo_set_flags \
-lexer lexer_utils lexer_debug lexer_checks
+lexer lexer_utils lexer_debug lexer_simple_tks lexer_word_tk
 TESTS = unit_test parser_tests is_uninhibited_tests
 OBJECTS := $(SRCS:%=%.o)
 TESTOBJECTS := $(TESTS:%=%.o)

@@ -6,7 +6,7 @@
 /*   By: mavan-he <mavan-he@student.codam.nl>         +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2019/05/16 17:45:31 by mavan-he       #+#    #+#                */
-/*   Updated: 2019/05/17 14:38:10 by mavan-he      ########   odam.nl         */
+/*   Updated: 2019/05/17 14:56:07 by mavan-he      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -68,21 +68,5 @@ int		lexer_io_tk(char *line, int *i, t_token *token)
 		return (FUNCT_FAILURE);
 	token->value.io = ft_atoi(&line[*i]);
 	*i += i_tmp;
-	return (FUNCT_SUCCESS);
-}
-
-int		lexer_word_tk(char *line, int *i, t_token *token)
-{
-	int		i_tmp;
-
-	i_tmp = *i;
-	while (line[i_tmp] != 0 && (is_tk_char(line[i_tmp]) != true ||
-			is_char_escaped(line, i_tmp) == true))
-		i_tmp++;
-	token->type = WORD;
-	token->value.str = ft_strsub(line, *i, i_tmp - (*i));
-	if (token->value.str == NULL)
-		token->type = ERROR;
-	*i = i_tmp;
 	return (FUNCT_SUCCESS);
 }
