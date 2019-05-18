@@ -6,7 +6,7 @@
 /*   By: omulder <omulder@student.codam.nl>           +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2019/04/10 20:29:42 by jbrinksm       #+#    #+#                */
-/*   Updated: 2019/05/17 14:41:00 by mavan-he      ########   odam.nl         */
+/*   Updated: 2019/05/18 20:22:33 by mavan-he      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -205,6 +205,7 @@ int		lexer_double_char_tks(char *line, int *i, t_token *token);
 int		lexer_single_char_tks(char *line, int *i, t_token *token);
 int		lexer_io_tk(char *line, int *i, t_token *token);
 int		lexer_word_tk(char *line, int *i, t_token *token);
+void	evaluator(t_list *token_lst);
 
 /*
 **----------------------------------parser--------------------------------------

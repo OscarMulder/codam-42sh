@@ -6,7 +6,7 @@
 /*   By: mavan-he <mavan-he@student.codam.nl>         +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2019/05/14 15:14:31 by mavan-he       #+#    #+#                */
-/*   Updated: 2019/05/17 14:46:52 by mavan-he      ########   odam.nl         */
+/*   Updated: 2019/05/18 20:18:55 by mavan-he      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -52,5 +52,6 @@ int			lexer(char *line, t_list **token_lst)
 	token.type = END;
 	if (add_tk_to_lst(token_lst, &token) == FUNCT_ERROR)
 		return (lexer_error(token_lst));
+	evaluator(*token_lst);
 	return (FUNCT_SUCCESS);
 }
