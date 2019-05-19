@@ -1,16 +1,20 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        ::::::::            */
-/*   evaluator.c                                        :+:    :+:            */
+/*   lexer_evaluator.c                                  :+:    :+:            */
 /*                                                     +:+                    */
 /*   By: mavan-he <mavan-he@student.codam.nl>         +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2019/05/18 19:03:52 by mavan-he       #+#    #+#                */
-/*   Updated: 2019/05/18 20:22:08 by mavan-he      ########   odam.nl         */
+/*   Updated: 2019/05/19 13:48:20 by mavan-he      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "vsh.h"
+
+/*
+**	The evaluator removes '\', '\'' and '"' from token WORD and ASSIGN.
+*/
 
 static void	trim_forwardslash(char *str, int *i_new, int *i)
 {
@@ -67,7 +71,7 @@ static void	trim_word(char *str)
 
 	i = 0;
 	i_new = 0;
-	while(str[i] != '\0')
+	while (str[i] != '\0')
 	{
 		if (str[i] == '\'')
 			trim_single_qoutes(str, &i_new, &i);
@@ -89,7 +93,8 @@ void		evaluator(t_list *token_lst)
 {
 	while (token_lst)
 	{
-		if (((t_token*)token_lst->content)->type == WORD)
+		if (((t_token*)token_lst->content)->type == WORD ||
+			((t_token*)token_lst->content)->type == ASSIGN)
 			trim_word(((t_token*)token_lst->content)->value.str);
 		token_lst = token_lst->next;
 	}

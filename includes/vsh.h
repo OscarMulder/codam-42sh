@@ -6,13 +6,13 @@
 /*   By: omulder <omulder@student.codam.nl>           +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2019/04/10 20:29:42 by jbrinksm       #+#    #+#                */
-/*   Updated: 2019/05/19 13:27:45 by jbrinksm      ########   odam.nl         */
+/*   Updated: 2019/05/19 13:52:36 by mavan-he      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
 #ifndef VSH_H
 # define VSH_H
-# define DEBUG
+//# define DEBUG
 
 /*
 **==================================defines=====================================
@@ -119,6 +119,7 @@ typedef struct	s_term
 **	BG // & in background
 **	PIPE, // |
 **	SEMICOL // ;
+	NEWLINE,
 **	END,
 **	ERROR // malloc fail
 */
