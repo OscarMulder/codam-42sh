@@ -6,7 +6,7 @@
 /*   By: mavan-he <mavan-he@student.codam.nl>         +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2019/05/19 12:12:46 by mavan-he       #+#    #+#                */
-/*   Updated: 2019/05/19 12:14:00 by mavan-he      ########   odam.nl         */
+/*   Updated: 2019/05/19 12:54:59 by jbrinksm      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -20,6 +20,8 @@ void	state_15(t_scanner *scanner)
 		change_state(scanner, &state_13);
 	else if (CURRENT_CHAR == '\'')
 		change_state(scanner, &state_12);
+	else if (ft_isdigit(CURRENT_CHAR) && scanner->tk_len == 0)
+		change_state(scanner, &state_19);
 	else if (CURRENT_CHAR != '|' && CURRENT_CHAR != '>' && \
 	CURRENT_CHAR != '<' && CURRENT_CHAR != '&' && CURRENT_CHAR != ';' && \
 	CURRENT_CHAR != '\n' && !ft_isspace(CURRENT_CHAR) && CURRENT_CHAR != '\0')

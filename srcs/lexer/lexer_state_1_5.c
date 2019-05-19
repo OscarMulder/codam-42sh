@@ -6,7 +6,7 @@
 /*   By: mavan-he <mavan-he@student.codam.nl>         +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2019/05/19 12:10:51 by mavan-he       #+#    #+#                */
-/*   Updated: 2019/05/19 12:11:43 by mavan-he      ########   odam.nl         */
+/*   Updated: 2019/05/19 12:45:45 by jbrinksm      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -59,5 +59,5 @@ void	state_1(t_scanner *scanner)
 	else if (CURRENT_CHAR == '\\')
 		change_state(scanner, &state_16);
 	else
-		change_state(scanner, &state_15);
+		state_15(scanner);
 }

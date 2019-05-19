@@ -6,7 +6,7 @@
 /*   By: mavan-he <mavan-he@student.codam.nl>         +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2019/05/16 16:06:49 by mavan-he       #+#    #+#                */
-/*   Updated: 2019/05/19 12:04:43 by mavan-he      ########   odam.nl         */
+/*   Updated: 2019/05/19 12:52:31 by jbrinksm      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,40 +16,44 @@
 
 void	put_token(t_token *node)
 {
+	char	*token;
+
 	if (node->type == START)
-		ft_putstr("START");
+		token = "START";
 	else if (node->type == ASSIGN)
-		ft_putstr("ASSIGN");
+		token = "ASSIGN";
 	else if (node->type == WORD)
-		ft_putstr("WORD");
-	else if (node->type == IO_NUM)
-		ft_putstr("IO_NUM");
+		token = "WORD";
+	else if (node->type == IO_NUMBER)
+		token = "IO_NUM";
 	else if (node->type == AND_IF)
-		ft_putstr("AND_IF");
+		token = "AND_IF";
 	else if (node->type == OR_IF)
-		ft_putstr("OR_IF");
+		token = "OR_IF";
 	else if (node->type == DLESS)
-		ft_putstr("DLESS");
+		token = "DLESS";
 	else if (node->type == DGREAT)
-		ft_putstr("DGREAT");
+		token = "DGREAT";
 	else if (node->type == SLESS)
-		ft_putstr("SLESS");
+		token = "SLESS";
 	else if (node->type == SGREAT)
-		ft_putstr("SGREAT");
+		token = "SGREAT";
 	else if (node->type == LESSAND)
-		ft_putstr("LESSAND");
+		token = "LESSAND";
 	else if (node->type == GREATAND)
-		ft_putstr("GREATAND");
+		token = "GREATAND";
 	else if (node->type == BG)
-		ft_putstr("BG");
+		token = "BG";
 	else if (node->type == PIPE)
-		ft_putstr("PIPE");
+		token = "PIPE";
 	else if (node->type == SEMICOL)
-		ft_putstr("SEMICOL");
+		token = "SEMICOL";
 	else if (node->type == END)
-		ft_putstr("END");
-	else if (node->type == ERROR)
-		ft_putstr("ERROR");
+		token = "END";
+	else
+		token = "ERROR";
+
+	ft_printf("%-16s", token);
 }
 
 void	print_node(t_list *node)
@@ -58,8 +62,8 @@ void	print_node(t_list *node)
 
 	token = (t_token*)node->content;
 	put_token(token);
-	ft_putstr("\t\tvalue: ");
-	if (token->type == IO_NUM)
+	ft_putstr("value: ");
+	if (token->type == IO_NUMBER)
 		ft_putnbr(token->value.io);
 	else if (token->type == WORD)
 		ft_putstr(token->value.str);

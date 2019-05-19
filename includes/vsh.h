@@ -6,7 +6,7 @@
 /*   By: omulder <omulder@student.codam.nl>           +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2019/04/10 20:29:42 by jbrinksm       #+#    #+#                */
-/*   Updated: 2019/05/19 12:10:26 by mavan-he      ########   odam.nl         */
+/*   Updated: 2019/05/19 13:27:45 by jbrinksm      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -24,6 +24,7 @@
 # define E_ALLOC 420
 # define CTRLD -1
 # define CR 0
+
 /*
 **------------------------------------echo--------------------------------------
 */
@@ -37,7 +38,9 @@
 /*
 **------------------------------------lexer-------------------------------------
 */
+
 # define CURRENT_CHAR (scanner->str)[scanner->str_index]
+
 /*
 **===============================personal headers===============================
 */
@@ -87,7 +90,7 @@
 # include <sys/param.h>
 
 /*
-**=================================typedefs======================================
+**=================================typedefs====================================
 */
 
 typedef struct	s_term
@@ -97,13 +100,14 @@ typedef struct	s_term
 }				t_term;
 
 /*
-**----------------------------------lexer----------------------------------------
+**----------------------------------lexer--------------------------------------
 */
+
 /*
 **	START,
 **	WORD, // bascially any string
 **	ASSIGN, WORD=[WORD]
-**	IO_NUM, // NUM followed by > or <
+**	IO_NUMBER, // NUM followed by > or <
 **	AND_IF, // &&
 **	OR_IF, // ||
 **	DLESS, // <<
@@ -123,12 +127,12 @@ typedef enum	e_tokens
 	START,
 	WORD,
 	ASSIGN,
-	IO_NUM,
+	IO_NUMBER,
 	AND_IF,
 	OR_IF,
-	DLESS, 
+	DLESS,
 	DGREAT,
-	SLESS, 
+	SLESS,
 	SGREAT,
 	LESSAND,
 	GREATAND,
@@ -235,6 +239,7 @@ void	state_15(t_scanner *scanner);
 void	state_16(t_scanner *scanner);
 void	state_17(t_scanner *scanner);
 void	state_18(t_scanner *scanner);
+void	state_19(t_scanner *scanner);
 
 /*
 **----------------------------------parser--------------------------------------
