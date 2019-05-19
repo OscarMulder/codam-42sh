@@ -6,7 +6,7 @@
 /*   By: omulder <omulder@student.codam.nl>           +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2019/04/10 20:29:42 by jbrinksm       #+#    #+#                */
-/*   Updated: 2019/05/18 20:22:33 by mavan-he      ########   odam.nl         */
+/*   Updated: 2019/05/19 11:55:35 by mavan-he      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -132,6 +132,7 @@ typedef enum	e_tokens
 	BG,
 	PIPE,
 	SEMICOL,
+	NEWLINE,
 	END,
 	ERROR
 }				t_tokens;
@@ -148,6 +149,13 @@ typedef struct	s_token
 	t_tk_value	value;
 }				t_token;
 
+typedef struct	s_scanner
+{
+	t_tokens	tk_type;
+	int			tk_len;
+	char		*str;
+	int			str_index;
+}				t_scanner;
 /*
 **=================================prototypes===================================
 */
@@ -206,6 +214,30 @@ int		lexer_single_char_tks(char *line, int *i, t_token *token);
 int		lexer_io_tk(char *line, int *i, t_token *token);
 int		lexer_word_tk(char *line, int *i, t_token *token);
 void	evaluator(t_list *token_lst);
+int		lexer_scanner(char *line, t_list *token_lst);
+
+t_scanner	*allocate_scanner(char *str);
+void		change_state(t_scanner *scanner, void (*state_x)(t_scanner *scanner));
+void		print_token(t_scanner *scanner);
+
+void	state_1(t_scanner *scanner);
+void	state_2(t_scanner *scanner);
+void	state_3(t_scanner *scanner);
+void	state_4(t_scanner *scanner);
+void	state_5(t_scanner *scanner);
+void	state_6(t_scanner *scanner);
+void	state_7(t_scanner *scanner);
+void	state_8(t_scanner *scanner);
+void	state_9(t_scanner *scanner);
+void	state_10(t_scanner *scanner);
+void	state_11(t_scanner *scanner);
+void	state_12(t_scanner *scanner);
+void	state_13(t_scanner *scanner);
+void	state_14(t_scanner *scanner);
+void	state_15(t_scanner *scanner);
+void	state_16(t_scanner *scanner);
+void	state_17(t_scanner *scanner);
+void	state_18(t_scanner *scanner);
 
 /*
 **----------------------------------parser--------------------------------------
