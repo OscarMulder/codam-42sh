@@ -6,7 +6,7 @@
 /*   By: mavan-he <mavan-he@student.codam.nl>         +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2019/05/16 16:06:49 by mavan-he       #+#    #+#                */
-/*   Updated: 2019/05/17 14:40:58 by mavan-he      ########   odam.nl         */
+/*   Updated: 2019/05/19 12:04:43 by mavan-he      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -68,4 +68,40 @@ void	print_node(t_list *node)
 	if (token->type != END)
 		ft_putchar('\n');
 }
+
+void	print_token(t_scanner *scanner)
+{
+	char			*type;
+	char	*lexeme;
+
+	if (scanner->tk_type == WORD)
+		type = "WORD";
+	else if (scanner->tk_type == PIPE)
+		type = "PIPE";
+	else if (scanner->tk_type == SLESS)
+		type = "SLESS";
+	else if (scanner->tk_type == SGREAT)
+		type = "SGREAT";
+	else if (scanner->tk_type == DLESS)
+		type = "DLESS";
+	else if (scanner->tk_type == DGREAT)
+		type = "DGREAT";
+	else if (scanner->tk_type == BG)
+		type = "BG";
+	else if (scanner->tk_type == SEMICOL)
+		type = "SEMICOLON";
+	else if (scanner->tk_type == AND_IF)
+		type = "AND_IF";
+	else if (scanner->tk_type == OR_IF)
+		type = "OR_IF";
+	else if (scanner->tk_type == NEWLINE)
+		type = "NEWLINE";
+	else
+		type = "UNKNOWN";
+	ft_printf("\n%s (%i): ", type, scanner->tk_len);
+	lexeme = ft_strndup(&(scanner->str[scanner->str_index - scanner->tk_len]), scanner->tk_len);
+	ft_printf("\t%s\n", lexeme);
+	ft_strdel(&lexeme);
+}
+
 #endif

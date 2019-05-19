@@ -6,7 +6,7 @@
 /*   By: mavan-he <mavan-he@student.codam.nl>         +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2019/05/16 10:23:43 by mavan-he       #+#    #+#                */
-/*   Updated: 2019/05/17 13:56:35 by mavan-he      ########   odam.nl         */
+/*   Updated: 2019/05/19 12:16:26 by mavan-he      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -42,7 +42,9 @@ int		lexer_error(t_list **token_lst)
 	return (FUNCT_ERROR);
 }
 
-int		is_tk_char(char c)
+void	change_state(t_scanner *scanner, void (*state_x)(t_scanner *scanner))
 {
-	return (c == '<' || c == '>' || c == '&' || c == '|' || c == ';');
+	(scanner->str_index)++;
+	(scanner->tk_len)++;
+	state_x(scanner);
 }
