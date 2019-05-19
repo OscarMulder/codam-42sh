@@ -6,7 +6,7 @@
 /*   By: jbrinksm <jbrinksm@student.codam.nl>         +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2019/04/18 16:37:32 by omulder        #+#    #+#                */
-/*   Updated: 2019/05/17 11:56:21 by mavan-he      ########   odam.nl         */
+/*   Updated: 2019/05/19 16:09:26 by mavan-he      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -161,7 +161,7 @@ Test(is_char_escaped, edge_cases)
 **------------------------------------------------------------------------------
 */
 
-TestSuite(update_quote_status);
+/* TestSuite(update_quote_status);
 
 Test(update_quote_status, basic)
 {
@@ -203,7 +203,7 @@ Test(update_quote_status, edge_cases)
 	quote = '\0';
 	cr_expect_eq(update_quote_status("\\\"harder'line", 8, &quote), 1);
 	cr_expect_eq(quote, '\'');
-}
+} */
 
 /*
 **------------------------------------------------------------------------------
@@ -295,20 +295,9 @@ Test(var_add_value, basic)
 	cr_expect_str_eq(fakenv[3], "TEST=success");
 }
 
-TestSuite(is_tk_char);
-
-Test(is_tk_char, basic)
-{
-	cr_expect(is_tk_char(';') == FUNCT_SUCCESS);
-	cr_expect(is_tk_char('<') == FUNCT_SUCCESS);
-	cr_expect(is_tk_char('>') == FUNCT_SUCCESS);
-	cr_expect(is_tk_char('&') == FUNCT_SUCCESS);
-	cr_expect(is_tk_char('|') == FUNCT_SUCCESS);
-}
-
 TestSuite(lexer_error);
 
-Test(lexer_error, basic)
+Test(lexer_error, basic, .init=redirect_all_stdout)
 {
 	t_token token;
 	t_list	*token_lst;

@@ -6,7 +6,7 @@
 /*   By: mavan-he <mavan-he@student.codam.nl>         +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2019/05/19 11:12:49 by mavan-he       #+#    #+#                */
-/*   Updated: 2019/05/19 13:47:49 by mavan-he      ########   odam.nl         */
+/*   Updated: 2019/05/19 15:27:46 by mavan-he      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -59,9 +59,6 @@ int			lexer_scanner(char *line, t_list *token_lst)
 	while ((scanner.str)[scanner.str_index] != '\0')
 	{
 		state_1(&scanner);
-		#ifdef DEBUG
-		print_token(&scanner);
-		#endif
 		if (scan_to_lst(token_lst, &scanner) == FUNCT_ERROR)
 			return (FUNCT_ERROR);
 		reset_scanner(&scanner);

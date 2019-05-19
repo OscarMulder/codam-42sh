@@ -6,7 +6,7 @@
 #    By: jbrinksm <jbrinksm@student.codam.nl>         +#+                      #
 #                                                    +#+                       #
 #    Created: 2019/04/10 20:30:07 by jbrinksm       #+#    #+#                 #
-#    Updated: 2019/05/19 12:20:29 by mavan-he      ########   odam.nl          #
+#    Updated: 2019/05/19 16:07:31 by mavan-he      ########   odam.nl          #
 #                                                                              #
 # **************************************************************************** #
 
@@ -19,7 +19,7 @@ INCLUDES = -I./libft/ -I./includes \
 LIBFT= ./libft/libft.a
 LIB = -L./libft/ -lft -ltermcap -L$(HOME)/.brew/lib -lcriterion
 VPATH = ./test ./libft ./srcs ./srcs/builtins ./srcs/input_handling \
-./srcs/parsing ./srcs/term_settings ./srcs/environment_handling ./srcs/shell \
+./srcs/term_settings ./srcs/environment_handling ./srcs/shell \
 ./srcs/tools ./test/parser ./test/tools ./test/builtins \
 ./test/environment_handling ./srcs/lexer
 SRCS = shell_start shell_prompt \
@@ -28,15 +28,11 @@ input_read \
 term_prepare term_is_valid term_init_struct term_get_attributes \
 term_set_attributes term_reset_attributes term_free_struct \
 get_environ_cpy var_get_value var_set_value var_join_key_value var_add_value \
-parser_lexer parser_split_line_to_commands parser_split_command_to_args \
-parser_remove_quotes \
-parser_rem_esc_char_quotes parser_rem_esc_char_semicolons \
-parser_rem_esc_char_blanks \
-is_char_escaped update_quote_status add_str_to_lst add_lst_to_lst \
+is_char_escaped \
 builtin_echo builtin_echo_set_flags \
 lexer lexer_utils lexer_debug lexer_evaluator lexer_scanner \
 lexer_state_1_5 lexer_state_6_10 lexer_state_11_15 lexer_state_16_20
-TESTS = unit_test parser_tests is_uninhibited_tests
+TESTS = unit_test
 OBJECTS := $(SRCS:%=%.o)
 TESTOBJECTS := $(TESTS:%=%.o)
 SRCS := $(SRCS:%=%.c)
