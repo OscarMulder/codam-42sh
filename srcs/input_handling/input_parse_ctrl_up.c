@@ -6,7 +6,7 @@
 /*   By: rkuijper <rkuijper@student.codam.nl>         +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2019/05/16 15:03:17 by rkuijper       #+#    #+#                */
-/*   Updated: 2019/05/17 14:46:18 by rkuijper      ########   odam.nl         */
+/*   Updated: 2019/05/20 10:18:28 by rkuijper      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -21,7 +21,7 @@ static void		parse_ctrl_line_up(unsigned *index)
 	if (*index >= ts.ts_cols)
 	{
 		ft_printf("\e[A");
-		(*index) -= ts.ts_cols;
+		*index -= ts.ts_cols;
 	}
 	else
 	{
