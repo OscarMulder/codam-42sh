@@ -50,3 +50,4 @@ cmd_suffix          ::=		[io_redirect | WORD]*
                     ;;
 separator_op        ::=		BG | SEMICOLON
                     ;;
+					
