@@ -6,7 +6,7 @@
 /*   By: rkuijper <rkuijper@student.codam.nl>         +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2019/05/16 13:46:55 by rkuijper       #+#    #+#                */
-/*   Updated: 2019/05/17 14:34:40 by rkuijper      ########   odam.nl         */
+/*   Updated: 2019/05/20 11:41:47 by rkuijper      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -21,7 +21,7 @@ int				input_parse_ctrl_d(char c, unsigned *index, char **line)
 	{
 		len = ft_strlen(*line);
 		if (len == 0)
-			exit(0); // Builtin exit, plz!!! Can't right now because of parameter; make it a global struct?
+			exit(0);
 		if (*index < len)
 		{
 			i = 0;

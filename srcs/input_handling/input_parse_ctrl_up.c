@@ -6,7 +6,7 @@
 /*   By: rkuijper <rkuijper@student.codam.nl>         +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2019/05/16 15:03:17 by rkuijper       #+#    #+#                */
-/*   Updated: 2019/05/20 10:18:28 by rkuijper      ########   odam.nl         */
+/*   Updated: 2019/05/20 11:43:44 by rkuijper      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -33,11 +33,11 @@ static void		parse_ctrl_line_up(unsigned *index)
 int				input_parse_ctrl_up(char c, int *input_state,
 	unsigned *index, char **line)
 {
-	(void)line; // Gets used as soon as history is implemented.
+	(void)line;
 	if ((*input_state == INPUT_BRACE || *input_state == INPUT_D_BRACE) &&
 		c == 'A')
 	{
-		if (*input_state == INPUT_BRACE) // History.
+		if (*input_state == INPUT_BRACE)
 			;
 		else
 			parse_ctrl_line_up(index);

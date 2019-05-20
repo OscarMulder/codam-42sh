@@ -6,13 +6,11 @@
 /*   By: rkuijper <rkuijper@student.codam.nl>         +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2019/05/16 13:41:00 by rkuijper       #+#    #+#                */
-/*   Updated: 2019/05/17 14:57:43 by rkuijper      ########   odam.nl         */
+/*   Updated: 2019/05/20 11:44:01 by rkuijper      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "vsh.h"
-
-// Very ugly, maybe rework to something better?
 
 static void		parse_next_move_word(unsigned *index, char **line)
 {

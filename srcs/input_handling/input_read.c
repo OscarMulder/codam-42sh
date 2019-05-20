@@ -6,7 +6,7 @@
 /*   By: jbrinksm <jbrinksm@student.codam.nl>         +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2019/04/17 14:03:16 by jbrinksm       #+#    #+#                */
-/*   Updated: 2019/05/20 10:22:06 by rkuijper      ########   odam.nl         */
+/*   Updated: 2019/05/20 11:44:26 by rkuijper      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -49,7 +49,6 @@ int			input_read(char **line)
 		status |= input_parse_ctrl_down(c, &input_state, &index, line);
 		if (status == 0)
 			input_state = 0;
-		// Clear terminal when ascii 12?
 		status |= input_parse_backspace(c, &index, line);
 		status |= input_parse_ctrl_d(c, &index, line);
 		status |= input_parse_ctrl_k(c, &index, line);
