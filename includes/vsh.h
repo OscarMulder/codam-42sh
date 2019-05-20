@@ -6,7 +6,7 @@
 /*   By: omulder <omulder@student.codam.nl>           +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2019/04/10 20:29:42 by jbrinksm       #+#    #+#                */
-/*   Updated: 2019/05/19 13:52:36 by mavan-he      ########   odam.nl         */
+/*   Updated: 2019/05/20 13:07:53 by jbrinksm      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -40,6 +40,19 @@
 */
 
 # define CURRENT_CHAR (scanner->str)[scanner->str_index]
+
+/*
+**-----------------------------------input--------------------------------------
+*/
+
+# define INPUT_NONE			0
+# define INPUT_ESC			1
+# define INPUT_BRACE		2
+# define INPUT_THREE		3
+# define INPUT_D_ESC		4
+# define INPUT_D_BRACE		5
+# define INPUT_D_THREE		6
+
 
 /*
 **===============================personal headers===============================
@@ -201,7 +214,26 @@ void	term_free_struct(t_term **term_p);
 */
 
 int		input_read(char **line);
-int		input_echo(char *buf);
+int		input_is_word_start(char *str, int i1, int i2);
+void	input_clear_char_at(char **line, unsigned index);
+
+int		input_parse_escape(char c, int *input_state);
+int		input_parse_char(char c, unsigned *index, char **line);
+int		input_parse_home(char c, int *input_state, unsigned *index);
+int		input_parse_backspace(char c, unsigned *index, char **line);
+int		input_parse_end(char c, int *input_state, unsigned *index, char **line);
+int		input_parse_next(char c, int *input_state, unsigned *index,
+			char **line);
+int		input_parse_prev(char c, int *input_state, unsigned *index,
+			char **line);
+int		input_parse_delete(char c, int *input_state, unsigned *index,
+			char **line);
+int		input_parse_ctrl_d(char c, unsigned *index, char **line);
+int		input_parse_ctrl_k(char c, unsigned *index, char **line);
+int		input_parse_ctrl_up(char c, int *input_state, unsigned *index,
+			char **line);
+int		input_parse_ctrl_down(char c, int *input_state,	unsigned *index,
+			char **line);
 
 /*
 **----------------------------------shell---------------------------------------
