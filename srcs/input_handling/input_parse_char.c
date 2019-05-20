@@ -6,7 +6,7 @@
 /*   By: rkuijper <rkuijper@student.codam.nl>         +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2019/05/16 13:33:54 by rkuijper       #+#    #+#                */
-/*   Updated: 2019/05/20 10:23:59 by rkuijper      ########   odam.nl         */
+/*   Updated: 2019/05/20 12:49:02 by rkuijper      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -46,7 +46,7 @@ int				input_parse_char(char c, unsigned *index, char **line)
 		ft_printf("%s", *line + *index);
 		if (len - 1 > 0)
 			ft_printf("\e[%dD", len - 1);
-		(*index) += 1;
+		*index += 1;
 	}
 	return (FUNCT_SUCCESS);
 }
