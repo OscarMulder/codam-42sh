@@ -6,7 +6,7 @@
 /*   By: mavan-he <mavan-he@student.codam.nl>         +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2019/05/16 16:06:49 by mavan-he       #+#    #+#                */
-/*   Updated: 2019/05/19 12:52:31 by jbrinksm      ########   odam.nl         */
+/*   Updated: 2019/05/19 16:14:19 by mavan-he      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -62,13 +62,12 @@ void	print_node(t_list *node)
 
 	token = (t_token*)node->content;
 	put_token(token);
-	ft_putstr("value: ");
 	if (token->type == IO_NUMBER)
 		ft_putnbr(token->value.io);
-	else if (token->type == WORD)
+	else if (token->type == WORD || token->type == ASSIGN)
 		ft_putstr(token->value.str);
 	else
-		ft_putstr("no value set");
+		put_token(token);
 	if (token->type != END)
 		ft_putchar('\n');
 }

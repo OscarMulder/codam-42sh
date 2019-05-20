@@ -6,13 +6,13 @@
 /*   By: omulder <omulder@student.codam.nl>           +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2019/04/10 20:29:42 by jbrinksm       #+#    #+#                */
-/*   Updated: 2019/05/20 13:07:53 by jbrinksm      ########   odam.nl         */
+/*   Updated: 2019/05/20 13:12:35 by jbrinksm      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
 #ifndef VSH_H
 # define VSH_H
-//# define DEBUG
+# define DEBUG
 
 /*
 **==================================defines=====================================
@@ -161,6 +161,7 @@ typedef enum	e_tokens
 typedef union	u_tk_value
 {
 	char		*str;
+	char		**array;
 	int			io;
 }				t_tk_value;
 
