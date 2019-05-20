@@ -6,7 +6,7 @@
 /*   By: mavan-he <mavan-he@student.codam.nl>         +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2019/05/18 19:03:52 by mavan-he       #+#    #+#                */
-/*   Updated: 2019/05/19 13:48:20 by mavan-he      ########   odam.nl         */
+/*   Updated: 2019/05/20 17:41:53 by mavan-he      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,7 +16,7 @@
 **	The evaluator removes '\', '\'' and '"' from token WORD and ASSIGN.
 */
 
-static void	trim_forwardslash(char *str, int *i_new, int *i)
+static void	trim_backwardslash(char *str, int *i_new, int *i)
 {
 	if (str[*i] == '\\' && str[*i + 1] == '\\')
 	{
@@ -41,7 +41,7 @@ static void	trim_double_qoutes(char *str, int *i_new, int *i)
 			(*i)++;
 		}
 		else if (str[*i] == '\\')
-			trim_forwardslash(str, i_new, i);
+			trim_backwardslash(str, i_new, i);
 		else
 		{
 			str[*i_new] = str[*i];
@@ -78,7 +78,7 @@ static void	trim_word(char *str)
 		else if (str[i] == '"')
 			trim_double_qoutes(str, &i_new, &i);
 		else if (str[i] == '\\')
-			trim_forwardslash(str, &i_new, &i);
+			trim_backwardslash(str, &i_new, &i);
 		else
 		{
 			str[i_new] = str[i];
