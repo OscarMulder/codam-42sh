@@ -6,7 +6,7 @@
 /*   By: mavan-he <mavan-he@student.codam.nl>         +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2019/05/18 19:03:52 by mavan-he       #+#    #+#                */
-/*   Updated: 2019/05/19 13:48:20 by mavan-he      ########   odam.nl         */
+/*   Updated: 2019/05/21 19:28:17 by jbrinksm      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -89,13 +89,12 @@ static void	trim_word(char *str)
 	ft_bzero(&str[i_new], i - i_new);
 }
 
-void		evaluator(t_list *token_lst)
+void		evaluator(t_tokenlst *lst)
 {
-	while (token_lst)
+	while (lst)
 	{
-		if (((t_token*)token_lst->content)->type == WORD ||
-			((t_token*)token_lst->content)->type == ASSIGN)
-			trim_word(((t_token*)token_lst->content)->value.str);
-		token_lst = token_lst->next;
+		if (lst->type == WORD || lst->type == ASSIGN)
+			trim_word((char*)lst->value.str);
+		lst = lst->next;
 	}
 }

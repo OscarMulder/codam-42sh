@@ -6,7 +6,7 @@
 /*   By: jbrinksm <jbrinksm@student.codam.nl>         +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2019/04/18 16:37:32 by omulder        #+#    #+#                */
-/*   Updated: 2019/05/19 16:09:26 by mavan-he      ########   odam.nl         */
+/*   Updated: 2019/05/21 20:22:48 by jbrinksm      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -285,8 +285,8 @@ TestSuite(var_add_value);
 
 Test(var_add_value, basic)
 {
-
 	char	**fakenv;
+
 	fakenv = ft_strsplit("LOL=didi|PATH=lala|PAT=lolo", '|');
 	cr_assert(fakenv != NULL, "Failed to allocate test strings");
 	cr_expect(var_add_value("PATH", "changed", &fakenv) == FUNCT_SUCCESS);
@@ -295,37 +295,93 @@ Test(var_add_value, basic)
 	cr_expect_str_eq(fakenv[3], "TEST=success");
 }
 
-TestSuite(lexer_error);
+TestSuite(lexer_error, .init=redirect_all_stdout);
 
-Test(lexer_error, basic, .init=redirect_all_stdout)
+Test(lexer_error, one_item)
 {
-	t_token token;
-	t_list	*token_lst;
-	char	*str;
+	t_tokenlst	*lst;
 
-	token.type = START;
-	token_lst = NULL;
-	ft_lstadd(&token_lst, ft_lstnew(&token, sizeof(t_token)));
-	token.type = WORD;
-	str = ft_strdup("hoi");
-	token.value.str = str;
-	add_tk_to_lst(&token_lst, &token);
-	lexer_error(&token_lst);
-	cr_expect(token_lst == NULL);
+	lst = NULL;
+	tokenlstaddback(&lst, START, get_tkval(START, NULL, 0));
+	lexer_error(&lst);
+	cr_expect(lst == NULL);
+	cr_expect_stderr_eq_str("vsh: lexer: malloc error\n");
 }
 
-// return (test_ret_fail("test_prompt failed!"));
-// return (test_ret_fail("test_free_and_return_null failed!"));
-// return (test_ret_fail("test_get_environ_cpy failed!"));
-// return (test_ret_fail("test_param_to_env failed!"));
-// return (test_ret_fail("test_term_is_valid failed!"));
-// return (test_ret_fail("test_term_init_struct failed!"));
-// return (test_ret_fail("test_term_free_struct failed!"));
-// return (test_ret_fail("test_term_get_attributes failed!"));
-// return (test_ret_fail("test_parser_split_commands failed!"));
-// return (test_ret_fail("test_parser_strdup_command_from_line failed!"));
-// return (test_ret_fail("test_parser_command_len_from_line failed!"));
-// return (test_ret_fail("test_parser_total_commands_from_line failed!"));
-// return (test_ret_fail("test_is_char_escaped failed!"));
-// return (test_ret_fail("test_is_char_escaped failed!"));
-// return (test_ret_fail("test_echo failed!"));
+Test(lexer_error, long_list)
+{
+	t_tokenlst	*lst;
+
+	lst = NULL;
+	tokenlstaddback(&lst, START, get_tkval(START, NULL, 0));
+	tokenlstaddback(&lst, WORD, get_tkval(WORD, ft_strdup("hoi"), 0));
+	tokenlstaddback(&lst, WORD, get_tkval(WORD, ft_strdup("hoi"), 0));
+	tokenlstaddback(&lst, IO_NUMBER, get_tkval(IO_NUMBER, NULL, 14234));
+	tokenlstaddback(&lst, WORD, get_tkval(WORD, ft_strdup("hoi"), 0));
+	tokenlstaddback(&lst, IO_NUMBER, get_tkval(IO_NUMBER, NULL, 14234));
+	tokenlstaddback(&lst, IO_NUMBER, get_tkval(IO_NUMBER, NULL, 14234));
+	tokenlstaddback(&lst, WORD, get_tkval(WORD, ft_strdup("hoi"), 0));
+	tokenlstaddback(&lst, IO_NUMBER, get_tkval(IO_NUMBER, NULL, 14234));
+	tokenlstaddback(&lst, WORD, get_tkval(WORD, ft_strdup("hoi"), 0));
+	lexer_error(&lst);
+	cr_expect(lst == NULL);
+	cr_expect_stderr_eq_str("vsh: lexer: malloc error\n");
+}
+
+Test(lexer_error, all_items)
+{
+	t_tokenlst	*lst;
+
+	lst = NULL;
+	tokenlstaddback(&lst, START, get_tkval(START, NULL, 0));
+	tokenlstaddback(&lst, WORD, get_tkval(WORD, ft_strdup("hoi"), 0));
+	tokenlstaddback(&lst, IO_NUMBER, get_tkval(IO_NUMBER, NULL, 14234));
+	tokenlstaddback(&lst, ERROR, get_tkval(ERROR, NULL, 0));
+	tokenlstaddback(&lst, ASSIGN, get_tkval(ASSIGN, NULL, 0));
+	tokenlstaddback(&lst, AND_IF, get_tkval(AND_IF, NULL, 0));
+	tokenlstaddback(&lst, OR_IF, get_tkval(OR_IF, NULL, 0));
+	tokenlstaddback(&lst, DLESS, get_tkval(DLESS, NULL, 0));
+	tokenlstaddback(&lst, DGREAT, get_tkval(DGREAT, NULL, 0));
+	tokenlstaddback(&lst, SLESS, get_tkval(SLESS, NULL, 0));
+	tokenlstaddback(&lst, SGREAT, get_tkval(SGREAT, NULL, 0));
+	tokenlstaddback(&lst, LESSAND, get_tkval(LESSAND, NULL, 0));
+	tokenlstaddback(&lst, GREATAND, get_tkval(GREATAND, NULL, 0));
+	tokenlstaddback(&lst, BG, get_tkval(BG, NULL, 0));
+	tokenlstaddback(&lst, PIPE, get_tkval(PIPE, NULL, 0));
+	tokenlstaddback(&lst, SEMICOL, get_tkval(SEMICOL, NULL, 0));
+	tokenlstaddback(&lst, NEWLINE, get_tkval(NEWLINE, NULL, 0));
+	tokenlstaddback(&lst, END, get_tkval(END, NULL, 0));
+	lexer_error(&lst);
+	cr_expect(lst == NULL);
+	cr_expect_stderr_eq_str("vsh: lexer: malloc error\n");
+}
+
+TestSuite(token_lst, .init=redirect_all_stdout);
+
+Test(token_lst, invalid_values)
+{
+	t_tokenlst	*lst;
+
+	lst = NULL;
+	tokenlstaddback(&lst, END, get_tkval(ASSIGN, NULL, 0));
+	tokenlstaddback(&lst, WORD, get_tkval(WORD, ft_strdup("hoi"), 0));
+	tokenlstaddback(&lst, ERROR, get_tkval(ERROR, NULL, 14234));
+	tokenlstaddback(&lst, ERROR, get_tkval(SGREAT, NULL, 0));
+	tokenlstaddback(&lst, ASSIGN, get_tkval(SLESS, NULL, 0));
+	tokenlstaddback(&lst, AND_IF, get_tkval(END, NULL, 0));
+	tokenlstaddback(&lst, OR_IF, get_tkval(SLESS, NULL, 0));
+	tokenlstaddback(&lst, LESSAND, get_tkval(ASSIGN, NULL, 0));
+	tokenlstaddback(&lst, ERROR, get_tkval(DGREAT, NULL, 0));
+	tokenlstaddback(&lst, SLESS, get_tkval(ERROR, NULL, 0));
+	tokenlstaddback(&lst, SGREAT, get_tkval(GREATAND, NULL, 0));
+	tokenlstaddback(&lst, LESSAND, get_tkval(START, NULL, 0));
+	tokenlstaddback(&lst, GREATAND, get_tkval(GREATAND, NULL, 0));
+	tokenlstaddback(&lst, BG, get_tkval(BG, NULL, 0));
+	tokenlstaddback(&lst, GREATAND, get_tkval(SEMICOL, NULL, 0));
+	tokenlstaddback(&lst, END, get_tkval(SEMICOL, NULL, 0));
+	tokenlstaddback(&lst, START, get_tkval(NEWLINE, NULL, 0));
+	tokenlstaddback(&lst, ERROR, get_tkval(LESSAND, NULL, 0));
+	lexer_error(&lst);
+	cr_expect(lst == NULL);
+	cr_expect_stderr_eq_str("vsh: lexer: malloc error\n");
+}
