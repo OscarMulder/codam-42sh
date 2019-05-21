@@ -6,7 +6,7 @@
 /*   By: jbrinksm <jbrinksm@student.codam.nl>         +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2019/04/18 16:37:32 by omulder        #+#    #+#                */
-/*   Updated: 2019/05/21 20:22:48 by jbrinksm      ########   odam.nl         */
+/*   Updated: 2019/05/21 20:32:42 by jbrinksm      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -295,6 +295,10 @@ Test(var_add_value, basic)
 	cr_expect_str_eq(fakenv[3], "TEST=success");
 }
 
+/*
+**------------------------------------------------------------------------------
+*/
+
 TestSuite(lexer_error, .init=redirect_all_stdout);
 
 Test(lexer_error, one_item)
@@ -356,6 +360,10 @@ Test(lexer_error, all_items)
 	cr_expect_stderr_eq_str("vsh: lexer: malloc error\n");
 }
 
+/*
+**------------------------------------------------------------------------------
+*/
+
 TestSuite(token_lst, .init=redirect_all_stdout);
 
 Test(token_lst, invalid_values)
@@ -384,4 +392,34 @@ Test(token_lst, invalid_values)
 	lexer_error(&lst);
 	cr_expect(lst == NULL);
 	cr_expect_stderr_eq_str("vsh: lexer: malloc error\n");
+}
+
+/*
+**------------------------------------------------------------------------------
+*/
+
+TestSuite(get_tkval);
+
+Test(get_tkval, basic_word_token)
+{
+	t_token_val		test;
+
+	test = get_tkval(WORD, "teststring", 0);
+	cr_expect_str_eq("teststring", test.str);
+	test = get_tkval(WORD, "ljdfhweiruh9m5h2985h25h20ghh034gh2034hg203h4g023h4g023h4g023h4g02h340gh2340gh3204gh34", 0);
+	cr_expect_str_eq("ljdfhweiruh9m5h2985h25h20ghh034gh2034hg203h4g023h4g023h4g023h4g02h340gh2340gh3204gh34", test.str);
+	test = get_tkval(WORD, "10986472034762346", 0);
+	cr_expect_str_eq("10986472034762346", test.str);
+	test = get_tkval(WORD, "dgasdgasdgasdgasgasdgast3g 3 3 324 25 234 235 2335 235 25", 0);
+	cr_expect_str_eq("dgasdgasdgasdgasgasdgast3g 3 3 324 25 234 235 2335 235 25", test.str);
+}
+
+Test(get_tkval, basic_ionumber_token)
+{
+	t_token_val		test;
+
+	test = get_tkval(IO_NUMBER, "dont use", 999);
+	cr_expect_str_eq(ft_itoa(999), ft_itoa(test.io_num));
+	test = get_tkval(IO_NUMBER, "dont use", 25214346);
+	cr_expect_str_eq(ft_itoa(25214346), ft_itoa(test.io_num));
 }
