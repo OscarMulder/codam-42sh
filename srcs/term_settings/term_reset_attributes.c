@@ -6,11 +6,15 @@
 /*   By: jbrinksm <jbrinksm@student.codam.nl>         +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2019/04/18 18:19:47 by jbrinksm       #+#    #+#                */
-/*   Updated: 2019/05/21 20:40:38 by jbrinksm      ########   odam.nl         */
+/*   Updated: 2019/05/21 20:41:40 by jbrinksm      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "vsh.h"
+
+/*
+**	We will need to implement errno return values for this function.
+*/
 
 int		term_reset(t_term *term_p)
 {
