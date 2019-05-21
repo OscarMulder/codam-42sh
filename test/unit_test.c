@@ -6,7 +6,7 @@
 /*   By: jbrinksm <jbrinksm@student.codam.nl>         +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2019/04/18 16:37:32 by omulder        #+#    #+#                */
-/*   Updated: 2019/05/21 20:32:42 by jbrinksm      ########   odam.nl         */
+/*   Updated: 2019/05/21 20:35:59 by jbrinksm      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -364,9 +364,9 @@ Test(lexer_error, all_items)
 **------------------------------------------------------------------------------
 */
 
-TestSuite(token_lst, .init=redirect_all_stdout);
+TestSuite(tokenlstaddback, .init=redirect_all_stdout);
 
-Test(token_lst, invalid_values)
+Test(tokenlstaddback, invalid_values)
 {
 	t_tokenlst	*lst;
 
