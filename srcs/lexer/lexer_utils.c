@@ -6,7 +6,7 @@
 /*   By: mavan-he <mavan-he@student.codam.nl>         +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2019/05/16 10:23:43 by mavan-he       #+#    #+#                */
-/*   Updated: 2019/05/21 19:47:36 by jbrinksm      ########   odam.nl         */
+/*   Updated: 2019/05/21 21:16:39 by jbrinksm      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,7 +19,7 @@ void	tokenlstdel(t_tokenlst **lst)
 	if ((*lst)->next != NULL)
 		tokenlstdel(&(*lst)->next);
 	if ((*lst)->type == WORD || (*lst)->type == ASSIGN)
-		ft_strdel(&(*lst)->value.str);
+		ft_strdel(&(*lst)->value);
 	ft_memdel((void**)lst);
 }
 

@@ -6,7 +6,7 @@
 /*   By: omulder <omulder@student.codam.nl>           +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2019/04/10 20:29:42 by jbrinksm       #+#    #+#                */
-/*   Updated: 2019/05/21 19:58:03 by jbrinksm      ########   odam.nl         */
+/*   Updated: 2019/05/21 21:15:45 by jbrinksm      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -158,16 +158,10 @@ typedef enum	e_tokens
 	END
 }				t_tokens;
 
-typedef union	u_token_val
-{
-	char	*str;
-	int		io_num;
-}				t_token_val;
-
 typedef struct	s_tokenlst
 {
 	t_tokens			type;
-	t_token_val			value;
+	char				*value;
 	struct s_tokenlst	*next;
 }				t_tokenlst;
 
@@ -247,9 +241,8 @@ void	shell_display_prompt(void);
 */
 
 
-t_token_val	get_tkval(t_tokens type, char *str, int value);
-int			tokenlstaddback(t_tokenlst **lst, t_tokens type, t_token_val value);
-t_tokenlst	*tokenlstnew(t_tokens type, t_token_val value);
+int			tokenlstaddback(t_tokenlst **lst, t_tokens type, char *value);
+t_tokenlst	*tokenlstnew(t_tokens type, char *value);
 void		tokenlstdel(t_tokenlst **lst);
 void		tokenlstiter(t_tokenlst *lst, void (*f)(t_tokenlst *elem));
 

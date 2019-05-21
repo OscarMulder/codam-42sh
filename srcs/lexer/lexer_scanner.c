@@ -6,7 +6,7 @@
 /*   By: mavan-he <mavan-he@student.codam.nl>         +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2019/05/19 11:12:49 by mavan-he       #+#    #+#                */
-/*   Updated: 2019/05/21 20:01:03 by jbrinksm      ########   odam.nl         */
+/*   Updated: 2019/05/21 21:17:43 by jbrinksm      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -33,24 +33,20 @@ static void	reset_scanner(t_scanner *scanner)
 static int	scan_to_lst(t_tokenlst *lst, t_scanner *scanner)
 {
 	t_tokens	type;
-	t_token_val	value;
+	char		*value;
 	int			tk_start;
 
 	tk_start = scanner->str_index - scanner->tk_len;
 	if (tk_start < 0)
 		return (FUNCT_ERROR);
 	type = scanner->tk_type;
-	if (type == WORD || type == ASSIGN)
+	value = NULL;
+	if (type == WORD || type == ASSIGN || type == IO_NUMBER)
 	{
-		value = get_tkval(type, \
-		(void*)ft_strndup(&(scanner->str[tk_start]), scanner->tk_len), 0);
-		if (value.str == NULL)
+		value = ft_strndup(&(scanner->str[tk_start]), scanner->tk_len);
+		if (value == NULL)
 			return (FUNCT_ERROR);
 	}
-	else if (type == IO_NUMBER)
-		value = get_tkval(type, NULL, ft_atoi(&(scanner->str[tk_start])));
-	else
-		value.str = NULL;
 	if (tokenlstaddback(&lst, type, value) == FUNCT_ERROR)
 		return (FUNCT_ERROR);
 	return (FUNCT_SUCCESS);

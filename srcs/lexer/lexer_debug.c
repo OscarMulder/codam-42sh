@@ -6,7 +6,7 @@
 /*   By: mavan-he <mavan-he@student.codam.nl>         +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2019/05/16 16:06:49 by mavan-he       #+#    #+#                */
-/*   Updated: 2019/05/21 19:27:53 by jbrinksm      ########   odam.nl         */
+/*   Updated: 2019/05/21 21:14:57 by jbrinksm      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -60,9 +60,9 @@ void	print_node(t_tokenlst *node)
 {
 	put_token(node);
 	if (node->type == IO_NUMBER)
-		ft_putnbr((int)node->value.io_num);
+		ft_putnbr(ft_atoi(node->value));
 	else if (node->type == WORD || node->type == ASSIGN)
-		ft_putstr((char*)node->value.str);
+		ft_putstr(node->value);
 	else
 		put_token(node);
 	if (node->type != END)

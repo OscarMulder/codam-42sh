@@ -6,7 +6,7 @@
 /*   By: mavan-he <mavan-he@student.codam.nl>         +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2019/05/18 19:03:52 by mavan-he       #+#    #+#                */
-/*   Updated: 2019/05/21 19:28:17 by jbrinksm      ########   odam.nl         */
+/*   Updated: 2019/05/21 21:14:13 by jbrinksm      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -94,7 +94,7 @@ void		evaluator(t_tokenlst *lst)
 	while (lst)
 	{
 		if (lst->type == WORD || lst->type == ASSIGN)
-			trim_word((char*)lst->value.str);
+			trim_word(lst->value);
 		lst = lst->next;
 	}
 }
