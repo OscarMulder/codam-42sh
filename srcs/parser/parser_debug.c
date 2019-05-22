@@ -6,7 +6,7 @@
 /*   By: mavan-he <mavan-he@student.codam.nl>         +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2019/05/21 21:13:37 by mavan-he       #+#    #+#                */
-/*   Updated: 2019/05/22 12:08:05 by mavan-he      ########   odam.nl         */
+/*   Updated: 2019/05/22 18:18:42 by mavan-he      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,7 +19,7 @@ static int		get_tree_height(t_ast *root)
 
 	if (!root)
 		return (0);
-	if (root->type != WORD)
+	if (root->type != END)
 	{
 		lh = get_tree_height(root->child);
 		rh = get_tree_height(root->sibling);
@@ -73,7 +73,7 @@ static void		tree_print_rec(t_ast *root, int depth, int space, int width)
 		return ;
 	space += width;
 	color = (depth % 5);
-	if (root->type != WORD)
+	if (root->sibling != NULL)
 		tree_print_rec(root->sibling, depth + 1, space, width);
 	i = width;
 	while (i < space)
@@ -82,11 +82,11 @@ static void		tree_print_rec(t_ast *root, int depth, int space, int width)
 		i++;
 	}
 	print_color(depth % 7);
-	if (root->type == WORD)
+	if (root->type == WORD || root->type == ASSIGN)
 		printf("%s\e[0m\n", root->value);
 	else
-		printf("%c\e[0m\n", '&');
-	if (root->type != WORD)
+		printf("%s\e[0m\n", put_token(root->type));
+	if (root->child != NULL)
 		tree_print_rec(root->child, depth + 1, space, width);
 }
 

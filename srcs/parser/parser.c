@@ -6,7 +6,7 @@
 /*   By: jbrinksm <jbrinksm@student.codam.nl>         +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2019/05/19 19:58:40 by jbrinksm       #+#    #+#                */
-/*   Updated: 2019/05/22 12:05:01 by mavan-he      ########   odam.nl         */
+/*   Updated: 2019/05/22 18:31:23 by mavan-he      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,17 +14,60 @@
 
 int		cmd_word(t_tokenlst **token_lst, t_ast **ast)
 {
-	if ((*token_lst)->type == WORD ||
-		(*token_lst)->type == ASSIGN)
-			add_astnode(token_lst, ast); 
+	t_tokenlst *current;
+
+	if ((*token_lst)->type == WORD || (*token_lst)->type == ASSIGN)
+	{
+		current = *token_lst;
+		if ((*token_lst)->next->type == WORD || (*token_lst)->next->type == ASSIGN)
+		{
+			*token_lst = (*token_lst)->next;
+			cmd_word(token_lst, ast);
+			add_astnode(&current, ast);
+		}
+		else
+			add_astnode(token_lst, ast);
+
+	}
 	else
 		return (FUNCT_FAILURE);
 	return (FUNCT_SUCCESS);
 }
 
-int		list(t_tokenlst **token_lst, t_ast **ast)
+int		pipe_sequence(t_tokenlst **token_lst, t_ast **ast)
 {
 	if (cmd_word(token_lst, ast) == FUNCT_SUCCESS)
+	{
+		while ((*token_lst)->type == PIPE)
+		{
+			add_astnode(token_lst, ast);
+			if (add_sibling(token_lst, ast, &cmd_word) != FUNCT_SUCCESS)
+				return (FUNCT_FAILURE);
+		}
+		return (FUNCT_SUCCESS);
+	}
+	return (FUNCT_FAILURE);
+}
+
+int		and_or(t_tokenlst **token_lst, t_ast **ast)
+{
+	if (pipe_sequence(token_lst, ast) == FUNCT_SUCCESS)
+	{
+		while ((*token_lst)->type == AND_IF ||
+			(*token_lst)->type == OR_IF)
+		{
+			add_astnode(token_lst, ast);
+			if (add_sibling(token_lst, ast, &pipe_sequence) != FUNCT_SUCCESS)
+				return (FUNCT_FAILURE);
+		}
+		return (FUNCT_SUCCESS);
+	}
+	return (FUNCT_FAILURE);
+}
+
+int		list(t_tokenlst **token_lst, t_ast **ast)
+{
+	if (and_or(token_lst, ast) == FUNCT_SUCCESS)
 	{
 		if ((*token_lst)->type == SEMICOL ||
 			(*token_lst)->type == BG)
@@ -55,9 +98,11 @@ int		parser(t_tokenlst **token_lst)
 	*token_lst = (*token_lst)->next;
 	ast = NULL;
 	if (complete_cmd(token_lst, &ast) != FUNCT_SUCCESS)
-		ft_putstr("\n\nJammer dit \n");
+	{
+		ft_putstr("\n\nSomething went wrong near token value\n");
+		ft_putendl((*token_lst)->value);
+	}
 	else
-		ft_putstr("\n\nNice ? \n");
-	print_tree(ast);
+		print_tree(ast);
 	return (0);
 }

@@ -6,7 +6,7 @@
 /*   By: omulder <omulder@student.codam.nl>           +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2019/04/10 20:29:42 by jbrinksm       #+#    #+#                */
-/*   Updated: 2019/05/22 12:15:03 by mavan-he      ########   odam.nl         */
+/*   Updated: 2019/05/22 16:32:45 by mavan-he      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -316,6 +316,7 @@ int				update_quote_status(char *line, int cur_index, char *quote);
 **----------------------------------debugging-----------------------------------
 */
 
+char			*put_token(t_tokens type);
 void			print_node(t_tokenlst *node);
 void			print_tree(t_ast *root);
 
