@@ -6,7 +6,7 @@
 /*   By: mavan-he <mavan-he@student.codam.nl>         +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2019/05/19 11:12:49 by mavan-he       #+#    #+#                */
-/*   Updated: 2019/05/21 21:17:43 by jbrinksm      ########   odam.nl         */
+/*   Updated: 2019/05/22 10:51:43 by tde-jong      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -48,7 +48,6 @@ static int	scan_to_lst(t_tokenlst *lst, t_scanner *scanner)
 			return (FUNCT_ERROR);
 	}
 	if (tokenlstaddback(&lst, type, value) == FUNCT_ERROR)
-
 		return (FUNCT_ERROR);
 	return (FUNCT_SUCCESS);
 }
