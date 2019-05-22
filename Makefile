@@ -6,7 +6,7 @@
 #    By: jbrinksm <jbrinksm@student.codam.nl>         +#+                      #
 #                                                    +#+                       #
 #    Created: 2019/04/10 20:30:07 by jbrinksm       #+#    #+#                 #
-#    Updated: 2019/05/22 15:34:20 by omulder       ########   odam.nl          #
+#    Updated: 2019/05/22 15:37:03 by omulder       ########   odam.nl          #
 #                                                                              #
 # **************************************************************************** #
 
@@ -17,7 +17,8 @@ COVERAGE = -coverage
 INCLUDES = -I./libft/ -I./includes
 LIBFT = ./libft/libft.a
 LIB = -L./libft/ -lft -ltermcap
-CRITERION = -I$(HOME)/.brew/include -L$(HOME)/.brew/lib -lcriterion
+CRITERIONINCLUDES = -I$(HOME)/.brew/include
+CRITERION = $(CRITERIONINCLUDES) -L$(HOME)/.brew/lib -lcriterion
 VPATH = ./test ./libft ./srcs ./srcs/builtins ./srcs/input_handling \
 ./srcs/term_settings ./srcs/environment_handling ./srcs/shell \
 ./srcs/tools ./test/parser ./test/tools ./test/builtins \
@@ -75,7 +76,7 @@ test_norm: fclean
 	@sh ${TRAVIS_BUILD_DIR}/test/norminette.sh
 
 $(TESTOBJECTS): $(TESTS)
-	@$(CC) $(FLAGS) $^ $(INCLUDES) -I$(HOME)/.brew/include -c
+	@$(CC) $(FLAGS) $^ $(INCLUDES) $(CRITERIONINCLUDES) -c
 
 test: $(TESTOBJECTS) $(OBJECTS)
 	@make re
