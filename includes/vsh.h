@@ -6,7 +6,7 @@
 /*   By: omulder <omulder@student.codam.nl>           +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2019/04/10 20:29:42 by jbrinksm       #+#    #+#                */
-/*   Updated: 2019/05/21 21:15:45 by jbrinksm      ########   odam.nl         */
+/*   Updated: 2019/05/22 11:00:09 by mavan-he      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -240,15 +240,15 @@ void	shell_display_prompt(void);
 **----------------------------------lexer---------------------------------------
 */
 
-int			tokenlstaddback(t_tokenlst **lst, t_tokens type, char *value);
+int			tokenlstaddback(t_tokenlst **token_lst, t_tokens type, char *value);
 t_tokenlst	*tokenlstnew(t_tokens type, char *value);
-void		tokenlstdel(t_tokenlst **lst);
-void		tokenlstiter(t_tokenlst *lst, void (*f)(t_tokenlst *elem));
+void		tokenlstdel(t_tokenlst **token_lst);
+void		tokenlstiter(t_tokenlst *token_lst, void (*f)(t_tokenlst *elem));
 
-int			lexer(char *line, t_tokenlst **lst);
+int			lexer(char *line, t_tokenlst **token_lst);
 int		lexer_error(t_tokenlst **token_lst);
 void	evaluator(t_tokenlst *token_lst);
-int		lexer_scanner(char *line, t_tokenlst *lst);
+int		lexer_scanner(char *line, t_tokenlst *token_lst);
 
 void	change_state(t_scanner *scanner, void (*state_x)(t_scanner *scanner));
 void	print_token(t_scanner *scanner);
