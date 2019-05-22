@@ -6,7 +6,7 @@
 #    By: jbrinksm <jbrinksm@student.codam.nl>         +#+                      #
 #                                                    +#+                       #
 #    Created: 2019/04/10 20:30:07 by jbrinksm       #+#    #+#                 #
-#    Updated: 2019/05/22 15:27:46 by omulder       ########   odam.nl          #
+#    Updated: 2019/05/22 15:34:20 by omulder       ########   odam.nl          #
 #                                                                              #
 # **************************************************************************** #
 
@@ -75,7 +75,7 @@ test_norm: fclean
 	@sh ${TRAVIS_BUILD_DIR}/test/norminette.sh
 
 $(TESTOBJECTS): $(TESTS)
-	@$(CC) $(FLAGS) $^ $(INCLUDES) -c
+	@$(CC) $(FLAGS) $^ $(INCLUDES) -I$(HOME)/.brew/include -c
 
 test: $(TESTOBJECTS) $(OBJECTS)
 	@make re
