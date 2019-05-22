@@ -48,6 +48,7 @@ static int	scan_to_lst(t_tokenlst *lst, t_scanner *scanner)
 			return (FUNCT_ERROR);
 	}
 	if (tokenlstaddback(&lst, type, value) == FUNCT_ERROR)
+
 		return (FUNCT_ERROR);
 	return (FUNCT_SUCCESS);
 }

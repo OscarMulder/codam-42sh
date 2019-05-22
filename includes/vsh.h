@@ -240,7 +240,6 @@ void	shell_display_prompt(void);
 **----------------------------------lexer---------------------------------------
 */
 
-
 int			tokenlstaddback(t_tokenlst **lst, t_tokens type, char *value);
 t_tokenlst	*tokenlstnew(t_tokens type, char *value);
 void		tokenlstdel(t_tokenlst **lst);
