@@ -6,7 +6,7 @@
 /*   By: mavan-he <mavan-he@student.codam.nl>         +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2019/05/19 11:12:49 by mavan-he       #+#    #+#                */
-/*   Updated: 2019/05/22 10:51:43 by tde-jong      ########   odam.nl         */
+/*   Updated: 2019/05/22 10:56:56 by mavan-he      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -30,7 +30,7 @@ static void	reset_scanner(t_scanner *scanner)
 **	Please someone help me to fix this disgusting mess. :)
 */
 
-static int	scan_to_lst(t_tokenlst *lst, t_scanner *scanner)
+static int	scan_to_lst(t_tokenlst *token_lst, t_scanner *scanner)
 {
 	t_tokens	type;
 	char		*value;
@@ -47,12 +47,12 @@ static int	scan_to_lst(t_tokenlst *lst, t_scanner *scanner)
 		if (value == NULL)
 			return (FUNCT_ERROR);
 	}
-	if (tokenlstaddback(&lst, type, value) == FUNCT_ERROR)
+	if (tokenlstaddback(&token_lst, type, value) == FUNCT_ERROR)
 		return (FUNCT_ERROR);
 	return (FUNCT_SUCCESS);
 }
 
-int			lexer_scanner(char *line, t_tokenlst *lst)
+int			lexer_scanner(char *line, t_tokenlst *token_lst)
 {
 	t_scanner scanner;
 
@@ -62,7 +62,7 @@ int			lexer_scanner(char *line, t_tokenlst *lst)
 	while ((scanner.str)[scanner.str_index] != '\0')
 	{
 		state_1(&scanner);
-		if (scan_to_lst(lst, &scanner) == FUNCT_ERROR)
+		if (scan_to_lst(token_lst, &scanner) == FUNCT_ERROR)
 			return (FUNCT_ERROR);
 		reset_scanner(&scanner);
 		while (ft_isspace((scanner.str)[scanner.str_index]))

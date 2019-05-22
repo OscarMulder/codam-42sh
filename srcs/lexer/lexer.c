@@ -6,7 +6,7 @@
 /*   By: mavan-he <mavan-he@student.codam.nl>         +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2019/05/14 15:14:31 by mavan-he       #+#    #+#                */
-/*   Updated: 2019/05/21 21:17:13 by jbrinksm      ########   odam.nl         */
+/*   Updated: 2019/05/22 10:56:56 by mavan-he      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -31,34 +31,34 @@ t_tokenlst	*tokenlstnew(t_tokens type, char *value)
 	return (new);
 }
 
-int			tokenlstaddback(t_tokenlst **lst, t_tokens type, char *value)
+int			tokenlstaddback(t_tokenlst **token_lst, t_tokens type, char *value)
 {
-	if (*lst == NULL)
+	if (*token_lst == NULL)
 	{
-		*lst = tokenlstnew(type, value);
-		if (*lst == NULL)
+		*token_lst = tokenlstnew(type, value);
+		if (*token_lst == NULL)
 			return (FUNCT_ERROR);
 		return (FUNCT_SUCCESS);
 	}
-	else if ((*lst)->next == NULL)
+	else if ((*token_lst)->next == NULL)
 	{
-		(*lst)->next = tokenlstnew(type, value);
-		if ((*lst)->next == NULL)
+		(*token_lst)->next = tokenlstnew(type, value);
+		if ((*token_lst)->next == NULL)
 			return (FUNCT_ERROR);
 		return (FUNCT_SUCCESS);
 	}
 	else
-		return (tokenlstaddback(&(*lst)->next, type, value));
+		return (tokenlstaddback(&(*token_lst)->next, type, value));
 }
 
-int			lexer(char *line, t_tokenlst **lst)
+int			lexer(char *line, t_tokenlst **token_lst)
 {
-	if (tokenlstaddback(lst, START, NULL) != FUNCT_SUCCESS)
-		return (lexer_error(lst));
-	if (lexer_scanner(line, *lst) != FUNCT_SUCCESS)
-		return (lexer_error(lst));
-	if (tokenlstaddback(lst, END, NULL) != FUNCT_SUCCESS)
-		return (lexer_error(lst));
-	evaluator(*lst);
+	if (tokenlstaddback(token_lst, START, NULL) != FUNCT_SUCCESS)
+		return (lexer_error(token_lst));
+	if (lexer_scanner(line, *token_lst) != FUNCT_SUCCESS)
+		return (lexer_error(token_lst));
+	if (tokenlstaddback(token_lst, END, NULL) != FUNCT_SUCCESS)
+		return (lexer_error(token_lst));
+	evaluator(*token_lst);
 	return (FUNCT_SUCCESS);
 }
