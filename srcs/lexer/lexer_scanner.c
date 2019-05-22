@@ -6,7 +6,7 @@
 /*   By: mavan-he <mavan-he@student.codam.nl>         +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2019/05/19 11:12:49 by mavan-he       #+#    #+#                */
-/*   Updated: 2019/05/22 10:56:56 by mavan-he      ########   odam.nl         */
+/*   Updated: 2019/05/22 11:14:49 by tde-jong      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -25,10 +25,6 @@ static void	reset_scanner(t_scanner *scanner)
 	scanner->tk_len = 0;
 	scanner->tk_type = ERROR;
 }
-
-/*
-**	Please someone help me to fix this disgusting mess. :)
-*/
 
 static int	scan_to_lst(t_tokenlst *token_lst, t_scanner *scanner)
 {

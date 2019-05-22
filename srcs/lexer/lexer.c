@@ -6,7 +6,7 @@
 /*   By: mavan-he <mavan-he@student.codam.nl>         +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2019/05/14 15:14:31 by mavan-he       #+#    #+#                */
-/*   Updated: 2019/05/22 10:56:56 by mavan-he      ########   odam.nl         */
+/*   Updated: 2019/05/22 11:16:56 by tde-jong      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -22,7 +22,7 @@ t_tokenlst	*tokenlstnew(t_tokens type, char *value)
 {
 	t_tokenlst	*new;
 
-	new = ft_memalloc(sizeof(t_tokenlst));
+	new = (t_tokenlst*)ft_memalloc(sizeof(t_tokenlst));
 	if (new == NULL)
 		return (NULL);
 	new->type = type;
