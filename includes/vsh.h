@@ -6,7 +6,7 @@
 /*   By: omulder <omulder@student.codam.nl>           +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2019/04/10 20:29:42 by jbrinksm       #+#    #+#                */
-/*   Updated: 2019/05/22 11:49:18 by mavan-he      ########   odam.nl         */
+/*   Updated: 2019/05/22 12:15:03 by mavan-he      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -171,6 +171,19 @@ typedef struct	s_scanner
 	char		*str;
 	int			str_index;
 }				t_scanner;
+
+/*
+**----------------------------------parser--------------------------------------
+*/
+
+typedef struct		s_ast
+{
+	t_tokens		type;
+	char			*value;
+	struct s_ast	*child;
+	struct s_ast	*sibling;
+	
+}					t_ast;
 /*
 **=================================prototypes===================================
 */
@@ -278,6 +291,11 @@ void			state_19(t_scanner *scanner);
 /*
 **----------------------------------parser--------------------------------------
 */
+int				parser(t_tokenlst **token_lst);
+int				add_astnode(t_tokenlst **token_lst, t_ast **ast);
+int				add_sibling(t_tokenlst **token_lst, t_ast **ast,
+				int (*parse_priority_x)(t_tokenlst **, t_ast **));
+t_ast			*new_ast_node(t_tokenlst *token);
 
 /*
 **----------------------------------bultins-------------------------------------
@@ -299,5 +317,6 @@ int				update_quote_status(char *line, int cur_index, char *quote);
 */
 
 void			print_node(t_tokenlst *node);
+void			print_tree(t_ast *root);
 
 #endif
