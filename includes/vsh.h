@@ -6,7 +6,7 @@
 /*   By: omulder <omulder@student.codam.nl>           +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2019/04/10 20:29:42 by jbrinksm       #+#    #+#                */
-/*   Updated: 2019/05/22 16:32:45 by mavan-he      ########   odam.nl         */
+/*   Updated: 2019/05/24 19:54:28 by mavan-he      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -40,6 +40,11 @@
 */
 
 # define CURRENT_CHAR (scanner->str)[scanner->str_index]
+/*
+**------------------------------------parser-------------------------------------
+*/
+
+# define TK_TYPE (*token_lst)->type
 
 /*
 **-----------------------------------input--------------------------------------
@@ -71,6 +76,7 @@
 # include <sys/stat.h>
 # include <sys/wait.h>
 # include <signal.h>
+# include <stdbool.h>
 
 # include <sys/ioctl.h>
 # include <termios.h>
@@ -293,9 +299,10 @@ void			state_19(t_scanner *scanner);
 */
 int				parser(t_tokenlst **token_lst);
 int				add_astnode(t_tokenlst **token_lst, t_ast **ast);
-int				add_sibling(t_tokenlst **token_lst, t_ast **ast,
-				int (*parse_priority_x)(t_tokenlst **, t_ast **));
+bool			add_sibling(t_tokenlst **token_lst, t_ast **ast,
+				bool (*parse_priority_x)(t_tokenlst **, t_ast **));
 t_ast			*new_ast_node(t_tokenlst *token);
+int				is_redirect_tk(t_tokens type);
 
 /*
 **----------------------------------bultins-------------------------------------
