@@ -6,7 +6,7 @@
 /*   By: mavan-he <mavan-he@student.codam.nl>         +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2019/05/19 11:12:49 by mavan-he       #+#    #+#                */
-/*   Updated: 2019/05/21 21:17:43 by jbrinksm      ########   odam.nl         */
+/*   Updated: 2019/05/24 11:18:35 by jbrinksm      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -25,10 +25,6 @@ static void	reset_scanner(t_scanner *scanner)
 	scanner->tk_len = 0;
 	scanner->tk_type = ERROR;
 }
-
-/*
-**	Please someone help me to fix this disgusting mess. :)
-*/
 
 static int	scan_to_lst(t_tokenlst *lst, t_scanner *scanner)
 {
@@ -61,7 +57,7 @@ int			lexer_scanner(char *line, t_tokenlst *lst)
 		(scanner.str_index)++;
 	while ((scanner.str)[scanner.str_index] != '\0')
 	{
-		state_1(&scanner);
+		state_start(&scanner);
 		if (scan_to_lst(lst, &scanner) == FUNCT_ERROR)
 			return (FUNCT_ERROR);
 		reset_scanner(&scanner);
