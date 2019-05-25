@@ -6,7 +6,7 @@
 /*   By: omulder <omulder@student.codam.nl>           +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2019/04/10 20:29:42 by jbrinksm       #+#    #+#                */
-/*   Updated: 2019/05/24 16:17:57 by jbrinksm      ########   odam.nl         */
+/*   Updated: 2019/05/25 12:56:03 by mavan-he      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -40,6 +40,10 @@
 */
 
 # define CURRENT_CHAR (scanner->str)[scanner->str_index]
+# define T_FLAG_HASDOLLAR (1 << 0)
+# define T_STATE_SQUOTE (1 << 1)
+# define T_STATE_DQUOTE (1 << 2)
+# define T_FLAG_HASEQUAL (1 << 3)
 
 /*
 **-----------------------------------input--------------------------------------
@@ -161,9 +165,9 @@ typedef enum	e_tokens
 typedef struct	s_tokenlst
 {
 	t_tokens			type;
+	int					flags;
 	char				*value;
 	struct s_tokenlst	*next;
-	int					flags;
 }				t_tokenlst;
 
 typedef struct	s_scanner
@@ -174,11 +178,6 @@ typedef struct	s_scanner
 	int			str_index;
 	int			flags;
 }				t_scanner;
-
-# define T_FLAG_HASDOLLAR (1 << 0)
-# define T_STATE_SQUOTE (1 << 1)
-# define T_STATE_DQUOTE (1 << 2)
-# define T_FLAG_HASEQUAL (1 << 3)
 
 /*
 **=================================prototypes===================================
@@ -254,7 +253,7 @@ t_tokenlst		*tokenlstnew(t_tokens type, char *value, int flags);
 void			tokenlstdel(t_tokenlst **token_lst);
 void			tokenlstiter(t_tokenlst *token_lst,
 					void (*f)(t_tokenlst *elem));
-int				is_shellspec(char c);
+bool			is_shellspec(char c);
 
 int				lexer(char *line, t_tokenlst **token_lst);
 int				lexer_error(t_tokenlst **token_lst);

@@ -1,13 +1,33 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        ::::::::            */
-/*   lexer_state_16_20.c                                :+:    :+:            */
+/*   lexer_state_singles1.c                             :+:    :+:            */
 /*                                                     +:+                    */
 /*   By: mavan-he <mavan-he@student.codam.nl>         +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2019/05/19 12:14:21 by mavan-he       #+#    #+#                */
-/*   Updated: 2019/05/24 16:25:12 by jbrinksm      ########   odam.nl         */
+/*   Updated: 2019/05/25 12:45:02 by mavan-he      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "vsh.h"
+
+void	state_dgreat(t_scanner *scanner)
+{
+	scanner->tk_type = DGREAT;
+}
+
+void	state_dless(t_scanner *scanner)
+{
+	scanner->tk_type = DLESS;
+}
+
+void	state_greatand(t_scanner *scanner)
+{
+	scanner->tk_type = GREATAND;
+}
+
+void	state_lessand(t_scanner *scanner)
+{
+	scanner->tk_type = LESSAND;
+}

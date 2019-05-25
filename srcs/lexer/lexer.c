@@ -6,7 +6,7 @@
 /*   By: mavan-he <mavan-he@student.codam.nl>         +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2019/05/14 15:14:31 by mavan-he       #+#    #+#                */
-/*   Updated: 2019/05/24 13:28:36 by jbrinksm      ########   odam.nl         */
+/*   Updated: 2019/05/25 12:53:43 by mavan-he      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -32,7 +32,8 @@ t_tokenlst	*tokenlstnew(t_tokens type, char *value, int flags)
 	return (new);
 }
 
-int			tokenlstaddback(t_tokenlst **token_lst, t_tokens type, char *value, int flags)
+int			tokenlstaddback(t_tokenlst **token_lst, t_tokens type,
+			char *value, int flags)
 {
 	if (*token_lst == NULL)
 	{
