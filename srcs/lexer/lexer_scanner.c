@@ -6,7 +6,7 @@
 /*   By: mavan-he <mavan-he@student.codam.nl>         +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2019/05/19 11:12:49 by mavan-he       #+#    #+#                */
-/*   Updated: 2019/05/22 11:14:49 by tde-jong      ########   odam.nl         */
+/*   Updated: 2019/05/25 14:39:07 by mavan-he      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -23,6 +23,7 @@ static void	init_scanner(char *str, t_scanner *scanner)
 static void	reset_scanner(t_scanner *scanner)
 {
 	scanner->tk_len = 0;
+	scanner->flags = 0;
 	scanner->tk_type = ERROR;
 }
 
@@ -30,12 +31,14 @@ static int	scan_to_lst(t_tokenlst *token_lst, t_scanner *scanner)
 {
 	t_tokens	type;
 	char		*value;
+	int			flags;
 	int			tk_start;
 
 	tk_start = scanner->str_index - scanner->tk_len;
 	if (tk_start < 0)
 		return (FUNCT_ERROR);
 	type = scanner->tk_type;
+	flags = scanner->flags;
 	value = NULL;
 	if (type == WORD || type == ASSIGN || type == IO_NUMBER)
 	{
@@ -43,7 +46,7 @@ static int	scan_to_lst(t_tokenlst *token_lst, t_scanner *scanner)
 		if (value == NULL)
 			return (FUNCT_ERROR);
 	}
-	if (tokenlstaddback(&token_lst, type, value) == FUNCT_ERROR)
+	if (tokenlstaddback(&token_lst, type, value, flags) == FUNCT_ERROR)
 		return (FUNCT_ERROR);
 	return (FUNCT_SUCCESS);
 }
@@ -57,7 +60,7 @@ int			lexer_scanner(char *line, t_tokenlst *token_lst)
 		(scanner.str_index)++;
 	while ((scanner.str)[scanner.str_index] != '\0')
 	{
-		state_1(&scanner);
+		state_start(&scanner);
 		if (scan_to_lst(token_lst, &scanner) == FUNCT_ERROR)
 			return (FUNCT_ERROR);
 		reset_scanner(&scanner);

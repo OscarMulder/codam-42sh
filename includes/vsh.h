@@ -6,7 +6,7 @@
 /*   By: omulder <omulder@student.codam.nl>           +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2019/04/10 20:29:42 by jbrinksm       #+#    #+#                */
-/*   Updated: 2019/05/24 19:54:28 by mavan-he      ########   odam.nl         */
+/*   Updated: 2019/05/25 15:10:35 by mavan-he      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -45,6 +45,10 @@
 */
 
 # define TK_TYPE (*token_lst)->type
+# define T_FLAG_HASDOLLAR (1 << 0)
+# define T_STATE_SQUOTE (1 << 1)
+# define T_STATE_DQUOTE (1 << 2)
+# define T_FLAG_HASEQUAL (1 << 3)
 
 /*
 **-----------------------------------input--------------------------------------
@@ -141,6 +145,7 @@ typedef struct	s_term
 **	END,
 **	ERROR // malloc fail
 */
+
 typedef enum	e_tokens
 {
 	ERROR,
@@ -166,6 +171,7 @@ typedef enum	e_tokens
 typedef struct	s_tokenlst
 {
 	t_tokens			type;
+	int					flags;
 	char				*value;
 	struct s_tokenlst	*next;
 }				t_tokenlst;
@@ -176,6 +182,7 @@ typedef struct	s_scanner
 	int			tk_len;
 	char		*str;
 	int			str_index;
+	int			flags;
 }				t_scanner;
 
 /*
@@ -259,11 +266,12 @@ void			shell_display_prompt(void);
 */
 
 int				tokenlstaddback(t_tokenlst **token_lst, t_tokens type,
-					char *value);
-t_tokenlst		*tokenlstnew(t_tokens type, char *value);
+					char *value, int flags);
+t_tokenlst		*tokenlstnew(t_tokens type, char *value, int flags);
 void			tokenlstdel(t_tokenlst **token_lst);
 void			tokenlstiter(t_tokenlst *token_lst,
 					void (*f)(t_tokenlst *elem));
+bool			is_shellspec(char c);
 
 int				lexer(char *line, t_tokenlst **token_lst);
 int				lexer_error(t_tokenlst **token_lst);
@@ -274,25 +282,25 @@ void			change_state(t_scanner *scanner,
 					void (*state_x)(t_scanner *scanner));
 void			print_token(t_scanner *scanner);
 
-void			state_1(t_scanner *scanner);
-void			state_2(t_scanner *scanner);
-void			state_3(t_scanner *scanner);
-void			state_4(t_scanner *scanner);
-void			state_5(t_scanner *scanner);
-void			state_6(t_scanner *scanner);
-void			state_7(t_scanner *scanner);
-void			state_8(t_scanner *scanner);
-void			state_9(t_scanner *scanner);
-void			state_10(t_scanner *scanner);
-void			state_11(t_scanner *scanner);
-void			state_12(t_scanner *scanner);
-void			state_13(t_scanner *scanner);
-void			state_14(t_scanner *scanner);
-void			state_15(t_scanner *scanner);
-void			state_16(t_scanner *scanner);
-void			state_17(t_scanner *scanner);
-void			state_18(t_scanner *scanner);
-void			state_19(t_scanner *scanner);
+void			state_start(t_scanner *scanner);
+void			state_pipe(t_scanner *scanner);
+void			state_orif(t_scanner *scanner);
+void			state_sgreat(t_scanner *scanner);
+void			state_dgreat(t_scanner *scanner);
+void			state_sless(t_scanner *scanner);
+void			state_dless(t_scanner *scanner);
+void			state_bg(t_scanner *scanner);
+void			state_andif(t_scanner *scanner);
+void			state_semicol(t_scanner *scanner);
+void			state_newline(t_scanner *scanner);
+void			state_squote(t_scanner *scanner);
+void			state_dquote(t_scanner *scanner);
+void			state_dquote_esc(t_scanner *scanner);
+void			state_word(t_scanner *scanner);
+void			state_word_esc(t_scanner *scanner);
+void			state_lessand(t_scanner *scanner);
+void			state_greatand(t_scanner *scanner);
+void			state_ionum(t_scanner *scanner);
 
 /*
 **----------------------------------parser--------------------------------------
