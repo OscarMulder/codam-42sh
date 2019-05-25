@@ -6,7 +6,7 @@
 /*   By: omulder <omulder@student.codam.nl>           +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2019/04/10 20:29:42 by jbrinksm       #+#    #+#                */
-/*   Updated: 2019/05/25 17:26:06 by mavan-he      ########   odam.nl         */
+/*   Updated: 2019/05/25 19:15:41 by mavan-he      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -194,6 +194,7 @@ typedef struct	s_scanner
 typedef struct		s_ast
 {
 	t_tokens		type;
+	int				flags;
 	char			*value;
 	struct s_ast	*child;
 	struct s_ast	*sibling;
@@ -313,6 +314,7 @@ bool			add_sibling(t_tokenlst **token_lst, t_ast **ast,
 				bool (*parse_priority_x)(t_tokenlst **, t_ast **));
 t_ast			*new_ast_node(t_tokenlst *token);
 bool			is_redirect_tk(t_tokens type);
+bool			cmd(t_tokenlst **token_lst, t_ast **ast);
 
 /*
 **----------------------------------bultins-------------------------------------
