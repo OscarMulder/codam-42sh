@@ -6,35 +6,28 @@
 /*   By: jbrinksm <jbrinksm@student.codam.nl>         +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2019/05/19 19:58:40 by jbrinksm       #+#    #+#                */
-/*   Updated: 2019/05/24 20:00:18 by mavan-he      ########   odam.nl         */
+/*   Updated: 2019/05/25 17:01:29 by mavan-he      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "vsh.h"
-/* 
-bool		cmd_word(t_tokenlst **token_lst, t_ast **ast)
+
+/* bool	add_redir_node(t_tokenlst **token_lst, t_ast **suffix, t_ast **prefix)
 {
-	t_tokenlst *current;
+	t_ast *next_ast;
 
-	if (TK_TYPE == WORD || TK_TYPE == ASSIGN)
-	{
-		current = *token_lst;
-		if ((*token_lst)->next->type == WORD || (*token_lst)->next->type == ASSIGN)
-		{
-			*token_lst = (*token_lst)->next;
-			cmd_word(token_lst, ast);
-			add_astnode(&current, ast);
-		}
-		else
-			add_astnode(token_lst, ast);
-
-	}
-	else
+	next_ast = NULL;
+	if (add_astnode(token_lst, &next_ast) == false)
 		return (false);
-	return (true);
+	if (*prefix == NULL)
+		*prefix = next_ast;
+	else
+		(*prefix)->child = next_ast;
+	if (cmd_suffix(token_lst, suffix, &next_ast) == false)
+		return (false);
 } */
 
-bool		cmd_suffix(t_tokenlst **token_lst, t_ast **suffix, t_ast **prefix)
+bool	cmd_suffix(t_tokenlst **token_lst, t_ast **suffix, t_ast **prefix)
 {
 	t_ast *next_ast;
 
@@ -64,7 +57,7 @@ bool		cmd_suffix(t_tokenlst **token_lst, t_ast **suffix, t_ast **prefix)
 	return (true);
 }
 
-bool		cmd_prefix(t_tokenlst **token_lst, t_ast **ast, t_ast **prefix)
+bool	cmd_prefix(t_tokenlst **token_lst, t_ast **ast, t_ast **prefix)
 {
 	t_ast *next_prefix;
 
@@ -84,7 +77,7 @@ bool		cmd_prefix(t_tokenlst **token_lst, t_ast **ast, t_ast **prefix)
 	return (true);
 }
 
-bool		cmd_word(t_tokenlst **token_lst, t_ast **ast)
+bool	cmd_word(t_tokenlst **token_lst, t_ast **ast)
 {
 	if (TK_TYPE == WORD)
 	{
@@ -98,7 +91,7 @@ bool		cmd_word(t_tokenlst **token_lst, t_ast **ast)
 		return (false);
 }
 
-bool		cmd(t_tokenlst **token_lst, t_ast **ast)
+bool	cmd(t_tokenlst **token_lst, t_ast **ast)
 {
 	t_ast	*prefix;
 	t_ast	*suffix;
@@ -123,7 +116,7 @@ bool		cmd(t_tokenlst **token_lst, t_ast **ast)
 		return (false);
 }
 
-bool		pipe_sequence(t_tokenlst **token_lst, t_ast **ast)
+bool	pipe_sequence(t_tokenlst **token_lst, t_ast **ast)
 {
 	if (cmd(token_lst, ast) == true)
 	{
@@ -139,7 +132,7 @@ bool		pipe_sequence(t_tokenlst **token_lst, t_ast **ast)
 	return (false);
 }
 
-bool		and_or(t_tokenlst **token_lst, t_ast **ast)
+bool	and_or(t_tokenlst **token_lst, t_ast **ast)
 {
 	if (pipe_sequence(token_lst, ast) == true)
 	{
@@ -156,7 +149,7 @@ bool		and_or(t_tokenlst **token_lst, t_ast **ast)
 	return (false);
 }
 
-bool		list(t_tokenlst **token_lst, t_ast **ast)
+bool	list(t_tokenlst **token_lst, t_ast **ast)
 {
 	if (and_or(token_lst, ast) == true)
 	{
@@ -176,14 +169,14 @@ bool		list(t_tokenlst **token_lst, t_ast **ast)
 	return (false);
 }
 
-bool		complete_cmd(t_tokenlst **token_lst, t_ast **ast)
+bool	complete_cmd(t_tokenlst **token_lst, t_ast **ast)
 {
 	if (list(token_lst, ast) == true && TK_TYPE == END)
 			return (true);
 	return (false);
 }
 
-int			parser(t_tokenlst **token_lst)
+int		parser(t_tokenlst **token_lst)
 {
 	t_ast *ast;
 

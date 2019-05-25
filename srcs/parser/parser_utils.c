@@ -6,7 +6,7 @@
 /*   By: mavan-he <mavan-he@student.codam.nl>         +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2019/05/21 19:54:55 by mavan-he       #+#    #+#                */
-/*   Updated: 2019/05/24 19:58:40 by mavan-he      ########   odam.nl         */
+/*   Updated: 2019/05/25 16:45:43 by mavan-he      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -56,7 +56,7 @@ int		add_astnode(t_tokenlst **token_lst, t_ast **ast)
 	return (FUNCT_SUCCESS);
 }
 
-int		is_redirect_tk(t_tokens type)
+bool	is_redirect_tk(t_tokens type)
 {
 	return (type == SLESS || type  == SGREAT || type  == DLESS ||
 			type  == DGREAT || type  == LESSAND || type  == GREATAND);
