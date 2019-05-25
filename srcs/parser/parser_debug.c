@@ -6,7 +6,7 @@
 /*   By: mavan-he <mavan-he@student.codam.nl>         +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2019/05/21 21:13:37 by mavan-he       #+#    #+#                */
-/*   Updated: 2019/05/22 18:18:42 by mavan-he      ########   odam.nl         */
+/*   Updated: 2019/05/25 17:14:17 by mavan-he      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -67,12 +67,10 @@ static void		print_color(int color)
 static void		tree_print_rec(t_ast *root, int depth, int space, int width)
 {
 	int i;
-	int color;
 
 	if (!root)
 		return ;
 	space += width;
-	color = (depth % 5);
 	if (root->sibling != NULL)
 		tree_print_rec(root->sibling, depth + 1, space, width);
 	i = width;

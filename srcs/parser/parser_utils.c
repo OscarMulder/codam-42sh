@@ -6,7 +6,7 @@
 /*   By: mavan-he <mavan-he@student.codam.nl>         +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2019/05/21 19:54:55 by mavan-he       #+#    #+#                */
-/*   Updated: 2019/05/25 16:45:43 by mavan-he      ########   odam.nl         */
+/*   Updated: 2019/05/25 17:26:54 by mavan-he      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -39,21 +39,21 @@ bool	add_sibling(t_tokenlst **token_lst, t_ast **ast,
 }
 
 
-int		add_astnode(t_tokenlst **token_lst, t_ast **ast)
+bool	add_astnode(t_tokenlst **token_lst, t_ast **ast)
 {
 	t_ast *new_node;
-
+	
 	new_node = new_ast_node(*token_lst);
 	if (new_node  == NULL)
 	{
-		// set flag to error
-		return (FUNCT_ERROR);
+		(*token_lst)->flags |= T_MALLOC_ERROR;
+		return (false);
 	}
 	new_node->child = *ast;
 	new_node->sibling = NULL;
 	*ast = new_node;
 	*token_lst = (*token_lst)->next;
-	return (FUNCT_SUCCESS);
+	return (true);
 }
 
 bool	is_redirect_tk(t_tokens type)
