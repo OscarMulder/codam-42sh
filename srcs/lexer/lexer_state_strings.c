@@ -6,7 +6,7 @@
 /*   By: mavan-he <mavan-he@student.codam.nl>         +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2019/05/19 12:12:00 by mavan-he       #+#    #+#                */
-/*   Updated: 2019/05/25 12:54:29 by mavan-he      ########   odam.nl         */
+/*   Updated: 2019/05/25 14:44:42 by mavan-he      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -41,8 +41,8 @@ void	state_word(t_scanner *scanner)
 		scanner->flags ^= T_STATE_SQUOTE;
 	if (CURRENT_CHAR == '\\')
 		change_state(scanner, &state_word_esc);
-	else if (!is_shellspec(CURRENT_CHAR) &&
-	!ft_isspace(CURRENT_CHAR) && CURRENT_CHAR != '\0')
+	else if (is_shellspec(CURRENT_CHAR) == false &&
+		ft_isspace(CURRENT_CHAR) == false && CURRENT_CHAR != '\0')
 		change_state(scanner, &state_word);
 	else if ((scanner->flags & T_STATE_DQUOTE ||
 			scanner->flags & T_STATE_SQUOTE) && CURRENT_CHAR != '\0')
