@@ -6,7 +6,7 @@
 /*   By: jbrinksm <jbrinksm@student.codam.nl>         +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2019/04/18 16:37:32 by omulder        #+#    #+#                */
-/*   Updated: 2019/05/25 13:00:20 by mavan-he      ########   odam.nl         */
+/*   Updated: 2019/05/25 15:41:38 by mavan-he      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -427,13 +427,16 @@ Test(lexer, basic)
 	cr_expect_str_eq(ft_itoa(lst->type), ft_itoa(START));
 	cr_expect(lst->value == NULL);
 	lst = lst->next;
-	cr_expect_str_eq(ft_itoa(lst->type), ft_itoa(WORD));
+	cr_expect(lst->type == WORD);
+//	cr_expect_str_eq(ft_itoa(lst->type), ft_itoa(WORD));
 	cr_expect_str_eq(lst->value, "ls");
 	lst = lst->next;
-	cr_expect_str_eq(ft_itoa(lst->type), ft_itoa(WORD));
+//	cr_expect_str_eq(ft_itoa(lst->type), ft_itoa(WORD));
+	cr_expect(lst->type == WORD);
 	cr_expect_str_eq(lst->value, "-la");
 	lst = lst->next;
-	cr_expect_str_eq(ft_itoa(lst->type), ft_itoa(END));
+//	cr_expect_str_eq(ft_itoa(lst->type), ft_itoa(END));
+	cr_expect(lst->type == END);
 	cr_expect(lst->value == NULL);
 	// lexer("ls -la; | lala \"pretty long sentence to test quotes\" lala", &lst);
 }
