@@ -6,7 +6,7 @@
 /*   By: jbrinksm <jbrinksm@student.codam.nl>         +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2019/04/18 16:37:32 by omulder        #+#    #+#                */
-/*   Updated: 2019/05/26 15:34:40 by mavan-he      ########   odam.nl         */
+/*   Updated: 2019/05/26 19:07:32 by mavan-he      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -464,4 +464,26 @@ Test(lexer, basic)
 	cr_expect(lst->type == END);
 	cr_expect(lst->value == NULL);
 	tokenlstdel(&tmp);
+}
+
+TestSuite(parser);
+
+Test(parser, basic)
+{
+	t_tokenlst	*lst;
+	t_ast		*ast;
+	t_ast		*tmp_ast;
+	char 		*str;
+
+	str = ft_strdup("HOME=/ ls -la || ls 2>file \"Documents\";");
+	lst = NULL;
+	ast = NULL;
+	cr_expect(lexer(&(str), &lst) == FUNCT_SUCCESS);
+	cr_expect(parser(&lst, &ast) == FUNCT_SUCCESS);
+	tmp_ast = ast;
+	cr_expect(ast->type == SEMICOL);
+	ast = ast->child;
+	cr_expect(ast->type == OR_IF);
+	astdel(&tmp_ast);
+	cr_expect(tmp_ast == NULL);
 }
