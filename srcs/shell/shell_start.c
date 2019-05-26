@@ -6,7 +6,7 @@
 /*   By: omulder <omulder@student.codam.nl>           +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2019/04/18 16:44:50 by omulder        #+#    #+#                */
-/*   Updated: 2019/05/26 13:12:17 by mavan-he      ########   odam.nl         */
+/*   Updated: 2019/05/26 16:05:31 by mavan-he      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -41,7 +41,7 @@ int		shell_start(void)
 		if (lexer(&line, &token_lst) != FUNCT_SUCCESS)
 			continue ;
 		#ifdef DEBUG
-		tokenlstiter(token_lst, print_node);
+ 		tokenlstiter(token_lst, print_node);
 		#endif
 		if (parser(&token_lst, &ast) != FUNCT_SUCCESS)
 			continue ;

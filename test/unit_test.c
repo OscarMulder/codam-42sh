@@ -6,7 +6,7 @@
 /*   By: jbrinksm <jbrinksm@student.codam.nl>         +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2019/04/18 16:37:32 by omulder        #+#    #+#                */
-/*   Updated: 2019/05/26 15:02:19 by mavan-he      ########   odam.nl         */
+/*   Updated: 2019/05/26 15:34:40 by mavan-he      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -427,6 +427,7 @@ Test(lexer, basic)
 	str = ft_strdup("HOME=/ ls -la || ls 2>file \"Documents\";");
 	lst = NULL;
 	cr_expect(lexer(&(str), &lst) == FUNCT_SUCCESS);
+	cr_expect(str == NULL);
 	tmp = lst;
 	cr_expect(lst->type == START);
 	cr_expect(lst->value == NULL);
