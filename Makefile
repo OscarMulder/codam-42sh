@@ -6,7 +6,7 @@
 #    By: jbrinksm <jbrinksm@student.codam.nl>         +#+                      #
 #                                                    +#+                       #
 #    Created: 2019/04/10 20:30:07 by jbrinksm       #+#    #+#                 #
-#    Updated: 2019/05/26 18:03:35 by tde-jong      ########   odam.nl          #
+#    Updated: 2019/05/26 18:03:46 by tde-jong      ########   odam.nl          #
 #                                                                              #
 # **************************************************************************** #
 
@@ -86,7 +86,7 @@ build_test: $(TESTOBJECTS) $(OBJECTS)
 test: build_test
 	@./vsh_tests
 
-testval: build_test
+test_valgrind: build_test
 	@valgrind --tool=memcheck --leak-check=full ./vsh_tests
 
 test_coverage: test
