@@ -6,7 +6,7 @@
 #    By: jbrinksm <jbrinksm@student.codam.nl>         +#+                      #
 #                                                    +#+                       #
 #    Created: 2019/04/10 20:30:07 by jbrinksm       #+#    #+#                 #
-#    Updated: 2019/05/25 14:45:20 by mavan-he      ########   odam.nl          #
+#    Updated: 2019/05/26 16:26:25 by omulder       ########   odam.nl          #
 #                                                                              #
 # **************************************************************************** #
 
@@ -83,6 +83,12 @@ test: $(TESTOBJECTS) $(OBJECTS)
 	@make $(TESTOBJECTS)
 	@$(CC) $(FLAGS) $^ $(COVERAGE) $(INCLUDES) $(CRITERION) $(LIB) -o vsh_tests
 	@./vsh_tests
+
+testval: $(TESTOBJECTS) $(OBJECTS)
+	@make re
+	@make $(TESTOBJECTS)
+	@$(CC) $(FLAGS) $^ $(COVERAGE) $(INCLUDES) $(CRITERION) $(LIB) -o vsh_tests
+	@valgrind --tool=memcheck --leak-check=full ./vsh_tests
 
 test_coverage: test
 	@gcov $(SRCS)
