@@ -76,9 +76,9 @@ First, build the container:
 ```
 docker build -t vsh .
 ```
-Then, run the container:
+Then, run the container from the repository dir:
 ```
-docker run -it vsh
+docker run -v $PWD:/vsh -it vsh
 ```
 Usefull commands:
 ```

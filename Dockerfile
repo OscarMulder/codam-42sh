@@ -8,6 +8,5 @@ RUN apt-get install -y make
 RUN apt-get install -y gcc
 RUN apt-get install -y criterion-dev
 RUN apt-get install -y libncurses5-dev libncursesw5-dev
-WORKDIR /app
-COPY . /app
+WORKDIR /vsh
 CMD make test
