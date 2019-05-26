@@ -6,7 +6,7 @@
 /*   By: mavan-he <mavan-he@student.codam.nl>         +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2019/05/21 21:13:37 by mavan-he       #+#    #+#                */
-/*   Updated: 2019/05/26 12:16:15 by mavan-he      ########   odam.nl         */
+/*   Updated: 2019/05/26 17:58:03 by mavan-he      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,7 +17,7 @@ static int		get_tree_height(t_ast *root)
 	int lh;
 	int rh;
 
-	if (!root)
+	if (root == NULL)
 		return (0);
 	if (root->type != END)
 	{

@@ -6,7 +6,7 @@
 /*   By: jbrinksm <jbrinksm@student.codam.nl>         +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2019/05/19 19:58:40 by jbrinksm       #+#    #+#                */
-/*   Updated: 2019/05/26 16:09:44 by mavan-he      ########   odam.nl         */
+/*   Updated: 2019/05/26 18:52:15 by mavan-he      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -79,15 +79,13 @@ int		parser(t_tokenlst **token_lst, t_ast **ast)
 	tmp = (*token_lst)->next;
 	if (complete_cmd(&tmp, ast) != true)
 	{
-		#ifdef DEBUG
-		print_tree(*ast);
-		#endif
 		if ((tmp)->flags & T_MALLOC_ERROR)
 			ft_putstr("vsh: parser: malloc error\n");
 		else
 			ft_printf("vsh: syntax error near unexpected token `%s'\n",
 			return_token_str((tmp)->type));
 		tokenlstdel(token_lst);
+		astdel(ast);
 		return (FUNCT_FAILURE);
 	}
 	tokenlstdel(token_lst);
