@@ -6,7 +6,7 @@
 /*   By: mavan-he <mavan-he@student.codam.nl>         +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2019/05/21 19:54:55 by mavan-he       #+#    #+#                */
-/*   Updated: 2019/05/26 12:14:51 by mavan-he      ########   odam.nl         */
+/*   Updated: 2019/05/26 12:51:59 by mavan-he      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -21,7 +21,14 @@ t_ast	*new_ast_node(t_tokenlst *token)
 		return (NULL);
 	node->type = token->type;
 	node->flags = token->flags;
-	node->value = token->value;
+	if (token->value != NULL)
+	{
+		node->value = ft_strdup(token->value);
+		if (node->value == NULL)
+			return (NULL);
+	}
+	else
+		node->value = NULL;
 	node->child = NULL;
 	node->sibling = NULL;
 	return (node);

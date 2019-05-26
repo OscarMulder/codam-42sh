@@ -6,7 +6,7 @@
 /*   By: mavan-he <mavan-he@student.codam.nl>         +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2019/05/14 15:14:31 by mavan-he       #+#    #+#                */
-/*   Updated: 2019/05/25 12:53:43 by mavan-he      ########   odam.nl         */
+/*   Updated: 2019/05/26 12:47:10 by mavan-he      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -53,13 +53,14 @@ int			tokenlstaddback(t_tokenlst **token_lst, t_tokens type,
 		return (tokenlstaddback(&(*token_lst)->next, type, value, flags));
 }
 
-int			lexer(char *line, t_tokenlst **token_lst)
+int			lexer(char **line, t_tokenlst **token_lst)
 {
 	if (tokenlstaddback(token_lst, START, NULL, 0) != FUNCT_SUCCESS)
-		return (lexer_error(token_lst));
-	if (lexer_scanner(line, *token_lst) != FUNCT_SUCCESS)
-		return (lexer_error(token_lst));
+		return (lexer_error(token_lst, line));
+	if (lexer_scanner(*line, *token_lst) != FUNCT_SUCCESS)
+		return (lexer_error(token_lst, line));
 	if (tokenlstaddback(token_lst, END, NULL, 0) != FUNCT_SUCCESS)
-		return (lexer_error(token_lst));
+		return (lexer_error(token_lst, line));
+	ft_strdel(line);
 	return (FUNCT_SUCCESS);
 }

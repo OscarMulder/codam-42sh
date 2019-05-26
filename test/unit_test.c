@@ -6,7 +6,7 @@
 /*   By: jbrinksm <jbrinksm@student.codam.nl>         +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2019/04/18 16:37:32 by omulder        #+#    #+#                */
-/*   Updated: 2019/05/25 16:03:06 by mavan-he      ########   odam.nl         */
+/*   Updated: 2019/05/26 13:06:30 by mavan-he      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -307,7 +307,7 @@ Test(lexer_error, one_item)
 
 	lst = NULL;
 	tokenlstaddback(&lst, START, NULL, 0);
-	lexer_error(&lst);
+	lexer_error(&lst, NULL);
 	cr_expect(lst == NULL);
 	cr_expect_stderr_eq_str("vsh: lexer: malloc error\n");
 }
@@ -345,7 +345,7 @@ Test(lexer_error, long_list)
 	tokenlstaddback(&lst, WORD, ft_strdup("testword"), 0);
 	tokenlstaddback(&lst, PIPE, NULL, 0);
 	tokenlstaddback(&lst, END, NULL, 0);
-	lexer_error(&lst);
+	lexer_error(&lst, NULL);
 	cr_expect(lst == NULL);
 	cr_expect_stderr_eq_str("vsh: lexer: malloc error\n");
 }
@@ -373,7 +373,7 @@ Test(lexer_error, all_items)
 	tokenlstaddback(&lst, SEMICOL, NULL, 0);
 	tokenlstaddback(&lst, NEWLINE, NULL, 0);
 	tokenlstaddback(&lst, END,  NULL, 0);
-	lexer_error(&lst);
+	lexer_error(&lst, NULL);
 	cr_expect(lst == NULL);
 	cr_expect_stderr_eq_str("vsh: lexer: malloc error\n");
 }
@@ -407,7 +407,7 @@ Test(tokenlstaddback, invalid_values)
 	tokenlstaddback(&lst, END, NULL, 0);
 	tokenlstaddback(&lst, START, NULL, 0);
 	tokenlstaddback(&lst, ERROR, ft_strdup("testword"), 0);
-	lexer_error(&lst);
+	lexer_error(&lst, NULL);
 	cr_expect(lst == NULL);
 	cr_expect_stderr_eq_str("vsh: lexer: malloc error\n");
 }
@@ -421,9 +421,11 @@ TestSuite(lexer);
 Test(lexer, basic)
 {
 	t_tokenlst	*lst;
+	char 		*str;
 
+	str = ft_strdup("ls -la");
 	lst = NULL;
-	lexer("ls -la", &lst);
+	lexer(&(str), &lst);
 	cr_expect(lst->type == START);
 	cr_expect(lst->value == NULL);
 	lst = lst->next;

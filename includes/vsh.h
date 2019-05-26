@@ -6,7 +6,7 @@
 /*   By: omulder <omulder@student.codam.nl>           +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2019/04/10 20:29:42 by jbrinksm       #+#    #+#                */
-/*   Updated: 2019/05/26 12:14:13 by mavan-he      ########   odam.nl         */
+/*   Updated: 2019/05/26 13:09:54 by mavan-he      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -47,7 +47,7 @@
 # define T_MALLOC_ERROR (1 << 4)
 
 /*
-**------------------------------------parser-------------------------------------
+**------------------------------------parser------------------------------------
 */
 
 # define TK_TYPE (*token_lst)->type
@@ -184,22 +184,21 @@ typedef struct	s_scanner
 	int			tk_len;
 	char		*str;
 	int			str_index;
-	int			flags;
+	char		flags;
 }				t_scanner;
 
 /*
 **----------------------------------parser--------------------------------------
 */
 
-typedef struct		s_ast
+typedef struct	s_ast
 {
 	t_tokens		type;
-	int				flags;
+	char			flags;
 	char			*value;
 	struct s_ast	*child;
 	struct s_ast	*sibling;
-	
-}					t_ast;
+}				t_ast;
 /*
 **=================================prototypes===================================
 */
@@ -276,8 +275,8 @@ void			tokenlstiter(t_tokenlst *token_lst,
 					void (*f)(t_tokenlst *elem));
 bool			is_shellspec(char c);
 
-int				lexer(char *line, t_tokenlst **token_lst);
-int				lexer_error(t_tokenlst **token_lst);
+int				lexer(char **line, t_tokenlst **token_lst);
+int				lexer_error(t_tokenlst **token_lst, char **line);
 void			evaluator(t_tokenlst *token_lst);
 int				lexer_scanner(char *line, t_tokenlst *token_lst);
 
@@ -308,7 +307,7 @@ void			state_ionum(t_scanner *scanner);
 /*
 **----------------------------------parser--------------------------------------
 */
-int				parser(t_tokenlst **token_lst);
+int				parser(t_tokenlst **token_lst, t_ast **ast);
 bool			add_astnode(t_tokenlst **token_lst, t_ast **ast);
 bool			add_sibling(t_tokenlst **token_lst, t_ast **ast,
 				bool (*parse_priority_x)(t_tokenlst **, t_ast **));
@@ -316,6 +315,7 @@ t_ast			*new_ast_node(t_tokenlst *token);
 bool			is_redirect_tk(t_tokens type);
 bool			cmd(t_tokenlst **token_lst, t_ast **ast);
 char			*return_token_str(t_tokens type);
+void			astdel(t_ast **ast);
 
 /*
 **----------------------------------bultins-------------------------------------
@@ -336,7 +336,6 @@ int				update_quote_status(char *line, int cur_index, char *quote);
 **----------------------------------debugging-----------------------------------
 */
 
-char			*put_token(t_tokens type);
 void			print_node(t_tokenlst *node);
 void			print_tree(t_ast *root);
 
