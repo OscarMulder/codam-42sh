@@ -80,6 +80,7 @@ Then, run the container from the repository dir:
 ```
 docker run -v $PWD:/vsh -it vsh
 ```
+To run with valgrind, open Dockerfile, change `make test` to `make testval`. Then rebuild the container.
 Usefull commands:
 ```
 docker ps	#lists running containers
