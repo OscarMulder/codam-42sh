@@ -6,7 +6,7 @@
 /*   By: mavan-he <mavan-he@student.codam.nl>         +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2019/05/16 16:06:49 by mavan-he       #+#    #+#                */
-/*   Updated: 2019/05/25 17:05:57 by mavan-he      ########   odam.nl         */
+/*   Updated: 2019/05/26 12:11:48 by mavan-he      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,57 +14,15 @@
 
 #ifdef DEBUG
 
-char	*put_token(t_tokens type)
-{
-	char	*token;
-
-	token = NULL;
-	if (type == START)
-		token = "START";
-	else if (type == ASSIGN)
-		token = "ASSIGN";
-	else if (type == WORD)
-		token = "WORD";
-	else if (type == IO_NUMBER)
-		token = "IO_NUM";
-	else if (type == AND_IF)
-		token = "AND_IF";
-	else if (type == OR_IF)
-		token = "OR_IF";
-	else if (type == DLESS)
-		token = "DLESS";
-	else if (type == DGREAT)
-		token = "DGREAT";
-	else if (type == SLESS)
-		token = "SLESS";
-	else if (type == SGREAT)
-		token = "SGREAT";
-	else if (type == LESSAND)
-		token = "LESSAND";
-	else if (type == GREATAND)
-		token = "GREATAND";
-	else if (type == BG)
-		token = "BG";
-	else if (type == PIPE)
-		token = "PIPE";
-	else if (type == SEMICOL)
-		token = "SEMICOL";
-	else if (type == END)
-		token = "END";
-	else
-		token = "ERROR";
-	return (token);
-}
-
 void	print_node(t_tokenlst *node)
 {
-	ft_printf("%-16s", put_token(node->type));
+	ft_printf("%-16s", return_token_str(node->type));
 	if (node->type == IO_NUMBER)
 		ft_printf("%-16s", node->value);
 	else if (node->type == WORD || node->type == ASSIGN)
 		ft_printf("%-16s", node->value);
 	else
-		put_token(node->type);
+		ft_printf("%-16s", return_token_str(node->type));
 	if (node->flags & T_FLAG_HASDOLLAR)
 		ft_putstr("<has_dollar>");
 	if (node->type != END)

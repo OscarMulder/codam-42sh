@@ -6,7 +6,7 @@
 /*   By: omulder <omulder@student.codam.nl>           +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2019/04/10 20:29:42 by jbrinksm       #+#    #+#                */
-/*   Updated: 2019/05/25 19:15:41 by mavan-he      ########   odam.nl         */
+/*   Updated: 2019/05/26 12:14:13 by mavan-he      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -315,6 +315,7 @@ bool			add_sibling(t_tokenlst **token_lst, t_ast **ast,
 t_ast			*new_ast_node(t_tokenlst *token);
 bool			is_redirect_tk(t_tokens type);
 bool			cmd(t_tokenlst **token_lst, t_ast **ast);
+char			*return_token_str(t_tokens type);
 
 /*
 **----------------------------------bultins-------------------------------------
