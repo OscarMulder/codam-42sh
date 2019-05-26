@@ -6,7 +6,7 @@
 /*   By: jbrinksm <jbrinksm@student.codam.nl>         +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2019/04/18 16:37:32 by omulder        #+#    #+#                */
-/*   Updated: 2019/05/26 13:06:30 by mavan-he      ########   odam.nl         */
+/*   Updated: 2019/05/26 15:02:19 by mavan-he      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -421,13 +421,18 @@ TestSuite(lexer);
 Test(lexer, basic)
 {
 	t_tokenlst	*lst;
+	t_tokenlst	*tmp;
 	char 		*str;
 
-	str = ft_strdup("ls -la");
+	str = ft_strdup("HOME=/ ls -la || ls 2>file \"Documents\";");
 	lst = NULL;
-	lexer(&(str), &lst);
+	cr_expect(lexer(&(str), &lst) == FUNCT_SUCCESS);
+	tmp = lst;
 	cr_expect(lst->type == START);
 	cr_expect(lst->value == NULL);
+	lst = lst->next;
+	cr_expect(lst->type == ASSIGN);
+	cr_expect_str_eq(lst->value, "HOME=/");
 	lst = lst->next;
 	cr_expect(lst->type == WORD);
 	cr_expect_str_eq(lst->value, "ls");
@@ -435,7 +440,27 @@ Test(lexer, basic)
 	cr_expect(lst->type == WORD);
 	cr_expect_str_eq(lst->value, "-la");
 	lst = lst->next;
+	cr_expect(lst->type == OR_IF);
+	cr_expect(lst->value == NULL);
+	lst = lst->next;
+	cr_expect(lst->type == WORD);
+	cr_expect_str_eq(lst->value, "ls");
+	lst = lst->next;
+	cr_expect(lst->type == IO_NUMBER);
+	cr_expect_str_eq(lst->value, "2");
+	lst = lst->next;
+	cr_expect(lst->type == SGREAT);
+	cr_expect(lst->value == NULL);
+	lst = lst->next;
+	cr_expect(lst->type == WORD);
+	cr_expect_str_eq(lst->value, "file");
+	lst = lst->next;
+	cr_expect(lst->type == WORD);
+	cr_expect_str_eq(lst->value, "\"Documents\"");
+	lst = lst->next;
+	cr_expect(lst->type == SEMICOL);
+	lst = lst->next;
 	cr_expect(lst->type == END);
 	cr_expect(lst->value == NULL);
-	// lexer("ls -la; | lala \"pretty long sentence to test quotes\" lala", &lst);
+	tokenlstdel(&tmp);
 }
