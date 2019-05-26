@@ -78,7 +78,7 @@ docker build -t vsh .
 ```
 Then, run the container:
 ```
-docker run vsh
+docker run -it vsh
 ```
 Usefull commands:
 ```
