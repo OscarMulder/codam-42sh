@@ -6,7 +6,7 @@
 /*   By: omulder <omulder@student.codam.nl>           +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2019/04/10 20:29:42 by jbrinksm       #+#    #+#                */
-/*   Updated: 2019/05/27 15:47:01 by omulder       ########   odam.nl         */
+/*   Updated: 2019/05/27 15:53:19 by omulder       ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -191,12 +191,12 @@ int				shell_start(void);
 **---------------------------------environment----------------------------------
 */
 
-char			**get_environ_cpy(void);
-char			*var_get_value(char *var_key, char **vararray);
-char			*var_join_key_value(char *var_key, char *var_value);
-int				var_set_value(char *var_key, char *var_value, char **vararray);
-int				var_add_value(char *var_key, char *var_value, char ***vararray);
-char			**free_and_return_null(char ***vshenviron);
+char			**env_get_environ_cpy(void);
+char			*env_var_get_value(char *var_key, char **vararray);
+char			*env_var_join_key_value(char *var_key, char *var_value);
+int				env_var_set_value(char *var_key, char *var_value, char **vararray);
+int				env_var_add_value(char *var_key, char *var_value, char ***vararray);
+char			**env_free_and_return_null(char ***vshenviron);
 
 /*
 **----------------------------------terminal------------------------------------

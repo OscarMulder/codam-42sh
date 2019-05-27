@@ -6,7 +6,7 @@
 /*   By: jbrinksm <jbrinksm@student.codam.nl>         +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2019/04/18 16:37:32 by omulder        #+#    #+#                */
-/*   Updated: 2019/05/25 16:03:06 by mavan-he      ########   odam.nl         */
+/*   Updated: 2019/05/27 15:56:37 by omulder       ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -82,15 +82,15 @@ Test(term_free_struct, basic)
 **------------------------------------------------------------------------------
 */
 
-TestSuite(get_environ_cpy);
+TestSuite(env_get_environ_cpy);
 
-Test(get_environ_cpy, basic)
+Test(env_get_environ_cpy, basic)
 {
 	extern char **environ;
 	char		**environ_cpy;
 	int			index;
 
-	environ_cpy = get_environ_cpy();
+	environ_cpy = env_get_environ_cpy();
 	index = 0;
 	cr_assert(environ_cpy != NULL);
 	while (environ_cpy[index] != NULL && environ[index] != NULL)
@@ -232,48 +232,48 @@ Test(builtin_echo, basic, .init=redirect_all_stdout)
 **------------------------------------------------------------------------------
 */
 
-TestSuite(var_get_value);
+TestSuite(env_var_get_value);
 
-Test(var_get_value, basic)
+Test(env_var_get_value, basic)
 {
 	char	*fakenv[] = {"LOL=didi", "PATH=lala", "PAT=lolo", NULL};
-	cr_expect_str_eq(var_get_value("PATH", fakenv), "lala");
-	cr_expect(var_get_value("NOEXIST", fakenv) == NULL);
+	cr_expect_str_eq(env_var_get_value("PATH", fakenv), "lala");
+	cr_expect(env_var_get_value("NOEXIST", fakenv) == NULL);
 }
 
 /*
 **------------------------------------------------------------------------------
 */
 
-TestSuite(var_join_key_value);
+TestSuite(env_var_join_key_value);
 
-Test(var_join_key_value, basic)
+Test(env_var_join_key_value, basic)
 {
-	cr_expect_str_eq(var_join_key_value("lolo", "lala"), "lolo=lala");
-	cr_expect_str_eq(var_join_key_value("lolo===", "lala"), "lolo====lala");
-	cr_expect_str_eq(var_join_key_value("lolo", "===lala"), "lolo====lala");
-	cr_expect_str_eq(var_join_key_value("=", "="), "===");
-	cr_expect_str_eq(var_join_key_value("", ""), "=");
-	cr_expect_str_eq(var_join_key_value("", "="), "==");
-	cr_expect_str_eq(var_join_key_value("=", ""), "==");
-	cr_expect_str_eq(var_join_key_value("\t", "\t"), "\t=\t");
+	cr_expect_str_eq(env_var_join_key_value("lolo", "lala"), "lolo=lala");
+	cr_expect_str_eq(env_var_join_key_value("lolo===", "lala"), "lolo====lala");
+	cr_expect_str_eq(env_var_join_key_value("lolo", "===lala"), "lolo====lala");
+	cr_expect_str_eq(env_var_join_key_value("=", "="), "===");
+	cr_expect_str_eq(env_var_join_key_value("", ""), "=");
+	cr_expect_str_eq(env_var_join_key_value("", "="), "==");
+	cr_expect_str_eq(env_var_join_key_value("=", ""), "==");
+	cr_expect_str_eq(env_var_join_key_value("\t", "\t"), "\t=\t");
 }
 
 /*
 **------------------------------------------------------------------------------
 */
 
-TestSuite(var_set_value);
+TestSuite(env_var_set_value);
 
-Test(var_set_value, basic)
+Test(env_var_set_value, basic)
 {
 	char	**fakenv;
 
 	fakenv = ft_strsplit("LOL=didi|PATH=lala|PAT=lolo", '|');
 	cr_assert(fakenv != NULL, "Failed to allocate test strings");
-	var_set_value("PATH", "lala", fakenv);
-	cr_expect(var_set_value("PATH", "changed", fakenv) == FUNCT_SUCCESS);
-	cr_expect(var_set_value("LI", "changed", fakenv) == FUNCT_FAILURE);
+	env_var_set_value("PATH", "lala", fakenv);
+	cr_expect(env_var_set_value("PATH", "changed", fakenv) == FUNCT_SUCCESS);
+	cr_expect(env_var_set_value("LI", "changed", fakenv) == FUNCT_FAILURE);
 	cr_expect_str_eq(fakenv[1], "PATH=changed");
 }
 
@@ -281,17 +281,17 @@ Test(var_set_value, basic)
 **------------------------------------------------------------------------------
 */
 
-TestSuite(var_add_value);
+TestSuite(env_var_add_value);
 
-Test(var_add_value, basic)
+Test(env_var_add_value, basic)
 {
 	char	**fakenv;
 
 	fakenv = ft_strsplit("LOL=didi|PATH=lala|PAT=lolo", '|');
 	cr_assert(fakenv != NULL, "Failed to allocate test strings");
-	cr_expect(var_add_value("PATH", "changed", &fakenv) == FUNCT_SUCCESS);
+	cr_expect(env_var_add_value("PATH", "changed", &fakenv) == FUNCT_SUCCESS);
 	cr_expect_str_eq(fakenv[1], "PATH=changed");
-	cr_expect(var_add_value("TEST", "success", &fakenv) == FUNCT_SUCCESS);
+	cr_expect(env_var_add_value("TEST", "success", &fakenv) == FUNCT_SUCCESS);
 	cr_expect_str_eq(fakenv[3], "TEST=success");
 }
 
