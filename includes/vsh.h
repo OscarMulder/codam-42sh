@@ -6,7 +6,7 @@
 /*   By: omulder <omulder@student.codam.nl>           +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2019/04/10 20:29:42 by jbrinksm       #+#    #+#                */
-/*   Updated: 2019/05/26 13:09:54 by mavan-he      ########   odam.nl         */
+/*   Updated: 2019/05/27 15:38:46 by omulder       ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -318,7 +318,7 @@ char			*return_token_str(t_tokens type);
 void			astdel(t_ast **ast);
 
 /*
-**----------------------------------bultins-------------------------------------
+**----------------------------------builtins-------------------------------------
 */
 
 void			builtin_exit(t_term *term_p);
