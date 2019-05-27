@@ -6,7 +6,7 @@
 /*   By: omulder <omulder@student.codam.nl>           +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2019/04/10 20:29:42 by jbrinksm       #+#    #+#                */
-/*   Updated: 2019/05/27 15:53:19 by omulder       ########   odam.nl         */
+/*   Updated: 2019/05/27 15:59:49 by omulder       ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -183,8 +183,6 @@ typedef struct	s_scanner
 **=================================prototypes===================================
 */
 
-int				term_reset(t_term *term_p);
-void			term_free_termp(t_term *term_p);
 int				shell_start(void);
 
 /*
