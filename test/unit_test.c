@@ -6,7 +6,7 @@
 /*   By: jbrinksm <jbrinksm@student.codam.nl>         +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2019/04/18 16:37:32 by omulder        #+#    #+#                */
-/*   Updated: 2019/05/26 19:07:32 by mavan-he      ########   odam.nl         */
+/*   Updated: 2019/05/27 17:23:42 by mavan-he      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -479,11 +479,11 @@ Test(parser, basic)
 	lst = NULL;
 	ast = NULL;
 	cr_expect(lexer(&(str), &lst) == FUNCT_SUCCESS);
-	cr_expect(parser(&lst, &ast) == FUNCT_SUCCESS);
+	cr_expect(parser_start(&lst, &ast) == FUNCT_SUCCESS);
 	tmp_ast = ast;
 	cr_expect(ast->type == SEMICOL);
 	ast = ast->child;
 	cr_expect(ast->type == OR_IF);
-	astdel(&tmp_ast);
+	parser_astdel(&tmp_ast);
 	cr_expect(tmp_ast == NULL);
 }

@@ -1,26 +1,30 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        ::::::::            */
-/*   parser.c                                           :+:    :+:            */
+/*   parser_start.c                                     :+:    :+:            */
 /*                                                     +:+                    */
 /*   By: jbrinksm <jbrinksm@student.codam.nl>         +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2019/05/19 19:58:40 by jbrinksm       #+#    #+#                */
-/*   Updated: 2019/05/27 15:20:10 by omulder       ########   odam.nl         */
+/*   Updated: 2019/05/27 17:27:51 by mavan-he      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "vsh.h"
 
-static bool	pipe_sequence(t_tokenlst **token_lst, t_ast **ast)
+/*
+**	Function names in this file refer to the vsh grammer.
+*/
+
+static bool	parser_pipe_sequence(t_tokenlst **token_lst, t_ast **ast)
 {
-	if (cmd(token_lst, ast) == true)
+	if (parser_command(token_lst, ast) == true)
 	{
 		while (TK_TYPE == PIPE)
 		{
-			if (add_astnode(token_lst, ast) == false)
+			if (parser_add_astnode(token_lst, ast) == false)
 				return (false);
-			if (add_sibling(token_lst, ast, &cmd) != true)
+			if (parser_add_sibling(token_lst, ast, &parser_command) != true)
 				return (false);
 		}
 		return (true);
@@ -28,16 +32,17 @@ static bool	pipe_sequence(t_tokenlst **token_lst, t_ast **ast)
 	return (false);
 }
 
-static bool	and_or(t_tokenlst **token_lst, t_ast **ast)
+static bool	parser_and_or(t_tokenlst **token_lst, t_ast **ast)
 {
-	if (pipe_sequence(token_lst, ast) == true)
+	if (parser_pipe_sequence(token_lst, ast) == true)
 	{
 		while (TK_TYPE == AND_IF ||
 			TK_TYPE == OR_IF)
 		{
-			if (add_astnode(token_lst, ast) == false)
+			if (parser_add_astnode(token_lst, ast) == false)
 				return (false);
-			if (add_sibling(token_lst, ast, &pipe_sequence) != true)
+			if (parser_add_sibling(token_lst, ast, &parser_pipe_sequence)
+				!= true)
 				return (false);
 		}
 		return (true);
@@ -45,18 +50,18 @@ static bool	and_or(t_tokenlst **token_lst, t_ast **ast)
 	return (false);
 }
 
-static bool	list(t_tokenlst **token_lst, t_ast **ast)
+static bool	parser_list(t_tokenlst **token_lst, t_ast **ast)
 {
-	if (and_or(token_lst, ast) == true)
+	if (parser_and_or(token_lst, ast) == true)
 	{
 		if (TK_TYPE == SEMICOL ||
 			TK_TYPE == BG)
 		{
-			if (add_astnode(token_lst, ast) == false)
+			if (parser_add_astnode(token_lst, ast) == false)
 				return (false);
 			if (TK_TYPE != END)
 			{
-				if (add_sibling(token_lst, ast, &list) == false)
+				if (parser_add_sibling(token_lst, ast, &parser_list) == false)
 					return (false);
 			}
 		}
@@ -65,27 +70,27 @@ static bool	list(t_tokenlst **token_lst, t_ast **ast)
 	return (false);
 }
 
-static bool	complete_cmd(t_tokenlst **token_lst, t_ast **ast)
+static bool	parser_complete_command(t_tokenlst **token_lst, t_ast **ast)
 {
-	if (list(token_lst, ast) == true && TK_TYPE == END)
+	if (parser_list(token_lst, ast) == true && TK_TYPE == END)
 		return (true);
 	return (false);
 }
 
-int		parser(t_tokenlst **token_lst, t_ast **ast)
+int			parser_start(t_tokenlst **token_lst, t_ast **ast)
 {
 	t_tokenlst	*tmp;
 
 	tmp = (*token_lst)->next;
-	if (complete_cmd(&tmp, ast) != true)
+	if (parser_complete_command(&tmp, ast) != true)
 	{
 		if ((tmp)->flags & T_MALLOC_ERROR)
 			ft_putstr("vsh: parser: malloc error\n");
 		else
 			ft_printf("vsh: syntax error near unexpected token `%s'\n",
-			return_token_str((tmp)->type));
+			parser_return_token_str((tmp)->type));
 		tokenlstdel(token_lst);
-		astdel(ast);
+		parser_astdel(ast);
 		return (FUNCT_FAILURE);
 	}
 	tokenlstdel(token_lst);

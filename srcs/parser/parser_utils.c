@@ -6,13 +6,13 @@
 /*   By: mavan-he <mavan-he@student.codam.nl>         +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2019/05/21 19:54:55 by mavan-he       #+#    #+#                */
-/*   Updated: 2019/05/26 12:51:59 by mavan-he      ########   odam.nl         */
+/*   Updated: 2019/05/27 17:27:36 by mavan-he      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "vsh.h"
 
-t_ast	*new_ast_node(t_tokenlst *token)
+t_ast	*parser_new_node(t_tokenlst *token)
 {
 	t_ast *node;
 
@@ -34,7 +34,7 @@ t_ast	*new_ast_node(t_tokenlst *token)
 	return (node);
 }
 
-bool	add_sibling(t_tokenlst **token_lst, t_ast **ast,
+bool	parser_add_sibling(t_tokenlst **token_lst, t_ast **ast,
 		bool (*parse_priority_x)(t_tokenlst **, t_ast **))
 {
 	t_ast *sibling;
@@ -46,11 +46,11 @@ bool	add_sibling(t_tokenlst **token_lst, t_ast **ast,
 	return (true);
 }
 
-bool	add_astnode(t_tokenlst **token_lst, t_ast **ast)
+bool	parser_add_astnode(t_tokenlst **token_lst, t_ast **ast)
 {
 	t_ast *new_node;
 
-	new_node = new_ast_node(*token_lst);
+	new_node = parser_new_node(*token_lst);
 	if (new_node == NULL)
 	{
 		(*token_lst)->flags |= T_MALLOC_ERROR;
@@ -61,10 +61,4 @@ bool	add_astnode(t_tokenlst **token_lst, t_ast **ast)
 	*ast = new_node;
 	*token_lst = (*token_lst)->next;
 	return (true);
-}
-
-bool	is_redirect_tk(t_tokens type)
-{
-	return (type == SLESS || type == SGREAT || type == DLESS ||
-			type == DGREAT || type == LESSAND || type == GREATAND);
 }

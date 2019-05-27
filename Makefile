@@ -6,7 +6,7 @@
 #    By: jbrinksm <jbrinksm@student.codam.nl>         +#+                      #
 #                                                    +#+                       #
 #    Created: 2019/04/10 20:30:07 by jbrinksm       #+#    #+#                 #
-#    Updated: 2019/05/26 18:03:46 by tde-jong      ########   odam.nl          #
+#    Updated: 2019/05/27 17:19:12 by mavan-he      ########   odam.nl          #
 #                                                                              #
 # **************************************************************************** #
 
@@ -32,11 +32,12 @@ input_parse_ctrl_up input_parse_ctrl_down input_is_word_start \
 term_prepare term_is_valid term_init_struct term_get_attributes \
 term_set_attributes term_reset_attributes term_free_struct \
 get_environ_cpy var_get_value var_set_value var_join_key_value var_add_value \
-is_char_escaped \
+is_char_escaped tool_is_redirect_tk \
 builtin_echo builtin_echo_set_flags \
 lexer lexer_utils lexer_debug lexer_evaluator lexer_scanner \
 lexer_state_if_else lexer_state_single lexer_state_start lexer_state_strings \
-parser parser_debug parser_utils parser_cmd parser_error parser_del_ast
+parser_start parser_debug parser_utils parser_command parser_error \
+parser_astdel 
 TESTS = unit_test
 OBJECTS := $(SRCS:%=%.o)
 TESTOBJECTS := $(TESTS:%=%.o)

@@ -6,7 +6,7 @@
 /*   By: omulder <omulder@student.codam.nl>           +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2019/04/10 20:29:42 by jbrinksm       #+#    #+#                */
-/*   Updated: 2019/05/27 15:38:46 by omulder       ########   odam.nl         */
+/*   Updated: 2019/05/27 17:22:41 by mavan-he      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -307,15 +307,14 @@ void			state_ionum(t_scanner *scanner);
 /*
 **----------------------------------parser--------------------------------------
 */
-int				parser(t_tokenlst **token_lst, t_ast **ast);
-bool			add_astnode(t_tokenlst **token_lst, t_ast **ast);
-bool			add_sibling(t_tokenlst **token_lst, t_ast **ast,
+int				parser_start(t_tokenlst **token_lst, t_ast **ast);
+bool			parser_add_astnode(t_tokenlst **token_lst, t_ast **ast);
+bool			parser_add_sibling(t_tokenlst **token_lst, t_ast **ast,
 				bool (*parse_priority_x)(t_tokenlst **, t_ast **));
-t_ast			*new_ast_node(t_tokenlst *token);
-bool			is_redirect_tk(t_tokens type);
-bool			cmd(t_tokenlst **token_lst, t_ast **ast);
-char			*return_token_str(t_tokens type);
-void			astdel(t_ast **ast);
+t_ast			*parser_new_node(t_tokenlst *token);
+bool			parser_command(t_tokenlst **token_lst, t_ast **ast);
+char			*parser_return_token_str(t_tokens type);
+void			parser_astdel(t_ast **ast);
 
 /*
 **----------------------------------builtins-------------------------------------
@@ -331,6 +330,7 @@ char			echo_set_flags(char **args, int *arg_i);
 
 int				is_char_escaped(char *line, int i);
 int				update_quote_status(char *line, int cur_index, char *quote);
+bool			tool_is_redirect_tk(t_tokens type);
 
 /*
 **----------------------------------debugging-----------------------------------

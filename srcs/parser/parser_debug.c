@@ -6,7 +6,7 @@
 /*   By: mavan-he <mavan-he@student.codam.nl>         +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2019/05/21 21:13:37 by mavan-he       #+#    #+#                */
-/*   Updated: 2019/05/26 17:58:03 by mavan-he      ########   odam.nl         */
+/*   Updated: 2019/05/27 17:22:41 by mavan-he      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -83,7 +83,7 @@ static void		tree_print_rec(t_ast *root, int depth, int space, int width)
 	if (root->type == WORD || root->type == ASSIGN)
 		printf("%s\e[0m\n", root->value);
 	else
-		printf("%s\e[0m\n", return_token_str(root->type));
+		printf("%s\e[0m\n", parser_return_token_str(root->type));
 	if (root->child != NULL)
 		tree_print_rec(root->child, depth + 1, space, width);
 }

@@ -6,7 +6,7 @@
 /*   By: mavan-he <mavan-he@student.codam.nl>         +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2019/05/26 12:11:35 by mavan-he       #+#    #+#                */
-/*   Updated: 2019/05/26 12:13:22 by mavan-he      ########   odam.nl         */
+/*   Updated: 2019/05/27 17:22:17 by mavan-he      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -40,7 +40,7 @@ static char	*return_single_tk_str(t_tokens type)
 		return ("ERROR");
 }
 
-char		*return_token_str(t_tokens type)
+char		*parser_return_token_str(t_tokens type)
 {
 	if (type == START)
 		return ("START");
