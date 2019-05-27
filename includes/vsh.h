@@ -6,7 +6,7 @@
 /*   By: omulder <omulder@student.codam.nl>           +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2019/04/10 20:29:42 by jbrinksm       #+#    #+#                */
-/*   Updated: 2019/05/27 15:59:49 by omulder       ########   odam.nl         */
+/*   Updated: 2019/05/27 16:00:31 by omulder       ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -180,12 +180,6 @@ typedef struct	s_scanner
 }				t_scanner;
 
 /*
-**=================================prototypes===================================
-*/
-
-int				shell_start(void);
-
-/*
 **---------------------------------environment----------------------------------
 */
 
@@ -240,6 +234,7 @@ int				input_parse_ctrl_down(char c, int *input_state, unsigned *index,
 */
 
 void			shell_display_prompt(void);
+int				shell_start(void);
 
 /*
 **----------------------------------lexer---------------------------------------
