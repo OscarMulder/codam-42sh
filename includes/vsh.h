@@ -6,7 +6,7 @@
 /*   By: omulder <omulder@student.codam.nl>           +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2019/04/10 20:29:42 by jbrinksm       #+#    #+#                */
-/*   Updated: 2019/05/27 16:51:42 by omulder       ########   odam.nl         */
+/*   Updated: 2019/05/27 17:27:33 by omulder       ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -41,8 +41,8 @@
 
 # define CURRENT_CHAR (scanner->str)[scanner->str_index]
 # define T_FLAG_HASDOLLAR (1 << 0)
-# define T_lexer_state_SQUOTE (1 << 1)
-# define T_lexer_state_DQUOTE (1 << 2)
+# define T_STATE_SQUOTE (1 << 1)
+# define T_STATE_DQUOTE (1 << 2)
 # define T_FLAG_HASEQUAL (1 << 3)
 
 /*
