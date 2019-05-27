@@ -6,7 +6,7 @@
 /*   By: omulder <omulder@student.codam.nl>           +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2019/04/10 20:29:42 by jbrinksm       #+#    #+#                */
-/*   Updated: 2019/05/25 14:45:18 by mavan-he      ########   odam.nl         */
+/*   Updated: 2019/05/27 15:47:01 by omulder       ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -294,7 +294,7 @@ void			state_ionum(t_scanner *scanner);
 
 void			builtin_exit(t_term *term_p);
 int				builtin_echo(char **args);
-char			echo_set_flags(char **args, int *arg_i);
+char			builtin_echo_set_flags(char **args, int *arg_i);
 
 /*
 **---------------------------------tools----------------------------------------
