@@ -6,13 +6,13 @@
 /*   By: jbrinksm <jbrinksm@student.codam.nl>         +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2019/05/19 19:58:40 by jbrinksm       #+#    #+#                */
-/*   Updated: 2019/05/26 18:52:15 by mavan-he      ########   odam.nl         */
+/*   Updated: 2019/05/27 15:20:10 by omulder       ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "vsh.h"
 
-bool	pipe_sequence(t_tokenlst **token_lst, t_ast **ast)
+static bool	pipe_sequence(t_tokenlst **token_lst, t_ast **ast)
 {
 	if (cmd(token_lst, ast) == true)
 	{
@@ -28,7 +28,7 @@ bool	pipe_sequence(t_tokenlst **token_lst, t_ast **ast)
 	return (false);
 }
 
-bool	and_or(t_tokenlst **token_lst, t_ast **ast)
+static bool	and_or(t_tokenlst **token_lst, t_ast **ast)
 {
 	if (pipe_sequence(token_lst, ast) == true)
 	{
@@ -45,7 +45,7 @@ bool	and_or(t_tokenlst **token_lst, t_ast **ast)
 	return (false);
 }
 
-bool	list(t_tokenlst **token_lst, t_ast **ast)
+static bool	list(t_tokenlst **token_lst, t_ast **ast)
 {
 	if (and_or(token_lst, ast) == true)
 	{
@@ -65,7 +65,7 @@ bool	list(t_tokenlst **token_lst, t_ast **ast)
 	return (false);
 }
 
-bool	complete_cmd(t_tokenlst **token_lst, t_ast **ast)
+static bool	complete_cmd(t_tokenlst **token_lst, t_ast **ast)
 {
 	if (list(token_lst, ast) == true && TK_TYPE == END)
 		return (true);

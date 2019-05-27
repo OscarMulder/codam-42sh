@@ -6,13 +6,13 @@
 /*   By: mavan-he <mavan-he@student.codam.nl>         +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2019/05/25 19:13:12 by mavan-he       #+#    #+#                */
-/*   Updated: 2019/05/26 18:47:15 by mavan-he      ########   odam.nl         */
+/*   Updated: 2019/05/27 15:23:54 by omulder       ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "vsh.h"
 
-bool	add_redir_node(t_tokenlst **token_lst, t_ast **ast)
+static bool	add_redir_node(t_tokenlst **token_lst, t_ast **ast)
 {
 	t_ast *redir;
 
@@ -34,7 +34,7 @@ bool	add_redir_node(t_tokenlst **token_lst, t_ast **ast)
 	return (true);
 }
 
-bool	cmd_suffix(t_tokenlst **token_lst, t_ast **suffix, t_ast **prefix)
+static bool	cmd_suffix(t_tokenlst **token_lst, t_ast **suffix, t_ast **prefix)
 {
 	t_ast *next_ast;
 
@@ -64,7 +64,7 @@ bool	cmd_suffix(t_tokenlst **token_lst, t_ast **suffix, t_ast **prefix)
 	return (true);
 }
 
-bool	cmd_prefix(t_tokenlst **token_lst, t_ast **ast, t_ast **prefix)
+static bool	cmd_prefix(t_tokenlst **token_lst, t_ast **ast, t_ast **prefix)
 {
 	t_ast *next_prefix;
 
@@ -87,7 +87,7 @@ bool	cmd_prefix(t_tokenlst **token_lst, t_ast **ast, t_ast **prefix)
 	return (true);
 }
 
-bool	cmd_word(t_tokenlst **token_lst, t_ast **ast, t_ast **prefix)
+static bool	cmd_word(t_tokenlst **token_lst, t_ast **ast, t_ast **prefix)
 {
 	if (TK_TYPE == WORD)
 	{
