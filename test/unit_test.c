@@ -6,7 +6,7 @@
 /*   By: jbrinksm <jbrinksm@student.codam.nl>         +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2019/04/18 16:37:32 by omulder        #+#    #+#                */
-/*   Updated: 2019/05/27 15:56:37 by omulder       ########   odam.nl         */
+/*   Updated: 2019/05/27 16:45:27 by omulder       ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -306,7 +306,7 @@ Test(lexer_error, one_item)
 	t_tokenlst	*lst;
 
 	lst = NULL;
-	tokenlstaddback(&lst, START, NULL, 0);
+	lexer_tokenlstaddback(&lst, START, NULL, 0);
 	lexer_error(&lst);
 	cr_expect(lst == NULL);
 	cr_expect_stderr_eq_str("vsh: lexer: malloc error\n");
@@ -317,34 +317,34 @@ Test(lexer_error, long_list)
 	t_tokenlst	*lst;
 
 	lst = NULL;
-	tokenlstaddback(&lst, START, NULL, 0);
-	tokenlstaddback(&lst, WORD, ft_strdup("testword"), 0);
-	tokenlstaddback(&lst, PIPE, NULL, 0);
-	tokenlstaddback(&lst, PIPE, NULL, 0);
-	tokenlstaddback(&lst, WORD, ft_strdup("testword"), 0);
-	tokenlstaddback(&lst, PIPE, NULL, 0);
-	tokenlstaddback(&lst, PIPE, NULL, 0);
-	tokenlstaddback(&lst, PIPE, NULL, 0);
-	tokenlstaddback(&lst, PIPE, NULL, 0);
-	tokenlstaddback(&lst, IO_NUMBER, ft_strdup("235235"), 0);
-	tokenlstaddback(&lst, PIPE, NULL, 0);
-	tokenlstaddback(&lst, WORD, ft_strdup("testword"), 0);
-	tokenlstaddback(&lst, PIPE, NULL, 0);
-	tokenlstaddback(&lst, PIPE, NULL, 0);
-	tokenlstaddback(&lst, PIPE, NULL, 0);
-	tokenlstaddback(&lst, IO_NUMBER, ft_strdup("12351235"), 0);
-	tokenlstaddback(&lst, IO_NUMBER, ft_strdup("1235135"), 0);
-	tokenlstaddback(&lst, PIPE, NULL, 0);
-	tokenlstaddback(&lst, PIPE, NULL, 0);
-	tokenlstaddback(&lst, PIPE, NULL, 0);
-	tokenlstaddback(&lst, PIPE, NULL, 0);
-	tokenlstaddback(&lst, WORD, ft_strdup("testword"), 0);
-	tokenlstaddback(&lst, IO_NUMBER, ft_strdup("1512351"), 0);
-	tokenlstaddback(&lst, PIPE, NULL, 0);
-	tokenlstaddback(&lst, PIPE, NULL, 0);
-	tokenlstaddback(&lst, WORD, ft_strdup("testword"), 0);
-	tokenlstaddback(&lst, PIPE, NULL, 0);
-	tokenlstaddback(&lst, END, NULL, 0);
+	lexer_tokenlstaddback(&lst, START, NULL, 0);
+	lexer_tokenlstaddback(&lst, WORD, ft_strdup("testword"), 0);
+	lexer_tokenlstaddback(&lst, PIPE, NULL, 0);
+	lexer_tokenlstaddback(&lst, PIPE, NULL, 0);
+	lexer_tokenlstaddback(&lst, WORD, ft_strdup("testword"), 0);
+	lexer_tokenlstaddback(&lst, PIPE, NULL, 0);
+	lexer_tokenlstaddback(&lst, PIPE, NULL, 0);
+	lexer_tokenlstaddback(&lst, PIPE, NULL, 0);
+	lexer_tokenlstaddback(&lst, PIPE, NULL, 0);
+	lexer_tokenlstaddback(&lst, IO_NUMBER, ft_strdup("235235"), 0);
+	lexer_tokenlstaddback(&lst, PIPE, NULL, 0);
+	lexer_tokenlstaddback(&lst, WORD, ft_strdup("testword"), 0);
+	lexer_tokenlstaddback(&lst, PIPE, NULL, 0);
+	lexer_tokenlstaddback(&lst, PIPE, NULL, 0);
+	lexer_tokenlstaddback(&lst, PIPE, NULL, 0);
+	lexer_tokenlstaddback(&lst, IO_NUMBER, ft_strdup("12351235"), 0);
+	lexer_tokenlstaddback(&lst, IO_NUMBER, ft_strdup("1235135"), 0);
+	lexer_tokenlstaddback(&lst, PIPE, NULL, 0);
+	lexer_tokenlstaddback(&lst, PIPE, NULL, 0);
+	lexer_tokenlstaddback(&lst, PIPE, NULL, 0);
+	lexer_tokenlstaddback(&lst, PIPE, NULL, 0);
+	lexer_tokenlstaddback(&lst, WORD, ft_strdup("testword"), 0);
+	lexer_tokenlstaddback(&lst, IO_NUMBER, ft_strdup("1512351"), 0);
+	lexer_tokenlstaddback(&lst, PIPE, NULL, 0);
+	lexer_tokenlstaddback(&lst, PIPE, NULL, 0);
+	lexer_tokenlstaddback(&lst, WORD, ft_strdup("testword"), 0);
+	lexer_tokenlstaddback(&lst, PIPE, NULL, 0);
+	lexer_tokenlstaddback(&lst, END, NULL, 0);
 	lexer_error(&lst);
 	cr_expect(lst == NULL);
 	cr_expect_stderr_eq_str("vsh: lexer: malloc error\n");
@@ -355,24 +355,24 @@ Test(lexer_error, all_items)
 	t_tokenlst	*lst;
 
 	lst = NULL;
-	tokenlstaddback(&lst, START, NULL, 0);
-	tokenlstaddback(&lst, WORD, ft_strdup("testword"), 0);
-	tokenlstaddback(&lst, IO_NUMBER, ft_strdup("testword"), 0);
-	tokenlstaddback(&lst, ERROR, NULL, 0);
-	tokenlstaddback(&lst, ASSIGN, ft_strdup("testword"), 0);
-	tokenlstaddback(&lst, AND_IF, NULL, 0);
-	tokenlstaddback(&lst, OR_IF, NULL, 0);
-	tokenlstaddback(&lst, DLESS, NULL, 0);
-	tokenlstaddback(&lst, DGREAT, NULL, 0);
-	tokenlstaddback(&lst, SLESS, NULL, 0);
-	tokenlstaddback(&lst, SGREAT, NULL, 0);
-	tokenlstaddback(&lst, LESSAND, NULL, 0);
-	tokenlstaddback(&lst, GREATAND, NULL, 0);
-	tokenlstaddback(&lst, BG, NULL, 0);
-	tokenlstaddback(&lst, PIPE, NULL, 0);
-	tokenlstaddback(&lst, SEMICOL, NULL, 0);
-	tokenlstaddback(&lst, NEWLINE, NULL, 0);
-	tokenlstaddback(&lst, END,  NULL, 0);
+	lexer_tokenlstaddback(&lst, START, NULL, 0);
+	lexer_tokenlstaddback(&lst, WORD, ft_strdup("testword"), 0);
+	lexer_tokenlstaddback(&lst, IO_NUMBER, ft_strdup("testword"), 0);
+	lexer_tokenlstaddback(&lst, ERROR, NULL, 0);
+	lexer_tokenlstaddback(&lst, ASSIGN, ft_strdup("testword"), 0);
+	lexer_tokenlstaddback(&lst, AND_IF, NULL, 0);
+	lexer_tokenlstaddback(&lst, OR_IF, NULL, 0);
+	lexer_tokenlstaddback(&lst, DLESS, NULL, 0);
+	lexer_tokenlstaddback(&lst, DGREAT, NULL, 0);
+	lexer_tokenlstaddback(&lst, SLESS, NULL, 0);
+	lexer_tokenlstaddback(&lst, SGREAT, NULL, 0);
+	lexer_tokenlstaddback(&lst, LESSAND, NULL, 0);
+	lexer_tokenlstaddback(&lst, GREATAND, NULL, 0);
+	lexer_tokenlstaddback(&lst, BG, NULL, 0);
+	lexer_tokenlstaddback(&lst, PIPE, NULL, 0);
+	lexer_tokenlstaddback(&lst, SEMICOL, NULL, 0);
+	lexer_tokenlstaddback(&lst, NEWLINE, NULL, 0);
+	lexer_tokenlstaddback(&lst, END,  NULL, 0);
 	lexer_error(&lst);
 	cr_expect(lst == NULL);
 	cr_expect_stderr_eq_str("vsh: lexer: malloc error\n");
@@ -382,31 +382,31 @@ Test(lexer_error, all_items)
 **------------------------------------------------------------------------------
 */
 
-TestSuite(tokenlstaddback, .init=redirect_all_stdout);
+TestSuite(lexer_tokenlstaddback, .init=redirect_all_stdout);
 
-Test(tokenlstaddback, invalid_values)
+Test(lexer_tokenlstaddback, invalid_values)
 {
 	t_tokenlst	*lst;
 
 	lst = NULL;
-	tokenlstaddback(&lst, END, ft_strdup("testword"), 0);
-	tokenlstaddback(&lst, WORD, ft_strdup("testword"), 0);
-	tokenlstaddback(&lst, ERROR, NULL, 0);
-	tokenlstaddback(&lst, ERROR, NULL, 0);
-	tokenlstaddback(&lst, ASSIGN, NULL, 0);
-	tokenlstaddback(&lst, AND_IF, ft_strdup("testword"), 0);
-	tokenlstaddback(&lst, OR_IF, NULL, 0);
-	tokenlstaddback(&lst, LESSAND, NULL, 0);
-	tokenlstaddback(&lst, ERROR, NULL, 0);
-	tokenlstaddback(&lst, SLESS, NULL, 0);
-	tokenlstaddback(&lst, SGREAT, ft_strdup("testword"), 0);
-	tokenlstaddback(&lst, LESSAND, NULL, 0);
-	tokenlstaddback(&lst, GREATAND, NULL, 0);
-	tokenlstaddback(&lst, BG, NULL, 0);
-	tokenlstaddback(&lst, GREATAND, NULL, 0);
-	tokenlstaddback(&lst, END, NULL, 0);
-	tokenlstaddback(&lst, START, NULL, 0);
-	tokenlstaddback(&lst, ERROR, ft_strdup("testword"), 0);
+	lexer_tokenlstaddback(&lst, END, ft_strdup("testword"), 0);
+	lexer_tokenlstaddback(&lst, WORD, ft_strdup("testword"), 0);
+	lexer_tokenlstaddback(&lst, ERROR, NULL, 0);
+	lexer_tokenlstaddback(&lst, ERROR, NULL, 0);
+	lexer_tokenlstaddback(&lst, ASSIGN, NULL, 0);
+	lexer_tokenlstaddback(&lst, AND_IF, ft_strdup("testword"), 0);
+	lexer_tokenlstaddback(&lst, OR_IF, NULL, 0);
+	lexer_tokenlstaddback(&lst, LESSAND, NULL, 0);
+	lexer_tokenlstaddback(&lst, ERROR, NULL, 0);
+	lexer_tokenlstaddback(&lst, SLESS, NULL, 0);
+	lexer_tokenlstaddback(&lst, SGREAT, ft_strdup("testword"), 0);
+	lexer_tokenlstaddback(&lst, LESSAND, NULL, 0);
+	lexer_tokenlstaddback(&lst, GREATAND, NULL, 0);
+	lexer_tokenlstaddback(&lst, BG, NULL, 0);
+	lexer_tokenlstaddback(&lst, GREATAND, NULL, 0);
+	lexer_tokenlstaddback(&lst, END, NULL, 0);
+	lexer_tokenlstaddback(&lst, START, NULL, 0);
+	lexer_tokenlstaddback(&lst, ERROR, ft_strdup("testword"), 0);
 	lexer_error(&lst);
 	cr_expect(lst == NULL);
 	cr_expect_stderr_eq_str("vsh: lexer: malloc error\n");

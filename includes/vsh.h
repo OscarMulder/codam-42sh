@@ -6,7 +6,7 @@
 /*   By: omulder <omulder@student.codam.nl>           +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2019/04/10 20:29:42 by jbrinksm       #+#    #+#                */
-/*   Updated: 2019/05/27 16:00:31 by omulder       ########   odam.nl         */
+/*   Updated: 2019/05/27 16:48:51 by omulder       ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -41,8 +41,8 @@
 
 # define CURRENT_CHAR (scanner->str)[scanner->str_index]
 # define T_FLAG_HASDOLLAR (1 << 0)
-# define T_STATE_SQUOTE (1 << 1)
-# define T_STATE_DQUOTE (1 << 2)
+# define T_lexer_state_SQUOTE (1 << 1)
+# define T_lexer_state_DQUOTE (1 << 2)
 # define T_FLAG_HASEQUAL (1 << 3)
 
 /*
@@ -240,42 +240,40 @@ int				shell_start(void);
 **----------------------------------lexer---------------------------------------
 */
 
-int				tokenlstaddback(t_tokenlst **token_lst, t_tokens type,
+int				lexer_tokenlstaddback(t_tokenlst **token_lst, t_tokens type,
 					char *value, int flags);
-t_tokenlst		*tokenlstnew(t_tokens type, char *value, int flags);
-void			tokenlstdel(t_tokenlst **token_lst);
-void			tokenlstiter(t_tokenlst *token_lst,
+t_tokenlst		*lexer_tokenlstnew(t_tokens type, char *value, int flags);
+void			lexer_tokenlstdel(t_tokenlst **token_lst);
+void			lexer_tokenlstiter(t_tokenlst *token_lst,
 					void (*f)(t_tokenlst *elem));
-bool			is_shellspec(char c);
+bool			lexer_is_shellspec(char c);
 
 int				lexer(char *line, t_tokenlst **token_lst);
 int				lexer_error(t_tokenlst **token_lst);
-void			evaluator(t_tokenlst *token_lst);
+void			lexer_evaluator(t_tokenlst *token_lst);
 int				lexer_scanner(char *line, t_tokenlst *token_lst);
 
-void			change_state(t_scanner *scanner,
-					void (*state_x)(t_scanner *scanner));
-void			print_token(t_scanner *scanner);
-
-void			state_start(t_scanner *scanner);
-void			state_pipe(t_scanner *scanner);
-void			state_orif(t_scanner *scanner);
-void			state_sgreat(t_scanner *scanner);
-void			state_dgreat(t_scanner *scanner);
-void			state_sless(t_scanner *scanner);
-void			state_dless(t_scanner *scanner);
-void			state_bg(t_scanner *scanner);
-void			state_andif(t_scanner *scanner);
-void			state_semicol(t_scanner *scanner);
-void			state_newline(t_scanner *scanner);
-void			state_squote(t_scanner *scanner);
-void			state_dquote(t_scanner *scanner);
-void			state_dquote_esc(t_scanner *scanner);
-void			state_word(t_scanner *scanner);
-void			state_word_esc(t_scanner *scanner);
-void			state_lessand(t_scanner *scanner);
-void			state_greatand(t_scanner *scanner);
-void			state_ionum(t_scanner *scanner);
+void			lexer_change_state(t_scanner *scanner,
+					void (*lexer_state_x)(t_scanner *scanner));
+void			lexer_state_start(t_scanner *scanner);
+void			lexer_state_pipe(t_scanner *scanner);
+void			lexer_state_orif(t_scanner *scanner);
+void			lexer_state_sgreat(t_scanner *scanner);
+void			lexer_state_dgreat(t_scanner *scanner);
+void			lexer_state_sless(t_scanner *scanner);
+void			lexer_state_dless(t_scanner *scanner);
+void			lexer_state_bg(t_scanner *scanner);
+void			lexer_state_andif(t_scanner *scanner);
+void			lexer_state_semicol(t_scanner *scanner);
+void			lexer_state_newline(t_scanner *scanner);
+void			lexer_state_squote(t_scanner *scanner);
+void			lexer_state_dquote(t_scanner *scanner);
+void			lexer_state_dquote_esc(t_scanner *scanner);
+void			lexer_state_word(t_scanner *scanner);
+void			lexer_state_word_esc(t_scanner *scanner);
+void			lexer_state_lessand(t_scanner *scanner);
+void			lexer_state_greatand(t_scanner *scanner);
+void			lexer_state_ionum(t_scanner *scanner);
 
 /*
 **----------------------------------parser--------------------------------------
@@ -301,5 +299,6 @@ int				update_quote_status(char *line, int cur_index, char *quote);
 */
 
 void			print_node(t_tokenlst *node);
+void			print_token(t_scanner *scanner);
 
 #endif
