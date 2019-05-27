@@ -6,7 +6,7 @@
 /*   By: mavan-he <mavan-he@student.codam.nl>         +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2019/05/14 15:14:31 by mavan-he       #+#    #+#                */
-/*   Updated: 2019/05/27 16:47:06 by omulder       ########   odam.nl         */
+/*   Updated: 2019/05/27 16:57:03 by omulder       ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,7 +15,8 @@
 /*
 **	The lexer creates a token list which will be send to the parser.
 **	In the lexer, the scanner will create the list of tokens.
-**	After that, the lexer_evaluator will remove any unnecessary '\', '\'' and '"'.
+**	After that, the lexer_evaluator will remove any unnecessary '\', '\''
+**	and '"'.
 */
 
 t_tokenlst	*lexer_tokenlstnew(t_tokens type, char *value, int flags)
