@@ -6,7 +6,7 @@
 /*   By: omulder <omulder@student.codam.nl>           +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2019/04/18 16:44:50 by omulder        #+#    #+#                */
-/*   Updated: 2019/05/28 11:50:00 by jbrinksm      ########   odam.nl         */
+/*   Updated: 2019/05/28 12:02:28 by jbrinksm      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -20,7 +20,7 @@ void	tokenlstiter(t_tokenlst *token_lst, void (*f)(t_tokenlst *elem))
 	tokenlstiter(token_lst->next, f);
 }
 
-int		read_till_stop(char **heredoc, char *stop)
+int		shell_read_till_stop(char **heredoc, char *stop)
 {
 	char		c;
 	unsigned	index;
@@ -32,7 +32,7 @@ int		read_till_stop(char **heredoc, char *stop)
 	*heredoc = ft_strnew(0);
 	while (read(STDIN_FILENO, &c, 1) > 0)
 	{
-		if (c == '\n')
+		if (ft_strcmp(&heredoc[index], stop) == 0)
 			break ;
 		status = 0;
 		status |= input_parse_escape(c, &input_state);
@@ -55,7 +55,7 @@ int		read_till_stop(char **heredoc, char *stop)
 	return (status);
 }
 
-void	dless_input(t_tokenlst *token_lst)
+void	shell_dless_input(t_tokenlst *token_lst)
 {
 	char 		*heredoc;
 	t_tokenlst	*probe;
