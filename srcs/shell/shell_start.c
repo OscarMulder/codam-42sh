@@ -6,7 +6,7 @@
 /*   By: omulder <omulder@student.codam.nl>           +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2019/04/18 16:44:50 by omulder        #+#    #+#                */
-/*   Updated: 2019/05/28 12:02:28 by jbrinksm      ########   odam.nl         */
+/*   Updated: 2019/05/28 14:18:26 by jbrinksm      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -25,32 +25,48 @@ int		shell_read_till_stop(char **heredoc, char *stop)
 	char		c;
 	unsigned	index;
 	int			status;
+	int			status2;
 	int			input_state;
+	char		*curr_line;
 
-	index = 0;
-	input_state = 0;
-	*heredoc = ft_strnew(0);
-	while (read(STDIN_FILENO, &c, 1) > 0)
+	status2 = 1;
+	while (status2 != 0)
 	{
-		if (ft_strcmp(&heredoc[index], stop) == 0)
-			break ;
-		status = 0;
-		status |= input_parse_escape(c, &input_state);
-		status |= input_parse_home(c, &input_state, &index);
-		status |= input_parse_end(c, &input_state, &index, heredoc);
-		status |= input_parse_prev(c, &input_state, &index, heredoc);
-		status |= input_parse_next(c, &input_state, &index, heredoc);
-		status |= input_parse_delete(c, &input_state, &index, heredoc);
-		status |= input_parse_ctrl_up(c, &input_state, &index, heredoc);
-		status |= input_parse_ctrl_down(c, &input_state, &index, heredoc);
-		if (status == 0)
-			input_state = 0;
-		status |= input_parse_backspace(c, &index, heredoc);
-		status |= input_parse_ctrl_d(c, &index, heredoc);
-		status |= input_parse_ctrl_k(c, &index, heredoc);
-		if (status == 0 &&
-			input_parse_char(c, &index, heredoc) == FUNCT_FAILURE)
-			return (FUNCT_FAILURE);
+		index = 0;
+		input_state = 0;
+		curr_line = ft_strnew(0);
+		ft_putstr("\nheredoc > ");
+		while (read(STDIN_FILENO, &c, 1) > 0)
+		{
+			if (c == '\n')
+				break ;
+			status = 0;
+			status |= input_parse_escape(c, &input_state);
+			status |= input_parse_home(c, &input_state, &index);
+			status |= input_parse_end(c, &input_state, &index, &curr_line);
+			status |= input_parse_prev(c, &input_state, &index, &curr_line);
+			status |= input_parse_next(c, &input_state, &index, &curr_line);
+			status |= input_parse_delete(c, &input_state, &index, &curr_line);
+			status |= input_parse_ctrl_up(c, &input_state, &index, &curr_line);
+			status |= input_parse_ctrl_down(c, &input_state, &index, &curr_line);
+			if (status == 0)
+				input_state = 0;
+			status |= input_parse_backspace(c, &index, &curr_line);
+			status |= input_parse_ctrl_d(c, &index, &curr_line);
+			status |= input_parse_ctrl_k(c, &index, &curr_line);
+			if (status == 0 &&
+				input_parse_char(c, &index, &curr_line) == FUNCT_FAILURE)
+				return (FUNCT_FAILURE);
+		}
+		status2 = ft_strcmp(curr_line, stop);
+		if (status2)
+		{
+			if (*heredoc == NULL)
+				*heredoc = ft_strdup(curr_line);
+			else
+				*heredoc = ft_strjoinfree(*heredoc, curr_line, 1);
+		}
+		ft_strdel(&curr_line);
 	}
 	return (status);
 }
@@ -62,14 +78,16 @@ void	shell_dless_input(t_tokenlst *token_lst)
 	char		*stop;
 
 	probe = token_lst;
+	heredoc = NULL;
 	while (probe != NULL)
 	{
-		if (probe->type == SLESS)
+		if (probe->type == DLESS)
 		{
 			probe = probe->next;
 			stop = ft_strdup(probe->value);
 			ft_strdel(&(probe->value));
-			read_till_stop(&heredoc, stop);
+			shell_read_till_stop(&heredoc, stop);
+			probe->value = ft_strdup(heredoc);
 		}
 		probe = probe->next;
 	}
@@ -98,7 +116,10 @@ int		shell_start(void)
 		#ifdef DEBUG
  		tokenlstiter(token_lst, print_node);
 		#endif
-		dless_input(token_lst);
+		shell_dless_input(token_lst);
+		#ifdef DEBUG
+ 		tokenlstiter(token_lst, print_node);
+		#endif
 		if (parser_start(&token_lst, &ast) != FUNCT_SUCCESS)
 			continue ;
 		#ifdef DEBUG
