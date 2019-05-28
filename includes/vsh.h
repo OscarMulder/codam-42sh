@@ -6,7 +6,7 @@
 /*   By: omulder <omulder@student.codam.nl>           +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2019/04/10 20:29:42 by jbrinksm       #+#    #+#                */
-/*   Updated: 2019/05/28 19:04:27 by jbrinksm      ########   odam.nl         */
+/*   Updated: 2019/05/28 19:14:30 by jbrinksm      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -279,7 +279,7 @@ void			lexer_tokenlstiter(t_tokenlst *token_lst,
 bool			lexer_is_shellspec(char c);
 
 int				lexer(char *line, t_tokenlst **token_lst);
-int				lexer_error(t_tokenlst **token_lst);
+int				lexer_error(t_tokenlst **token_lst, char **line);
 void			lexer_evaluator(t_tokenlst *token_lst);
 int				lexer_scanner(char *line, t_tokenlst *token_lst);
 
@@ -329,8 +329,6 @@ char			builtin_echo_set_flags(char **args, int *arg_i);
 **---------------------------------tools----------------------------------------
 */
 
-int				is_char_escaped(char *line, int i);
-int				update_quote_status(char *line, int cur_index, char *quote);
 bool			tool_is_redirect_tk(t_tokens type);
 int				tools_is_char_escaped(char *line, int i);
 int				tools_update_quote_status(char *line, int cur_index, char *quote);
