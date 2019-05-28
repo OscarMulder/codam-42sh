@@ -6,7 +6,7 @@
 /*   By: omulder <omulder@student.codam.nl>           +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2019/04/10 20:29:42 by jbrinksm       #+#    #+#                */
-/*   Updated: 2019/05/28 18:49:44 by omulder       ########   odam.nl         */
+/*   Updated: 2019/05/28 18:50:33 by omulder       ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -283,7 +283,7 @@ void			lexer_state_ionum(t_scanner *scanner);
 **----------------------------------bultins-------------------------------------
 */
 
-void			builtin_exit(int exitcode);
+void			builtin_exit(char exitcode);
 int				builtin_echo(char **args);
 char			builtin_echo_set_flags(char **args, int *arg_i);
 
