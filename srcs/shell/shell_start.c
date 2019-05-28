@@ -6,7 +6,7 @@
 /*   By: omulder <omulder@student.codam.nl>           +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2019/04/18 16:44:50 by omulder        #+#    #+#                */
-/*   Updated: 2019/05/27 16:47:06 by omulder       ########   odam.nl         */
+/*   Updated: 2019/05/28 19:05:04 by jbrinksm      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -20,35 +20,141 @@ void	lexer_tokenlstiter(t_tokenlst *lst, void (*f)(t_tokenlst *elem))
 	lexer_tokenlstiter(lst->next, f);
 }
 
-int		shell_start(void)
+int			shell_isescaped(const char *line, int index)
 {
-	int			status;
-	char		*line;
-	t_tokenlst	*lst;
+	if (index == 0)
+		return (FUNCT_FAILURE);
+	else
+	{
+		if (line[index - 1] == '\\')
+			return (FUNCT_SUCCESS);
+		else
+			return (FUNCT_FAILURE);
+	}
+}
+
+char		*ft_chartostr(char c)
+{
+	char	*str;
+
+	str = ft_strnew(2);
+	str[0] = c;
+	return (str);
+}
+
+char		shell_quote_checker_find_quote(char *line)
+{
+	int		index;
+	char	quote;
+	int		is_escaped;
+	char	c;
+
+	index = 0;
+	quote = '\0';
+	while (line[index] != '\0')
+	{
+		is_escaped = shell_isescaped(line, index);
+		c = line[index];
+		if (!quote && (c == '\'' || c == '"') && !is_escaped)
+			quote = c;
+		else if (quote && c == quote && !is_escaped)
+			quote = '\0';
+		index++;
+	}
+	return (quote);
+}
+
+char		*ft_joinstrcstr(char *s1, char c, char *s2)
+{
+	char	*str;
+
+	str = ft_strnew(ft_strlen(s1) + 1 + ft_strlen(s2));
+	if (str == NULL)
+		return (NULL);
+	str = ft_strcpy(str, s1);
+	str = ft_strcat(str, ft_chartostr(c));
+	str = ft_strcat(str, s2);
+	return (str);
+}
+
+char		*ft_joinstrcstr_free_s1(char *s1, char c, char *s2)
+{
+	char	*str;
+
+	str = ft_joinstrcstr(s1, c, s2);
+	ft_strdel(&s1);
+	return (str);
+}
+
+char		*ft_joinstrcstr_free_s2(char *s1, char c, char *s2)
+{
+	char	*str;
+
+	str = ft_joinstrcstr(s1, c, s2);
+	ft_strdel(&s2);
+	return (str);
+}
+
+char		*ft_joinstrcstr_free_all(char *s1, char c, char *s2)
+{
+	char	*str;
+
+	str = ft_joinstrcstr(s1, c, s2);
+	ft_strdel(&s1);
+	ft_strdel(&s2);
+	return (str);
+}
+
+void		shell_quote_checker(char **line)
+{
+	char	quote;
+	char	*extra_line;
+
+	quote = shell_quote_checker_find_quote(*line);
+	while (quote != '\0')
+	{
+		if (quote == '\'')
+			ft_printf("\nquote> ", quote);
+		else if (quote == '"')
+			ft_printf("\ndquote> ", quote);
+		input_read(&extra_line);
+		*line = ft_joinstrcstr_free_all(*line, '\n', extra_line);
+		quote = shell_quote_checker_find_quote(*line);
+	}
+}
+int     shell_start(void)
+
+{
+
+	int         status;
+	char        *line;
+	t_tokenlst  *token_lst;
+	t_ast       *ast;
 
 	status = 1;
 	line = NULL;
-	lst = NULL;
+	token_lst = NULL;
+	ast = NULL;
 	while (status != CTRLD)
 	{
 		shell_display_prompt();
 		status = input_read(&line);
-		if (lexer(line, &lst) != FUNCT_SUCCESS)
-		{
-			ft_strdel(&line);
-			continue ;
-		}
 		#ifdef DEBUG
 		ft_printf("\n>>>> LINE <<<<\n%s\n\n>>>> TOKEN_LST <<<<\n", line);
-		lexer_tokenlstiter(lst, print_node);
 		#endif
-		/* ADD EXPANSION FUNC ? */
-		/* ADD PARSER */
-		/* ADD lexer_evaluator */
-		/* ADD AST DEL */
-		lexer_tokenlstdel(&lst);
-		ft_strdel(&line);
-		ft_putendl("");
+		if (lexer(line, &token_lst) != FUNCT_SUCCESS)
+			continue ;
+		#ifdef DEBUG
+		lexer_tokenlstiter(token_lst, print_node);
+		#endif
+		if (parser_start(&token_lst, &ast) != FUNCT_SUCCESS)
+			continue ;
+		#ifdef DEBUG
+		print_tree(ast);
+		#endif
+		parser_astdel(&ast);
+		/* ADD EVALUATOR */
+		ft_putchar('\n');
 	}
 	return (FUNCT_SUCCESS);
 }

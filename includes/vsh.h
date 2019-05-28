@@ -6,7 +6,7 @@
 /*   By: omulder <omulder@student.codam.nl>           +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2019/04/10 20:29:42 by jbrinksm       #+#    #+#                */
-/*   Updated: 2019/05/27 17:27:33 by omulder       ########   odam.nl         */
+/*   Updated: 2019/05/28 19:04:27 by jbrinksm      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -44,6 +44,13 @@
 # define T_STATE_SQUOTE (1 << 1)
 # define T_STATE_DQUOTE (1 << 2)
 # define T_FLAG_HASEQUAL (1 << 3)
+# define T_MALLOC_ERROR (1 << 4)
+
+/*
+**------------------------------------parser------------------------------------
+*/
+
+# define TK_TYPE (*token_lst)->type
 
 /*
 **-----------------------------------input--------------------------------------
@@ -75,6 +82,7 @@
 # include <sys/stat.h>
 # include <sys/wait.h>
 # include <signal.h>
+# include <stdbool.h>
 
 # include <sys/ioctl.h>
 # include <termios.h>
@@ -176,8 +184,28 @@ typedef struct	s_scanner
 	int			tk_len;
 	char		*str;
 	int			str_index;
-	int			flags;
+	char		flags;
 }				t_scanner;
+
+/*
+**----------------------------------parser--------------------------------------
+*/
+
+typedef struct	s_ast
+{
+	t_tokens		type;
+	char			flags;
+	char			*value;
+	struct s_ast	*child;
+	struct s_ast	*sibling;
+}				t_ast;
+/*
+**=================================prototypes===================================
+*/
+
+int				term_reset(t_term *term_p);
+void			term_free_termp(t_term *term_p);
+int				shell_start(void);
 
 /*
 **---------------------------------environment----------------------------------
@@ -234,6 +262,8 @@ int				input_parse_ctrl_down(char c, int *input_state, unsigned *index,
 */
 
 void			shell_display_prompt(void);
+int				shell_read_till_stop(char **heredoc, char *stop);
+void			shell_dless_input(t_tokenlst *token_lst);
 int				shell_start(void);
 
 /*
@@ -278,9 +308,17 @@ void			lexer_state_ionum(t_scanner *scanner);
 /*
 **----------------------------------parser--------------------------------------
 */
+int				parser_start(t_tokenlst **token_lst, t_ast **ast);
+bool			parser_add_astnode(t_tokenlst **token_lst, t_ast **ast);
+bool			parser_add_sibling(t_tokenlst **token_lst, t_ast **ast,
+				bool (*parse_priority_x)(t_tokenlst **, t_ast **));
+t_ast			*parser_new_node(t_tokenlst *token);
+bool			parser_command(t_tokenlst **token_lst, t_ast **ast);
+char			*parser_return_token_str(t_tokens type);
+void			parser_astdel(t_ast **ast);
 
 /*
-**----------------------------------bultins-------------------------------------
+**----------------------------------builtins-------------------------------------
 */
 
 void			builtin_exit(t_term *term_p);
@@ -291,6 +329,9 @@ char			builtin_echo_set_flags(char **args, int *arg_i);
 **---------------------------------tools----------------------------------------
 */
 
+int				is_char_escaped(char *line, int i);
+int				update_quote_status(char *line, int cur_index, char *quote);
+bool			tool_is_redirect_tk(t_tokens type);
 int				tools_is_char_escaped(char *line, int i);
 int				tools_update_quote_status(char *line, int cur_index, char *quote);
 
@@ -299,6 +340,7 @@ int				tools_update_quote_status(char *line, int cur_index, char *quote);
 */
 
 void			print_node(t_tokenlst *node);
+void			print_tree(t_ast *root);
 void			print_token(t_scanner *scanner);
 
 #endif
