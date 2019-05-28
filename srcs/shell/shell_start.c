@@ -6,18 +6,18 @@
 /*   By: omulder <omulder@student.codam.nl>           +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2019/04/18 16:44:50 by omulder        #+#    #+#                */
-/*   Updated: 2019/05/28 14:18:26 by jbrinksm      ########   odam.nl         */
+/*   Updated: 2019/05/28 17:43:45 by jbrinksm      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "vsh.h"
 
-void	tokenlstiter(t_tokenlst *token_lst, void (*f)(t_tokenlst *elem))
+void	lexer_tokenlstiter(t_tokenlst *lst, void (*f)(t_tokenlst *elem))
 {
-	if (token_lst == NULL || f == NULL)
+	if (lst == NULL || f == NULL)
 		return ;
-	f(token_lst);
-	tokenlstiter(token_lst->next, f);
+	f(lst);
+	lexer_tokenlstiter(lst->next, f);
 }
 
 int		shell_read_till_stop(char **heredoc, char *stop)
@@ -111,15 +111,13 @@ int		shell_start(void)
 		#ifdef DEBUG
 		ft_printf("\n>>>> LINE <<<<\n%s\n\n>>>> TOKEN_LST <<<<\n", line);
 		#endif
-		if (lexer(&line, &token_lst) != FUNCT_SUCCESS)
+		if (lexer(line, &token_lst) != FUNCT_SUCCESS)
 			continue ;
 		#ifdef DEBUG
- 		tokenlstiter(token_lst, print_node);
+ 		lexer_tokenlstiter(token_lst, print_node);
 		#endif
 		shell_dless_input(token_lst);
-		#ifdef DEBUG
- 		tokenlstiter(token_lst, print_node);
-		#endif
+ 		lexer_tokenlstiter(token_lst, print_node);
 		if (parser_start(&token_lst, &ast) != FUNCT_SUCCESS)
 			continue ;
 		#ifdef DEBUG
@@ -127,7 +125,10 @@ int		shell_start(void)
 		#endif
 		parser_astdel(&ast);
 		/* ADD EVALUATOR */
-		ft_putchar('\n');
+		/* ADD EXPANSION FUNC ? */
+		lexer_tokenlstdel(&token_lst);
+		ft_strdel(&line);
+		ft_putendl("");
 	}
 	return (FUNCT_SUCCESS);
 }

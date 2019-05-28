@@ -6,7 +6,7 @@
 /*   By: omulder <omulder@student.codam.nl>           +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2019/04/10 20:29:42 by jbrinksm       #+#    #+#                */
-/*   Updated: 2019/05/28 12:28:19 by jbrinksm      ########   odam.nl         */
+/*   Updated: 2019/05/28 17:45:47 by jbrinksm      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -187,10 +187,6 @@ typedef struct	s_scanner
 	char		flags;
 }				t_scanner;
 
-/*
-**----------------------------------parser--------------------------------------
-*/
-
 typedef struct	s_ast
 {
 	t_tokens		type;
@@ -199,24 +195,17 @@ typedef struct	s_ast
 	struct s_ast	*child;
 	struct s_ast	*sibling;
 }				t_ast;
-/*
-**=================================prototypes===================================
-*/
-
-int				term_reset(t_term *term_p);
-void			term_free_termp(t_term *term_p);
-int				shell_start(void);
 
 /*
 **---------------------------------environment----------------------------------
 */
 
-char			**get_environ_cpy(void);
-char			*var_get_value(char *var_key, char **vararray);
-char			*var_join_key_value(char *var_key, char *var_value);
-int				var_set_value(char *var_key, char *var_value, char **vararray);
-int				var_add_value(char *var_key, char *var_value, char ***vararray);
-char			**free_and_return_null(char ***vshenviron);
+char			**env_get_environ_cpy(void);
+char			*env_var_get_value(char *var_key, char **vararray);
+char			*env_var_join_key_value(char *var_key, char *var_value);
+int				env_var_set_value(char *var_key, char *var_value, char **vararray);
+int				env_var_add_value(char *var_key, char *var_value, char ***vararray);
+char			**env_free_and_return_null(char ***vshenviron);
 
 /*
 **----------------------------------terminal------------------------------------
@@ -264,47 +253,46 @@ int				input_parse_ctrl_down(char c, int *input_state, unsigned *index,
 void			shell_display_prompt(void);
 int				shell_read_till_stop(char **heredoc, char *stop);
 void			shell_dless_input(t_tokenlst *token_lst);
+int				shell_start(void);
 
 /*
 **----------------------------------lexer---------------------------------------
 */
 
-int				tokenlstaddback(t_tokenlst **token_lst, t_tokens type,
+int				lexer_tokenlstaddback(t_tokenlst **token_lst, t_tokens type,
 					char *value, int flags);
-t_tokenlst		*tokenlstnew(t_tokens type, char *value, int flags);
-void			tokenlstdel(t_tokenlst **token_lst);
-void			tokenlstiter(t_tokenlst *token_lst,
+t_tokenlst		*lexer_tokenlstnew(t_tokens type, char *value, int flags);
+void			lexer_tokenlstdel(t_tokenlst **token_lst);
+void			lexer_tokenlstiter(t_tokenlst *token_lst,
 					void (*f)(t_tokenlst *elem));
-bool			is_shellspec(char c);
+bool			lexer_is_shellspec(char c);
 
-int				lexer(char **line, t_tokenlst **token_lst);
-int				lexer_error(t_tokenlst **token_lst, char **line);
-void			evaluator(t_tokenlst *token_lst);
+int				lexer(char *line, t_tokenlst **token_lst);
+int				lexer_error(t_tokenlst **token_lst);
+void			lexer_evaluator(t_tokenlst *token_lst);
 int				lexer_scanner(char *line, t_tokenlst *token_lst);
 
-void			change_state(t_scanner *scanner,
-					void (*state_x)(t_scanner *scanner));
-void			print_token(t_scanner *scanner);
-
-void			state_start(t_scanner *scanner);
-void			state_pipe(t_scanner *scanner);
-void			state_orif(t_scanner *scanner);
-void			state_sgreat(t_scanner *scanner);
-void			state_dgreat(t_scanner *scanner);
-void			state_sless(t_scanner *scanner);
-void			state_dless(t_scanner *scanner);
-void			state_bg(t_scanner *scanner);
-void			state_andif(t_scanner *scanner);
-void			state_semicol(t_scanner *scanner);
-void			state_newline(t_scanner *scanner);
-void			state_squote(t_scanner *scanner);
-void			state_dquote(t_scanner *scanner);
-void			state_dquote_esc(t_scanner *scanner);
-void			state_word(t_scanner *scanner);
-void			state_word_esc(t_scanner *scanner);
-void			state_lessand(t_scanner *scanner);
-void			state_greatand(t_scanner *scanner);
-void			state_ionum(t_scanner *scanner);
+void			lexer_change_state(t_scanner *scanner,
+					void (*lexer_state_x)(t_scanner *scanner));
+void			lexer_state_start(t_scanner *scanner);
+void			lexer_state_pipe(t_scanner *scanner);
+void			lexer_state_orif(t_scanner *scanner);
+void			lexer_state_sgreat(t_scanner *scanner);
+void			lexer_state_dgreat(t_scanner *scanner);
+void			lexer_state_sless(t_scanner *scanner);
+void			lexer_state_dless(t_scanner *scanner);
+void			lexer_state_bg(t_scanner *scanner);
+void			lexer_state_andif(t_scanner *scanner);
+void			lexer_state_semicol(t_scanner *scanner);
+void			lexer_state_newline(t_scanner *scanner);
+void			lexer_state_squote(t_scanner *scanner);
+void			lexer_state_dquote(t_scanner *scanner);
+void			lexer_state_dquote_esc(t_scanner *scanner);
+void			lexer_state_word(t_scanner *scanner);
+void			lexer_state_word_esc(t_scanner *scanner);
+void			lexer_state_lessand(t_scanner *scanner);
+void			lexer_state_greatand(t_scanner *scanner);
+void			lexer_state_ionum(t_scanner *scanner);
 
 /*
 **----------------------------------parser--------------------------------------
@@ -324,15 +312,15 @@ void			parser_astdel(t_ast **ast);
 
 void			builtin_exit(t_term *term_p);
 int				builtin_echo(char **args);
-char			echo_set_flags(char **args, int *arg_i);
+char			builtin_echo_set_flags(char **args, int *arg_i);
 
 /*
 **---------------------------------tools----------------------------------------
 */
 
-int				is_char_escaped(char *line, int i);
-int				update_quote_status(char *line, int cur_index, char *quote);
 bool			tool_is_redirect_tk(t_tokens type);
+int				tools_is_char_escaped(char *line, int i);
+int				tools_update_quote_status(char *line, int cur_index, char *quote);
 
 /*
 **----------------------------------debugging-----------------------------------
@@ -340,5 +328,6 @@ bool			tool_is_redirect_tk(t_tokens type);
 
 void			print_node(t_tokenlst *node);
 void			print_tree(t_ast *root);
+void			print_token(t_scanner *scanner);
 
 #endif
