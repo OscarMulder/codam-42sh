@@ -6,7 +6,7 @@
 /*   By: mavan-he <mavan-he@student.codam.nl>         +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2019/05/25 19:13:12 by mavan-he       #+#    #+#                */
-/*   Updated: 2019/05/27 17:28:26 by mavan-he      ########   odam.nl         */
+/*   Updated: 2019/05/29 14:13:09 by mavan-he      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -96,6 +96,8 @@ static bool	parser_cmd_word(t_tokenlst **token_lst, t_ast **ast,
 	{
 		if (parser_add_astnode(token_lst, ast) == false)
 			return (false);
+		(*ast)->sibling = (*ast)->child;
+		(*ast)->child = NULL;
 		return (true);
 	}
 	else if (*ast != NULL)
@@ -124,8 +126,10 @@ bool		parser_command(t_tokenlst **token_lst, t_ast **ast)
 		if (parser_cmd_suffix(token_lst, &suffix, &prefix) == false)
 			return (false);
 		if ((*ast)->child == NULL)
-			(*ast)->child = prefix;
-		(*ast)->sibling = suffix;
+			(*ast)->sibling = prefix;
+		else
+			(*ast)->sibling = (*ast)->child;
+		(*ast)->child = suffix;
 		return (true);
 	}
 	else
