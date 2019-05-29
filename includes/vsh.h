@@ -6,7 +6,7 @@
 /*   By: omulder <omulder@student.codam.nl>           +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2019/04/10 20:29:42 by jbrinksm       #+#    #+#                */
-/*   Updated: 2019/05/29 17:16:10 by jbrinksm      ########   odam.nl         */
+/*   Updated: 2019/05/29 17:22:31 by jbrinksm      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -207,8 +207,10 @@ typedef struct	s_ast
 char			**env_get_environ_cpy(void);
 char			*env_var_get_value(char *var_key, char **vararray);
 char			*env_var_join_key_value(char *var_key, char *var_value);
-int				env_var_set_value(char *var_key, char *var_value, char **vararray);
-int				env_var_add_value(char *var_key, char *var_value, char ***vararray);
+int				env_var_set_value(char *var_key, char *var_value,
+					char **vararray);
+int				env_var_add_value(char *var_key, char *var_value,
+					char ***vararray);
 char			**env_free_and_return_null(char ***vshenviron);
 
 /*
@@ -311,7 +313,7 @@ char			*parser_return_token_str(t_tokens type);
 void			parser_astdel(t_ast **ast);
 
 /*
-**----------------------------------builtins-------------------------------------
+**----------------------------------builtins------------------------------------
 */
 
 void			builtin_exit(unsigned char exitcode);
@@ -324,7 +326,8 @@ char			builtin_echo_set_flags(char **args, int *arg_i);
 
 bool			tool_is_redirect_tk(t_tokens type);
 int				tools_is_char_escaped(char *line, int i);
-int				tools_update_quote_status(char *line, int cur_index, char *quote);
+int				tools_update_quote_status(char *line, int cur_index,
+					char *quote);
 bool			tool_is_redirect_tk(t_tokens type);
 
 /*
