@@ -6,7 +6,7 @@
 /*   By: omulder <omulder@student.codam.nl>           +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2019/04/18 16:44:50 by omulder        #+#    #+#                */
-/*   Updated: 2019/05/29 17:16:25 by jbrinksm      ########   odam.nl         */
+/*   Updated: 2019/05/29 18:45:48 by jbrinksm      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -20,28 +20,6 @@ void	lexer_tokenlstiter(t_tokenlst *lst, void (*f)(t_tokenlst *elem))
 	lexer_tokenlstiter(lst->next, f);
 }
 
-int			shell_isescaped(const char *line, int index)
-{
-	if (index == 0)
-		return (FUNCT_FAILURE);
-	else
-	{
-		if (line[index - 1] == '\\')
-			return (FUNCT_SUCCESS);
-		else
-			return (FUNCT_FAILURE);
-	}
-}
-
-char		*ft_chartostr(char c)
-{
-	char	*str;
-
-	str = ft_strnew(2);
-	str[0] = c;
-	return (str);
-}
-
 char		shell_quote_checker_find_quote(char *line)
 {
 	int		index;
@@ -53,7 +31,7 @@ char		shell_quote_checker_find_quote(char *line)
 	quote = '\0';
 	while (line[index] != '\0')
 	{
-		is_escaped = shell_isescaped(line, index);
+		is_escaped = tools_is_char_escaped(line, index);
 		c = line[index];
 		if (!quote && (c == '\'' || c == '"') && !is_escaped)
 			quote = c;
@@ -62,47 +40,6 @@ char		shell_quote_checker_find_quote(char *line)
 		index++;
 	}
 	return (quote);
-}
-
-char		*ft_joinstrcstr(char *s1, char c, char *s2)
-{
-	char	*str;
-
-	str = ft_strnew(ft_strlen(s1) + 1 + ft_strlen(s2));
-	if (str == NULL)
-		return (NULL);
-	str = ft_strcpy(str, s1);
-	str = ft_strcat(str, ft_chartostr(c));
-	str = ft_strcat(str, s2);
-	return (str);
-}
-
-char		*ft_joinstrcstr_free_s1(char *s1, char c, char *s2)
-{
-	char	*str;
-
-	str = ft_joinstrcstr(s1, c, s2);
-	ft_strdel(&s1);
-	return (str);
-}
-
-char		*ft_joinstrcstr_free_s2(char *s1, char c, char *s2)
-{
-	char	*str;
-
-	str = ft_joinstrcstr(s1, c, s2);
-	ft_strdel(&s2);
-	return (str);
-}
-
-char		*ft_joinstrcstr_free_all(char *s1, char c, char *s2)
-{
-	char	*str;
-
-	str = ft_joinstrcstr(s1, c, s2);
-	ft_strdel(&s1);
-	ft_strdel(&s2);
-	return (str);
 }
 
 void		shell_quote_checker(char **line)
@@ -114,21 +51,22 @@ void		shell_quote_checker(char **line)
 	while (quote != '\0')
 	{
 		if (quote == '\'')
-			ft_printf("\nquote> ", quote);
+			ft_printf("\nquote> ");
 		else if (quote == '"')
-			ft_printf("\ndquote> ", quote);
+			ft_printf("\ndquote> ");
 		input_read(&extra_line);
 		*line = ft_joinstrcstr_free_all(*line, '\n', extra_line);
 		quote = shell_quote_checker_find_quote(*line);
 	}
 }
+
 int     shell_start(void)
 {
 
-	int         status;
-	char        *line;
-	t_tokenlst  *token_lst;
-	t_ast       *ast;
+	int			status;
+	char		*line;
+	t_tokenlst	*token_lst;
+	t_ast		*ast;
 
 	status = 1;
 	line = NULL;
