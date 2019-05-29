@@ -6,7 +6,7 @@
 /*   By: omulder <omulder@student.codam.nl>           +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2019/04/10 20:29:42 by jbrinksm       #+#    #+#                */
-/*   Updated: 2019/05/28 19:14:30 by jbrinksm      ########   odam.nl         */
+/*   Updated: 2019/05/29 17:16:10 by jbrinksm      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -199,13 +199,6 @@ typedef struct	s_ast
 	struct s_ast	*child;
 	struct s_ast	*sibling;
 }				t_ast;
-/*
-**=================================prototypes===================================
-*/
-
-int				term_reset(t_term *term_p);
-void			term_free_termp(t_term *term_p);
-int				shell_start(void);
 
 /*
 **---------------------------------environment----------------------------------
@@ -278,7 +271,7 @@ void			lexer_tokenlstiter(t_tokenlst *token_lst,
 					void (*f)(t_tokenlst *elem));
 bool			lexer_is_shellspec(char c);
 
-int				lexer(char *line, t_tokenlst **token_lst);
+int				lexer(char **line, t_tokenlst **token_lst);
 int				lexer_error(t_tokenlst **token_lst, char **line);
 void			lexer_evaluator(t_tokenlst *token_lst);
 int				lexer_scanner(char *line, t_tokenlst *token_lst);
@@ -321,7 +314,7 @@ void			parser_astdel(t_ast **ast);
 **----------------------------------builtins-------------------------------------
 */
 
-void			builtin_exit(t_term *term_p);
+void			builtin_exit(unsigned char exitcode);
 int				builtin_echo(char **args);
 char			builtin_echo_set_flags(char **args, int *arg_i);
 
@@ -332,6 +325,7 @@ char			builtin_echo_set_flags(char **args, int *arg_i);
 bool			tool_is_redirect_tk(t_tokens type);
 int				tools_is_char_escaped(char *line, int i);
 int				tools_update_quote_status(char *line, int cur_index, char *quote);
+bool			tool_is_redirect_tk(t_tokens type);
 
 /*
 **----------------------------------debugging-----------------------------------
@@ -340,5 +334,6 @@ int				tools_update_quote_status(char *line, int cur_index, char *quote);
 void			print_node(t_tokenlst *node);
 void			print_tree(t_ast *root);
 void			print_token(t_scanner *scanner);
+void			print_tree(t_ast *root);
 
 #endif
