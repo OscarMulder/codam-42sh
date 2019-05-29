@@ -1,28 +1,21 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        ::::::::            */
-/*   builtin_exit.c                                     :+:    :+:            */
+/*   exec_builtin.c                                     :+:    :+:            */
 /*                                                     +:+                    */
-/*   By: jbrinksm <jbrinksm@student.codam.nl>         +#+                     */
+/*   By: omulder <omulder@student.codam.nl>           +#+                     */
 /*                                                   +#+                      */
-/*   Created: 2019/04/11 20:15:24 by jbrinksm       #+#    #+#                */
-/*   Updated: 2019/05/29 16:50:11 by omulder       ########   odam.nl         */
+/*   Created: 2019/05/29 16:59:41 by omulder        #+#    #+#                */
+/*   Updated: 2019/05/29 18:21:53 by omulder       ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "vsh.h"
 
-void	builtin_exit(char **args)
+int		exec_builtin(char **args, char **env)
 {
-	ft_printf("exit\n");
-	if (args[1] != 0 && args[2] == 0)
-	{
-		exit(ft_atoi(args[1]));
-	}
-	else if (args[1] != 0 && args[2] != 0)
-	{
-		ft_printf("Sh3llN4m3: 3x1t: T00 M4ny ArGum3nts\n");
-		exit(-1);
-	}
-	exit(PROG_SUCCESS);
+	if (ft_strcmp(args[0], "exit") == 0)
+		builtin_exit(args);
+	ft_strarrdel(&env);
+	return (0);
 }
