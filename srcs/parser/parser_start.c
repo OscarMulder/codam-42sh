@@ -6,7 +6,7 @@
 /*   By: jbrinksm <jbrinksm@student.codam.nl>         +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2019/05/19 19:58:40 by jbrinksm       #+#    #+#                */
-/*   Updated: 2019/05/27 17:27:51 by mavan-he      ########   odam.nl         */
+/*   Updated: 2019/05/29 14:35:59 by omulder       ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -89,10 +89,10 @@ int			parser_start(t_tokenlst **token_lst, t_ast **ast)
 		else
 			ft_printf("vsh: syntax error near unexpected token `%s'\n",
 			parser_return_token_str((tmp)->type));
-		tokenlstdel(token_lst);
+		lexer_tokenlstdel(token_lst);
 		parser_astdel(ast);
 		return (FUNCT_FAILURE);
 	}
-	tokenlstdel(token_lst);
+	lexer_tokenlstdel(token_lst);
 	return (FUNCT_SUCCESS);
 }
