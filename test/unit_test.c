@@ -6,7 +6,7 @@
 /*   By: jbrinksm <jbrinksm@student.codam.nl>         +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2019/04/18 16:37:32 by omulder        #+#    #+#                */
-/*   Updated: 2019/05/29 14:31:03 by omulder       ########   odam.nl         */
+/*   Updated: 2019/05/29 14:39:55 by omulder       ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -307,7 +307,7 @@ Test(lexer_error, one_item)
 
 	lst = NULL;
 	lexer_tokenlstaddback(&lst, START, NULL, 0);
-	lexer_error(&lst);
+	lexer_error(&lst, NULL);
 	cr_expect(lst == NULL);
 	cr_expect_stderr_eq_str("vsh: lexer: malloc error\n");
 }
@@ -426,7 +426,7 @@ Test(lexer, basic)
 
 	str = ft_strdup("HOME=/ ls -la || ls 2>file \"Documents\";");
 	lst = NULL;
-	cr_expect(lexer(str), &lst) == FUNCT_SUCCESS);
+	cr_expect(lexer(&(str), &lst) == FUNCT_SUCCESS);
 	cr_expect(str == NULL);
 	tmp = lst;
 	cr_expect(lst->type == START);
@@ -478,7 +478,7 @@ Test(parser, basic)
 	str = ft_strdup("HOME=/ ls -la || ls 2>file \"Documents\";");
 	lst = NULL;
 	ast = NULL;
-	cr_expect(lexer(str, &lst) == FUNCT_SUCCESS);
+	cr_expect(lexer(&(str), &lst) == FUNCT_SUCCESS);
 	cr_expect(parser_start(&lst, &ast) == FUNCT_SUCCESS);
 	tmp_ast = ast;
 	cr_expect(ast->type == SEMICOL);
