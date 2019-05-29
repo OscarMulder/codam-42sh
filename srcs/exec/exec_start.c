@@ -6,7 +6,7 @@
 /*   By: omulder <omulder@student.codam.nl>           +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2019/05/29 17:52:22 by omulder        #+#    #+#                */
-/*   Updated: 2019/05/29 18:21:44 by omulder       ########   odam.nl         */
+/*   Updated: 2019/05/29 18:48:25 by omulder       ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,12 +17,14 @@ static char	**create_args(t_ast *ast)
 	char	**args;
 	t_ast	*probe;
 
-	if (!ast)
+	if (ast == NULL)
 		return (NULL);
 	args = (char**)ft_memalloc(2);
-	if (!args)
+	if (args == NULL)
 		return (NULL);
 	args[0] = ft_strdup(ast->value);
+	if (args[0] == NULL)
+		return (NULL);
 	probe = ast->child;
 	while (probe)
 	{
