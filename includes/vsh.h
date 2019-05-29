@@ -6,7 +6,7 @@
 /*   By: omulder <omulder@student.codam.nl>           +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2019/04/10 20:29:42 by jbrinksm       #+#    #+#                */
-/*   Updated: 2019/05/29 18:15:16 by omulder       ########   odam.nl         */
+/*   Updated: 2019/05/29 18:52:42 by omulder       ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -325,7 +325,11 @@ char			builtin_echo_set_flags(char **args, int *arg_i);
 int				tools_is_char_escaped(char *line, int i);
 int				tools_update_quote_status(char *line, int cur_index, char *quote);
 bool			tool_is_redirect_tk(t_tokens type);
+/*
+**----------------------------------history-------------------------------------
+*/
 
+int				history_line_to_file(char *line);
 /*
 **---------------------------------exec-----------------------------------------
 */

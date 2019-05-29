@@ -6,7 +6,7 @@
 /*   By: jbrinksm <jbrinksm@student.codam.nl>         +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2019/04/18 16:37:32 by omulder        #+#    #+#                */
-/*   Updated: 2019/05/29 18:29:51 by omulder       ########   odam.nl         */
+/*   Updated: 2019/05/29 18:52:34 by omulder       ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -508,4 +508,22 @@ Test(command_exec, basic)
 	cr_expect(parser_start(&lst, &ast) == FUNCT_SUCCESS);
 	cr_expect(exec_start(ast) == FUNCT_FAILURE); // this fails in the first version, shoudln't fail later
 	parser_astdel(&tmp_ast);
+TestSuite(history);
+
+/*
+**------------------------------------------------------------------------------
+*/
+
+Test(history, basic)
+{
+	FILE	*f;
+	char	buf[7];
+
+	ft_bzero(buf, 7);
+	cr_expect(history_line_to_file("check") == FUNCT_SUCCESS);
+	f = fopen("/tmp/.vsh_history", "r");
+	cr_expect(f != NULL);
+	fseek(f, -6, SEEK_END);
+	fread(buf, 1, 6, f);
+	cr_expect(ft_strcmp(buf, "check\n") == 0);
 }
