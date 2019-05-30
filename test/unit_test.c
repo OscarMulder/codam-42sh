@@ -6,7 +6,7 @@
 /*   By: jbrinksm <jbrinksm@student.codam.nl>         +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2019/04/18 16:37:32 by omulder        #+#    #+#                */
-/*   Updated: 2019/05/29 18:52:34 by omulder       ########   odam.nl         */
+/*   Updated: 2019/05/30 13:28:20 by omulder       ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -508,11 +508,12 @@ Test(command_exec, basic)
 	cr_expect(parser_start(&lst, &ast) == FUNCT_SUCCESS);
 	cr_expect(exec_start(ast) == FUNCT_FAILURE); // this fails in the first version, shoudln't fail later
 	parser_astdel(&tmp_ast);
-TestSuite(history);
+}
 
 /*
 **------------------------------------------------------------------------------
 */
+TestSuite(history);
 
 Test(history, basic)
 {
