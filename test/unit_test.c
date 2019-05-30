@@ -6,7 +6,7 @@
 /*   By: jbrinksm <jbrinksm@student.codam.nl>         +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2019/04/18 16:37:32 by omulder        #+#    #+#                */
-/*   Updated: 2019/05/29 18:12:38 by mavan-he      ########   odam.nl         */
+/*   Updated: 2019/05/30 15:11:04 by mavan-he      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -492,14 +492,20 @@ TestSuite(history);
 
 Test(history, basic)
 {
-	FILE	*f;
-	char	buf[7];
+	int		fd;
+	char	*array[4];
+	char	buf[22];
+	int 	ret;
 
-	ft_bzero(buf, 7);
-	cr_expect(history_line_to_file("check") == FUNCT_SUCCESS);
-	f = fopen("/tmp/.vsh_history", "r");
-	cr_expect(f != NULL);
-	fseek(f, -6, SEEK_END);
-	fread(buf, 1, 6, f);
-	cr_expect(ft_strcmp(buf, "check\n") == 0);
+	ft_bzero(buf, 22);
+	array[0] = "check1";
+	array[1] = "check2";
+	array[2] = "check3";
+	array[3] = NULL;
+	cr_expect(history_to_file(array) == FUNCT_SUCCESS);
+	fd = open("/tmp/.vsh_history", O_RDONLY);
+	cr_expect(fd > 0);
+	ret = read(fd, buf, 22);
+	cr_expect(ret == 21);
+	cr_expect(ft_strcmp(buf, "check1\ncheck2\ncheck3\n") == 0);
 }
