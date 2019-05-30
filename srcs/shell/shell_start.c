@@ -6,7 +6,7 @@
 /*   By: omulder <omulder@student.codam.nl>           +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2019/04/18 16:44:50 by omulder        #+#    #+#                */
-/*   Updated: 2019/05/30 15:07:54 by mavan-he      ########   odam.nl         */
+/*   Updated: 2019/05/30 19:03:35 by mavan-he      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -35,6 +35,8 @@ int		shell_start(void)
 	{
 		shell_display_prompt();
 		status = input_read(&line);
+		history_line_to_array(line);
+		history_to_file();
 		#ifdef DEBUG
 		ft_printf("\n>>>> LINE <<<<\n%s\n\n>>>> TOKEN_LST <<<<\n", line);
 		#endif

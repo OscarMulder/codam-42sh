@@ -6,7 +6,7 @@
 /*   By: jbrinksm <jbrinksm@student.codam.nl>         +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2019/04/18 16:37:32 by omulder        #+#    #+#                */
-/*   Updated: 2019/05/30 16:59:23 by mavan-he      ########   odam.nl         */
+/*   Updated: 2019/05/30 18:51:07 by mavan-he      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -502,7 +502,8 @@ Test(history, history_to_file)
 	array[1] = "check2";
 	array[2] = "check3";
 	array[3] = NULL;
-	cr_expect(history_to_file(array) == FUNCT_SUCCESS);
+	history = array;
+	cr_expect(history_to_file() == FUNCT_SUCCESS);
 	fd = open("/tmp/.vsh_history", O_RDONLY);
 	cr_expect(fd > 0);
 	ret = read(fd, buf, 22);
@@ -512,15 +513,15 @@ Test(history, history_to_file)
 
 Test(history, get_file_content)
 {
-	char **history;
 	char	*array[4];
 
+	history = array;
 	array[0] = "check1";
 	array[1] = "check2";
 	array[2] = "check3";
 	array[3] = NULL;
-	cr_expect(history_to_file(array) == FUNCT_SUCCESS);
-	cr_expect(history_get_file_content(&history) == FUNCT_SUCCESS);
+	cr_expect(history_to_file() == FUNCT_SUCCESS);
+	cr_expect(history_get_file_content() == FUNCT_SUCCESS);
 	cr_expect(ft_strequ("check1", history[0]) == true);
 	cr_expect(ft_strequ("check2", history[1]) == true);
 	cr_expect(ft_strequ("check3", history[2]) == true);

@@ -1,41 +1,22 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        ::::::::            */
-/*   history_get_file_content.c                         :+:    :+:            */
+/*   history_line_to_array.c                            :+:    :+:            */
 /*                                                     +:+                    */
 /*   By: mavan-he <mavan-he@student.codam.nl>         +#+                     */
 /*                                                   +#+                      */
-/*   Created: 2019/05/30 13:49:22 by mavan-he       #+#    #+#                */
-/*   Updated: 2019/05/30 19:09:33 by mavan-he      ########   odam.nl         */
+/*   Created: 2019/05/30 18:55:25 by mavan-he       #+#    #+#                */
+/*   Updated: 2019/05/30 20:10:00 by mavan-he      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "vsh.h"
 
-int		history_get_file_content(void)
+int		history_line_to_array(char *line)
 {
-	int		fd;
-	int		ret;
-	char	*line;
-	int		i;
-
-	history = (char **)ft_memalloc(sizeof(char *) * 501);
-	if (history == NULL)
+	history[history_i % 500] = ft_strdup(line);
+	if (history[history_i % 500] == NULL)
 		return (FUNCT_ERROR);
-	fd = open("/tmp/.vsh_history", O_RDWR | O_CREAT, S_IRUSR | S_IWUSR);
-	if (fd == -1)
-		return (FUNCT_ERROR);
-	ret = 1;
-	i = 0;
-	while (ret > 0 && i < 500)
-	{
-		line = NULL;
-		ret = ft_get_next_line(fd, &line);
-		if (ret == -1)
-			return (FUNCT_ERROR);
-		(history)[i] = line;
-		i++;
-	}
-	history_i = i - 1;
+	history_i++;
 	return (FUNCT_SUCCESS);
 }
