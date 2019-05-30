@@ -6,7 +6,7 @@
 /*   By: omulder <omulder@student.codam.nl>           +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2019/05/29 17:17:48 by omulder        #+#    #+#                */
-/*   Updated: 2019/05/29 18:15:09 by omulder       ########   odam.nl         */
+/*   Updated: 2019/05/30 14:03:45 by omulder       ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,7 +18,7 @@ static int		clean_return(char ***args, int ret)
 	return (ret);
 }
 
-int		exec_cmd(char **args, char **env)
+int		exec_cmd(char **args, char ***env)
 {
 	int ret;
 

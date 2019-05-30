@@ -6,7 +6,7 @@
 /*   By: omulder <omulder@student.codam.nl>           +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2019/05/29 17:52:22 by omulder        #+#    #+#                */
-/*   Updated: 2019/05/29 18:48:25 by omulder       ########   odam.nl         */
+/*   Updated: 2019/05/30 15:27:56 by omulder       ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,7 +19,7 @@ static char	**create_args(t_ast *ast)
 
 	if (ast == NULL)
 		return (NULL);
-	args = (char**)ft_memalloc(2);
+	args = (char**)ft_memalloc(sizeof(char*) * 2);
 	if (args == NULL)
 		return (NULL);
 	args[0] = ft_strdup(ast->value);
@@ -28,7 +28,7 @@ static char	**create_args(t_ast *ast)
 	probe = ast->child;
 	while (probe)
 	{
-		if (ft_strarradd(&args, probe->value) == FUNCT_ERROR)
+		if (ft_strarradd(&args, ft_strdup(probe->value)) == FUNCT_ERROR)
 			return (NULL);
 		probe = probe->child;
 	}
@@ -46,7 +46,7 @@ int			exec_start(t_ast *ast)
 		args = create_args(ast);
 		if (args == NULL)
 			return (FUNCT_FAILURE);
-		return (exec_cmd(args, env));
+		return (exec_cmd(args, &env));
 	}
 	else
 	{
