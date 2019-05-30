@@ -6,7 +6,7 @@
 /*   By: jbrinksm <jbrinksm@student.codam.nl>         +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2019/04/18 16:37:32 by omulder        #+#    #+#                */
-/*   Updated: 2019/05/30 15:11:04 by mavan-he      ########   odam.nl         */
+/*   Updated: 2019/05/30 16:59:23 by mavan-he      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -490,7 +490,7 @@ Test(parser, basic)
 
 TestSuite(history);
 
-Test(history, basic)
+Test(history, history_to_file)
 {
 	int		fd;
 	char	*array[4];
@@ -508,4 +508,21 @@ Test(history, basic)
 	ret = read(fd, buf, 22);
 	cr_expect(ret == 21);
 	cr_expect(ft_strcmp(buf, "check1\ncheck2\ncheck3\n") == 0);
+}
+
+Test(history, get_file_content)
+{
+	char **history;
+	char	*array[4];
+
+	array[0] = "check1";
+	array[1] = "check2";
+	array[2] = "check3";
+	array[3] = NULL;
+	cr_expect(history_to_file(array) == FUNCT_SUCCESS);
+	cr_expect(history_get_file_content(&history) == FUNCT_SUCCESS);
+	cr_expect(ft_strequ("check1", history[0]) == true);
+	cr_expect(ft_strequ("check2", history[1]) == true);
+	cr_expect(ft_strequ("check3", history[2]) == true);
+	cr_expect(history[3] == NULL);
 }

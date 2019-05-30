@@ -6,13 +6,14 @@
 /*   By: jbrinksm <jbrinksm@student.codam.nl>         +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2019/01/09 11:10:09 by omulder        #+#    #+#                */
-/*   Updated: 2019/05/21 12:10:07 by mavan-he      ########   odam.nl         */
+/*   Updated: 2019/05/30 16:06:06 by mavan-he      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
 #ifndef LIBFT_H
 # define LIBFT_H
 
+# define BUFF_SIZE 64
 # include <string.h>
 # include <stdlib.h>
 # include <unistd.h>
@@ -81,5 +82,6 @@ char				*ft_strchr(const char *s, int c);
 char				**ft_strsplit(const char *s, char c);
 char				*ft_strjoinchr(char const *s1, char c);
 char				*ft_strjoinchrfree(char *s1, char c, int i);
+int					ft_get_next_line(const int fd, char **line);
 
 #endif

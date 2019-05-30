@@ -6,7 +6,7 @@
 /*   By: omulder <omulder@student.codam.nl>           +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2019/04/10 20:29:42 by jbrinksm       #+#    #+#                */
-/*   Updated: 2019/05/30 15:08:15 by mavan-he      ########   odam.nl         */
+/*   Updated: 2019/05/30 16:03:36 by mavan-he      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -328,6 +328,7 @@ bool			tool_is_redirect_tk(t_tokens type);
 */
 
 int				history_to_file(char **history);
+int				history_get_file_content(char ***history);
 /*
 **----------------------------------debugging-----------------------------------
 */
