@@ -6,7 +6,7 @@
 /*   By: omulder <omulder@student.codam.nl>           +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2019/04/10 20:29:42 by jbrinksm       #+#    #+#                */
-/*   Updated: 2019/05/30 17:52:07 by mavan-he      ########   odam.nl         */
+/*   Updated: 2019/05/30 20:42:51 by mavan-he      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -22,6 +22,8 @@
 # define FUNCT_FAILURE 0
 # define FUNCT_SUCCESS 1
 # define FUNCT_ERROR -1
+# define PROG_FAILURE 1
+# define PROG_SUCCESS 0
 # define E_ALLOC 420
 # define CTRLD -1
 # define CR 0
@@ -313,7 +315,7 @@ void			parser_astdel(t_ast **ast);
 **----------------------------------builtins-------------------------------------
 */
 
-void			builtin_exit(unsigned char exitcode);
+void			builtin_exit(char **args);
 int				builtin_echo(char **args);
 char			builtin_echo_set_flags(char **args, int *arg_i);
 
@@ -324,6 +326,14 @@ char			builtin_echo_set_flags(char **args, int *arg_i);
 int				tools_is_char_escaped(char *line, int i);
 int				tools_update_quote_status(char *line, int cur_index, char *quote);
 bool			tool_is_redirect_tk(t_tokens type);
+
+/*
+**---------------------------------exec-----------------------------------------
+*/
+
+int				exec_cmd(char **args, char ***env);
+int				exec_start(t_ast *ast);
+int				exec_builtin(char **args, char ***env);
 
 /*
 **----------------------------------debugging-----------------------------------
