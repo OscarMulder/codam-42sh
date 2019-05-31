@@ -6,14 +6,13 @@
 /*   By: jbrinksm <jbrinksm@student.codam.nl>         +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2019/01/09 11:10:09 by omulder        #+#    #+#                */
-/*   Updated: 2019/05/31 14:34:19 by tde-jong      ########   odam.nl         */
+/*   Updated: 2019/05/31 14:37:07 by tde-jong      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
 #ifndef LIBFT_H
 # define LIBFT_H
 
-# include <unistd.h>
 # include "ft_printf.h"
 
 typedef struct		s_list
