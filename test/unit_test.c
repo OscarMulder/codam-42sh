@@ -6,7 +6,7 @@
 /*   By: jbrinksm <jbrinksm@student.codam.nl>         +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2019/04/18 16:37:32 by omulder        #+#    #+#                */
-/*   Updated: 2019/05/31 11:17:26 by tde-jong      ########   odam.nl         */
+/*   Updated: 2019/05/31 15:24:52 by omulder       ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -508,7 +508,7 @@ Test(parser, basic)
 
 TestSuite(command_exit);
 
-Test(command_exec, basic)
+Test(command_exec, basic, .init=redirect_all_stdout)
 {
 	t_tokenlst	*lst;
 	t_ast		*ast;
@@ -542,3 +542,41 @@ Test(history, basic)
 	fread(buf, 1, 6, f);
 	cr_expect(ft_strcmp(buf, "check\n") == 0);
 }
+
+/*
+**------------------------------------------------------------------------------
+*/
+
+TestSuite(exec_echo);
+
+Test(exec_echo, basic, .init=redirect_all_stdout)
+{
+	t_tokenlst	*lst;
+	t_ast		*ast;
+	char 		*str;
+
+	str = ft_strdup("echo hoi");
+	lst = NULL;
+	ast = NULL;
+	cr_expect(lexer(&(str), &lst) == FUNCT_SUCCESS);
+	cr_expect(parser_start(&lst, &ast) == FUNCT_SUCCESS);
+	cr_expect(exec_start(ast) == FUNCT_SUCCESS);
+	cr_expect_stdout_eq_str("hoi\n");
+	parser_astdel(&ast);
+}
+
+Test(exec_echo, basic2, .init=redirect_all_stdout)
+{
+	t_tokenlst	*lst;
+	t_ast		*ast;
+	char 		*str;
+
+	str = ft_strdup("echo \"Hi, this is a string\"");
+	lst = NULL;
+	ast = NULL;
+	cr_expect(lexer(&(str), &lst) == FUNCT_SUCCESS);
+	cr_expect(parser_start(&lst, &ast) == FUNCT_SUCCESS);
+	cr_expect(exec_start(ast) == FUNCT_SUCCESS);
+	cr_expect_stdout_eq_str("\"Hi, this is a string\"\n");
+	parser_astdel(&ast);
+} 
