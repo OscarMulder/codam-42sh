@@ -6,7 +6,7 @@
 /*   By: omulder <omulder@student.codam.nl>           +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2019/04/10 20:29:42 by jbrinksm       #+#    #+#                */
-/*   Updated: 2019/05/31 14:45:27 by tde-jong      ########   odam.nl         */
+/*   Updated: 2019/05/31 14:45:53 by tde-jong      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -90,7 +90,7 @@
 # include <termios.h>
 # include <curses.h>
 # include <term.h>
-# include <sys/types.h>
+
 /*
 **	malloc, free, close, fork, execve, exit | getenv
 **	access, write, read, getcwd, chdir | isatty ttyname ttyslot write close
