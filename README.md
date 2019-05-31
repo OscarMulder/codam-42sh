@@ -21,15 +21,6 @@ The following is a brief description of the shell’s operation when it reads an
 6. Executes the command (see Executing Commands).
 7. Optionally waits for the command to complete and collects its exit status (see Exit Status).
 
-## Adding tests
-
-1. Create a new file in `test/` called `test_`*NAME_OF_FUNCTION*`.c`.
-2. Add function prototype to `test.h` header.
-3. Add test to `test_main.c`.
-4. Add name of testfile to "`TESTS`" variable in Makefile.
-5. Test if the test passes with '`make test`'.
-6. Travis wil automatically run the test on push.
-
 ## Github workflow
 Because we want to make sure we have a good experience working on this project together, we setup a more advanced github workflow. Please keep the following things in mind while pushing to github.
 - Every feature has it's own branch, which will be merged via a push request on Github.
