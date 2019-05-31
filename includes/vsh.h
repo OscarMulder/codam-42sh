@@ -6,7 +6,7 @@
 /*   By: omulder <omulder@student.codam.nl>           +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2019/04/10 20:29:42 by jbrinksm       #+#    #+#                */
-/*   Updated: 2019/05/31 15:03:27 by tde-jong      ########   odam.nl         */
+/*   Updated: 2019/05/31 15:16:30 by tde-jong      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -79,8 +79,6 @@
 
 # include <unistd.h>
 # include <stdbool.h>
-
-# include <sys/ioctl.h>
 
 /*
 **	malloc, free, close, fork, execve, exit | getenv
