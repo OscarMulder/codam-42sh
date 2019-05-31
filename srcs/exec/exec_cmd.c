@@ -25,6 +25,7 @@ int			exec_cmd(char **args, char ***env, int *exit_code)
 		exec_external(args, env, exit_code) == false)
 	{
 		ft_printf("%s: Command not found.\n", args[0]);
+		*exit_code = EXIT_NOTFOUND;
 	}
 	return (clean_return(&args, env, FUNCT_SUCCESS));
 }
