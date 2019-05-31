@@ -6,7 +6,7 @@
 /*   By: omulder <omulder@student.codam.nl>           +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2019/04/10 20:29:42 by jbrinksm       #+#    #+#                */
-/*   Updated: 2019/05/31 15:02:49 by tde-jong      ########   odam.nl         */
+/*   Updated: 2019/05/31 15:03:27 by tde-jong      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -78,7 +78,6 @@
 */
 
 # include <unistd.h>
-# include <fcntl.h>
 # include <stdbool.h>
 
 # include <sys/ioctl.h>

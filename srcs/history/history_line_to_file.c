@@ -6,11 +6,12 @@
 /*   By: mavan-he <mavan-he@student.codam.nl>         +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2019/05/29 15:25:10 by mavan-he       #+#    #+#                */
-/*   Updated: 2019/05/29 18:12:26 by mavan-he      ########   odam.nl         */
+/*   Updated: 2019/05/31 15:04:41 by tde-jong      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "vsh.h"
+#include <fcntl.h>
 
 int		history_line_to_file(char *line)
 {
