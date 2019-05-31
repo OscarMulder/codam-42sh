@@ -6,7 +6,7 @@
 /*   By: jbrinksm <jbrinksm@student.codam.nl>         +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2019/04/18 16:37:32 by omulder        #+#    #+#                */
-/*   Updated: 2019/05/30 13:49:22 by omulder       ########   odam.nl         */
+/*   Updated: 2019/05/31 15:19:09 by tde-jong      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,6 +19,7 @@
 #include "vsh.h"
 #include <criterion/criterion.h>
 #include <criterion/redirect.h>
+#include <unistd.h>
 
 void redirect_all_stdout(void)
 {

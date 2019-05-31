@@ -6,12 +6,13 @@
 /*   By: jbrinksm <jbrinksm@student.codam.nl>         +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2019/04/18 18:19:47 by jbrinksm       #+#    #+#                */
-/*   Updated: 2019/05/31 14:52:21 by tde-jong      ########   odam.nl         */
+/*   Updated: 2019/05/31 15:18:17 by tde-jong      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "vsh.h"
 #include <termios.h>
+#include <unistd.h>
 
 /*
 **	We will need to implement errno return values for this function.
