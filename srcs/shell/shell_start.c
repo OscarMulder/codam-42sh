@@ -71,6 +71,13 @@ int		shell_read_till_stop(char **heredoc, char *stop)
 	return (status);
 }
 
+/*
+**	Right now this function will not include any '\n'
+**	in between the lines read. This should be fine since I'm
+**	pretty sure our input_read is supposed to read those '\n's
+**	whenever you press return.
+*/
+
 void	shell_dless_input(t_tokenlst *token_lst)
 {
 	char 		*heredoc;

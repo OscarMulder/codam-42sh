@@ -208,6 +208,28 @@ Test(tools_update_quote_status, edge_cases)
 /*
 **------------------------------------------------------------------------------
 */
+
+// TestSuite(tools_is_char_escaped);
+
+// Test(tools_is_char_escaped, basic)
+// {
+// 	cr_expect_eq(tools_is_char_escaped("\\n", 1), FUNCT_SUCCESS);
+// 	cr_expect_eq(tools_is_char_escaped("\\\\n", 2), FUNCT_FAILURE);
+// 	cr_expect_eq(tools_is_char_escaped("abc\\n", 4), FUNCT_SUCCESS);
+// 	cr_expect_eq(tools_is_char_escaped("abc\\\\n", 5), FUNCT_FAILURE);
+// }
+
+// Test(tools_is_char_escaped, edge_cases)
+// {
+// 	cr_expect_eq(tools_is_char_escaped("\\\"\\n", 3), FUNCT_SUCCESS);
+// 	cr_expect_eq(tools_is_char_escaped("\\\"\\\\n", 4), FUNCT_FAILURE);
+// 	cr_expect_eq(tools_is_char_escaped("", 0), FUNCT_FAILURE);
+// }
+
+/*
+**------------------------------------------------------------------------------
+*/
+
 TestSuite(builtin_echo);
 
 Test(builtin_echo, basic, .init=redirect_all_stdout)
