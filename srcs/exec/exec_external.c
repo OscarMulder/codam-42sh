@@ -6,7 +6,7 @@
 /*   By: tde-jong <tde-jong@student.codam.nl>         +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2019/05/31 10:47:19 by tde-jong       #+#    #+#                */
-/*   Updated: 2019/06/01 14:23:27 by tde-jong      ########   odam.nl         */
+/*   Updated: 2019/06/01 14:36:43 by tde-jong      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -25,6 +25,8 @@ static bool	exec_bin(char **args, char **env, int *exit_code)
 	waitpid(pid, &status, WUNTRACED);
 	if (WIFEXITED(status))
 		*exit_code = WEXITSTATUS(status);
+	else if (WIFSIGNALED(status))
+		*exit_code = EXIT_FATAL + WTERMSIG(status);
 	return (true);
 }
 
