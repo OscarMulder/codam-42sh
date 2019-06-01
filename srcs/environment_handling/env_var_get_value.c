@@ -1,18 +1,18 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        ::::::::            */
-/*   var_set_value.c                                    :+:    :+:            */
+/*   env_var_get_value.c                                :+:    :+:            */
 /*                                                     +:+                    */
 /*   By: jbrinksm <jbrinksm@student.codam.nl>         +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2019/04/03 18:45:30 by jbrinksm       #+#    #+#                */
-/*   Updated: 2019/05/02 10:28:07 by rkuijper      ########   odam.nl         */
+/*   Updated: 2019/05/27 15:51:34 by omulder       ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "vsh.h"
 
-int		var_set_value(char *var_key, char *var_value, char **vararray)
+char		*env_var_get_value(char *var_key, char **vararray)
 {
 	int		var_len;
 	int		env_i;
@@ -23,14 +23,8 @@ int		var_set_value(char *var_key, char *var_value, char **vararray)
 	{
 		if (ft_strncmp(var_key, vararray[env_i], var_len) == 0 &&
 			vararray[env_i][var_len] == '=')
-		{
-			free(vararray[env_i]);
-			vararray[env_i] = var_join_key_value(var_key, var_value);
-			if (vararray[env_i] == NULL)
-				return (FUNCT_ERROR); // add error message here ??
-			return (FUNCT_SUCCESS);
-		}
+			return (ft_strchr(vararray[env_i], '=') + 1);
 		env_i++;
 	}
-	return (FUNCT_FAILURE);
+	return (NULL);
 }

@@ -1,26 +1,22 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        ::::::::            */
-/*   parser_lexer.c                                     :+:    :+:            */
+/*   ft_strndup.c                                       :+:    :+:            */
 /*                                                     +:+                    */
 /*   By: jbrinksm <jbrinksm@student.codam.nl>         +#+                     */
 /*                                                   +#+                      */
-/*   Created: 2019/04/17 14:57:49 by jbrinksm       #+#    #+#                */
-/*   Updated: 2019/04/24 15:14:13 by jbrinksm      ########   odam.nl         */
+/*   Created: 2019/01/09 13:26:21 by jbrinksm       #+#    #+#                */
+/*   Updated: 2019/05/05 12:59:24 by jbrinksm      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
-/*
-**	IMPORTANT: add check for more than one ';' command seperator.
-**	It's not allowed.
-*/
+#include "libft.h"
 
-#include "vsh.h"
-
-int			parser_lexer(char *line, char ***commands)
+char	*ft_strndup(const char *s1, size_t n)
 {
-	*commands = parser_split_line_to_commands(line);
-	if (*commands == NULL)
-		return (FUNCT_FAILURE);
-	return (FUNCT_SUCCESS);
+	char	*cpy;
+
+	cpy = ft_strnew(n);
+	ft_strncpy(cpy, s1, n);
+	return (cpy);
 }
