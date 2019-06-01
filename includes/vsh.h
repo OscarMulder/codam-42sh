@@ -21,9 +21,18 @@
 # define FUNCT_FAILURE 0
 # define FUNCT_SUCCESS 1
 # define FUNCT_ERROR -1
+# define PROG_FAILURE 1
+# define PROG_SUCCESS 0
 # define E_ALLOC 420
 # define CTRLD -1
 # define CR 0
+
+/*
+**=================================exit codes====================================
+*/
+
+# define EXIT_OK 0
+# define EXIT_NOTFOUND 127
 
 /*
 **------------------------------------echo--------------------------------------
@@ -318,8 +327,8 @@ void			parser_astdel(t_ast **ast);
 **----------------------------------builtins------------------------------------
 */
 
-void			builtin_exit(unsigned char exitcode);
-int				builtin_echo(char **args);
+void			builtin_exit(char **args, int *exit_code);
+void			builtin_echo(char **args, int *exit_code);
 char			builtin_echo_set_flags(char **args, int *arg_i);
 
 /*
@@ -331,6 +340,19 @@ int				tools_is_char_escaped(char *line, int i);
 int				tools_update_quote_status(char *line, int cur_index,
 					char *quote);
 bool			tool_is_redirect_tk(t_tokens type);
+/*
+**----------------------------------history-------------------------------------
+*/
+
+int				history_line_to_file(char *line);
+/*
+**---------------------------------exec-----------------------------------------
+*/
+
+int				exec_cmd(char **args, char ***env, int *exit_code);
+int				exec_start(t_ast *ast, int *exit_code);
+bool			exec_builtin(char **args, char ***env, int *exit_code);
+bool			exec_external(char **args, char ***env, int *exit_code);
 
 /*
 **----------------------------------debugging-----------------------------------

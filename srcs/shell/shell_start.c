@@ -23,10 +23,12 @@ void	lexer_tokenlstiter(t_tokenlst *lst, void (*f)(t_tokenlst *elem))
 int		shell_start(void)
 {
 	int			status;
+	int			exit_code;
 	char		*line;
 	t_tokenlst	*token_lst;
 	t_ast		*ast;
 
+	exit_code = 0;
 	status = 1;
 	line = NULL;
 	token_lst = NULL;
@@ -39,6 +41,7 @@ int		shell_start(void)
 		#ifdef DEBUG
 		ft_printf("\n>>>> LINE <<<<\n%s\n\n>>>> TOKEN_LST <<<<\n", line);
 		#endif
+		history_line_to_file(line);
 		if (lexer(&line, &token_lst) != FUNCT_SUCCESS)
 			continue ;
 		#ifdef DEBUG
@@ -49,8 +52,8 @@ int		shell_start(void)
 		#ifdef DEBUG
 		print_tree(ast);
 		#endif
+		exec_start(ast, &exit_code);
 		parser_astdel(&ast);
-		/* ADD EVALUATOR */
 		ft_putchar('\n');
 	}
 	return (FUNCT_SUCCESS);

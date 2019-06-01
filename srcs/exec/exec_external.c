@@ -1,23 +1,21 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        ::::::::            */
-/*   ft_strlen.c                                        :+:    :+:            */
+/*   exec_external.c                                    :+:    :+:            */
 /*                                                     +:+                    */
-/*   By: omulder <omulder@student.codam.nl>           +#+                     */
+/*   By: tde-jong <tde-jong@student.codam.nl>         +#+                     */
 /*                                                   +#+                      */
-/*   Created: 2019/01/09 13:28:01 by omulder        #+#    #+#                */
-/*   Updated: 2019/05/29 18:12:19 by tde-jong      ########   odam.nl         */
+/*   Created: 2019/05/31 10:47:19 by tde-jong       #+#    #+#                */
+/*   Updated: 2019/05/31 10:48:39 by tde-jong      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "libft.h"
+#include "vsh.h"
 
-size_t	ft_strlen(const char *s)
+bool	exec_external(char **args, char ***env, int *exit_code)
 {
-	char *e;
-
-	e = (char*)s;
-	while (*e)
-		e++;
-	return ((size_t)(e - s));
+	(void)args;
+	(void)env;
+	(void)exit_code;
+	return (false);
 }

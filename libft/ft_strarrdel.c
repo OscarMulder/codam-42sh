@@ -1,23 +1,29 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        ::::::::            */
-/*   ft_strlen.c                                        :+:    :+:            */
+/*   ft_strarrdel.c                                     :+:    :+:            */
 /*                                                     +:+                    */
 /*   By: omulder <omulder@student.codam.nl>           +#+                     */
 /*                                                   +#+                      */
-/*   Created: 2019/01/09 13:28:01 by omulder        #+#    #+#                */
-/*   Updated: 2019/05/29 18:12:19 by tde-jong      ########   odam.nl         */
+/*   Created: 2019/03/24 13:17:15 by omulder        #+#    #+#                */
+/*   Updated: 2019/04/12 10:14:19 by omulder       ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "libft.h"
 
-size_t	ft_strlen(const char *s)
+void	ft_strarrdel(char ***arr)
 {
-	char *e;
+	int i;
 
-	e = (char*)s;
-	while (*e)
-		e++;
-	return ((size_t)(e - s));
+	i = 0;
+	if (arr == NULL || *arr == NULL)
+		return ;
+	while ((*arr)[i] != 0)
+	{
+		ft_strdel(&((*arr)[i]));
+		i++;
+	}
+	free(*arr);
+	*arr = NULL;
 }

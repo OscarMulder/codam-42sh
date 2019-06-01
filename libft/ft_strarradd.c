@@ -1,23 +1,40 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        ::::::::            */
-/*   ft_strlen.c                                        :+:    :+:            */
+/*   ft_strarradd.c                                     :+:    :+:            */
 /*                                                     +:+                    */
 /*   By: omulder <omulder@student.codam.nl>           +#+                     */
 /*                                                   +#+                      */
-/*   Created: 2019/01/09 13:28:01 by omulder        #+#    #+#                */
-/*   Updated: 2019/05/29 18:12:19 by tde-jong      ########   odam.nl         */
+/*   Created: 2019/04/03 19:05:09 by omulder        #+#    #+#                */
+/*   Updated: 2019/04/12 10:33:09 by omulder       ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "libft.h"
 
-size_t	ft_strlen(const char *s)
+int		ft_strarradd(char ***arr, char *add)
 {
-	char *e;
+	int		i;
+	int		count;
+	char	**new;
 
-	e = (char*)s;
-	while (*e)
-		e++;
-	return ((size_t)(e - s));
+	if (!arr)
+		return (-1);
+	count = 0;
+	while ((*arr)[count] != 0)
+		count++;
+	i = 0;
+	new = (char**)ft_memalloc(sizeof(char*) * (count + 2));
+	while ((*arr)[i] != 0)
+	{
+		new[i] = ft_strdup((*arr)[i]);
+		if (new[i] == NULL)
+			return (-1);
+		i++;
+	}
+	new[i] = ft_strdup(add);
+	ft_strdel(&add);
+	ft_strarrdel(arr);
+	*arr = new;
+	return (0);
 }
