@@ -6,18 +6,18 @@
 /*   By: jbrinksm <jbrinksm@student.codam.nl>         +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2019/04/11 20:15:24 by jbrinksm       #+#    #+#                */
-/*   Updated: 2019/06/01 18:23:50 by mavan-he      ########   odam.nl         */
+/*   Updated: 2019/06/01 18:42:17 by mavan-he      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "vsh.h"
 #include "vsh_history.h"
 
-void	builtin_exit(char **args)
+void	builtin_exit(char **args, int *exit_code)
 {
 	history_to_file();
 	ft_printf("exit\n");
-	if (args[1] != 0 && args[2] == 0)
+	if (args[1] != NULL && args[2] == NULL)
 	{
 		if (ft_isdigit(args[1][0]) == false)
 		{
@@ -31,5 +31,5 @@ void	builtin_exit(char **args)
 		ft_printf("b4sh: 3x1t: T00 M4ny ArGum3nts\n");
 		exit(-1);
 	}
-	exit(PROG_SUCCESS);
+	exit(*exit_code);
 }
