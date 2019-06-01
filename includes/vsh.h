@@ -6,7 +6,7 @@
 /*   By: omulder <omulder@student.codam.nl>           +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2019/04/10 20:29:42 by jbrinksm       #+#    #+#                */
-/*   Updated: 2019/06/01 14:34:51 by tde-jong      ########   odam.nl         */
+/*   Updated: 2019/06/01 15:16:54 by omulder       ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -338,6 +338,15 @@ bool			tool_is_redirect_tk(t_tokens type);
 */
 
 int				history_line_to_file(char *line);
+
+/*
+**----------------------------------execution-----------------------------------
+*/
+
+int		exec_start(t_ast *ast, int *exit_code);
+int		exec_cmd(char **args, char ***env, int *exit_code);
+bool	exec_builtin(char **args, char ***env, int *exit_code);
+bool	exec_external(char **args, char ***env, int *exit_code);
 
 /*
 **----------------------------------debugging-----------------------------------
