@@ -6,7 +6,7 @@
 /*   By: jbrinksm <jbrinksm@student.codam.nl>         +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2019/04/18 16:37:32 by omulder        #+#    #+#                */
-/*   Updated: 2019/05/08 10:44:54 by rkuijper      ########   odam.nl         */
+/*   Updated: 2019/06/01 10:26:18 by omulder       ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -82,15 +82,15 @@ Test(term_free_struct, basic)
 **------------------------------------------------------------------------------
 */
 
-TestSuite(get_environ_cpy);
+TestSuite(env_get_environ_cpy);
 
-Test(get_environ_cpy, basic)
+Test(env_get_environ_cpy, basic)
 {
 	extern char **environ;
 	char		**environ_cpy;
 	int			index;
 
-	environ_cpy = get_environ_cpy();
+	environ_cpy = env_get_environ_cpy();
 	index = 0;
 	cr_assert(environ_cpy != NULL);
 	while (environ_cpy[index] != NULL && environ[index] != NULL)
@@ -140,214 +140,70 @@ Test(term_get_attributes, invalid_fd, .init=redirect_all_stdout)
 **------------------------------------------------------------------------------
 */
 
-TestSuite(parser_split_line_to_commands);
+TestSuite(tools_is_char_escaped);
 
-Test(parser_split_line_to_commands, basic)
+Test(tools_is_char_escaped, basic)
 {
-	char	**commands;
-
-	commands = NULL;
-	parser_lexer("\"\";1'22'3'4';'1;';", &commands);
-	cr_assert(commands != NULL);
-	cr_expect_str_eq(commands[0], "");
-	cr_expect_str_eq(commands[1], "12234");
-	cr_expect_str_eq(commands[2], "1;");
-	cr_expect_str_eq(commands[3], "");
+	cr_expect_eq(tools_is_char_escaped("\\n", 1), FUNCT_SUCCESS);
+	cr_expect_eq(tools_is_char_escaped("\\\\n", 2), FUNCT_FAILURE);
+	cr_expect_eq(tools_is_char_escaped("abc\\n", 4), FUNCT_SUCCESS);
+	cr_expect_eq(tools_is_char_escaped("abc\\\\n", 5), FUNCT_FAILURE);
 }
 
-Test(parser_split_line_to_commands, escaped_command_seperator)
+Test(tools_is_char_escaped, edge_cases)
 {
-	char	**commands;
-
-	commands = NULL;
-	parser_lexer("lalalaffffdsdg;asdgasdgas\\;dg as; dga sgas \\\";@", &commands);
-	cr_assert(commands != NULL);
-	cr_expect_str_eq(commands[0], "lalalaffffdsdg");
-	cr_expect_str_eq(commands[1], "asdgasdgas\\;dg as");
-	cr_expect_str_eq(commands[2], " dga sgas \\\"");
-	cr_expect_str_eq(commands[3], "@");
-}
-
-Test(parser_split_line_to_commands, escaped_command_seperator2)
-{
-	char	**commands;
-
-	commands = NULL;
-	parser_lexer("123;456\\\\\\;123;456;", &commands);
-	cr_assert(commands != NULL);
-	cr_expect_str_eq(commands[0], "123");
-	cr_expect_str_eq(commands[1], "456\\\\\\;123");
-	cr_expect_str_eq(commands[2], "456");
-	cr_expect_str_eq(commands[3], "");
+	cr_expect_eq(tools_is_char_escaped("\\\"\\n", 3), FUNCT_SUCCESS);
+	cr_expect_eq(tools_is_char_escaped("\\\"\\\\n", 4), FUNCT_FAILURE);
+	cr_expect_eq(tools_is_char_escaped("", 0), FUNCT_FAILURE);
 }
 
 /*
 **------------------------------------------------------------------------------
 */
 
-TestSuite(parser_strdup_command_from_line);
+/* TestSuite(tools_update_quote_status);
 
-Test(parser_strdup_command_from_line, basic)
-{
-	char	*result;
-	int		index;
-
-	index = 0;
-	result = parser_strdup_command_from_line("simple;command;line", &index);
-	cr_assert(result != NULL);
-	cr_expect_str_eq(result, "simple");
-}
-
-Test(parser_strdup_command_from_line, moderate)
-{
-	char	*result;
-	int		index;
-
-	index = 0;
-	result = parser_strdup_command_from_line("more\\;complicated;line", &index);
-	cr_assert(result != NULL);
-	cr_expect_str_eq(result, "more\\;complicated");
-}
-
-Test(parser_strdup_command_from_line, quoted_command_seperator)
-{
-	char	*result;
-	int		index;
-
-	index = 0;
-	result = parser_strdup_command_from_line("\"quoted;command;line\"", &index);
-	cr_assert(result != NULL);
-	cr_expect_str_eq(result, "quoted;command;line");
-}
-
-/*
-**------------------------------------------------------------------------------
-*/
-
-TestSuite(parser_command_len_from_line);
-
-Test(parser_command_len_from_line, basic)
-{
-	int		index;
-
-	index = 0;
-	cr_expect_eq(parser_command_len_from_line("123456789", &index), 9);
-	cr_expect_eq(parser_command_len_from_line("1;2", &index), 1);
-}
-
-Test(parser_command_len_from_line, escaped_command_seperator)
-{
-	int		index;
-
-	index = 0;
-	cr_expect_eq(parser_command_len_from_line("123456\\;9", &index), 9);
-	cr_expect_eq(parser_command_len_from_line("1\\;\\;67", &index), 7);
-}
-
-Test(parser_command_len_from_line, quoted_command_seperator)
-{
-	int		index;
-
-	index = 0;
-	cr_expect_eq(parser_command_len_from_line("123\"5;7\"", &index), 6);
-	cr_expect_eq(parser_command_len_from_line("\"2\"\\;;aaa", &index), 3);
-}
-
-/*
-**------------------------------------------------------------------------------
-*/
-
-TestSuite(parser_total_commands_from_line);
-
-Test(parser_total_commands_from_line, basic)
-{
-	cr_expect_eq(parser_total_commands_from_line("simple;command;line"), 3);
-	cr_expect_eq(parser_total_commands_from_line("a;lot;of;commands;though;which;might;be;too;many;?"), 11);
-
-	/* should this be 0 or 1? */
-	cr_expect_eq(parser_total_commands_from_line(""), 1);
-}
-
-Test(parser_total_commands_from_line, escaped_command_seperator)
-{
-	cr_expect_eq(parser_total_commands_from_line("simple;commandline;with;escaped\\;semi;colon;line"), 6);
-	cr_expect_eq(parser_total_commands_from_line("command\\;line\\;with;more\\;escaped;semi\\;colons"), 3);
-}
-
-Test(parser_total_commands_from_line, quoted_command_seperator)
-{
-	cr_expect_eq(parser_total_commands_from_line("commandline;with\";quoted;\"semi;colons"), 3);
-	cr_expect_eq(parser_total_commands_from_line("\"nice;weird;\";quoted\"semi;colons\""), 2);
-}
-
-/*
-**------------------------------------------------------------------------------
-*/
-
-TestSuite(is_char_escaped);
-
-Test(is_char_escaped, basic)
-{
-	cr_expect_eq(is_char_escaped("\\n", 1), FUNCT_SUCCESS);
-	cr_expect_eq(is_char_escaped("\\\\n", 2), FUNCT_FAILURE);
-	cr_expect_eq(is_char_escaped("abc\\n", 4), FUNCT_SUCCESS);
-	cr_expect_eq(is_char_escaped("abc\\\\n", 5), FUNCT_FAILURE);
-}
-
-Test(is_char_escaped, edge_cases)
-{
-	cr_expect_eq(is_char_escaped("\\\"\\n", 3), FUNCT_SUCCESS);
-	cr_expect_eq(is_char_escaped("\\\"\\\\n", 4), FUNCT_FAILURE);
-	cr_expect_eq(is_char_escaped("", 0), FUNCT_FAILURE);
-}
-
-/*
-**------------------------------------------------------------------------------
-*/
-
-TestSuite(update_quote_status);
-
-Test(update_quote_status, basic)
+Test(tools_update_quote_status, basic)
 {
 	char quote;
 
 	quote = '\0';
-	cr_expect_eq(update_quote_status("easy\"line\"", 3, &quote), 0);
+	cr_expect_eq(tools_update_quote_status("easy\"line\"", 3, &quote), 0);
 	cr_expect_eq(quote, '\0');
 	quote = '\0';
-	cr_expect_eq(update_quote_status("easy\"line\"", 4, &quote), 1);
+	cr_expect_eq(tools_update_quote_status("easy\"line\"", 4, &quote), 1);
 	cr_expect_eq(quote, '"');
 	quote = '\0';
-	cr_expect_eq(update_quote_status("easy\"line\"", 5, &quote), 0);
+	cr_expect_eq(tools_update_quote_status("easy\"line\"", 5, &quote), 0);
 	cr_expect_eq(quote, '\0');
 	quote = '\0';
-	cr_expect_eq(update_quote_status("easy'line'", 3, &quote), 0);
+	cr_expect_eq(tools_update_quote_status("easy'line'", 3, &quote), 0);
 	cr_expect_eq(quote, '\0');
 	quote = '\0';
-	cr_expect_eq(update_quote_status("easy'line'", 4, &quote), 1);
+	cr_expect_eq(tools_update_quote_status("easy'line'", 4, &quote), 1);
 	cr_expect_eq(quote, '\'');
 	quote = '\0';
-	cr_expect_eq(update_quote_status("easy'line'", 5, &quote), 0);
+	cr_expect_eq(tools_update_quote_status("easy'line'", 5, &quote), 0);
 	cr_expect_eq(quote, '\0');
 }
 
-Test(update_quote_status, edge_cases)
+Test(tools_update_quote_status, edge_cases)
 {
 	char quote;
 
 	quote = '\'';
-	cr_expect_eq(update_quote_status("h'arde\\'rline'", 7, &quote), 0);
+	cr_expect_eq(tools_update_quote_status("h'arde\\'rline'", 7, &quote), 0);
 	cr_expect_eq(quote, '\'');
 	quote = '\0';
-	cr_expect_eq(update_quote_status("\\'harderline", 1, &quote), 0);
+	cr_expect_eq(tools_update_quote_status("\\'harderline", 1, &quote), 0);
 	cr_expect_eq(quote, '\0');
 	quote = '"';
-	cr_expect_eq(update_quote_status("\"harder'line\"", 7, &quote), 0);
+	cr_expect_eq(tools_update_quote_status("\"harder'line\"", 7, &quote), 0);
 	cr_expect_eq(quote, '"');
 	quote = '\0';
-	cr_expect_eq(update_quote_status("\\\"harder'line", 8, &quote), 1);
+	cr_expect_eq(tools_update_quote_status("\\\"harder'line", 8, &quote), 1);
 	cr_expect_eq(quote, '\'');
-}
+} */
 
 /*
 **------------------------------------------------------------------------------
@@ -376,48 +232,48 @@ Test(builtin_echo, basic, .init=redirect_all_stdout)
 **------------------------------------------------------------------------------
 */
 
-TestSuite(var_get_value);
+TestSuite(env_var_get_value);
 
-Test(var_get_value, basic)
+Test(env_var_get_value, basic)
 {
 	char	*fakenv[] = {"LOL=didi", "PATH=lala", "PAT=lolo", NULL};
-	cr_expect_str_eq(var_get_value("PATH", fakenv), "lala");
-	cr_expect(var_get_value("NOEXIST", fakenv) == NULL);
+	cr_expect_str_eq(env_var_get_value("PATH", fakenv), "lala");
+	cr_expect(env_var_get_value("NOEXIST", fakenv) == NULL);
 }
 
 /*
 **------------------------------------------------------------------------------
 */
 
-TestSuite(var_join_key_value);
+TestSuite(env_var_join_key_value);
 
-Test(var_join_key_value, basic)
+Test(env_var_join_key_value, basic)
 {
-	cr_expect_str_eq(var_join_key_value("lolo", "lala"), "lolo=lala");
-	cr_expect_str_eq(var_join_key_value("lolo===", "lala"), "lolo====lala");
-	cr_expect_str_eq(var_join_key_value("lolo", "===lala"), "lolo====lala");
-	cr_expect_str_eq(var_join_key_value("=", "="), "===");
-	cr_expect_str_eq(var_join_key_value("", ""), "=");
-	cr_expect_str_eq(var_join_key_value("", "="), "==");
-	cr_expect_str_eq(var_join_key_value("=", ""), "==");
-	cr_expect_str_eq(var_join_key_value("\t", "\t"), "\t=\t");
+	cr_expect_str_eq(env_var_join_key_value("lolo", "lala"), "lolo=lala");
+	cr_expect_str_eq(env_var_join_key_value("lolo===", "lala"), "lolo====lala");
+	cr_expect_str_eq(env_var_join_key_value("lolo", "===lala"), "lolo====lala");
+	cr_expect_str_eq(env_var_join_key_value("=", "="), "===");
+	cr_expect_str_eq(env_var_join_key_value("", ""), "=");
+	cr_expect_str_eq(env_var_join_key_value("", "="), "==");
+	cr_expect_str_eq(env_var_join_key_value("=", ""), "==");
+	cr_expect_str_eq(env_var_join_key_value("\t", "\t"), "\t=\t");
 }
 
 /*
 **------------------------------------------------------------------------------
 */
 
-TestSuite(var_set_value);
+TestSuite(env_var_set_value);
 
-Test(var_set_value, basic)
+Test(env_var_set_value, basic)
 {
 	char	**fakenv;
 
 	fakenv = ft_strsplit("LOL=didi|PATH=lala|PAT=lolo", '|');
 	cr_assert(fakenv != NULL, "Failed to allocate test strings");
-	var_set_value("PATH", "lala", fakenv);
-	cr_expect(var_set_value("PATH", "changed", fakenv) == FUNCT_SUCCESS);
-	cr_expect(var_set_value("LI", "changed", fakenv) == FUNCT_FAILURE);
+	env_var_set_value("PATH", "lala", fakenv);
+	cr_expect(env_var_set_value("PATH", "changed", fakenv) == FUNCT_SUCCESS);
+	cr_expect(env_var_set_value("LI", "changed", fakenv) == FUNCT_FAILURE);
 	cr_expect_str_eq(fakenv[1], "PATH=changed");
 }
 
@@ -497,32 +353,249 @@ Test(builtin_cd, basic_builtin_cd)
 **------------------------------------------------------------------------------
 */
 
-TestSuite(var_add_value);
+TestSuite(env_var_add_value);
 
-Test(var_add_value, basic)
+Test(env_var_add_value, basic)
 {
-
 	char	**fakenv;
+
 	fakenv = ft_strsplit("LOL=didi|PATH=lala|PAT=lolo", '|');
 	cr_assert(fakenv != NULL, "Failed to allocate test strings");
-	cr_expect(var_add_value("PATH", "changed", &fakenv) == FUNCT_SUCCESS);
+	cr_expect(env_var_add_value("PATH", "changed", &fakenv) == FUNCT_SUCCESS);
 	cr_expect_str_eq(fakenv[1], "PATH=changed");
-	cr_expect(var_add_value("TEST", "success", &fakenv) == FUNCT_SUCCESS);
+	cr_expect(env_var_add_value("TEST", "success", &fakenv) == FUNCT_SUCCESS);
 	cr_expect_str_eq(fakenv[3], "TEST=success");
 }
 
-// return (test_ret_fail("test_prompt failed!"));
-// return (test_ret_fail("test_free_and_return_null failed!"));
-// return (test_ret_fail("test_get_environ_cpy failed!"));
-// return (test_ret_fail("test_param_to_env failed!"));
-// return (test_ret_fail("test_term_is_valid failed!"));
-// return (test_ret_fail("test_term_init_struct failed!"));
-// return (test_ret_fail("test_term_free_struct failed!"));
-// return (test_ret_fail("test_term_get_attributes failed!"));
-// return (test_ret_fail("test_parser_split_commands failed!"));
-// return (test_ret_fail("test_parser_strdup_command_from_line failed!"));
-// return (test_ret_fail("test_parser_command_len_from_line failed!"));
-// return (test_ret_fail("test_parser_total_commands_from_line failed!"));
-// return (test_ret_fail("test_is_char_escaped failed!"));
-// return (test_ret_fail("test_is_char_escaped failed!"));
-// return (test_ret_fail("test_echo failed!"));
+/*
+**------------------------------------------------------------------------------
+*/
+
+TestSuite(lexer_error, .init=redirect_all_stdout);
+
+Test(lexer_error, one_item)
+{
+	t_tokenlst	*lst;
+
+	lst = NULL;
+	lexer_tokenlstaddback(&lst, START, NULL, 0);
+	lexer_error(&lst, NULL);
+	cr_expect(lst == NULL);
+	cr_expect_stderr_eq_str("vsh: lexer: malloc error\n");
+}
+
+Test(lexer_error, long_list)
+{
+	t_tokenlst	*lst;
+
+	lst = NULL;
+	lexer_tokenlstaddback(&lst, START, NULL, 0);
+	lexer_tokenlstaddback(&lst, WORD, ft_strdup("testword"), 0);
+	lexer_tokenlstaddback(&lst, PIPE, NULL, 0);
+	lexer_tokenlstaddback(&lst, PIPE, NULL, 0);
+	lexer_tokenlstaddback(&lst, WORD, ft_strdup("testword"), 0);
+	lexer_tokenlstaddback(&lst, PIPE, NULL, 0);
+	lexer_tokenlstaddback(&lst, PIPE, NULL, 0);
+	lexer_tokenlstaddback(&lst, PIPE, NULL, 0);
+	lexer_tokenlstaddback(&lst, PIPE, NULL, 0);
+	lexer_tokenlstaddback(&lst, IO_NUMBER, ft_strdup("235235"), 0);
+	lexer_tokenlstaddback(&lst, PIPE, NULL, 0);
+	lexer_tokenlstaddback(&lst, WORD, ft_strdup("testword"), 0);
+	lexer_tokenlstaddback(&lst, PIPE, NULL, 0);
+	lexer_tokenlstaddback(&lst, PIPE, NULL, 0);
+	lexer_tokenlstaddback(&lst, PIPE, NULL, 0);
+	lexer_tokenlstaddback(&lst, IO_NUMBER, ft_strdup("12351235"), 0);
+	lexer_tokenlstaddback(&lst, IO_NUMBER, ft_strdup("1235135"), 0);
+	lexer_tokenlstaddback(&lst, PIPE, NULL, 0);
+	lexer_tokenlstaddback(&lst, PIPE, NULL, 0);
+	lexer_tokenlstaddback(&lst, PIPE, NULL, 0);
+	lexer_tokenlstaddback(&lst, PIPE, NULL, 0);
+	lexer_tokenlstaddback(&lst, WORD, ft_strdup("testword"), 0);
+	lexer_tokenlstaddback(&lst, IO_NUMBER, ft_strdup("1512351"), 0);
+	lexer_tokenlstaddback(&lst, PIPE, NULL, 0);
+	lexer_tokenlstaddback(&lst, PIPE, NULL, 0);
+	lexer_tokenlstaddback(&lst, WORD, ft_strdup("testword"), 0);
+	lexer_tokenlstaddback(&lst, PIPE, NULL, 0);
+	lexer_tokenlstaddback(&lst, END, NULL, 0);
+	lexer_error(&lst, NULL);
+	cr_expect(lst == NULL);
+	cr_expect_stderr_eq_str("vsh: lexer: malloc error\n");
+}
+
+Test(lexer_error, all_items)
+{
+	t_tokenlst	*lst;
+
+	lst = NULL;
+	lexer_tokenlstaddback(&lst, START, NULL, 0);
+	lexer_tokenlstaddback(&lst, WORD, ft_strdup("testword"), 0);
+	lexer_tokenlstaddback(&lst, IO_NUMBER, ft_strdup("testword"), 0);
+	lexer_tokenlstaddback(&lst, ERROR, NULL, 0);
+	lexer_tokenlstaddback(&lst, ASSIGN, ft_strdup("testword"), 0);
+	lexer_tokenlstaddback(&lst, AND_IF, NULL, 0);
+	lexer_tokenlstaddback(&lst, OR_IF, NULL, 0);
+	lexer_tokenlstaddback(&lst, DLESS, NULL, 0);
+	lexer_tokenlstaddback(&lst, DGREAT, NULL, 0);
+	lexer_tokenlstaddback(&lst, SLESS, NULL, 0);
+	lexer_tokenlstaddback(&lst, SGREAT, NULL, 0);
+	lexer_tokenlstaddback(&lst, LESSAND, NULL, 0);
+	lexer_tokenlstaddback(&lst, GREATAND, NULL, 0);
+	lexer_tokenlstaddback(&lst, BG, NULL, 0);
+	lexer_tokenlstaddback(&lst, PIPE, NULL, 0);
+	lexer_tokenlstaddback(&lst, SEMICOL, NULL, 0);
+	lexer_tokenlstaddback(&lst, NEWLINE, NULL, 0);
+	lexer_tokenlstaddback(&lst, END,  NULL, 0);
+	lexer_error(&lst, NULL);
+	cr_expect(lst == NULL);
+	cr_expect_stderr_eq_str("vsh: lexer: malloc error\n");
+}
+
+/*
+**------------------------------------------------------------------------------
+*/
+
+TestSuite(lexer_tokenlstaddback, .init=redirect_all_stdout);
+
+Test(lexer_tokenlstaddback, invalid_values)
+{
+	t_tokenlst	*lst;
+
+	lst = NULL;
+	lexer_tokenlstaddback(&lst, END, ft_strdup("testword"), 0);
+	lexer_tokenlstaddback(&lst, WORD, ft_strdup("testword"), 0);
+	lexer_tokenlstaddback(&lst, ERROR, NULL, 0);
+	lexer_tokenlstaddback(&lst, ERROR, NULL, 0);
+	lexer_tokenlstaddback(&lst, ASSIGN, NULL, 0);
+	lexer_tokenlstaddback(&lst, AND_IF, ft_strdup("testword"), 0);
+	lexer_tokenlstaddback(&lst, OR_IF, NULL, 0);
+	lexer_tokenlstaddback(&lst, LESSAND, NULL, 0);
+	lexer_tokenlstaddback(&lst, ERROR, NULL, 0);
+	lexer_tokenlstaddback(&lst, SLESS, NULL, 0);
+	lexer_tokenlstaddback(&lst, SGREAT, ft_strdup("testword"), 0);
+	lexer_tokenlstaddback(&lst, LESSAND, NULL, 0);
+	lexer_tokenlstaddback(&lst, GREATAND, NULL, 0);
+	lexer_tokenlstaddback(&lst, BG, NULL, 0);
+	lexer_tokenlstaddback(&lst, GREATAND, NULL, 0);
+	lexer_tokenlstaddback(&lst, END, NULL, 0);
+	lexer_tokenlstaddback(&lst, START, NULL, 0);
+	lexer_tokenlstaddback(&lst, ERROR, ft_strdup("testword"), 0);
+	lexer_error(&lst, NULL);
+	cr_expect(lst == NULL);
+	cr_expect_stderr_eq_str("vsh: lexer: malloc error\n");
+}
+
+/*
+**------------------------------------------------------------------------------
+*/
+
+TestSuite(lexer);
+
+Test(lexer, basic)
+{
+	t_tokenlst	*lst;
+	t_tokenlst	*tmp;
+	char 		*str;
+
+	str = ft_strdup("HOME=/ ls -la || ls 2>file \"Documents\";");
+	lst = NULL;
+	cr_expect(lexer(&(str), &lst) == FUNCT_SUCCESS);
+	cr_expect(str == NULL);
+	tmp = lst;
+	cr_expect(lst->type == START);
+	cr_expect(lst->value == NULL);
+	lst = lst->next;
+	cr_expect(lst->type == ASSIGN);
+	cr_expect_str_eq(lst->value, "HOME=/");
+	lst = lst->next;
+	cr_expect(lst->type == WORD);
+	cr_expect_str_eq(lst->value, "ls");
+	lst = lst->next;
+	cr_expect(lst->type == WORD);
+	cr_expect_str_eq(lst->value, "-la");
+	lst = lst->next;
+	cr_expect(lst->type == OR_IF);
+	cr_expect(lst->value == NULL);
+	lst = lst->next;
+	cr_expect(lst->type == WORD);
+	cr_expect_str_eq(lst->value, "ls");
+	lst = lst->next;
+	cr_expect(lst->type == IO_NUMBER);
+	cr_expect_str_eq(lst->value, "2");
+	lst = lst->next;
+	cr_expect(lst->type == SGREAT);
+	cr_expect(lst->value == NULL);
+	lst = lst->next;
+	cr_expect(lst->type == WORD);
+	cr_expect_str_eq(lst->value, "file");
+	lst = lst->next;
+	cr_expect(lst->type == WORD);
+	cr_expect_str_eq(lst->value, "\"Documents\"");
+	lst = lst->next;
+	cr_expect(lst->type == SEMICOL);
+	lst = lst->next;
+	cr_expect(lst->type == END);
+	cr_expect(lst->value == NULL);
+	lexer_tokenlstdel(&tmp);
+}
+
+TestSuite(parser);
+
+Test(parser, basic)
+{
+	t_tokenlst	*lst;
+	t_ast		*ast;
+	t_ast		*tmp_ast;
+	char 		*str;
+
+	str = ft_strdup("HOME=/ ls -la || ls 2>file \"Documents\";");
+	lst = NULL;
+	ast = NULL;
+	cr_expect(lexer(&(str), &lst) == FUNCT_SUCCESS);
+	cr_expect(parser_start(&lst, &ast) == FUNCT_SUCCESS);
+	tmp_ast = ast;
+	cr_expect(ast->type == SEMICOL);
+	ast = ast->child;
+	cr_expect(ast->type == OR_IF);
+	parser_astdel(&tmp_ast);
+	cr_expect(tmp_ast == NULL);
+}
+
+/*
+**------------------------------------------------------------------------------
+*/
+
+TestSuite(command_exit);
+
+Test(command_exec, basic)
+{
+	t_tokenlst	*lst;
+	t_ast		*ast;
+	char 		*str;
+
+	str = ft_strdup("1=1");
+	lst = NULL;
+	ast = NULL;
+	cr_expect(lexer(&(str), &lst) == FUNCT_SUCCESS);
+	cr_expect(parser_start(&lst, &ast) == FUNCT_SUCCESS);
+	cr_expect(exec_start(ast) == FUNCT_FAILURE); // this fails in the first version, shoudln't fail later
+	parser_astdel(&ast);
+}
+
+/*
+**------------------------------------------------------------------------------
+*/
+TestSuite(history);
+
+Test(history, basic)
+{
+	FILE	*f;
+	char	buf[7];
+
+	ft_bzero(buf, 7);
+	cr_expect(history_line_to_file("check") == FUNCT_SUCCESS);
+	f = fopen("/tmp/.vsh_history", "r");
+	cr_expect(f != NULL);
+	fseek(f, -6, SEEK_END);
+	fread(buf, 1, 6, f);
+	cr_expect(ft_strcmp(buf, "check\n") == 0);
+}

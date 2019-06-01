@@ -1,26 +1,33 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        ::::::::            */
-/*   var_join_key_value.c                               :+:    :+:            */
+/*   lexer_state_single.c                               :+:    :+:            */
 /*                                                     +:+                    */
 /*   By: mavan-he <mavan-he@student.codam.nl>         +#+                     */
 /*                                                   +#+                      */
-/*   Created: 2019/04/30 16:00:15 by mavan-he       #+#    #+#                */
-/*   Updated: 2019/05/02 10:23:48 by rkuijper      ########   odam.nl         */
+/*   Created: 2019/05/19 12:14:21 by mavan-he       #+#    #+#                */
+/*   Updated: 2019/05/27 16:50:01 by omulder       ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "vsh.h"
 
-char	*var_join_key_value(char *var_key, char *var_value)
+void	lexer_state_dgreat(t_scanner *scanner)
 {
-	char *var_pair;
+	scanner->tk_type = DGREAT;
+}
 
-	var_pair = ft_strnew(ft_strlen(var_key) + ft_strlen(var_value) + 1);
-	if (var_pair == NULL)
-		return (NULL);
-	ft_strcpy(var_pair, var_key);
-	ft_strcat(var_pair, "=");
-	ft_strcat(var_pair, var_value);
-	return (var_pair);
+void	lexer_state_dless(t_scanner *scanner)
+{
+	scanner->tk_type = DLESS;
+}
+
+void	lexer_state_greatand(t_scanner *scanner)
+{
+	scanner->tk_type = GREATAND;
+}
+
+void	lexer_state_lessand(t_scanner *scanner)
+{
+	scanner->tk_type = LESSAND;
 }
