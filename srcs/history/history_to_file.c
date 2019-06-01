@@ -6,11 +6,14 @@
 /*   By: mavan-he <mavan-he@student.codam.nl>         +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2019/05/29 15:25:10 by mavan-he       #+#    #+#                */
-/*   Updated: 2019/05/30 19:11:13 by mavan-he      ########   odam.nl         */
+/*   Updated: 2019/06/01 17:15:31 by mavan-he      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "vsh.h"
+#include "vsh_history.h"
+#include <fcntl.h>
+#include "libft.h"
 
 int		history_to_file(void)
 {
