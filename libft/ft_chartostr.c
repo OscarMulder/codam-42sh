@@ -17,6 +17,8 @@ char		*ft_chartostr(char c)
 	char	*str;
 
 	str = ft_strnew(2);
+	if (str == NULL)
+		return (NULL);
 	str[0] = c;
 	return (str);
 }
