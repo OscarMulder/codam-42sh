@@ -6,7 +6,7 @@
 /*   By: jbrinksm <jbrinksm@student.codam.nl>         +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2019/04/18 16:37:32 by omulder        #+#    #+#                */
-/*   Updated: 2019/06/01 12:45:52 by omulder       ########   odam.nl         */
+/*   Updated: 2019/06/01 13:04:22 by omulder       ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -581,5 +581,45 @@ Test(exec_echo, basic2, .init=redirect_all_stdout)
 	cr_expect(parser_start(&lst, &ast) == FUNCT_SUCCESS);
 	cr_expect(exec_start(ast, &exit_code) == FUNCT_SUCCESS);
 	cr_expect_stdout_eq_str("\"Hi, this is a string\"\n");
+	parser_astdel(&ast);
+} 
+
+/*
+**------------------------------------------------------------------------------
+*/
+
+TestSuite(exec_cmd);
+
+Test(exec_cmd, basic, .init=redirect_all_stdout)
+{
+	t_tokenlst	*lst;
+	t_ast		*ast;
+	char 		*str;
+	int			exit_code;
+
+	str = ft_strdup("/bin/pwd");
+	lst = NULL;
+	ast = NULL;
+	cr_expect(lexer(&(str), &lst) == FUNCT_SUCCESS);
+	cr_expect(parser_start(&lst, &ast) == FUNCT_SUCCESS);
+	cr_expect(exec_start(ast, &exit_code) == FUNCT_SUCCESS);
+	cr_expect_stdout_eq_str(ft_strjoin(getcwd(NULL, 0), "\n")); //leak fest don't care
+	parser_astdel(&ast);
+}
+
+Test(exec_cmd, basic2, .init=redirect_all_stdout)
+{
+	t_tokenlst	*lst;
+	t_ast		*ast;
+	char 		*str;
+	int			exit_code;
+
+	str = ft_strdup("/bin/echo hoi");
+	lst = NULL;
+	ast = NULL;
+	cr_expect(lexer(&(str), &lst) == FUNCT_SUCCESS);
+	cr_expect(parser_start(&lst, &ast) == FUNCT_SUCCESS);
+	cr_expect(exec_start(ast, &exit_code) == FUNCT_SUCCESS);
+	cr_expect_stdout_eq_str("hoi\n");
 	parser_astdel(&ast);
 } 
