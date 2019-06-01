@@ -6,7 +6,7 @@
 /*   By: tde-jong <tde-jong@student.codam.nl>         +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2019/05/31 10:47:19 by tde-jong       #+#    #+#                */
-/*   Updated: 2019/06/01 12:53:11 by omulder       ########   odam.nl         */
+/*   Updated: 2019/06/01 13:28:10 by omulder       ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,14 +15,13 @@
 static bool	exec_bin(char **args, char **env, int *exit_code)
 {
 	pid_t	pid;
-	pid_t	wpid;
 
 	pid = fork();
 	if (pid < 0)
 		return (false);
 	if (pid == 0)
 		execve(args[0], args, env);
-	wpid = waitpid(pid, exit_code, WUNTRACED);
+	waitpid(pid, exit_code, WUNTRACED);
 	if (WIFSIGNALED(*exit_code))
 		return (false);
 	return (true);
