@@ -6,7 +6,7 @@
 /*   By: jbrinksm <jbrinksm@student.codam.nl>         +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2019/04/18 16:37:32 by omulder        #+#    #+#                */
-/*   Updated: 2019/05/30 20:44:49 by mavan-he      ########   odam.nl         */
+/*   Updated: 2019/06/01 17:58:46 by mavan-he      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -550,4 +550,21 @@ Test(history, get_file_content)
 	cr_expect(ft_strequ("check2", history[1]) == true);
 	cr_expect(ft_strequ("check3", history[2]) == true);
 	cr_expect(history[3] == NULL);
+}
+
+TestSuite(history_output);
+
+Test(history, history_print, .init=redirect_all_stdout)
+{
+	char	*array[4];
+
+	history = array;
+	array[0] = "check1";
+	array[1] = "check2";
+	array[2] = "check3";
+	array[3] = NULL;
+	cr_expect(history_to_file() == FUNCT_SUCCESS);
+	cr_expect(history_get_file_content() == FUNCT_SUCCESS);
+	history_print();
+	cr_expect_stdout_eq_str("    0  check1\n    1  check2\n    2  check3\n");
 }
