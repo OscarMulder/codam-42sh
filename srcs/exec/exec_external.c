@@ -1,36 +1,36 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        ::::::::            */
-/*   exec_extern.c                                      :+:    :+:            */
+/*   exec_external.c                                    :+:    :+:            */
 /*                                                     +:+                    */
-/*   By: omulder <omulder@student.codam.nl>           +#+                     */
+/*   By: tde-jong <tde-jong@student.codam.nl>         +#+                     */
 /*                                                   +#+                      */
-/*   Created: 2019/06/01 11:50:51 by omulder        #+#    #+#                */
-/*   Updated: 2019/06/01 12:32:22 by omulder       ########   odam.nl         */
+/*   Created: 2019/05/31 10:47:19 by tde-jong       #+#    #+#                */
+/*   Updated: 2019/06/01 12:53:11 by omulder       ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "exec.h"
+#include "vsh.h"
 
-static bool	exec_bin(char **args, char **env, int *status)
+static bool	exec_bin(char **args, char **env, int *exit_code)
 {
 	pid_t	pid;
 	pid_t	wpid;
 
 	pid = fork();
 	if (pid < 0)
-		return (FUNCT_FAILURE);
+		return (false);
 	if (pid == 0)
 		execve(args[0], args, env);
-	wpid = waitpid(pid, status, WUNTRACED);
-	if (WIFSIGNALED(*status))
-		return (FUNCT_FAILURE);
-	return (FUNCT_SUCCESS);
+	wpid = waitpid(pid, exit_code, WUNTRACED);
+	if (WIFSIGNALED(*exit_code))
+		return (false);
+	return (true);
 }
 
-bool		exec_extern(char **args, char **env, int *status)
+bool		exec_external(char **args, char ***env, int *exit_code)
 {
 	if (args[0][0] != '/')
-		return (FUNCT_FAILURE);
-	return (exec_bin(args, env, status));
+		return (false);
+	return (exec_bin(args, *env, exit_code));
 }

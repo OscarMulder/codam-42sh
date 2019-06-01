@@ -6,26 +6,26 @@
 /*   By: omulder <omulder@student.codam.nl>           +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2019/05/29 17:17:48 by omulder        #+#    #+#                */
-/*   Updated: 2019/06/01 12:34:11 by omulder       ########   odam.nl         */
+/*   Updated: 2019/06/01 12:52:53 by omulder       ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "exec.h"
 
-static int		clean_return(char ***args, int ret)
+static int	clean_return(char ***args, char ***env, int ret)
 {
 	ft_strarrdel(args);
+	ft_strarrdel(env);
 	return (ret);
 }
 
-int		exec_cmd(char **args, char ***env)
+int			exec_cmd(char **args, char ***env, int *exit_code)
 {
-	int ret;
-	int	status;
-
-	ret = exec_builtin(args, env);
-	if (ret == 1 || ret == -1)
-		return (clean_return(&args, FUNCT_SUCCESS));
-	ret = exec_extern(args, *env, &status);
-	return (clean_return(&args, FUNCT_SUCCESS));
+	if (exec_builtin(args, env, exit_code) == false &&
+		exec_external(args, env, exit_code) == false)
+	{
+		ft_printf("%s: Command not found.\n", args[0]);
+		*exit_code = EXIT_NOTFOUND;
+	}
+	return (clean_return(&args, env, FUNCT_SUCCESS));
 }

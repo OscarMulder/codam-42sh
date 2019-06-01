@@ -6,7 +6,7 @@
 /*   By: omulder <omulder@student.codam.nl>           +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2019/04/10 20:29:42 by jbrinksm       #+#    #+#                */
-/*   Updated: 2019/06/01 12:30:30 by omulder       ########   odam.nl         */
+/*   Updated: 2019/06/01 12:52:01 by omulder       ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -26,6 +26,13 @@
 # define E_ALLOC 420
 # define CTRLD -1
 # define CR 0
+
+/*
+**=================================exit codes====================================
+*/
+
+# define EXIT_OK 0
+# define EXIT_NOTFOUND 127
 
 /*
 **------------------------------------echo--------------------------------------
@@ -314,8 +321,8 @@ void			parser_astdel(t_ast **ast);
 **----------------------------------builtins-------------------------------------
 */
 
-void			builtin_exit(char **args);
-int				builtin_echo(char **args);
+void			builtin_exit(char **args, int *exit_code);
+void			builtin_echo(char **args, int *exit_code);
 char			builtin_echo_set_flags(char **args, int *arg_i);
 
 /*
