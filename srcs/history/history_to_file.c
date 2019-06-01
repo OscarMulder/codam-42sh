@@ -6,7 +6,7 @@
 /*   By: mavan-he <mavan-he@student.codam.nl>         +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2019/05/29 15:25:10 by mavan-he       #+#    #+#                */
-/*   Updated: 2019/06/01 17:15:31 by mavan-he      ########   odam.nl         */
+/*   Updated: 2019/06/01 18:24:38 by mavan-he      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -24,7 +24,7 @@ int		history_to_file(void)
 		O_RDWR | O_CREAT | O_TRUNC, S_IRUSR | S_IWUSR);
 	if (fd == -1)
 	{
-		ft_printf("Cannot open/create vsh history file \n");
+		ft_putstr_fd("Cannot open/create vsh history file \n", STDERR_FILENO);
 		return (FUNCT_ERROR);
 	}
 	i = 0;

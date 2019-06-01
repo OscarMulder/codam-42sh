@@ -6,14 +6,16 @@
 /*   By: jbrinksm <jbrinksm@student.codam.nl>         +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2019/04/11 20:15:24 by jbrinksm       #+#    #+#                */
-/*   Updated: 2019/05/30 16:28:20 by omulder       ########   odam.nl         */
+/*   Updated: 2019/06/01 18:23:50 by mavan-he      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "vsh.h"
+#include "vsh_history.h"
 
 void	builtin_exit(char **args)
 {
+	history_to_file();
 	ft_printf("exit\n");
 	if (args[1] != 0 && args[2] == 0)
 	{
