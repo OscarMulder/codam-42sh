@@ -6,7 +6,7 @@
 /*   By: mavan-he <mavan-he@student.codam.nl>         +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2019/04/25 17:17:25 by mavan-he       #+#    #+#                */
-/*   Updated: 2019/05/08 10:58:26 by rkuijper      ########   odam.nl         */
+/*   Updated: 2019/06/01 10:29:28 by omulder       ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -105,15 +105,15 @@ static void		cd_post_process_var(char *old_path, char *path, char ***env, char c
 	char *correct_path;
 
 	correct_path = cd_get_correct_path(old_path, path);
-	var_add_value("OLDPWD", old_path, env);
+	env_var_add_value("OLDPWD", old_path, env);
 	if (cd_flag == CD_OPT_PU)
 	{
 		free(correct_path);
 		correct_path = getcwd(NULL, 0);
-		var_add_value("PWD", correct_path, env);
+		env_var_add_value("PWD", correct_path, env);
 	}
 	else
-		var_add_value("PWD", correct_path, env);
+		env_var_add_value("PWD", correct_path, env);
 	free(correct_path);
 }
 
@@ -122,7 +122,7 @@ static int		cd_change_dir(char *path, char ***env, char cd_flag, int print)
 	char		*pwd;
 	char		*old_path;
 	
-	pwd = var_get_value("PWD", *env);
+	pwd = env_var_get_value("PWD", *env);
 	if (cd_flag == CD_OPT_LU && pwd)
 		old_path = ft_strdup(pwd);
 	else
@@ -190,12 +190,12 @@ int			builtin_cd(char **args, char ***env)
 		return (FUNCT_ERROR);
 	if (args[0] == NULL || ft_strequ(args[0], "--"))
 	{
-		path = var_get_value("HOME", *env);
+		path = env_var_get_value("HOME", *env);
 		return (cd_parse_dash(path, env, cd_flag, "HOME"));
 	}
 	if (args[0][0] == '-' && args[0][1] == '\0')
 	{
-		path = var_get_value("OLDPWD", *env);
+		path = env_var_get_value("OLDPWD", *env);
 		return (cd_parse_dash(path, env, cd_flag, "OLDPWD"));
 	}
 	return (cd_change_dir(args[0], env, cd_flag, 0));
