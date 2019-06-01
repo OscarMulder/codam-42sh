@@ -25,7 +25,7 @@ char		shell_quote_checker_find_quote(char *line)
 	{
 		is_escaped = tools_is_char_escaped(line, index);
 		c = line[index];
-		if (!quote && (c == '\'' || c == '"') && !is_escaped)
+		if (quote == '\0' && (c == '\'' || c == '"') && !is_escaped)
 			quote = c;
 		else if (quote && c == quote && !is_escaped)
 			quote = '\0';
