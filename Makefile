@@ -35,7 +35,7 @@ term_set_attributes term_reset_attributes term_free_struct \
 env_get_environ_cpy env_var_get_value env_var_set_value env_var_join_key_value \
 env_var_add_value \
 tools_is_char_escaped tool_is_redirect_tk \
-builtin_echo builtin_echo_set_flags builtin_exit \
+builtin_echo builtin_echo_set_flags \
 lexer lexer_utils lexer_debug lexer_evaluator lexer_scanner \
 lexer_state_if_else lexer_state_single lexer_state_start lexer_state_strings \
 parser_start parser_debug parser_utils parser_command parser_error \
