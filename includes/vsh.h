@@ -6,7 +6,7 @@
 /*   By: omulder <omulder@student.codam.nl>           +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2019/04/10 20:29:42 by jbrinksm       #+#    #+#                */
-/*   Updated: 2019/05/29 17:22:31 by jbrinksm      ########   odam.nl         */
+/*   Updated: 2019/05/31 07:52:08 by root          ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -259,6 +259,8 @@ int				input_parse_ctrl_down(char c, int *input_state, unsigned *index,
 void			shell_display_prompt(void);
 int				shell_read_till_stop(char **heredoc, char *stop);
 void			shell_dless_input(t_tokenlst *token_lst);
+void			shell_quote_checker(char **line);
+char			shell_quote_checker_find_quote(char *line);
 int				shell_start(void);
 
 /*
