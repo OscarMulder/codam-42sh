@@ -6,7 +6,7 @@
 /*   By: jbrinksm <jbrinksm@student.codam.nl>         +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2019/04/18 16:37:32 by omulder        #+#    #+#                */
-/*   Updated: 2019/05/30 13:49:22 by omulder       ########   odam.nl         */
+/*   Updated: 2019/06/01 12:41:02 by omulder       ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,6 +17,7 @@
 */
 
 #include "vsh.h"
+#include "exec.h"
 #include <criterion/criterion.h>
 #include <criterion/redirect.h>
 
