@@ -6,7 +6,7 @@
 #    By: jbrinksm <jbrinksm@student.codam.nl>         +#+                      #
 #                                                    +#+                       #
 #    Created: 2019/04/10 20:30:07 by jbrinksm       #+#    #+#                 #
-#    Updated: 2019/05/29 18:52:07 by omulder       ########   odam.nl          #
+#    Updated: 2019/06/01 12:30:46 by omulder       ########   odam.nl          #
 #                                                                              #
 # **************************************************************************** #
 
@@ -40,7 +40,7 @@ lexer lexer_utils lexer_debug lexer_evaluator lexer_scanner \
 lexer_state_if_else lexer_state_single lexer_state_start lexer_state_strings \
 parser_start parser_debug parser_utils parser_command parser_error \
 parser_astdel \
-exec_builtin exec_cmd exec_start \
+exec_builtin exec_cmd exec_start exec_extern \
 history_line_to_file
 TESTS = unit_test
 OBJECTS := $(SRCS:%=%.o)
