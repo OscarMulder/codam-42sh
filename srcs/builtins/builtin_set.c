@@ -6,21 +6,11 @@
 /*   By: mavan-he <mavan-he@student.codam.nl>         +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2019/05/03 17:50:50 by mavan-he       #+#    #+#                */
-/*   Updated: 2019/06/01 10:48:13 by omulder       ########   odam.nl         */
+/*   Updated: 2019/06/01 10:50:10 by omulder       ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "vsh.h"
-
-/*
-** >>>>>>>>>>> WIP <<<<<<<<<<<<<
-** SET:
-**
-** set lists both internal and external environment
-**
-** TODO:
-** sorting both lists together ?
-*/
 
 int			builtin_set(char **args, char **var_intern, char **var_extern)
 {
