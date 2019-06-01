@@ -15,7 +15,7 @@
 void	builtin_exit(char **args, int *exit_code)
 {
 	ft_printf("exit\n");
-	if (args[1] != 0 && args[2] == 0)
+	if (args[1] != NULL && args[2] == NULL)
 	{
 		if (ft_isdigit(args[1][0]) == false)
 		{
