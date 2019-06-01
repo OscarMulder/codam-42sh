@@ -6,7 +6,7 @@
 /*   By: omulder <omulder@student.codam.nl>           +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2019/04/18 16:44:50 by omulder        #+#    #+#                */
-/*   Updated: 2019/05/31 07:46:58 by root          ########   odam.nl         */
+/*   Updated: 2019/06/01 06:19:35 by root          ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -20,9 +20,8 @@ void	lexer_tokenlstiter(t_tokenlst *lst, void (*f)(t_tokenlst *elem))
 	lexer_tokenlstiter(lst->next, f);
 }
 
-int     shell_start(void)
+int		shell_start(void)
 {
-
 	int			status;
 	char		*line;
 	t_tokenlst	*token_lst;
