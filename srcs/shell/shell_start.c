@@ -11,6 +11,7 @@
 /* ************************************************************************** */
 
 #include "vsh.h"
+#include <unistd.h>
 
 void	lexer_tokenlstiter(t_tokenlst *lst, void (*f)(t_tokenlst *elem))
 {
