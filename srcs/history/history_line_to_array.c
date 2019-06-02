@@ -6,7 +6,7 @@
 /*   By: mavan-he <mavan-he@student.codam.nl>         +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2019/05/30 18:55:25 by mavan-he       #+#    #+#                */
-/*   Updated: 2019/06/01 17:16:24 by mavan-he      ########   odam.nl         */
+/*   Updated: 2019/06/02 15:35:52 by mavan-he      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -20,5 +20,6 @@ int		history_line_to_array(char *line)
 	if (history[history_i % 500] == NULL)
 		return (FUNCT_ERROR);
 	history_i++;
+	history_tmp = history_i % 500;
 	return (FUNCT_SUCCESS);
 }

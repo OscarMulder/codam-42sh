@@ -6,7 +6,7 @@
 /*   By: mavan-he <mavan-he@student.codam.nl>         +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2019/05/30 13:49:22 by mavan-he       #+#    #+#                */
-/*   Updated: 2019/06/01 17:16:02 by mavan-he      ########   odam.nl         */
+/*   Updated: 2019/06/02 15:50:44 by mavan-he      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -40,5 +40,6 @@ int		history_get_file_content(void)
 		i++;
 	}
 	history_i = i - 1;
+	history_tmp = history_i;
 	return (FUNCT_SUCCESS);
 }
