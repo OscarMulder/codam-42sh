@@ -6,7 +6,7 @@
 /*   By: jbrinksm <jbrinksm@student.codam.nl>         +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2019/01/09 11:10:09 by omulder        #+#    #+#                */
-/*   Updated: 2019/05/30 20:45:01 by mavan-he      ########   odam.nl         */
+/*   Updated: 2019/06/02 10:32:59 by mavan-he      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,9 +14,6 @@
 # define LIBFT_H
 
 # define BUFF_SIZE 64
-# include <string.h>
-# include <stdlib.h>
-# include <unistd.h>
 # include "ft_printf.h"
 
 typedef struct		s_list
