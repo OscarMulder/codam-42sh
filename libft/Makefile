@@ -27,6 +27,7 @@ FILES = ft_atoi.c ft_itoa.c ft_memalloc.c ft_memdel.c ft_memmove.c \
 	ft_lstiter.c ft_lstdel.c ft_lstdelone.c ft_strarradd.c ft_strarrdel.c \
   ft_joinstrcstr.c ft_chartostr.c ft_joinstrcstr_free_s1.c \
   ft_joinstrcstr_free_s2.c ft_joinstrcstr_free_all.c
+	ft_get_next_line.c
 OBJECTS = $(FILES:.c=.o)
 
 all: $(OBJECTS) $(NAME)

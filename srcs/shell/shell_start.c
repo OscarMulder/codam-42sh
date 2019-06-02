@@ -38,10 +38,10 @@ int		shell_start(void)
 		shell_display_prompt();
 		status = input_read(&line);
 		shell_quote_checker(&line);
+		history_line_to_array(line);
 		#ifdef DEBUG
 		ft_printf("\n>>>> LINE <<<<\n%s\n\n>>>> TOKEN_LST <<<<\n", line);
 		#endif
-		history_line_to_file(line);
 		if (lexer(&line, &token_lst) != FUNCT_SUCCESS)
 			continue ;
 		#ifdef DEBUG
