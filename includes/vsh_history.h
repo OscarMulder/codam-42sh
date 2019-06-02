@@ -1,19 +1,24 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        ::::::::            */
-/*   ft_putchar_fd.c                                    :+:    :+:            */
+/*   vsh_history.h                                      :+:    :+:            */
 /*                                                     +:+                    */
 /*   By: mavan-he <mavan-he@student.codam.nl>         +#+                     */
 /*                                                   +#+                      */
-/*   Created: 2019/01/12 16:50:01 by mavan-he       #+#    #+#                */
-/*   Updated: 2019/05/31 14:36:19 by tde-jong      ########   odam.nl         */
+/*   Created: 2019/05/30 17:42:22 by mavan-he       #+#    #+#                */
+/*   Updated: 2019/05/30 21:01:33 by mavan-he      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "libft.h"
-#include <unistd.h>
+#ifndef VSH_HISTORY_H
+# define VSH_HISTORY_H
 
-void	ft_putchar_fd(char c, int fd)
-{
-	write(fd, &c, 1);
-}
+int		history_i;
+char	**history;
+
+int				history_to_file(void);
+int				history_get_file_content(void);
+int				history_line_to_array(char *line);
+void			history_print(void);
+
+#endif

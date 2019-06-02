@@ -22,9 +22,9 @@ CRITERION = $(CRITERIONINCLUDES) -L$(HOME)/.brew/lib -lcriterion
 VPATH = ./test ./libft ./srcs ./srcs/builtins ./srcs/input_handling \
 ./srcs/term_settings ./srcs/environment_handling ./srcs/shell \
 ./srcs/tools ./test/parser ./test/tools ./test/builtins \
-./test/environment_handling ./srcs/lexer ./srcs/parser
+./test/environment_handling ./srcs/lexer ./srcs/parser ./srcs/history \
+./srcs/exec
 SRCS = shell_start shell_prompt \
-builtin_exit \
 input_read input_parse_char input_parse_escape input_parse_home \
 input_parse_end input_parse_prev input_parse_next input_parse_backspace \
 input_parse_delete input_parse_ctrl_d input_parse_ctrl_k \
@@ -34,12 +34,14 @@ term_set_attributes term_reset_attributes term_free_struct \
 tool_is_redirect_tk \
 env_get_environ_cpy env_var_get_value env_var_set_value env_var_join_key_value \
 env_var_add_value \
-tools_is_char_escaped \
-builtin_echo builtin_echo_set_flags \
+tools_is_char_escaped tool_is_redirect_tk \
+builtin_echo builtin_echo_set_flags builtin_exit \
 lexer lexer_utils lexer_debug lexer_evaluator lexer_scanner \
 lexer_state_if_else lexer_state_single lexer_state_start lexer_state_strings \
 parser_start parser_debug parser_utils parser_command parser_error \
-parser_astdel 
+parser_astdel \
+history_to_file history_get_file_content history_line_to_array history_print \
+exec_builtin exec_cmd exec_external exec_start 
 TESTS = unit_test
 OBJECTS := $(SRCS:%=%.o)
 TESTOBJECTS := $(TESTS:%=%.o)

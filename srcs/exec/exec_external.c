@@ -1,19 +1,21 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        ::::::::            */
-/*   ft_putchar_fd.c                                    :+:    :+:            */
+/*   exec_external.c                                    :+:    :+:            */
 /*                                                     +:+                    */
-/*   By: mavan-he <mavan-he@student.codam.nl>         +#+                     */
+/*   By: tde-jong <tde-jong@student.codam.nl>         +#+                     */
 /*                                                   +#+                      */
-/*   Created: 2019/01/12 16:50:01 by mavan-he       #+#    #+#                */
-/*   Updated: 2019/05/31 14:36:19 by tde-jong      ########   odam.nl         */
+/*   Created: 2019/05/31 10:47:19 by tde-jong       #+#    #+#                */
+/*   Updated: 2019/05/31 10:48:39 by tde-jong      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "libft.h"
-#include <unistd.h>
+#include "vsh.h"
 
-void	ft_putchar_fd(char c, int fd)
+bool	exec_external(char **args, char ***env, int *exit_code)
 {
-	write(fd, &c, 1);
+	(void)args;
+	(void)env;
+	(void)exit_code;
+	return (false);
 }

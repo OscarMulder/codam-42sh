@@ -103,10 +103,12 @@ void	shell_dless_input(t_tokenlst *token_lst)
 int		shell_start(void)
 {
 	int			status;
+	int			exit_code;
 	char		*line;
 	t_tokenlst	*token_lst;
 	t_ast		*ast;
 
+	exit_code = 0;
 	status = 1;
 	line = NULL;
 	token_lst = NULL;
@@ -115,6 +117,7 @@ int		shell_start(void)
 	{
 		shell_display_prompt();
 		status = input_read(&line);
+		history_line_to_array(line);
 		#ifdef DEBUG
 		ft_printf("\n>>>> LINE <<<<\n%s\n\n>>>> TOKEN_LST <<<<\n", line);
 		#endif
@@ -130,12 +133,13 @@ int		shell_start(void)
 		#ifdef DEBUG
 		print_tree(ast);
 		#endif
+		exec_start(ast, &exit_code);
 		parser_astdel(&ast);
 		/* ADD EVALUATOR */
 		/* ADD EXPANSION FUNC ? */
 		lexer_tokenlstdel(&token_lst);
+		ft_putchar('\n');
 		ft_strdel(&line);
-		ft_putendl("");
 	}
 	return (FUNCT_SUCCESS);
 }

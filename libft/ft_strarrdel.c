@@ -1,19 +1,29 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        ::::::::            */
-/*   ft_putchar_fd.c                                    :+:    :+:            */
+/*   ft_strarrdel.c                                     :+:    :+:            */
 /*                                                     +:+                    */
-/*   By: mavan-he <mavan-he@student.codam.nl>         +#+                     */
+/*   By: omulder <omulder@student.codam.nl>           +#+                     */
 /*                                                   +#+                      */
-/*   Created: 2019/01/12 16:50:01 by mavan-he       #+#    #+#                */
-/*   Updated: 2019/05/31 14:36:19 by tde-jong      ########   odam.nl         */
+/*   Created: 2019/03/24 13:17:15 by omulder        #+#    #+#                */
+/*   Updated: 2019/04/12 10:14:19 by omulder       ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "libft.h"
-#include <unistd.h>
 
-void	ft_putchar_fd(char c, int fd)
+void	ft_strarrdel(char ***arr)
 {
-	write(fd, &c, 1);
+	int i;
+
+	i = 0;
+	if (arr == NULL || *arr == NULL)
+		return ;
+	while ((*arr)[i] != 0)
+	{
+		ft_strdel(&((*arr)[i]));
+		i++;
+	}
+	free(*arr);
+	*arr = NULL;
 }

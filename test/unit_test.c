@@ -19,6 +19,9 @@
 #include "vsh.h"
 #include <criterion/criterion.h>
 #include <criterion/redirect.h>
+#include <limits.h>
+#include <unistd.h>
+#include <fcntl.h>
 
 void redirect_all_stdout(void)
 {
@@ -235,18 +238,31 @@ TestSuite(builtin_echo);
 Test(builtin_echo, basic, .init=redirect_all_stdout)
 {
 	char	**args;
+	int		exit_code;
 
 	args = ft_strsplit("echo|-nEe|\\\\test\\a\\t\\v\\r\\n\\b\\f\\E", '|');
-	builtin_echo(args);
+	exit_code = INT_MIN;
+	builtin_echo(args, &exit_code);
+	cr_expect(exit_code == 0);
 	ft_freearray(&args);
+
 	args = ft_strsplit("echo|-Eea|\n", '|');
-	builtin_echo(args);
+	exit_code = INT_MIN;
+	builtin_echo(args, &exit_code);
+	cr_expect(exit_code == 0);
 	ft_freearray(&args);
+
 	args = ft_strsplit("echo|-nEe", '|');
-	builtin_echo(args);
+	exit_code = INT_MIN;
+	builtin_echo(args, &exit_code);
+	cr_expect(exit_code == 0);
 	ft_freearray(&args);
+
 	args = ft_strsplit("echo|-E", '|');
-	builtin_echo(args);
+	exit_code = INT_MIN;
+	builtin_echo(args, &exit_code);
+	cr_expect(exit_code == 0);
+
 	cr_expect_stdout_eq_str("\\test\a\t\v\r\n\b\f\e-Eea \n\n\n");
 }
 
@@ -508,4 +524,125 @@ Test(parser, basic)
 	cr_expect(ast->type == OR_IF);
 	parser_astdel(&tmp_ast);
 	cr_expect(tmp_ast == NULL);
+}
+
+/*
+**------------------------------------------------------------------------------
+*/
+
+TestSuite(command_exit);
+
+Test(command_exec, basic, .init=redirect_all_stdout)
+{
+	t_tokenlst	*lst;
+	t_ast		*ast;
+	char 		*str;
+	int			exit_code;
+
+	str = ft_strdup("1=1");
+	lst = NULL;
+	ast = NULL;
+	cr_expect(lexer(&(str), &lst) == FUNCT_SUCCESS);
+	cr_expect(parser_start(&lst, &ast) == FUNCT_SUCCESS);
+	cr_expect(exec_start(ast, &exit_code) == FUNCT_FAILURE); // this fails in the first version, shoudln't fail later
+	parser_astdel(&ast);
+}
+
+/*
+**------------------------------------------------------------------------------
+*/
+TestSuite(history);
+
+Test(history, history_to_file)
+{
+	int		fd;
+	char	*array[4];
+	char	buf[22];
+	int 	ret;
+
+	ft_bzero(buf, 22);
+	array[0] = "check1";
+	array[1] = "check2";
+	array[2] = "check3";
+	array[3] = NULL;
+	history = array;
+	cr_expect(history_to_file() == FUNCT_SUCCESS);
+	fd = open("/tmp/.vsh_history", O_RDONLY);
+	cr_expect(fd > 0);
+	ret = read(fd, buf, 22);
+	cr_expect(ret == 21);
+	cr_expect(ft_strcmp(buf, "check1\ncheck2\ncheck3\n") == 0);
+}
+
+Test(history, get_file_content)
+{
+	char	*array[4];
+
+	history = array;
+	array[0] = "check1";
+	array[1] = "check2";
+	array[2] = "check3";
+	array[3] = NULL;
+	cr_expect(history_to_file() == FUNCT_SUCCESS);
+	cr_expect(history_get_file_content() == FUNCT_SUCCESS);
+	cr_expect(ft_strequ("check1", history[0]) == true);
+	cr_expect(ft_strequ("check2", history[1]) == true);
+	cr_expect(ft_strequ("check3", history[2]) == true);
+	cr_expect(history[3] == NULL);
+}
+
+TestSuite(history_output);
+
+Test(history, history_print, .init=redirect_all_stdout)
+{
+	char	*array[4];
+
+	history = array;
+	array[0] = "check1";
+	array[1] = "check2";
+	array[2] = "check3";
+	array[3] = NULL;
+	cr_expect(history_to_file() == FUNCT_SUCCESS);
+	cr_expect(history_get_file_content() == FUNCT_SUCCESS);
+	history_print();
+	cr_expect_stdout_eq_str("    0  check1\n    1  check2\n    2  check3\n");
+}
+/*
+**------------------------------------------------------------------------------
+*/
+
+TestSuite(exec_echo);
+
+Test(exec_echo, basic, .init=redirect_all_stdout)
+{
+	t_tokenlst	*lst;
+	t_ast		*ast;
+	char 		*str;
+	int			exit_code;
+
+	str = ft_strdup("echo hoi");
+	lst = NULL;
+	ast = NULL;
+	cr_expect(lexer(&(str), &lst) == FUNCT_SUCCESS);
+	cr_expect(parser_start(&lst, &ast) == FUNCT_SUCCESS);
+	cr_expect(exec_start(ast, &exit_code) == FUNCT_SUCCESS);
+	cr_expect_stdout_eq_str("hoi\n");
+	parser_astdel(&ast);
+}
+
+Test(exec_echo, basic2, .init=redirect_all_stdout)
+{
+	t_tokenlst	*lst;
+	t_ast		*ast;
+	char 		*str;
+	int			exit_code;
+
+	str = ft_strdup("echo \"Hi, this is a string\"");
+	lst = NULL;
+	ast = NULL;
+	cr_expect(lexer(&(str), &lst) == FUNCT_SUCCESS);
+	cr_expect(parser_start(&lst, &ast) == FUNCT_SUCCESS);
+	cr_expect(exec_start(ast, &exit_code) == FUNCT_SUCCESS);
+	cr_expect_stdout_eq_str("\"Hi, this is a string\"\n");
+	parser_astdel(&ast);
 }

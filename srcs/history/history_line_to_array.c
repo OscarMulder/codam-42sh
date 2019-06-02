@@ -1,19 +1,24 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        ::::::::            */
-/*   ft_putchar_fd.c                                    :+:    :+:            */
+/*   history_line_to_array.c                            :+:    :+:            */
 /*                                                     +:+                    */
 /*   By: mavan-he <mavan-he@student.codam.nl>         +#+                     */
 /*                                                   +#+                      */
-/*   Created: 2019/01/12 16:50:01 by mavan-he       #+#    #+#                */
-/*   Updated: 2019/05/31 14:36:19 by tde-jong      ########   odam.nl         */
+/*   Created: 2019/05/30 18:55:25 by mavan-he       #+#    #+#                */
+/*   Updated: 2019/06/01 17:16:24 by mavan-he      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
+#include "vsh.h"
+#include "vsh_history.h"
 #include "libft.h"
-#include <unistd.h>
 
-void	ft_putchar_fd(char c, int fd)
+int		history_line_to_array(char *line)
 {
-	write(fd, &c, 1);
+	history[history_i % 500] = ft_strdup(line);
+	if (history[history_i % 500] == NULL)
+		return (FUNCT_ERROR);
+	history_i++;
+	return (FUNCT_SUCCESS);
 }

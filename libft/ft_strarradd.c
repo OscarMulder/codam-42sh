@@ -1,19 +1,40 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        ::::::::            */
-/*   ft_putendl.c                                       :+:    :+:            */
+/*   ft_strarradd.c                                     :+:    :+:            */
 /*                                                     +:+                    */
 /*   By: omulder <omulder@student.codam.nl>           +#+                     */
 /*                                                   +#+                      */
-/*   Created: 2019/01/09 12:09:48 by omulder        #+#    #+#                */
-/*   Updated: 2019/05/31 14:35:07 by tde-jong      ########   odam.nl         */
+/*   Created: 2019/04/03 19:05:09 by omulder        #+#    #+#                */
+/*   Updated: 2019/04/12 10:33:09 by omulder       ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "libft.h"
-#include <unistd.h>
 
-void	ft_putendl(char const *s)
+int		ft_strarradd(char ***arr, char *add)
 {
-	ft_putendl_fd(s, STDOUT_FILENO);
+	int		i;
+	int		count;
+	char	**new;
+
+	if (!arr)
+		return (-1);
+	count = 0;
+	while ((*arr)[count] != 0)
+		count++;
+	i = 0;
+	new = (char**)ft_memalloc(sizeof(char*) * (count + 2));
+	while ((*arr)[i] != 0)
+	{
+		new[i] = ft_strdup((*arr)[i]);
+		if (new[i] == NULL)
+			return (-1);
+		i++;
+	}
+	new[i] = ft_strdup(add);
+	ft_strdel(&add);
+	ft_strarrdel(arr);
+	*arr = new;
+	return (0);
 }
