@@ -6,7 +6,7 @@
 /*   By: jbrinksm <jbrinksm@student.codam.nl>         +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2019/04/18 16:37:32 by omulder        #+#    #+#                */
-/*   Updated: 2019/06/01 05:48:14 by jbrinksm      ########   odam.nl         */
+/*   Updated: 2019/06/02 08:53:10 by root          ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -145,17 +145,17 @@ TestSuite(tools_is_char_escaped);
 
 Test(tools_is_char_escaped, basic)
 {
-	cr_expect_eq(tools_is_char_escaped("\\n", 1), FUNCT_SUCCESS);
-	cr_expect_eq(tools_is_char_escaped("\\\\n", 2), FUNCT_FAILURE);
-	cr_expect_eq(tools_is_char_escaped("abc\\n", 4), FUNCT_SUCCESS);
-	cr_expect_eq(tools_is_char_escaped("abc\\\\n", 5), FUNCT_FAILURE);
+	cr_expect_eq(tools_is_char_escaped("\\n", 1), true);
+	cr_expect_eq(tools_is_char_escaped("\\\\n", 2), false);
+	cr_expect_eq(tools_is_char_escaped("abc\\n", 4), true);
+	cr_expect_eq(tools_is_char_escaped("abc\\\\n", 5), false);
 }
 
 Test(tools_is_char_escaped, edge_cases)
 {
-	cr_expect_eq(tools_is_char_escaped("\\\"\\n", 3), FUNCT_SUCCESS);
-	cr_expect_eq(tools_is_char_escaped("\\\"\\\\n", 4), FUNCT_FAILURE);
-	cr_expect_eq(tools_is_char_escaped("", 0), FUNCT_FAILURE);
+	cr_expect_eq(tools_is_char_escaped("\\\"\\n", 3), true);
+	cr_expect_eq(tools_is_char_escaped("\\\"\\\\n", 4), false);
+	cr_expect_eq(tools_is_char_escaped("", 0), false);
 }
 
 /*

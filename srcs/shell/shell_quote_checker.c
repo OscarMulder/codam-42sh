@@ -6,7 +6,7 @@
 /*   By: jbrinksm <jbrinksm@student.codam.nl>         +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2019/05/31 07:47:19 by jbrinksm       #+#    #+#                */
-/*   Updated: 2019/05/31 07:48:22 by jbrinksm      ########   odam.nl         */
+/*   Updated: 2019/06/02 08:52:11 by root          ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,18 +16,21 @@ char		shell_quote_checker_find_quote(char *line)
 {
 	int		i;
 	char	quote;
-	int		is_escaped;
 	char	c;
 
 	i = 0;
 	quote = '\0';
 	while (line[i] != '\0')
 	{
-		is_escaped = tools_is_char_escaped(line, i);
+		if (tools_is_char_escaped(line, i) == true)
+		{
+			i++;
+			continue ;
+		}
 		c = line[i];
-		if (quote == '\0' && (c == '\'' || c == '"') && is_escaped == 0)
+		if (quote == '\0' && (c == '\'' || c == '"'))
 			quote = c;
-		else if (quote && c == quote && is_escaped == 0)
+		else if (quote && c == quote)
 			quote = '\0';
 		i++;
 	}
