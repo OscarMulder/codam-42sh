@@ -6,7 +6,7 @@
 /*   By: jbrinksm <jbrinksm@student.codam.nl>         +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2019/04/18 16:37:32 by omulder        #+#    #+#                */
-/*   Updated: 2019/06/02 10:32:07 by mavan-he      ########   odam.nl         */
+/*   Updated: 2019/06/02 10:36:03 by mavan-he      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -21,6 +21,7 @@
 #include <criterion/redirect.h>
 #include <limits.h>
 #include <unistd.h>
+#include <fcntl.h>
 
 void redirect_all_stdout(void)
 {
