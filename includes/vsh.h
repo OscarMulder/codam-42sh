@@ -247,7 +247,7 @@ int				input_parse_ctrl_down(char c, int *input_state, unsigned *index,
 */
 
 void			shell_display_prompt(void);
-int				shell_read_till_stop(char **heredoc, char *stop);
+int				shell_dless_read_till_stop(char **heredoc, char *stop);
 void			shell_dless_input(t_tokenlst *token_lst);
 int				shell_start(void);
 
