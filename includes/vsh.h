@@ -251,7 +251,7 @@ int				input_parse_ctrl_down(char c, int *input_state, unsigned *index,
 void			shell_display_prompt(void);
 int				shell_read_till_stop(char **heredoc, char *stop);
 void			shell_dless_input(t_tokenlst *token_lst);
-void			shell_quote_checker(char **line);
+int				shell_quote_checker(char **line);
 char			shell_quote_checker_find_quote(char *line);
 int				shell_start(void);
 

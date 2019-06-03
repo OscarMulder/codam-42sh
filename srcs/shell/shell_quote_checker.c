@@ -37,7 +37,13 @@ char		shell_quote_checker_find_quote(char *line)
 	return (quote);
 }
 
-void		shell_quote_checker(char **line)
+/*
+**	Right now there is no way of exiting the program through regular signals
+**	if you don't supply the proper END_HERE input. Will need to be fixed through
+**	some termcaps shit.
+*/
+
+int		shell_quote_checker(char **line)
 {
 	char	quote;
 	char	*extra_line;
@@ -51,6 +57,13 @@ void		shell_quote_checker(char **line)
 			ft_printf("\ndquote> ");
 		input_read(&extra_line);
 		*line = ft_joinstrcstr_free_all(*line, '\n', extra_line);
+		if (*line == NULL)
+		{
+			ft_printf("vsh: failed to allocate enough memory for"
+			" commandline input\n");
+			return (FUNCT_ERROR);
+		}
 		quote = shell_quote_checker_find_quote(*line);
 	}
+	return (FUNCT_SUCCESS);
 }
