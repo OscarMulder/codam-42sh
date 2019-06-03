@@ -6,7 +6,7 @@
 /*   By: omulder <omulder@student.codam.nl>           +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2019/04/10 20:29:42 by jbrinksm       #+#    #+#                */
-/*   Updated: 2019/06/01 15:16:54 by omulder       ########   odam.nl         */
+/*   Updated: 2019/06/03 15:31:43 by omulder       ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -80,28 +80,13 @@
 */
 
 # include "libft.h"
+# include "vsh_history.h"
 
 /*
 **==================================headers=====================================
 */
 
-# include <stdlib.h>
-# include <unistd.h>
-# include <fcntl.h>
-# include <dirent.h>
-# include <sys/stat.h>
-# include <sys/wait.h>
-# include <signal.h>
 # include <stdbool.h>
-
-# include <sys/ioctl.h>
-# include <termios.h>
-# include <curses.h>
-# include <term.h>
-# include <fcntl.h>
-# include <sys/types.h>
-# include <sys/uio.h>
-# include <signal.h>
 
 /*
 **	malloc, free, close, fork, execve, exit | getenv
@@ -121,8 +106,6 @@
 **	read
 **	signal
 */
-
-# include <sys/param.h>
 
 /*
 **=================================typedefs====================================
@@ -333,11 +316,6 @@ char			builtin_echo_set_flags(char **args, int *arg_i);
 int				tools_is_char_escaped(char *line, int i);
 int				tools_update_quote_status(char *line, int cur_index, char *quote);
 bool			tool_is_redirect_tk(t_tokens type);
-/*
-**----------------------------------history-------------------------------------
-*/
-
-int				history_line_to_file(char *line);
 
 /*
 **----------------------------------execution-----------------------------------

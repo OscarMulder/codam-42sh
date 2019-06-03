@@ -6,7 +6,7 @@
 /*   By: jbrinksm <jbrinksm@student.codam.nl>         +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2019/04/18 16:37:32 by omulder        #+#    #+#                */
-/*   Updated: 2019/06/01 15:35:49 by omulder       ########   odam.nl         */
+/*   Updated: 2019/06/03 15:32:01 by omulder       ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -20,6 +20,8 @@
 #include <criterion/criterion.h>
 #include <criterion/redirect.h>
 #include <limits.h>
+#include <unistd.h>
+#include <fcntl.h>
 
 void redirect_all_stdout(void)
 {
@@ -529,20 +531,60 @@ Test(command_exec, basic, .init=redirect_all_stdout)
 */
 TestSuite(history);
 
-Test(history, basic)
+Test(history, history_to_file)
 {
-	FILE	*f;
-	char	buf[7];
+	int		fd;
+	char	*array[4];
+	char	buf[22];
+	int 	ret;
 
-	ft_bzero(buf, 7);
-	cr_expect(history_line_to_file("check") == FUNCT_SUCCESS);
-	f = fopen("/tmp/.vsh_history", "r");
-	cr_expect(f != NULL);
-	fseek(f, -6, SEEK_END);
-	fread(buf, 1, 6, f);
-	cr_expect(ft_strcmp(buf, "check\n") == 0);
+	ft_bzero(buf, 22);
+	array[0] = "check1";
+	array[1] = "check2";
+	array[2] = "check3";
+	array[3] = NULL;
+	history = array;
+	cr_expect(history_to_file() == FUNCT_SUCCESS);
+	fd = open("/tmp/.vsh_history", O_RDONLY);
+	cr_expect(fd > 0);
+	ret = read(fd, buf, 22);
+	cr_expect(ret == 21);
+	cr_expect(ft_strcmp(buf, "check1\ncheck2\ncheck3\n") == 0);
 }
 
+Test(history, get_file_content)
+{
+	char	*array[4];
+
+	history = array;
+	array[0] = "check1";
+	array[1] = "check2";
+	array[2] = "check3";
+	array[3] = NULL;
+	cr_expect(history_to_file() == FUNCT_SUCCESS);
+	cr_expect(history_get_file_content() == FUNCT_SUCCESS);
+	cr_expect(ft_strequ("check1", history[0]) == true);
+	cr_expect(ft_strequ("check2", history[1]) == true);
+	cr_expect(ft_strequ("check3", history[2]) == true);
+	cr_expect(history[3] == NULL);
+}
+
+TestSuite(history_output);
+
+Test(history, history_print, .init=redirect_all_stdout)
+{
+	char	*array[4];
+
+	history = array;
+	array[0] = "check1";
+	array[1] = "check2";
+	array[2] = "check3";
+	array[3] = NULL;
+	cr_expect(history_to_file() == FUNCT_SUCCESS);
+	cr_expect(history_get_file_content() == FUNCT_SUCCESS);
+	history_print();
+	cr_expect_stdout_eq_str("    0  check1\n    1  check2\n    2  check3\n");
+}
 /*
 **------------------------------------------------------------------------------
 */

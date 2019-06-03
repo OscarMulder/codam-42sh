@@ -6,16 +6,14 @@
 /*   By: jbrinksm <jbrinksm@student.codam.nl>         +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2019/01/09 11:10:09 by omulder        #+#    #+#                */
-/*   Updated: 2019/05/29 18:16:16 by omulder       ########   odam.nl         */
+/*   Updated: 2019/06/02 10:32:59 by mavan-he      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
 #ifndef LIBFT_H
 # define LIBFT_H
 
-# include <string.h>
-# include <stdlib.h>
-# include <unistd.h>
+# define BUFF_SIZE 64
 # include "ft_printf.h"
 
 typedef struct		s_list
@@ -81,6 +79,7 @@ char				*ft_strchr(const char *s, int c);
 char				**ft_strsplit(const char *s, char c);
 char				*ft_strjoinchr(char const *s1, char c);
 char				*ft_strjoinchrfree(char *s1, char c, int i);
+int					ft_get_next_line(const int fd, char **line);
 int					ft_strarradd(char ***arr, char *add); // Not sure if this func is save2use
 void				ft_strarrdel(char ***arr);
 
