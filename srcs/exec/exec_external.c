@@ -6,11 +6,12 @@
 /*   By: tde-jong <tde-jong@student.codam.nl>         +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2019/05/31 10:47:19 by tde-jong       #+#    #+#                */
-/*   Updated: 2019/06/01 14:36:43 by tde-jong      ########   odam.nl         */
+/*   Updated: 2019/06/03 15:43:32 by omulder       ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "vsh.h"
+#include "unistd.h"
 
 static bool	exec_bin(char **args, char **env, int *exit_code)
 {

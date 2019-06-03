@@ -6,11 +6,10 @@
 /*   By: omulder <omulder@student.codam.nl>           +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2019/04/18 16:44:50 by omulder        #+#    #+#                */
-/*   Updated: 2019/06/03 15:30:23 by omulder       ########   odam.nl         */
+/*   Updated: 2019/06/03 15:44:57 by omulder       ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "vsh.h"
 #include "vsh.h"
 
 void	lexer_tokenlstiter(t_tokenlst *lst, void (*f)(t_tokenlst *elem))
