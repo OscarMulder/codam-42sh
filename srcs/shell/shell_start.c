@@ -46,7 +46,8 @@ int		shell_start(void)
 		#ifdef DEBUG
  		lexer_tokenlstiter(token_lst, print_node);
 		#endif
-		shell_dless_input(token_lst);
+		if (shell_dless_input(token_lst) != FUNCT_SUCCESS)
+			continue ;
 		#ifdef DEBUG
  		lexer_tokenlstiter(token_lst, print_node);
 		#endif

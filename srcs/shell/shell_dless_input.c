@@ -47,20 +47,12 @@ int		shell_dless_set_tk_val(t_tokenlst *probe, char **heredoc, char *stop)
 	
 	ft_strdel(&(probe->value));
 	ret = shell_dless_read_till_stop(heredoc, stop);
-	if (ret == FUNCT_ERROR)
-		ft_printf("vsh: failed to allocate enough memory for heredoc.\n");
 	if (ret == FUNCT_SUCCESS)
-	{
 		probe->value = ft_strdup(*heredoc);
-		if (probe->value == NULL)
-			probe->value = ft_strnew(0);
-	}
-	else
+	else if (ret == FUNCT_FAILURE)
 		probe->value = ft_strnew(0);
 	if (probe->value == NULL)
 		return (FUNCT_ERROR);
-	if (ret != FUNCT_FAILURE && *probe->value == '\0')
-		return (FUNCT_FAILURE);
 	return (FUNCT_SUCCESS);
 }
 
@@ -71,7 +63,7 @@ int		shell_dless_set_tk_val(t_tokenlst *probe, char **heredoc, char *stop)
 **	whenever you press return.
 */
 
-void	shell_dless_input(t_tokenlst *token_lst)
+int		shell_dless_input(t_tokenlst *token_lst)
 {
 	char 		*heredoc;
 	t_tokenlst	*probe;
@@ -85,17 +77,16 @@ void	shell_dless_input(t_tokenlst *token_lst)
 		{
 			probe = probe->next;
 			stop = ft_strdup(probe->value);
-			if (stop == NULL)
+			if (stop == NULL || shell_dless_set_tk_val(probe, &heredoc, stop)
+			== FUNCT_ERROR)
 			{
-				probe = probe->next;
-				continue ;
+				ft_printf("vsh: failed to allocate enough memory for heredoc\n");
+				return (FUNCT_ERROR);
 			}
-			if (shell_dless_set_tk_val(probe, &heredoc, stop) == FUNCT_ERROR)
-				ft_printf("vsh: couldn't even fucking allocate 1 byte lol\n"
-				"WHAT DO WE DO IN THIS SITUATION BOIS?\n");
 			ft_strdel(&heredoc);
 			ft_strdel(&stop);
 		}
 		probe = probe->next;
 	}
+	return (FUNCT_SUCCESS);
 }
