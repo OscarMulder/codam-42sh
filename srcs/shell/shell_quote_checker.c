@@ -30,7 +30,7 @@ char		shell_quote_checker_find_quote(char *line)
 		c = line[i];
 		if (quote == '\0' && (c == '\'' || c == '"'))
 			quote = c;
-		else if (quote && c == quote)
+		else if (quote != '\0' && c == quote)
 			quote = '\0';
 		i++;
 	}
