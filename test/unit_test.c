@@ -148,17 +148,96 @@ TestSuite(tools_is_char_escaped);
 
 Test(tools_is_char_escaped, basic)
 {
-	cr_expect_eq(tools_is_char_escaped("\\n", 1), FUNCT_SUCCESS);
-	cr_expect_eq(tools_is_char_escaped("\\\\n", 2), FUNCT_FAILURE);
-	cr_expect_eq(tools_is_char_escaped("abc\\n", 4), FUNCT_SUCCESS);
-	cr_expect_eq(tools_is_char_escaped("abc\\\\n", 5), FUNCT_FAILURE);
+	cr_expect_eq(tools_is_char_escaped("\\n", 1), true);
+	cr_expect_eq(tools_is_char_escaped("\\\\n", 2), false);
+	cr_expect_eq(tools_is_char_escaped("abc\\n", 4), true);
+	cr_expect_eq(tools_is_char_escaped("abc\\\\n", 5), false);
 }
 
 Test(tools_is_char_escaped, edge_cases)
 {
-	cr_expect_eq(tools_is_char_escaped("\\\"\\n", 3), FUNCT_SUCCESS);
-	cr_expect_eq(tools_is_char_escaped("\\\"\\\\n", 4), FUNCT_FAILURE);
-	cr_expect_eq(tools_is_char_escaped("", 0), FUNCT_FAILURE);
+	cr_expect_eq(tools_is_char_escaped("\\\"\\n", 3), true);
+	cr_expect_eq(tools_is_char_escaped("\\\"\\\\n", 4), false);
+	cr_expect_eq(tools_is_char_escaped("", 0), false);
+}
+
+/*
+**------------------------------------------------------------------------------
+*/
+
+TestSuite(shell_quote_checker_find_quote);
+
+Test(shell_quote_checker_find_quote, basic)
+{
+	char *line;
+
+	line = "A simple \"line\"";
+	cr_expect_eq(shell_quote_checker_find_quote(line), '\0');
+	line = "A simple \"line";
+	cr_expect_eq(shell_quote_checker_find_quote(line), '"');
+	line = "A simple line";
+	cr_expect_eq(shell_quote_checker_find_quote(line), '\0');
+	line = "A simple line\"";
+	cr_expect_eq(shell_quote_checker_find_quote(line), '"');
+	line = "A simple 'line'";
+	cr_expect_eq(shell_quote_checker_find_quote(line), '\0');
+	line = "A simple 'line";
+	cr_expect_eq(shell_quote_checker_find_quote(line), '\'');
+	line = "A simple line";
+	cr_expect_eq(shell_quote_checker_find_quote(line), '\0');
+	line = "A simple line'";
+	cr_expect_eq(shell_quote_checker_find_quote(line), '\'');
+}
+
+Test(shell_quote_checker_find_quote, both_quotes)
+{
+	char *line;
+
+	line = "A simple \"line\'";
+	cr_expect_eq(shell_quote_checker_find_quote(line), '"');
+	line = "A simple 'line\"";
+	cr_expect_eq(shell_quote_checker_find_quote(line), '\'');
+	line = "A simple ''line\"";
+	cr_expect_eq(shell_quote_checker_find_quote(line), '"');
+	line = "'A simple 'line\"";
+	cr_expect_eq(shell_quote_checker_find_quote(line), '"');
+	line = "A simple 'line\"\"";
+	cr_expect_eq(shell_quote_checker_find_quote(line), '\'');
+	line = "A simple 'line\"'\"'";
+	cr_expect_eq(shell_quote_checker_find_quote(line), '"');
+}
+
+/*
+**------------------------------------------------------------------------------
+*/
+
+TestSuite(shell_quote_checker);
+
+/*	
+**	Not sure how to test this properly yet, since you need input if
+**	the quoting isn't correct.
+*/
+
+Test(shell_quote_checker, basic)
+{
+	char *line;
+
+	line = strdup("lala");
+	shell_quote_checker(&line);
+	cr_expect_str_eq(line, "lala");
+	ft_strdel(&line);
+	line = strdup("lala''");
+	shell_quote_checker(&line);
+	cr_expect_str_eq(line, "lala''");
+	ft_strdel(&line);
+	line = strdup("lala\"\"");
+	shell_quote_checker(&line);
+	cr_expect_str_eq(line, "lala\"\"");
+	ft_strdel(&line);
+	line = strdup("lala'\"'");
+	shell_quote_checker(&line);
+	cr_expect_str_eq(line, "lala'\"'");
+	ft_strdel(&line);
 }
 
 /*

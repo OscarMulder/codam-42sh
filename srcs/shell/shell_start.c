@@ -37,6 +37,8 @@ int		shell_start(void)
 	{
 		shell_display_prompt();
 		status = input_read(&line);
+		while (shell_quote_checker(&line) != FUNCT_SUCCESS)
+			continue ;
 		history_line_to_array(line);
 		#ifdef DEBUG
 		ft_printf("\n>>>> LINE <<<<\n%s\n\n>>>> TOKEN_LST <<<<\n", line);
@@ -44,7 +46,7 @@ int		shell_start(void)
 		if (lexer(&line, &token_lst) != FUNCT_SUCCESS)
 			continue ;
 		#ifdef DEBUG
- 		lexer_tokenlstiter(token_lst, print_node);
+		lexer_tokenlstiter(token_lst, print_node);
 		#endif
 		if (shell_dless_input(token_lst) != FUNCT_SUCCESS)
 			continue ;

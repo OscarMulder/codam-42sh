@@ -6,7 +6,7 @@
 #    By: jbrinksm <jbrinksm@student.codam.nl>         +#+                      #
 #                                                    +#+                       #
 #    Created: 2019/01/09 11:10:43 by omulder        #+#    #+#                 #
-#    Updated: 2019/05/30 20:43:46 by mavan-he      ########   odam.nl          #
+#    Updated: 2019/05/29 18:38:33 by jbrinksm      ########   odam.nl          #
 #                                                                              #
 # **************************************************************************** #
 
@@ -25,7 +25,10 @@ ft_putchar_fd.c ft_putstr_fd.c ft_putendl_fd.c ft_putnbr_fd.c ft_lstlen.c \
 ft_lsttoarray.c ft_lstnew.c ft_lstaddback.c ft_lstadd.c ft_strchr.c \
 ft_strsplit.c ft_strjoinchr.c ft_strjoinchrfree.c ft_strndup.c \
 ft_lstiter.c ft_lstdel.c ft_lstdelone.c ft_strarradd.c ft_strarrdel.c \
-ft_get_next_line.c ft_strjoinfree_s1.c ft_strjoinfree_s2.c ft_strjoinfree_all.c
+ft_joinstrcstr.c ft_chartostr.c ft_joinstrcstr_free_s1.c \
+ft_joinstrcstr_free_s2.c ft_joinstrcstr_free_all.c \
+ft_get_next_line.c \
+ft_strjoinfree_s1.c ft_strjoinfree_s2.c ft_strjoinfree_all.c
 OBJECTS = $(FILES:.c=.o)
 
 all: $(OBJECTS) $(NAME)

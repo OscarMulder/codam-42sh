@@ -24,7 +24,7 @@ VPATH = ./test ./libft ./srcs ./srcs/builtins ./srcs/input_handling \
 ./srcs/tools ./test/parser ./test/tools ./test/builtins \
 ./test/environment_handling ./srcs/lexer ./srcs/parser ./srcs/history \
 ./srcs/exec
-SRCS = shell_start shell_prompt shell_dless_input \
+SRCS = shell_start shell_prompt shell_quote_checker shell_dless_input \
 input_read input_parse_char input_parse_escape input_parse_home \
 input_parse_end input_parse_prev input_parse_next input_parse_backspace \
 input_parse_delete input_parse_ctrl_d input_parse_ctrl_k \

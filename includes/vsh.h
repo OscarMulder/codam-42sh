@@ -199,8 +199,10 @@ typedef struct	s_ast
 char			**env_get_environ_cpy(void);
 char			*env_var_get_value(char *var_key, char **vararray);
 char			*env_var_join_key_value(char *var_key, char *var_value);
-int				env_var_set_value(char *var_key, char *var_value, char **vararray);
-int				env_var_add_value(char *var_key, char *var_value, char ***vararray);
+int				env_var_set_value(char *var_key, char *var_value,
+					char **vararray);
+int				env_var_add_value(char *var_key, char *var_value,
+					char ***vararray);
 char			**env_free_and_return_null(char ***vshenviron);
 
 /*
@@ -250,6 +252,8 @@ void			shell_display_prompt(void);
 int				shell_dless_read_till_stop(char **heredoc, char *stop);
 int				shell_dless_set_tk_val(t_tokenlst *probe, char **heredoc, char *stop);
 int				shell_dless_input(t_tokenlst *token_lst);
+int				shell_quote_checker(char **line);
+char			shell_quote_checker_find_quote(char *line);
 int				shell_start(void);
 
 /*
@@ -304,7 +308,7 @@ char			*parser_return_token_str(t_tokens type);
 void			parser_astdel(t_ast **ast);
 
 /*
-**----------------------------------builtins-------------------------------------
+**----------------------------------builtins------------------------------------
 */
 
 void			builtin_exit(char **args, int *exit_code);
@@ -316,8 +320,9 @@ char			builtin_echo_set_flags(char **args, int *arg_i);
 */
 
 bool			tool_is_redirect_tk(t_tokens type);
-int				tools_is_char_escaped(char *line, int i);
-int				tools_update_quote_status(char *line, int cur_index, char *quote);
+bool			tools_is_char_escaped(char *line, int i);
+int				tools_update_quote_status(char *line, int cur_index,
+					char *quote);
 bool			tool_is_redirect_tk(t_tokens type);
 
 /*
