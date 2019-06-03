@@ -6,7 +6,7 @@
 /*   By: mavan-he <mavan-he@student.codam.nl>         +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2019/06/02 14:28:54 by mavan-he       #+#    #+#                */
-/*   Updated: 2019/06/02 16:23:30 by mavan-he      ########   odam.nl         */
+/*   Updated: 2019/06/03 16:28:32 by mavan-he      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,14 +16,16 @@
 
 static void	history_clear_line(unsigned *index, unsigned linelen)
 {
-	ft_printf("\e[%dD", (*index) - 1);
+	if (*index > 0)
+		ft_printf("\e[%dD", *index);
 	*index = 0;
 	while (*index < linelen)
 	{
 		ft_putchar(' ');
 		(*index)++;
 	}
-	ft_printf("\e[%dD", linelen - 1);
+	if (*index > 0)
+		ft_printf("\e[%dD", *index);
 }
 
 void		history_change_line(char **line, unsigned *index, char arrow)
@@ -34,10 +36,10 @@ void		history_change_line(char **line, unsigned *index, char arrow)
 		history_tmp--;
 		*line = history[history_tmp];
 	}
-	else if (arrow == ARROW_DOWN && history_tmp != history_i % 500)
+	else if (arrow == ARROW_DOWN && history_tmp < history_i % 500)
 	{
-		*line = history[history_tmp];
 		history_tmp++;
+		*line = history[history_tmp];
 	}
 	else
 		ft_printf("\a");
