@@ -59,6 +59,8 @@ int		shell_dless_set_tk_val(t_tokenlst *probe, char **heredoc, char *stop)
 		probe->value = ft_strnew(0);
 	if (probe->value == NULL)
 		return (FUNCT_ERROR);
+	if (ret != FUNCT_FAILURE && *probe->value == '\0')
+		return (FUNCT_FAILURE);
 	return (FUNCT_SUCCESS);
 }
 
