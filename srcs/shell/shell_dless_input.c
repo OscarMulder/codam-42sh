@@ -41,6 +41,27 @@ int		shell_dless_read_till_stop(char **heredoc, char *stop)
 	return (FUNCT_SUCCESS);
 }
 
+int		shell_dless_set_tk_val(t_tokenlst *probe, char **heredoc, char *stop)
+{
+	int	ret;
+	
+	ft_strdel(&(probe->value));
+	ret = shell_dless_read_till_stop(heredoc, stop);
+	if (ret == FUNCT_ERROR)
+		ft_printf("vsh: failed to allocate enough memory for heredoc.\n");
+	if (ret == FUNCT_SUCCESS)
+	{
+		probe->value = ft_strdup(*heredoc);
+		if (probe->value == NULL)
+			probe->value = ft_strnew(0);
+	}
+	else
+		probe->value = ft_strnew(0);
+	if (probe->value == NULL)
+		return (FUNCT_ERROR);
+	return (FUNCT_SUCCESS);
+}
+
 /*
 **	Right now this function will not include any '\n'
 **	in between the lines read. This should be fine since I'm
@@ -53,7 +74,6 @@ void	shell_dless_input(t_tokenlst *token_lst)
 	char 		*heredoc;
 	t_tokenlst	*probe;
 	char		*stop;
-	int			ret;
 
 	probe = token_lst;
 	heredoc = NULL;
@@ -63,15 +83,14 @@ void	shell_dless_input(t_tokenlst *token_lst)
 		{
 			probe = probe->next;
 			stop = ft_strdup(probe->value);
-			ft_strdel(&(probe->value));
-			ret = shell_dless_read_till_stop(&heredoc, stop) == FUNCT_SUCCESS;
-			if (ret == FUNCT_SUCCESS)
-				probe->value = ft_strdup(heredoc);
-			else if (ret == FUNCT_FAILURE)
-				probe->value = ft_strnew(0);
-			else
-				ft_printf("NICE MALLOC ERROR THAT IDK HOW TO HANDLE"
-				"WHAT DO WE DO HERE BOIS \n");
+			if (stop == NULL)
+			{
+				probe = probe->next;
+				continue ;
+			}
+			if (shell_dless_set_tk_val(probe, &heredoc, stop) == FUNCT_ERROR)
+				ft_printf("vsh: couldn't even fucking allocate 1 byte lol\n"
+				"WHAT DO WE DO IN THIS SITUATION BOIS?\n");
 			ft_strdel(&heredoc);
 			ft_strdel(&stop);
 		}
