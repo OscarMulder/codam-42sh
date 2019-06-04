@@ -6,7 +6,7 @@
 /*   By: jbrinksm <jbrinksm@student.codam.nl>         +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2019/04/10 20:29:49 by jbrinksm       #+#    #+#                */
-/*   Updated: 2019/06/04 10:13:28 by jbrinksm      ########   odam.nl         */
+/*   Updated: 2019/06/04 11:43:48 by jbrinksm      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -25,7 +25,7 @@ int		main(int argc, char **argv)
 	(void)argv;
 	(void)argc;
 	envlst = env_getlst();
-	vshenviron = env_get_environ_cpy();
+	vshenviron = env_lsttoarr(envlst, ENV_EXTERN);
 	term_p = term_prepare(vshenviron);
 	history_get_file_content();
 	/* if !term_p or history failed: send appropriate error message/log */

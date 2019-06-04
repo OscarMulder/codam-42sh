@@ -6,13 +6,13 @@
 /*   By: jbrinksm <jbrinksm@student.codam.nl>         +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2019/06/04 08:06:54 by jbrinksm       #+#    #+#                */
-/*   Updated: 2019/06/04 10:16:20 by jbrinksm      ########   odam.nl         */
+/*   Updated: 2019/06/04 11:42:12 by jbrinksm      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "vsh.h"
 
-t_envlst	*env_lstnew(char *var, unsigned char type)
+t_envlst	*env_lstnew(char *var, unsigned char types)
 {
 	t_envlst	*new;
 
@@ -27,7 +27,7 @@ t_envlst	*env_lstnew(char *var, unsigned char type)
 		free(new);
 		return (NULL);
 	}
-	new->type &= ~type;
+	new->type |= types;
 	new->next = NULL;
 	return (new);
 }

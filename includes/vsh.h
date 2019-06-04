@@ -6,7 +6,7 @@
 /*   By: omulder <omulder@student.codam.nl>           +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2019/04/10 20:29:42 by jbrinksm       #+#    #+#                */
-/*   Updated: 2019/06/04 10:15:33 by jbrinksm      ########   odam.nl         */
+/*   Updated: 2019/06/04 11:42:48 by jbrinksm      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -224,7 +224,9 @@ char			**env_free_and_return_null(char ***vshenviron);
 
 t_envlst	*env_getlst(void);
 void		env_lstaddback(t_envlst **lst, t_envlst *new);
-t_envlst	*env_lstnew(char *var, unsigned char type);
+t_envlst	*env_lstnew(char *var, unsigned char types);
+char		**env_lsttoarr(t_envlst *lst, unsigned char types_to_match);
+int			env_lstlen(t_envlst *lst, unsigned char types_to_match);
 
 /*
 **----------------------------------terminal------------------------------------
