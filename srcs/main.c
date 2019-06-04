@@ -26,7 +26,7 @@ int		main(int argc, char **argv)
 	(void)argc;
 	envlst = env_getlst();
 	vshenviron = env_lsttoarr(envlst, ENV_EXTERN);
-	term_p = term_prepare(vshenviron);
+	term_p = term_prepare(envlst);
 	history_get_file_content();
 	/* if !term_p or history failed: send appropriate error message/log */
 	if (term_p == NULL)

@@ -23,10 +23,14 @@ t_term	*term_return(t_term *term_p, int return_value)
 	return (term_p);
 }
 
-t_term	*term_prepare(char **vshenviron)
+t_term	*term_prepare(t_envlst *lst)
 {
 	t_term	*term_p;
+	char	**vshenviron;
 
+	vshenviron = env_lsttoarr(lst, ENV_EXTERN);
+	if (vshenviron == NULL)
+		return (term_return(NULL, FUNCT_FAILURE));
 	term_p = term_init_struct();
 	/* Add specific alloc error here */
 	if (term_p == NULL)

@@ -232,7 +232,7 @@ int			env_lstlen(t_envlst *lst, unsigned char types_to_match);
 **----------------------------------terminal------------------------------------
 */
 
-t_term			*term_prepare(char **vshenviron);
+t_term			*term_prepare(t_envlst *lst);
 t_term			*term_return(t_term *term_p, int return_value);
 int				term_is_valid(char **vshenviron);
 t_term			*term_init_struct(void);
