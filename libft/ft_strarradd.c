@@ -34,7 +34,10 @@ bool		ft_strarradd(char ***arr, const char *add)
 	}
 	new[i] = ft_strdup(add);
 	if (new[i] == NULL)
+	{
+		ft_strarrdel(&new);
 		return (false);
+	}
 	free(*arr);
 	*arr = new;
 	return (true);
