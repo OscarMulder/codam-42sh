@@ -12,11 +12,9 @@
 
 #include "vsh.h"
 
-static char	**create_args(t_ast *ast)
+static char **init_array(t_ast *ast)
 {
 	char	**args;
-	char	*temp;
-	t_ast	*probe;
 
 	if (ast == NULL)
 		return (NULL);
@@ -26,14 +24,30 @@ static char	**create_args(t_ast *ast)
 	args[0] = ft_strdup(ast->value);
 	if (args[0] == NULL)
 		return (NULL);
+	return (args);
+}
+
+static char	**create_args(t_ast *ast)
+{
+	char	**args;
+	char	*temp;
+	t_ast	*probe;
+
+	args = (init_array(ast));
+	if (args == NULL)
+		return (NULL);
 	probe = ast->child;
 	while (probe)
 	{
 		temp = ft_strdup(probe->value);
 		if (temp == NULL)
 			return (NULL);
-		if (ft_strarradd(&args, temp) == FUNCT_ERROR)
+		if (ft_strarradd(&args, temp) == false)
+		{
+			ft_strdel(&temp);
 			return (NULL);
+		}
+		ft_strdel(&temp);
 		probe = probe->child;
 	}
 	return (args);

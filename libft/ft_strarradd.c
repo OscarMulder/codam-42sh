@@ -12,14 +12,14 @@
 
 #include "libft.h"
 
-int		ft_strarradd(char ***arr, char *add)
+int		ft_strarradd(char ***arr, const char *add)
 {
 	int		i;
 	int		count;
 	char	**new;
 
-	if (!arr)
-		return (-1);
+	if (arr == NULL || *arr == NULL)
+		return (0);
 	count = 0;
 	while ((*arr)[count] != 0)
 		count++;
@@ -27,14 +27,11 @@ int		ft_strarradd(char ***arr, char *add)
 	new = (char**)ft_memalloc(sizeof(char*) * (count + 2));
 	while ((*arr)[i] != 0)
 	{
-		new[i] = ft_strdup((*arr)[i]);
-		if (new[i] == NULL)
-			return (-1);
+		new[i] = (*arr)[i];
 		i++;
 	}
 	new[i] = ft_strdup(add);
-	ft_strdel(&add);
-	ft_strarrdel(arr);
+	free(*arr);
 	*arr = new;
-	return (0);
+	return (1);
 }
