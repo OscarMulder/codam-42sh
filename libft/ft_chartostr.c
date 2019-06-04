@@ -1,25 +1,24 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        ::::::::            */
-/*   ft_strjoinfree.c                                   :+:    :+:            */
+/*   ft_chartostr.c                                     :+:    :+:            */
 /*                                                     +:+                    */
 /*   By: jbrinksm <jbrinksm@student.codam.nl>         +#+                     */
 /*                                                   +#+                      */
-/*   Created: 2019/04/16 20:15:07 by jbrinksm       #+#    #+#                */
-/*   Updated: 2019/04/16 20:20:01 by jbrinksm      ########   odam.nl         */
+/*   Created: 2019/05/29 18:35:35 by jbrinksm       #+#    #+#                */
+/*   Updated: 2019/06/02 08:31:02 by jbrinksm      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "libft.h"
 
-char	*ft_strjoinfree(char *s1, char *s2, int i)
+char		*ft_chartostr(char c)
 {
 	char	*str;
 
-	str = ft_strjoin(s1, s2);
-	if (i == 1 || i == 3)
-		ft_strdel(&s1);
-	if (i == 2 || i == 3)
-		ft_strdel(&s2);
+	str = ft_strnew(1);
+	if (str == NULL)
+		return (NULL);
+	str[0] = c;
 	return (str);
 }
