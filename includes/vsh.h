@@ -6,7 +6,7 @@
 /*   By: omulder <omulder@student.codam.nl>           +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2019/04/10 20:29:42 by jbrinksm       #+#    #+#                */
-/*   Updated: 2019/06/04 08:24:24 by root          ########   odam.nl         */
+/*   Updated: 2019/06/04 08:25:08 by root          ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -195,6 +195,13 @@ typedef struct	s_ast
 /*
 **---------------------------------environment----------------------------------
 */
+
+typedef struct	s_envlst
+{
+	char			*var;
+	unsigned char	type;
+	struct s_envlst	*next;
+}				t_envlst;
 
 char			**env_get_environ_cpy(void);
 char			*env_var_get_value(char *var_key, char **vararray);
