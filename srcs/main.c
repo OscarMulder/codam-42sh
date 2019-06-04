@@ -6,7 +6,7 @@
 /*   By: jbrinksm <jbrinksm@student.codam.nl>         +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2019/04/10 20:29:49 by jbrinksm       #+#    #+#                */
-/*   Updated: 2019/05/30 19:02:23 by mavan-he      ########   odam.nl         */
+/*   Updated: 2019/06/04 10:13:28 by jbrinksm      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -20,9 +20,11 @@ int		main(int argc, char **argv)
 {
 	t_term	*term_p;
 	char	**vshenviron;
+	t_envlst	*envlst;
 
 	(void)argv;
 	(void)argc;
+	envlst = env_getlst();
 	vshenviron = env_get_environ_cpy();
 	term_p = term_prepare(vshenviron);
 	history_get_file_content();

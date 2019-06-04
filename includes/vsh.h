@@ -6,7 +6,7 @@
 /*   By: omulder <omulder@student.codam.nl>           +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2019/04/10 20:29:42 by jbrinksm       #+#    #+#                */
-/*   Updated: 2019/06/04 08:25:08 by root          ########   odam.nl         */
+/*   Updated: 2019/06/04 10:15:33 by jbrinksm      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -54,6 +54,14 @@
 # define T_STATE_DQUOTE (1 << 2)
 # define T_FLAG_HASEQUAL (1 << 3)
 # define T_MALLOC_ERROR (1 << 4)
+
+/*
+**---------------------------------environment----------------------------------
+*/
+
+# define ENV_EXTERN (1 << 0)
+# define ENV_INTERN (1 << 1)
+# define ENV_TEMP (1 << 2)
 
 /*
 **------------------------------------parser------------------------------------
@@ -211,6 +219,12 @@ int				env_var_set_value(char *var_key, char *var_value,
 int				env_var_add_value(char *var_key, char *var_value,
 					char ***vararray);
 char			**env_free_and_return_null(char ***vshenviron);
+
+/* environment branch -jorn */
+
+t_envlst	*env_getlst(void);
+void		env_lstaddback(t_envlst **lst, t_envlst *new);
+t_envlst	*env_lstnew(char *var, unsigned char type);
 
 /*
 **----------------------------------terminal------------------------------------
