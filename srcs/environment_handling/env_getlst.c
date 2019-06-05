@@ -12,7 +12,7 @@
 
 #include "vsh.h"
 
-t_envlst	*env_lstnew(char *var, unsigned char types)
+t_envlst	*env_lstnew(char *var, unsigned char type)
 {
 	t_envlst	*new;
 
@@ -27,7 +27,7 @@ t_envlst	*env_lstnew(char *var, unsigned char types)
 		free(new);
 		return (NULL);
 	}
-	new->type |= types;
+	new->type = type;
 	new->next = NULL;
 	return (new);
 }

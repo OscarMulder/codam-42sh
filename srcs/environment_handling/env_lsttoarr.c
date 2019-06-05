@@ -12,7 +12,7 @@
 
 #include "vsh.h"
 
-int		env_lstlen(t_envlst *lst, unsigned char types_to_match)
+int		env_lstlen(t_envlst *lst, unsigned char minimal_type)
 {
 	t_envlst	*probe;
 	int			len;
@@ -21,21 +21,21 @@ int		env_lstlen(t_envlst *lst, unsigned char types_to_match)
 	len = 0;
 	while (probe != NULL)
 	{
-		if (probe->type & types_to_match)
+		if (probe->type >= minimal_type)
 			len++;
 		probe = probe->next;
 	}
 	return (len);
 }
 
-char	**env_lsttoarr(t_envlst *lst, unsigned char types_to_match)
+char	**env_lsttoarr(t_envlst *lst, unsigned char minimal_type)
 {
 	char		**vshenviron;
 	t_envlst	*probe;
 	int			len;
 	int			i;
 
-	len = env_lstlen(lst, types_to_match);
+	len = env_lstlen(lst, minimal_type);
 	vshenviron = (char**)ft_memalloc(sizeof(char*) * (len + 1));
 	if (vshenviron == NULL)
 		return (NULL);
@@ -43,7 +43,7 @@ char	**env_lsttoarr(t_envlst *lst, unsigned char types_to_match)
 	probe = lst;
 	while (i < len)
 	{
-		if (probe->type & types_to_match)
+		if (probe->type >= minimal_type)
 		{
 			vshenviron[i] = ft_strdup(probe->var);
 			if (vshenviron[i] == NULL)

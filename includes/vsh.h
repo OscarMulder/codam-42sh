@@ -60,9 +60,9 @@
 **---------------------------------environment----------------------------------
 */
 
-# define ENV_EXTERN (1 << 0)
-# define ENV_INTERN (1 << 1)
-# define ENV_TEMP (1 << 2)
+# define ENV_EXTERN 2
+# define ENV_INTERN 1
+# define ENV_TEMP 0
 
 /*
 **------------------------------------parser------------------------------------
@@ -225,9 +225,9 @@ char			**env_free_and_return_null(char ***vshenviron);
 
 t_envlst	*env_getlst(void);
 void		env_lstaddback(t_envlst **lst, t_envlst *new);
-t_envlst	*env_lstnew(char *var, unsigned char types);
-char		**env_lsttoarr(t_envlst *lst, unsigned char types_to_match);
-int			env_lstlen(t_envlst *lst, unsigned char types_to_match);
+t_envlst	*env_lstnew(char *var, unsigned char type);
+char		**env_lsttoarr(t_envlst *lst, unsigned char minimal_type);
+int			env_lstlen(t_envlst *lst, unsigned char minimal_type);
 
 /*
 **----------------------------------terminal------------------------------------
