@@ -53,7 +53,7 @@ char		**clean_memory(char **new)
 {
 	int i;
 
-	if (new == NULL || *new == NULL)
+	if (new == NULL)
 		return (NULL);
 	i = 0;
 	while (new[i] != NULL)
