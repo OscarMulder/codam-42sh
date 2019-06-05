@@ -49,19 +49,19 @@ static int	ft_word_length(const char *s, char c)
 	return (l);
 }
 
-char		**clean_memory(char **res)
+char		**clean_memory(char **new)
 {
 	int i;
 
-	if (res == NULL || *res == NULL)
+	if (new == NULL || *new == NULL)
 		return (NULL);
 	i = 0;
-	while (res[i] != NULL)
+	while (new[i] != NULL)
 	{
-		free(&(res[i]));
+		free(&(new[i]));
 		i++;
 	}
-	free(res);
+	free(new);
 	return (NULL);
 }
 
