@@ -733,8 +733,24 @@ Test(exec_find_bin, basic2)
 	char		**env;
 
 	env = env_get_environ_cpy();
-	ft_printf("PATH: %s\n", env_var_get_value("PATH", env));
 	env_var_add_value("PATH", "/usr/bin:/bin:./", &env);
+	str = ft_strdup("ls");
+	bin = exec_find_binary(str, env);
+	cr_expect_str_eq(bin, "/bin/ls");
+	ft_freearray(&env);
+	ft_strdel(&bin);
+	ft_strdel(&str);
+}
+
+Test(exec_find_bin, advanced)
+{
+	char 		*str;
+	char		*bin;
+	char		**env;
+
+	env = env_get_environ_cpy();
+	ft_printf("PATH: %s\n", env_var_get_value("PATH", env));
+	env_var_add_value("PATH", "/Users/travis/.rvm/gems/ruby-2.4.2/bin:/Users/travis/.rvm/gems/ruby-2.4.2@global/bin:/Users/travis/.rvm/rubies/ruby-2.4.2/bin:/Users/travis/.rvm/bin:/Users/travis/bin:/Users/travis/.local/bin:/Users/travis/.nvm/versions/node/v6.11.4/bin:/usr/local/bin:/usr/bin:/bin:/usr/sbin:/sbin:/opt/X11/bin", &env);
 	str = ft_strdup("ls");
 	bin = exec_find_binary(str, env);
 	cr_expect_str_eq(bin, "/bin/ls");
