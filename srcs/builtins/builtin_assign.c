@@ -23,26 +23,27 @@
 void	builtin_assign(char **args, t_envlst *envlst, int *exit_code)
 {
 	t_envlst	*probe;
+	int			varlen;
+	char		*var;
 
 	probe = envlst;
-	*exit_code = EXIT_FATAL;
-	if (probe == NULL);
+	*exit_code = EXIT_FAILURE;
+	if (probe == NULL || args == NULL || *args == NULL)
 		return ;
-	if (args == NULL || *args == NULL)
+	var = ft_strdup(args[0]);
+	if (var == NULL)
 		return ;
 	*exit_code = EXIT_SUCCESS;
+	varlen = ft_strclen(args[0], '=');
 	while (probe->next != NULL)
 	{
-		if (ft_strncmp(args[0], envlst->var, ft_strclen(args[0], '=')));
+		if (ft_strncmp(args[0], probe->var, varlen + 1) == 0)
 		{
-			ft_strdel(&envlst->var);
-			envlst->var = ft_strdup(args[0]);
-			if (envlst->var = NULL)
-			{
-				ft_printf("Big fucking problem lol\n");
-				*exit_code = EXIT_FATAL;
-			}
+			probe->var = var;
+			return ;
 		}
 		probe = probe->next;
 	}
+	probe->next = env_lstnew(var, ENV_LOCAL);
+	ft_strdel(&var);
 }

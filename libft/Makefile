@@ -6,7 +6,7 @@
 #    By: jbrinksm <jbrinksm@student.codam.nl>         +#+                      #
 #                                                    +#+                       #
 #    Created: 2019/01/09 11:10:43 by omulder        #+#    #+#                 #
-#    Updated: 2019/06/05 09:17:35 by tde-jong      ########   odam.nl          #
+#    Updated: 2019/06/05 09:35:17 by jbrinksm      ########   odam.nl          #
 #                                                                              #
 # **************************************************************************** #
 
@@ -28,7 +28,8 @@ ft_lstiter.c ft_lstdel.c ft_lstdelone.c ft_strarradd.c ft_strarrdel.c \
 ft_joinstrcstr.c ft_chartostr.c ft_joinstrcstr_free_s1.c \
 ft_joinstrcstr_free_s2.c ft_joinstrcstr_free_all.c \
 ft_get_next_line.c \
-ft_strjoinfree_s1.c ft_strjoinfree_s2.c ft_strjoinfree_all.c
+ft_strjoinfree_s1.c ft_strjoinfree_s2.c ft_strjoinfree_all.c \
+ft_strclen.c
 OBJECTS = $(FILES:.c=.o)
 
 all: $(OBJECTS) $(NAME)
