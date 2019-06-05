@@ -703,3 +703,39 @@ Test(exec_cmd, basic2, .init=redirect_all_stdout)
 	cr_expect_stdout_eq_str("hoi\n");
 	parser_astdel(&ast);
 } 
+
+/*
+**------------------------------------------------------------------------------
+*/
+
+TestSuite(exec_find_bin);
+
+Test(exec_find_bin, basic)
+{
+	char 		*str;
+	char		*bin;
+	char		**env;
+
+	env = env_get_environ_cpy();
+	str = ft_strdup("ls");
+	bin = exec_find_binary(str, env);
+	cr_expect_str_eq(bin, "/bin/ls");
+	ft_freearray(&env);
+	ft_strdel(&bin);
+	ft_strdel(&str);
+}
+
+Test(exec_find_bin, basic2)
+{
+	char 		*str;
+	char		*bin;
+	char		**env;
+
+	env = env_get_environ_cpy();
+	str = ft_strdup("env");
+	bin = exec_find_binary(str, env);
+	cr_expect_str_eq(bin, "/usr/bin/env");
+	ft_freearray(&env);
+	ft_strdel(&bin);
+	ft_strdel(&str);
+} 
