@@ -6,7 +6,7 @@
 /*   By: omulder <omulder@student.codam.nl>           +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2019/05/29 17:52:22 by omulder        #+#    #+#                */
-/*   Updated: 2019/05/31 10:20:28 by tde-jong      ########   odam.nl         */
+/*   Updated: 2019/05/31 10:20:28 by jbrinksm      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -78,6 +78,13 @@ void		exec_start(t_ast *ast, int *exit_code, t_envlst *envlst)
 		if (args == NULL)
 			return ;
 		exec_cmd(args, envlst, exit_code);
+	}
+	else if (ast->type == ASSIGN)
+	{
+		args = create_args(ast);
+		if (args == NULL)
+			return ;
+		builtin_assign(args);
 	}
 	else
 		ft_printf("N0p3: I only do the easy shit, don't fuckup!\n");
