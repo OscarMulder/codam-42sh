@@ -710,7 +710,7 @@ Test(exec_cmd, basic2, .init=redirect_all_stdout)
 
 TestSuite(exec_find_bin);
 
-Test(exec_find_bin, advanced)
+Test(exec_find_bin, basic)
 {
 	char 		*str;
 	char		*bin;
@@ -721,6 +721,23 @@ Test(exec_find_bin, advanced)
 	str = ft_strdup("vsh");
 	bin = exec_find_binary(str, env);
 	cr_expect_str_eq(bin, ".//vsh");
+	ft_freearray(&env);
+	ft_strdel(&bin);
+	ft_strdel(&str);
+}
+
+Test(exec_find_bin, basic2)
+{
+	char 		*str;
+	char		*bin;
+	char		**env;
+
+	env = env_get_environ_cpy();
+	ft_printf("PATH: %s\n", env_var_get_value("PATH", env));
+	env_var_add_value("PATH", "/usr/bin:/bin:./", &env);
+	str = ft_strdup("ls");
+	bin = exec_find_binary(str, env);
+	cr_expect_str_eq(bin, "/bin/ls");
 	ft_freearray(&env);
 	ft_strdel(&bin);
 	ft_strdel(&str);
