@@ -710,32 +710,18 @@ Test(exec_cmd, basic2, .init=redirect_all_stdout)
 
 TestSuite(exec_find_bin);
 
-Test(exec_find_bin, basic)
+Test(exec_find_bin, advanced)
 {
 	char 		*str;
 	char		*bin;
 	char		**env;
 
 	env = env_get_environ_cpy();
-	str = ft_strdup("echo");
+	env_var_add_value("PATH", "./", &env);
+	str = ft_strdup("vsh");
 	bin = exec_find_binary(str, env);
-	cr_expect_str_eq(bin, "/bin/echo");
+	cr_expect_str_eq(bin, ".//vsh");
 	ft_freearray(&env);
 	ft_strdel(&bin);
 	ft_strdel(&str);
 }
-
-Test(exec_find_bin, basic2)
-{
-	char 		*str;
-	char		*bin;
-	char		**env;
-
-	env = env_get_environ_cpy();
-	str = ft_strdup("cat");
-	bin = exec_find_binary(str, env);
-	cr_expect_str_eq(bin, "/bin/cat");
-	ft_freearray(&env);
-	ft_strdel(&bin);
-	ft_strdel(&str);
-} 
