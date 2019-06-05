@@ -49,7 +49,7 @@ static int	ft_word_length(const char *s, char c)
 	return (l);
 }
 
-char		**clean_memory(char **new)
+static char		**clean_memory(char **new)
 {
 	int i;
 
