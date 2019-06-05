@@ -27,10 +27,29 @@ static char	**init_array(t_ast *ast)
 	return (args);
 }
 
+static int	add_argument(char ***args, char *value)
+{
+	char	*temp;
+
+	temp = ft_strdup(value);
+	if (temp == NULL)
+	{
+		ft_strarrdel(args);
+		return (FUNCT_FAILURE);
+	}
+	if (ft_strarradd(args, temp) == FUNCT_FAILURE)
+	{
+		ft_strdel(&temp);
+		ft_strarrdel(args);
+		return (FUNCT_FAILURE);
+	}
+	ft_strdel(&temp);
+	return (FUNCT_SUCCESS);
+}
+
 static char	**create_args(t_ast *ast)
 {
 	char	**args;
-	char	*temp;
 	t_ast	*probe;
 
 	args = (init_array(ast));
@@ -39,16 +58,8 @@ static char	**create_args(t_ast *ast)
 	probe = ast->child;
 	while (probe)
 	{
-		temp = ft_strdup(probe->value);
-		if (temp == NULL)
+		if (add_argument(&args, probe->value) == FUNCT_FAILURE)
 			return (NULL);
-		if (ft_strarradd(&args, temp) == FUNCT_FAILURE)
-		{
-			ft_strdel(&temp);
-			ft_strarrdel(&args);
-			return (NULL);
-		}
-		ft_strdel(&temp);
 		probe = probe->child;
 	}
 	return (args);
@@ -66,7 +77,10 @@ int			exec_start(t_ast *ast, int *exit_code)
 	{
 		args = create_args(ast);
 		if (args == NULL)
+		{
+			ft_strarrdel(&env);
 			return (FUNCT_FAILURE);
+		}
 		return (exec_cmd(args, &env, exit_code));
 	}
 	else
