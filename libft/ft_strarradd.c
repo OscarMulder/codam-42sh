@@ -12,7 +12,7 @@
 
 #include "libft.h"
 
-static char	**init_array(char ***arr, const char *add)
+static char	**init_array(char ***arr)
 {
 	int		count;
 	char	**new;
@@ -33,7 +33,7 @@ int			ft_strarradd(char ***arr, const char *add)
 	int		i;
 	char	**new;
 
-	new = init_array(arr, add);
+	new = init_array(arr);
 	if (new == NULL)
 		return (false);
 	i = 0;
