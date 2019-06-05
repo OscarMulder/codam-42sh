@@ -24,12 +24,14 @@ int		main(int argc, char **argv)
 	(void)argv;
 	(void)argc;
 	envlst = env_getlst();
+	if (envlst == NULL)
+		return (EXIT_FAILURE);
 	term_p = term_prepare(envlst);
 	history_get_file_content();
 	/* if !term_p or history failed: send appropriate error message/log */
 	if (term_p == NULL)
 		return (EXIT_FAILURE);
-	shell_start();
+	shell_start(envlst);
 	if (term_reset(term_p) == FUNCT_FAILURE)
 		return (EXIT_FAILURE);
 	term_free_struct(&term_p);

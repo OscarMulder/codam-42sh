@@ -32,9 +32,9 @@ static bool	exec_bin(char **args, char **env, int *exit_code)
 	return (true);
 }
 
-bool		exec_external(char **args, char ***env, int *exit_code)
+bool		exec_external(char **args, char **env, int *exit_code)
 {
 	if (args[0][0] != '/')
 		return (false);
-	return (exec_bin(args, *env, exit_code));
+	return (exec_bin(args, env, exit_code));
 }

@@ -278,7 +278,7 @@ int				shell_dless_set_tk_val(t_tokenlst *probe, char **heredoc, char *stop);
 int				shell_dless_input(t_tokenlst *token_lst);
 int				shell_quote_checker(char **line);
 char			shell_quote_checker_find_quote(char *line);
-int				shell_start(void);
+int				shell_start(t_envlst *envlst);
 
 /*
 **----------------------------------lexer---------------------------------------
@@ -353,10 +353,10 @@ bool			tool_is_redirect_tk(t_tokens type);
 **----------------------------------execution-----------------------------------
 */
 
-int		exec_start(t_ast *ast, int *exit_code);
-int		exec_cmd(char **args, char ***env, int *exit_code);
-bool	exec_builtin(char **args, char ***env, int *exit_code);
-bool	exec_external(char **args, char ***env, int *exit_code);
+void	exec_start(t_ast *ast, int *exit_code, t_envlst *envlst);
+void	exec_cmd(char **args, t_envlst *envlst, int *exit_code);
+bool	exec_builtin(char **args, t_envlst *envlst, int *exit_code);
+bool	exec_external(char **args, char **env, int *exit_code);
 
 /*
 **----------------------------------debugging-----------------------------------

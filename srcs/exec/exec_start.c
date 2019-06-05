@@ -68,27 +68,17 @@ static char	**create_args(t_ast *ast)
 	return (args);
 }
 
-int			exec_start(t_ast *ast, int *exit_code)
+void		exec_start(t_ast *ast, int *exit_code, t_envlst *envlst)
 {
-	char	**env;
 	char	**args;
 
-	env = env_get_environ_cpy();
-	if (env == NULL)
-		return (FUNCT_FAILURE);
 	if (ast->type == WORD)
 	{
 		args = create_args(ast);
 		if (args == NULL)
-		{
-			ft_strarrdel(&env);
-			return (FUNCT_FAILURE);
-		}
-		return (exec_cmd(args, &env, exit_code));
+			return ;
+		exec_cmd(args, envlst, exit_code);
 	}
 	else
-	{
 		ft_printf("N0p3: I only do the easy shit, don't fuckup!\n");
-		return (FUNCT_FAILURE);
-	}
 }

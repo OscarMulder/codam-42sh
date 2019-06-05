@@ -24,9 +24,9 @@
 **		builtin_env(args, exit_code);
 */
 
-bool	exec_builtin(char **args, char ***env, int *exit_code)
+bool	exec_builtin(char **args, t_envlst *envlst, int *exit_code)
 {
-	(void)env;
+	(void)envlst;
 	if (ft_strequ(args[0], "echo"))
 		builtin_echo(args, exit_code);
 	else if (ft_strequ(args[0], "exit"))
