@@ -12,7 +12,7 @@
 
 #include "vsh.h"
 
-static char **init_array(t_ast *ast)
+static char	**init_array(t_ast *ast)
 {
 	char	**args;
 
@@ -42,9 +42,10 @@ static char	**create_args(t_ast *ast)
 		temp = ft_strdup(probe->value);
 		if (temp == NULL)
 			return (NULL);
-		if (ft_strarradd(&args, temp) == false)
+		if (ft_strarradd(&args, temp) == FUNCT_FAILURE)
 		{
 			ft_strdel(&temp);
+			ft_strarrdel(&args);
 			return (NULL);
 		}
 		ft_strdel(&temp);
