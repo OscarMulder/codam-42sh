@@ -717,9 +717,9 @@ Test(exec_find_bin, basic)
 	char		**env;
 
 	env = env_get_environ_cpy();
-	str = ft_strdup("git");
+	str = ft_strdup("echo");
 	bin = exec_find_binary(str, env);
-	cr_expect_str_eq(bin, "/usr/bin/git");
+	cr_expect_str_eq(bin, "/bin/echo");
 	ft_freearray(&env);
 	ft_strdel(&bin);
 	ft_strdel(&str);
@@ -732,9 +732,9 @@ Test(exec_find_bin, basic2)
 	char		**env;
 
 	env = env_get_environ_cpy();
-	str = ft_strdup("gcc");
+	str = ft_strdup("cat");
 	bin = exec_find_binary(str, env);
-	cr_expect_str_eq(bin, "/usr/bin/gcc");
+	cr_expect_str_eq(bin, "/bin/cat");
 	ft_freearray(&env);
 	ft_strdel(&bin);
 	ft_strdel(&str);
