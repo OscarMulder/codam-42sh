@@ -6,7 +6,7 @@
 /*   By: tde-jong <tde-jong@student.codam.nl>         +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2019/06/05 15:16:46 by tde-jong       #+#    #+#                */
-/*   Updated: 2019/06/05 16:43:33 by tde-jong      ########   odam.nl         */
+/*   Updated: 2019/06/05 16:52:10 by tde-jong      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -31,7 +31,7 @@ static char		*check_dir(DIR *d, char *filename, char *path)
 	while (dir != NULL)
 	{
 		if (ft_strequ(filename, dir->d_name))
-			return (ft_joinstrcstr(path, "/", filename));
+			return (ft_joinstrcstr(path, '/', filename));
 		dir = readdir(d);
 	}
 	return (NULL);
@@ -58,6 +58,6 @@ char			*exec_find_binary(char *filename, char **vararray)
 			break ;
 		paths++;
 	}
-	ft_freearray(tofree);
+	ft_freearray(&tofree);
 	return (ret);
 }
