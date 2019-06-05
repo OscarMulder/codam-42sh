@@ -12,9 +12,8 @@
 
 #include "libft.h"
 
-bool		ft_strarradd(char ***arr, const char *add)
+static char	**init_array(char ***arr, const char *add)
 {
-	int		i;
 	int		count;
 	char	**new;
 
@@ -23,10 +22,21 @@ bool		ft_strarradd(char ***arr, const char *add)
 	count = 0;
 	while ((*arr)[count] != NULL)
 		count++;
-	i = 0;
 	new = (char**)ft_memalloc(sizeof(char*) * (count + 2));
 	if (new == NULL)
 		return (false);
+	return (new);
+}
+
+int			ft_strarradd(char ***arr, const char *add)
+{
+	int		i;
+	char	**new;
+
+	new = init_array(arr, add);
+	if (new == NULL)
+		return (false);
+	i = 0;
 	while ((*arr)[i] != NULL)
 	{
 		new[i] = (*arr)[i];
