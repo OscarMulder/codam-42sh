@@ -6,7 +6,7 @@
 /*   By: jbrinksm <jbrinksm@student.codam.nl>         +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2019/01/09 11:10:09 by omulder        #+#    #+#                */
-/*   Updated: 2019/06/05 09:17:57 by tde-jong      ########   odam.nl         */
+/*   Updated: 2019/06/05 09:25:29 by tde-jong      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -63,7 +63,7 @@ t_list				*ft_lstnew(void *content, size_t content_size);
 void				ft_lstadd(t_list **alst, t_list *new);
 char				*ft_strndup(const char *s1, size_t n);
 int					ft_strequ(char const *s1, char const *s2);
-int					ft_strnequ(char const *s1, char const *s2, size_t n)
+int					ft_strnequ(char const *s1, char const *s2, size_t n);
 void				ft_putchar_fd(char c, int fd);
 void				ft_putstr_fd(char const *s, int fd);
 void				ft_putendl_fd(char const *s, int fd);
