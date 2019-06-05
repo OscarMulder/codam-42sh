@@ -23,7 +23,10 @@ static char	**init_array(t_ast *ast)
 		return (NULL);
 	args[0] = ft_strdup(ast->value);
 	if (args[0] == NULL)
+	{
+		ft_strarrdel(&args);
 		return (NULL);
+	}
 	return (args);
 }
 
