@@ -496,7 +496,7 @@ Test(command_exec, basic, .init=redirect_all_stdout)
 	envlst = env_getlst();
 	cr_expect(lexer(&(str), &lst) == FUNCT_SUCCESS);
 	cr_expect(parser_start(&lst, &ast) == FUNCT_SUCCESS);
-	exec_start(ast, &exit_code, envlst);
+	exec_start(ast, envlst, &exit_code);
 	cr_expect(exit_code == 0);
 	parser_astdel(&ast);
 }
@@ -580,7 +580,7 @@ Test(exec_echo, basic, .init=redirect_all_stdout)
 	envlst = env_getlst();
 	cr_expect(lexer(&(str), &lst) == FUNCT_SUCCESS);
 	cr_expect(parser_start(&lst, &ast) == FUNCT_SUCCESS);
-	exec_start(ast, &exit_code, envlst);
+	exec_start(ast, envlst, &exit_code);
 	cr_expect(exit_code == 0);
 	cr_expect_stdout_eq_str("hoi\n");
 	parser_astdel(&ast);
@@ -600,7 +600,7 @@ Test(exec_echo, basic2, .init=redirect_all_stdout)
 	envlst = env_getlst();
 	cr_expect(lexer(&(str), &lst) == FUNCT_SUCCESS);
 	cr_expect(parser_start(&lst, &ast) == FUNCT_SUCCESS);
-	exec_start(ast, &exit_code, envlst);
+	exec_start(ast, envlst, &exit_code);
 	cr_expect(exit_code == 0);
 	cr_expect_stdout_eq_str("\"Hi, this is a string\"\n");
 	parser_astdel(&ast);
@@ -628,7 +628,7 @@ Test(exec_cmd, basic, .init=redirect_all_stdout)
 	envlst = env_getlst();
 	cr_expect(lexer(&(str), &lst) == FUNCT_SUCCESS);
 	cr_expect(parser_start(&lst, &ast) == FUNCT_SUCCESS);
-	exec_start(ast, &exit_code, envlst);
+	exec_start(ast, envlst, &exit_code);
 	cr_expect(exit_code == 0);
 	ft_strdel(&str);
 	str = ft_strjoin(cwd, "\n");
@@ -652,7 +652,7 @@ Test(exec_cmd, basic2, .init=redirect_all_stdout)
 	envlst = env_getlst();
 	cr_expect(lexer(&(str), &lst) == FUNCT_SUCCESS);
 	cr_expect(parser_start(&lst, &ast) == FUNCT_SUCCESS);
-	exec_start(ast, &exit_code, envlst);
+	exec_start(ast, envlst, &exit_code);
 	cr_expect(exit_code == 0);
 	cr_expect_stdout_eq_str("hoi\n");
 	parser_astdel(&ast);
@@ -668,14 +668,14 @@ Test(exec_find_bin, basic)
 {
 	char 		*str;
 	char		*bin;
-	char		**env;
+	t_envlst	lst;
 
-	env = env_get_environ_cpy();
-	env_var_add_value("PATH", "./", &env);
+	lst.var = "PATH=./";
+	lst.type = ENV_EXTERN;
+	lst.next = NULL;
 	str = ft_strdup("vsh");
-	bin = exec_find_binary(str, env);
+	bin = exec_find_binary(str, &lst);
 	cr_expect_str_eq(bin, ".//vsh");
-	ft_freearray(&env);
 	ft_strdel(&bin);
 	ft_strdel(&str);
 }
@@ -684,14 +684,14 @@ Test(exec_find_bin, basic2)
 {
 	char 		*str;
 	char		*bin;
-	char		**env;
+	t_envlst	lst;
 
-	env = env_get_environ_cpy();
-	env_var_add_value("PATH", "/usr/bin:/bin:./", &env);
+	lst.var = "PATH=/usr/bin:/bin:./";
+	lst.type = ENV_EXTERN;
+	lst.next = NULL;
 	str = ft_strdup("ls");
-	bin = exec_find_binary(str, env);
+	bin = exec_find_binary(str, &lst);
 	cr_expect_str_eq(bin, "/bin/ls");
-	ft_freearray(&env);
 	ft_strdel(&bin);
 	ft_strdel(&str);
 }
@@ -700,14 +700,14 @@ Test(exec_find_bin, advanced)
 {
 	char 		*str;
 	char		*bin;
-	char		**env;
+	t_envlst	lst;
 
-	env = env_get_environ_cpy();
-	env_var_add_value("PATH", "/Users/travis/.rvm/gems/ruby-2.4.2/bin:/Users/travis/.rvm/gems/ruby-2.4.2@global/bin:/Users/travis/.rvm/rubies/ruby-2.4.2/bin:/Users/travis/.rvm/bin:/Users/travis/bin:/Users/travis/.local/bin:/Users/travis/.nvm/versions/node/v6.11.4/bin:/usr/local/bin:/usr/bin:/bin:/usr/sbin:/sbin:/opt/X11/bin", &env);
+	lst.var = "PATH=/Users/travis/.rvm/gems/ruby-2.4.2/bin:/Users/travis/.rvm/gems/ruby-2.4.2@global/bin:/Users/travis/.rvm/rubies/ruby-2.4.2/bin:/Users/travis/.rvm/bin:/Users/travis/bin:/Users/travis/.local/bin:/Users/travis/.nvm/versions/node/v6.11.4/bin:/usr/local/bin:/usr/bin:/bin:/usr/sbin:/sbin:/opt/X11/bin";
+	lst.type = ENV_EXTERN;
+	lst.next = NULL;
 	str = ft_strdup("ls");
-	bin = exec_find_binary(str, env);
+	bin = exec_find_binary(str, &lst);
 	cr_expect_str_eq(bin, "/bin/ls");
-	ft_freearray(&env);
 	ft_strdel(&bin);
 	ft_strdel(&str);
 }
@@ -716,14 +716,14 @@ Test(exec_find_bin, nopath)
 {
 	char 		*str;
 	char		*bin;
-	char		**env;
+	t_envlst	lst;
 
-	env = env_get_environ_cpy();
-	env_var_set_value("PATH", "", env);
+	lst.var = "PATH=";
+	lst.type = ENV_EXTERN;
+	lst.next = NULL;
 	str = ft_strdup("ls");
-	bin = exec_find_binary(str, env);
+	bin = exec_find_binary(str, &lst);
 	cr_expect(bin == NULL);
-	ft_freearray(&env);
 	ft_strdel(&bin);
 	ft_strdel(&str);
 }
@@ -734,13 +734,16 @@ Test(exec_find_bin, execution, .init=redirect_all_stdout)
 	t_ast		*ast;
 	char 		*str;
 	int			exit_code;
+	t_envlst	*envlst;
 
+	envlst = env_getlst();
 	str = ft_strdup("ls vsh");
 	lst = NULL;
 	ast = NULL;
 	cr_expect(lexer(&(str), &lst) == FUNCT_SUCCESS);
 	cr_expect(parser_start(&lst, &ast) == FUNCT_SUCCESS);
-	cr_expect(exec_start(ast, &exit_code) == FUNCT_SUCCESS);
+	exec_start(ast, envlst, &exit_code);
+	cr_expect(exit_code == FUNCT_SUCCESS);
 	cr_expect_stdout_eq_str("vsh\n");
 	parser_astdel(&ast);
 }
@@ -751,13 +754,16 @@ Test(exec_find_bin, execnonexistent, .init=redirect_all_stdout)
 	t_ast		*ast;
 	char 		*str;
 	int			exit_code;
+	t_envlst	*envlst;
 
+	envlst = env_getlst();
 	str = ft_strdup("idontexist");
 	lst = NULL;
 	ast = NULL;
 	cr_expect(lexer(&(str), &lst) == FUNCT_SUCCESS);
 	cr_expect(parser_start(&lst, &ast) == FUNCT_SUCCESS);
-	cr_expect(exec_start(ast, &exit_code) == FUNCT_SUCCESS);
+	exec_start(ast, envlst, &exit_code);
+	cr_expect(exit_code == FUNCT_SUCCESS);
 	cr_expect_stdout_eq_str("idontexist: Command not found.\n");
 	parser_astdel(&ast);
 }

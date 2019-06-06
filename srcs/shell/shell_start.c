@@ -58,7 +58,7 @@ int		shell_start(t_envlst *envlst)
 		#ifdef DEBUG
 		print_tree(ast);
 		#endif
-		exec_start(ast, &exit_code, envlst);
+		exec_start(ast, envlst, &exit_code);
 		parser_astdel(&ast);
 		/* ADD EVALUATOR */
 		/* ADD EXPANSION FUNC ? */

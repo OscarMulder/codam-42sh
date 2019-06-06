@@ -68,7 +68,7 @@ static char	**create_args(t_ast *ast)
 	return (args);
 }
 
-void		exec_start(t_ast *ast, int *exit_code, t_envlst *envlst)
+void	exec_start(t_ast *ast, t_envlst *envlst, int *exit_code)
 {
 	char	**args;
 

@@ -345,7 +345,7 @@ bool			tool_is_redirect_tk(t_tokens type);
 **----------------------------------execution-----------------------------------
 */
 
-void	exec_start(t_ast *ast, int *exit_code, t_envlst *envlst);
+void	exec_start(t_ast *ast, t_envlst *envlst, int *exit_code);
 void	exec_cmd(char **args, t_envlst *envlst, int *exit_code);
 bool	exec_builtin(char **args, t_envlst *envlst, int *exit_code);
 bool	exec_external(char **args, t_envlst *envlst, int *exit_code);
