@@ -14,22 +14,14 @@
 
 void		exec_cmd(char **args, t_envlst *envlst, int *exit_code)
 {
-	char	**vshenviron;
 
 	if (exec_builtin(args, envlst, exit_code) == false)
 	{
-		vshenviron = env_lsttoarr(envlst, ENV_EXTERN);
-		if (vshenviron == NULL)
-		{
-			ft_printf("vsh: failed to allocate enough memory!\n");
-			*exit_code = EXIT_FAILURE;
-		}
-		else if (exec_external(args, vshenviron, exit_code) == false)
+		if (exec_external(args, envlst, exit_code) == false)
 		{
 			ft_printf("%s: Command not found.\n", args[0]);
 			*exit_code = EXIT_NOTFOUND;
 		}
-		free(vshenviron);
 	}
 	ft_strarrdel(&args);
 }

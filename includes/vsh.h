@@ -6,7 +6,7 @@
 /*   By: omulder <omulder@student.codam.nl>           +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2019/04/10 20:29:42 by jbrinksm       #+#    #+#                */
-/*   Updated: 2019/06/06 14:53:23 by jbrinksm      ########   odam.nl         */
+/*   Updated: 2019/06/06 13:41:57 by tde-jong      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -31,7 +31,6 @@
 **=================================exit codes====================================
 */
 
-# define EXIT_OK 0
 # define EXIT_NOTFOUND 127
 # define EXIT_FATAL 128
 
@@ -349,7 +348,8 @@ bool			tool_is_redirect_tk(t_tokens type);
 void	exec_start(t_ast *ast, int *exit_code, t_envlst *envlst);
 void	exec_cmd(char **args, t_envlst *envlst, int *exit_code);
 bool	exec_builtin(char **args, t_envlst *envlst, int *exit_code);
-bool	exec_external(char **args, char **env, int *exit_code);
+bool	exec_external(char **args, t_envlst *envlst, int *exit_code);
+char	*exec_find_binary(char *filename, t_envlst *envlst);
 
 /*
 **----------------------------------debugging-----------------------------------
