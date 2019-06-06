@@ -6,7 +6,7 @@
 /*   By: omulder <omulder@student.codam.nl>           +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2019/04/10 20:29:42 by jbrinksm       #+#    #+#                */
-/*   Updated: 2019/06/05 09:30:47 by jbrinksm      ########   odam.nl         */
+/*   Updated: 2019/06/06 00:01:08 by jbrinksm      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -339,6 +339,9 @@ void			builtin_exit(char **args, int *exit_code);
 void			builtin_echo(char **args, int *exit_code);
 char			builtin_echo_set_flags(char **args, int *arg_i);
 void			builtin_assign(char **args, t_envlst *envlst, int *exit_code);
+void			builtin_export(char **args, t_envlst *envlst, int *exit_code);
+void			builtin_export_var(char *varname, t_envlst *envlst, int *exit_code);
+void			builtin_export_noargs(t_envlst *envlst, int *exit_code);
 
 /*
 **---------------------------------tools----------------------------------------
