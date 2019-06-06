@@ -219,7 +219,6 @@ typedef struct	s_envlst
 	struct s_envlst	*next;
 }				t_envlst;
 
-char			**env_get_environ_cpy(void);
 char			*env_getvalue(char *var_key, t_envlst *envlst);
 char			**env_free_and_return_null(char ***vshenviron);
 

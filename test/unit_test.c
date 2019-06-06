@@ -38,16 +38,14 @@ TestSuite(term_is_valid);
 
 Test(term_is_valid, basic, .init=redirect_all_stdout)
 {
-	t_envlst	*envlst;
 	t_envlst	lst1;
 	t_envlst	lst2;
 
-	envlst = &lst1;
 	lst1.var = "TERM=non_valid_term";
 	lst2.var = "TERM=vt100";
 	lst1.type = ENV_EXTERN;
 	lst2.type = ENV_EXTERN;
-	lst1.next = &lst2;
+	lst1.next = NULL;
 	lst2.next = NULL;
 	cr_expect_eq(term_is_valid(&lst1), FUNCT_FAILURE);
 	cr_expect_eq(term_is_valid(&lst2), FUNCT_SUCCESS);
@@ -86,29 +84,6 @@ Test(term_free_struct, basic)
 
 	term_free_struct(&term_p);
 	cr_expect_eq(term_p, NULL);
-}
-
-/*
-**------------------------------------------------------------------------------
-*/
-
-TestSuite(env_get_environ_cpy);
-
-Test(env_get_environ_cpy, basic)
-{
-	extern char **environ;
-	char		**environ_cpy;
-	int			index;
-
-	environ_cpy = env_get_environ_cpy();
-	index = 0;
-	cr_assert(environ_cpy != NULL);
-	while (environ_cpy[index] != NULL && environ[index] != NULL)
-	{
-		cr_expect_str_eq(environ_cpy[index], environ[index]);
-		index++;
-	}
-	cr_expect_eq(environ_cpy[index], environ[index]);
 }
 
 /*
