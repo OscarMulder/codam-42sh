@@ -255,19 +255,19 @@ Test(builtin_echo, basic, .init=redirect_all_stdout)
 	exit_code = INT_MIN;
 	builtin_echo(args, &exit_code);
 	cr_expect(exit_code == 0);
-	ft_freearray(&args);
+	ft_freestrarray(&args);
 
 	args = ft_strsplit("echo|-Eea|\n", '|');
 	exit_code = INT_MIN;
 	builtin_echo(args, &exit_code);
 	cr_expect(exit_code == 0);
-	ft_freearray(&args);
+	ft_freestrarray(&args);
 
 	args = ft_strsplit("echo|-nEe", '|');
 	exit_code = INT_MIN;
 	builtin_echo(args, &exit_code);
 	cr_expect(exit_code == 0);
-	ft_freearray(&args);
+	ft_freestrarray(&args);
 
 	args = ft_strsplit("echo|-E", '|');
 	exit_code = INT_MIN;
@@ -721,7 +721,7 @@ Test(exec_find_bin, basic)
 	str = ft_strdup("vsh");
 	bin = exec_find_binary(str, env);
 	cr_expect_str_eq(bin, ".//vsh");
-	ft_freearray(&env);
+	ft_freestrarray(&env);
 	ft_strdel(&bin);
 	ft_strdel(&str);
 }
@@ -737,7 +737,7 @@ Test(exec_find_bin, basic2)
 	str = ft_strdup("ls");
 	bin = exec_find_binary(str, env);
 	cr_expect_str_eq(bin, "/bin/ls");
-	ft_freearray(&env);
+	ft_freestrarray(&env);
 	ft_strdel(&bin);
 	ft_strdel(&str);
 }
@@ -753,7 +753,7 @@ Test(exec_find_bin, advanced)
 	str = ft_strdup("ls");
 	bin = exec_find_binary(str, env);
 	cr_expect_str_eq(bin, "/bin/ls");
-	ft_freearray(&env);
+	ft_freestrarray(&env);
 	ft_strdel(&bin);
 	ft_strdel(&str);
 }
@@ -769,7 +769,7 @@ Test(exec_find_bin, nopath)
 	str = ft_strdup("ls");
 	bin = exec_find_binary(str, env);
 	cr_expect(bin == NULL);
-	ft_freearray(&env);
+	ft_freestrarray(&env);
 	ft_strdel(&bin);
 	ft_strdel(&str);
 }

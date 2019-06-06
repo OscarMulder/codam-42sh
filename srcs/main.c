@@ -33,6 +33,6 @@ int		main(int argc, char **argv)
 	if (term_reset(term_p) == FUNCT_FAILURE)
 		return (EXIT_FAILURE);
 	term_free_struct(&term_p);
-	ft_freearray(&vshenviron);
+	ft_freestrarray(&vshenviron);
 	return (EXIT_SUCCESS);
 }

@@ -19,7 +19,7 @@
 
 char	**env_free_and_return_null(char ***vshenviron)
 {
-	ft_freearray(vshenviron);
+	ft_freestrarray(vshenviron);
 	return (NULL);
 }
 

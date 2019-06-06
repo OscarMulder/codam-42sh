@@ -14,8 +14,8 @@
 
 static int	clean_return(char ***args, char ***env, int ret)
 {
-	ft_strarrdel(args);
-	ft_strarrdel(env);
+	ft_freestrarray(args);
+	ft_freestrarray(env);
 	return (ret);
 }
 

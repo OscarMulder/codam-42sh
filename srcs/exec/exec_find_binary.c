@@ -60,6 +60,6 @@ char			*exec_find_binary(char *filename, char **vararray)
 		}
 		i++;
 	}
-	ft_freearray(&paths);
+	ft_freestrarray(&paths);
 	return (ret);
 }

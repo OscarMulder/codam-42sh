@@ -1,29 +1,30 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        ::::::::            */
-/*   ft_strarrdel.c                                     :+:    :+:            */
+/*   ft_freestrarray.c                                  :+:    :+:            */
 /*                                                     +:+                    */
 /*   By: omulder <omulder@student.codam.nl>           +#+                     */
 /*                                                   +#+                      */
-/*   Created: 2019/03/24 13:17:15 by omulder        #+#    #+#                */
-/*   Updated: 2019/04/12 10:14:19 by omulder       ########   odam.nl         */
+/*   Created: 2019/03/30 01:48:39 by jbrinksm       #+#    #+#                */
+/*   Updated: 2019/04/23 14:51:05 by omulder       ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "libft.h"
 
-void	ft_strarrdel(char ***arr)
+void	ft_freestrarray(char ***array_p)
 {
-	int i;
+	int index;
 
-	i = 0;
-	if (arr == NULL || *arr == NULL)
-		return ;
-	while ((*arr)[i] != 0)
+	index = 0;
+	if (*array_p)
 	{
-		ft_strdel(&((*arr)[i]));
-		i++;
+		while ((*array_p)[index] != NULL)
+		{
+			ft_strdel(&(*array_p)[index]);
+			index++;
+		}
+		free(*array_p);
+		*array_p = NULL;
 	}
-	free(*arr);
-	*arr = NULL;
 }
