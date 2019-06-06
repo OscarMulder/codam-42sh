@@ -18,12 +18,25 @@ static bool	exec_bin(char **args, char **env, int *exit_code)
 {
 	pid_t	pid;
 	int		status;
+	int		ret;
 
 	pid = fork();
 	if (pid < 0)
 		return (false);
 	if (pid == 0)
-		execve(args[0], args, env);
+	{
+		ret = execve(args[0], args, env);
+		if (ret == -1)
+		{
+			if (args[0][0] == '/')
+				ft_eprintf("vsh: %s: no such file or directory\n", args[0]);
+			else
+				ft_eprintf("vsh: %s: command not found\n", args[0]);
+			ft_freestrarray(&env);
+			ft_freestrarray(&args);
+			exit(ret);
+		}
+	}
 	waitpid(pid, &status, WUNTRACED);
 	if (WIFEXITED(status))
 		*exit_code = WEXITSTATUS(status);
