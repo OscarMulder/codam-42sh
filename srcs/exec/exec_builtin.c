@@ -6,7 +6,7 @@
 /*   By: omulder <omulder@student.codam.nl>           +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2019/05/29 16:59:41 by omulder        #+#    #+#                */
-/*   Updated: 2019/06/06 00:02:47 by jbrinksm      ########   odam.nl         */
+/*   Updated: 2019/06/06 13:51:54 by jbrinksm      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -26,12 +26,11 @@
 
 bool	exec_builtin(char **args, t_envlst *envlst, int *exit_code)
 {
+	(void)envlst;
 	if (ft_strequ(args[0], "echo"))
 		builtin_echo(args, exit_code);
 	else if (ft_strequ(args[0], "exit"))
 		builtin_exit(args, exit_code);
-	else if (ft_strequ(args[0], "export"))
-		builtin_export(args, envlst, exit_code);
 	else
 		return (false);
 	return (true);
