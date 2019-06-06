@@ -12,10 +12,11 @@
 
 #include "vsh.h"
 
-void	builtin_export_noargs(t_envlst *envlst, int *exit_code)
+void			builtin_export_noargs(t_envlst *envlst, int flags, int *exit_code)
 {
 	t_envlst	*probe;
 
+	(void)flags;
 	probe = envlst;
 	while (probe != NULL)
 	{
@@ -39,7 +40,7 @@ void	builtin_export_noargs(t_envlst *envlst, int *exit_code)
 **	set exit_code to EXIT_FAILURE.
 */
 
-void	builtin_export_var(char *varname, t_envlst *envlst, int *exit_code)
+void			builtin_export_var(char *varname, t_envlst *envlst, int *exit_code)
 {
 	t_envlst	*probe;
 	int			varlen;
@@ -67,15 +68,75 @@ void	builtin_export_var(char *varname, t_envlst *envlst, int *exit_code)
 	*exit_code = EXIT_FAILURE;
 }
 
-void	builtin_export(char **args, t_envlst *envlst, int *exit_code)
+int				builtin_export_readflags(char *arg, int *flags)
 {
-	int		i;
+	int i;
+
+	if (arg == NULL /* <-- should be redundant */|| arg[0] == '\0')
+		return (FUNCT_ERROR);
+	i = 1;
+	while (arg[i] != '\0')
+	{
+		if (arg[i] == 'n')
+			*flags |= EXP_FLAG_LN;
+		else if (arg[i] == 'p')
+			*flags |= EXP_FLAG_LP;
+		else
+		{
+			ft_printf("export: invalid option %c\n", arg[i]);
+			return (FUNCT_ERROR);
+		}
+		i++;
+	}
+	return (FUNCT_SUCCESS);
+}
+
+int				builtin_export_getflags(char **args, int *flags, int *argc)
+{
+	int				i;
+
+	if (args == NULL)
+		return (FUNCT_ERROR);
+	i = 0;
+	while (args[i] != NULL)
+	{
+		(*argc)++;
+		if (ft_strcmp(args[i], "--") == 0)
+			return (FUNCT_SUCCESS);
+		if (args[i][0] == '-')
+		{
+			if (builtin_export_readflags(args[i], flags) == FUNCT_ERROR)
+				return (FUNCT_ERROR);
+		}
+		else
+		{
+			(*argc)--;
+			return (FUNCT_SUCCESS);
+		}
+		i++;
+	}
+	return (FUNCT_SUCCESS);
+}
+
+void			builtin_export(char **args, t_envlst *envlst, int *exit_code)
+{
+	int	i;
+	int	flags;
 
 	i = 1;
 	if (args == NULL /* should be redundant --> */|| args[0] == NULL)
+	{
 		*exit_code = EXIT_FAILURE;
-	else if (args[1] == NULL)
-		builtin_export_noargs(envlst, exit_code);
+		return ;
+	}
+	flags = 0;
+	if (builtin_export_getflags(&(args[1]), &flags, &i) == FUNCT_ERROR)
+	{
+		*exit_code = EXIT_FAILURE;
+		return ;
+	}
+	if (args[i] == NULL)
+		builtin_export_noargs(envlst, flags, exit_code);
 	else
 	{
 		*exit_code = EXIT_SUCCESS;

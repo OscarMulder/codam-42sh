@@ -46,6 +46,13 @@
 # define ESC				27
 
 /*
+**-------------------------------builtin export---------------------------------
+*/
+
+# define EXP_FLAG_LN		(1 << 0)
+# define EXP_FLAG_LP		(1 << 1)
+
+/*
 **------------------------------------lexer-------------------------------------
 */
 
@@ -341,7 +348,7 @@ char			builtin_echo_set_flags(char **args, int *arg_i);
 void			builtin_assign(char **args, t_envlst *envlst, int *exit_code);
 void			builtin_export(char **args, t_envlst *envlst, int *exit_code);
 void			builtin_export_var(char *varname, t_envlst *envlst, int *exit_code);
-void			builtin_export_noargs(t_envlst *envlst, int *exit_code);
+void			builtin_export_noargs(t_envlst *envlst, int flags, int *exit_code);
 
 /*
 **---------------------------------tools----------------------------------------
