@@ -17,7 +17,7 @@ void	ft_freestrarray(char ***array_p)
 	int index;
 
 	index = 0;
-	if (*array_p)
+	if (array_p != NULL && *array_p != NULL)
 	{
 		while ((*array_p)[index] != NULL)
 		{
