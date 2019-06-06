@@ -758,6 +758,22 @@ Test(exec_find_bin, advanced)
 	ft_strdel(&str);
 }
 
+Test(exec_find_bin, nopath)
+{
+	char 		*str;
+	char		*bin;
+	char		**env;
+
+	env = env_get_environ_cpy();
+	env_var_set_value("PATH", "", env);
+	str = ft_strdup("ls");
+	bin = exec_find_binary(str, env);
+	cr_expect(bin == NULL);
+	ft_freearray(&env);
+	ft_strdel(&bin);
+	ft_strdel(&str);
+}
+
 Test(exec_find_bin, execution, .init=redirect_all_stdout)
 {
 	t_tokenlst	*lst;
@@ -772,5 +788,22 @@ Test(exec_find_bin, execution, .init=redirect_all_stdout)
 	cr_expect(parser_start(&lst, &ast) == FUNCT_SUCCESS);
 	cr_expect(exec_start(ast, &exit_code) == FUNCT_SUCCESS);
 	cr_expect_stdout_eq_str("vsh\n");
+	parser_astdel(&ast);
+}
+
+Test(exec_find_bin, execnonexistent, .init=redirect_all_stdout)
+{
+	t_tokenlst	*lst;
+	t_ast		*ast;
+	char 		*str;
+	int			exit_code;
+
+	str = ft_strdup("idontexist");
+	lst = NULL;
+	ast = NULL;
+	cr_expect(lexer(&(str), &lst) == FUNCT_SUCCESS);
+	cr_expect(parser_start(&lst, &ast) == FUNCT_SUCCESS);
+	cr_expect(exec_start(ast, &exit_code) == FUNCT_SUCCESS);
+	cr_expect_stdout_eq_str("idontexist: Command not found.\n");
 	parser_astdel(&ast);
 }

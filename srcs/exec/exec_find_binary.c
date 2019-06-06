@@ -18,7 +18,7 @@ static char		**get_paths(char **vararray)
 	char *paths;
 
 	paths = env_var_get_value("PATH", vararray);
-	if (paths == NULL)
+	if (paths == NULL || *paths == '\0') // second condition should be fixed in env var get value
 		return (NULL);
 	return (ft_strsplit(paths, ':'));
 }
