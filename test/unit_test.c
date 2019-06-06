@@ -749,7 +749,6 @@ Test(exec_find_bin, advanced)
 	char		**env;
 
 	env = env_get_environ_cpy();
-	ft_printf("PATH: %s\n", env_var_get_value("PATH", env));
 	env_var_add_value("PATH", "/Users/travis/.rvm/gems/ruby-2.4.2/bin:/Users/travis/.rvm/gems/ruby-2.4.2@global/bin:/Users/travis/.rvm/rubies/ruby-2.4.2/bin:/Users/travis/.rvm/bin:/Users/travis/bin:/Users/travis/.local/bin:/Users/travis/.nvm/versions/node/v6.11.4/bin:/usr/local/bin:/usr/bin:/bin:/usr/sbin:/sbin:/opt/X11/bin", &env);
 	str = ft_strdup("ls");
 	bin = exec_find_binary(str, env);
@@ -757,4 +756,21 @@ Test(exec_find_bin, advanced)
 	ft_freearray(&env);
 	ft_strdel(&bin);
 	ft_strdel(&str);
+}
+
+Test(exec_find_bin, execution, .init=redirect_all_stdout)
+{
+	t_tokenlst	*lst;
+	t_ast		*ast;
+	char 		*str;
+	int			exit_code;
+
+	str = ft_strdup("ls vsh");
+	lst = NULL;
+	ast = NULL;
+	cr_expect(lexer(&(str), &lst) == FUNCT_SUCCESS);
+	cr_expect(parser_start(&lst, &ast) == FUNCT_SUCCESS);
+	cr_expect(exec_start(ast, &exit_code) == FUNCT_SUCCESS);
+	cr_expect_stdout_eq_str("vsh\n");
+	parser_astdel(&ast);
 }
