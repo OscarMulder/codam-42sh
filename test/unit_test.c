@@ -686,7 +686,7 @@ Test(exec_find_bin, basic2)
 	char		*bin;
 	t_envlst	lst;
 
-	lst.var = "PATH=/usr/bin:/bin:./";
+	lst.var = "PATH=/bin:./";
 	lst.type = ENV_EXTERN;
 	lst.next = NULL;
 	str = ft_strdup("ls");
@@ -702,7 +702,7 @@ Test(exec_find_bin, advanced)
 	char		*bin;
 	t_envlst	lst;
 
-	lst.var = "PATH=/Users/travis/.rvm/gems/ruby-2.4.2/bin:/Users/travis/.rvm/gems/ruby-2.4.2@global/bin:/Users/travis/.rvm/rubies/ruby-2.4.2/bin:/Users/travis/.rvm/bin:/Users/travis/bin:/Users/travis/.local/bin:/Users/travis/.nvm/versions/node/v6.11.4/bin:/usr/local/bin:/usr/bin:/bin:/usr/sbin:/sbin:/opt/X11/bin";
+	lst.var = "PATH=/Users/travis/.rvm/gems/ruby-2.4.2/bin:/Users/travis/.rvm/gems/ruby-2.4.2@global/bin:/Users/travis/.rvm/rubies/ruby-2.4.2/bin:/Users/travis/.rvm/bin:/Users/travis/bin:/Users/travis/.local/bin:/Users/travis/.nvm/versions/node/v6.11.4/bin:/bin:/usr/local/bin:/usr/bin:/usr/sbin:/sbin:/opt/X11/bin";
 	lst.type = ENV_EXTERN;
 	lst.next = NULL;
 	str = ft_strdup("ls");
@@ -743,7 +743,7 @@ Test(exec_find_bin, execution, .init=redirect_all_stdout)
 	cr_expect(lexer(&(str), &lst) == FUNCT_SUCCESS);
 	cr_expect(parser_start(&lst, &ast) == FUNCT_SUCCESS);
 	exec_start(ast, envlst, &exit_code);
-	cr_expect(exit_code == FUNCT_SUCCESS);
+	cr_expect(exit_code == EXIT_SUCCESS);
 	cr_expect_stdout_eq_str("vsh\n");
 	parser_astdel(&ast);
 }
@@ -763,7 +763,7 @@ Test(exec_find_bin, execnonexistent, .init=redirect_all_stdout)
 	cr_expect(lexer(&(str), &lst) == FUNCT_SUCCESS);
 	cr_expect(parser_start(&lst, &ast) == FUNCT_SUCCESS);
 	exec_start(ast, envlst, &exit_code);
-	cr_expect(exit_code == FUNCT_SUCCESS);
+	cr_expect(exit_code == EXIT_NOTFOUND);
 	cr_expect_stdout_eq_str("idontexist: Command not found.\n");
 	parser_astdel(&ast);
 }
