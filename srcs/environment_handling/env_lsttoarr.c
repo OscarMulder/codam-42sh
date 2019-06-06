@@ -6,7 +6,7 @@
 /*   By: jbrinksm <jbrinksm@student.codam.nl>         +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2019/06/04 10:54:56 by jbrinksm       #+#    #+#                */
-/*   Updated: 2019/06/05 09:12:33 by tde-jong      ########   odam.nl         */
+/*   Updated: 2019/06/06 14:06:59 by jbrinksm      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -45,12 +45,7 @@ char	**env_lsttoarr(t_envlst *lst, unsigned char minimal_type)
 	{
 		if (probe->type >= minimal_type)
 		{
-			vshenviron[i] = ft_strdup(probe->var);
-			if (vshenviron[i] == NULL)
-			{
-				ft_freearray(&vshenviron);
-				return (NULL);
-			}
+			vshenviron[i] = probe->var;
 			i++;
 		}
 		probe = probe->next;

@@ -6,7 +6,7 @@
 /*   By: jbrinksm <jbrinksm@student.codam.nl>         +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2019/04/18 16:37:32 by omulder        #+#    #+#                */
-/*   Updated: 2019/05/29 17:30:34 by jbrinksm      ########   odam.nl         */
+/*   Updated: 2019/06/06 15:09:17 by jbrinksm      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -38,13 +38,19 @@ TestSuite(term_is_valid);
 
 Test(term_is_valid, basic, .init=redirect_all_stdout)
 {
-	char *env1;
-	char *env2;
+	t_envlst	*envlst;
+	t_envlst	lst1;
+	t_envlst	lst2;
 
-	env1 = "TERM=non_valid_term";
-	env2 = "TERM=vt100";
-	cr_expect_eq(term_is_valid(&env1), FUNCT_FAILURE);
-	cr_expect_eq(term_is_valid(&env2), FUNCT_SUCCESS);
+	envlst = &lst1;
+	lst1.var = "TERM=non_valid_term";
+	lst2.var = "TERM=vt100";
+	lst1.type = ENV_EXTERN;
+	lst2.type = ENV_EXTERN;
+	lst1.next = &lst2;
+	lst2.next = NULL;
+	cr_expect_eq(term_is_valid(&lst1), FUNCT_FAILURE);
+	cr_expect_eq(term_is_valid(&lst2), FUNCT_SUCCESS);
 }
 
 /*
@@ -110,8 +116,6 @@ Test(env_get_environ_cpy, basic)
 */
 
 TestSuite(term_get_attributes);
-
-
 
 Test(term_get_attributes, basic)
 {
@@ -281,67 +285,27 @@ Test(builtin_echo, basic, .init=redirect_all_stdout)
 **------------------------------------------------------------------------------
 */
 
-TestSuite(env_var_get_value);
+TestSuite(env_getvalue);
 
-Test(env_var_get_value, basic)
+Test(env_getvalue, basic)
 {
-	char	*fakenv[] = {"LOL=didi", "PATH=lala", "PAT=lolo", NULL};
-	cr_expect_str_eq(env_var_get_value("PATH", fakenv), "lala");
-	cr_expect(env_var_get_value("NOEXIST", fakenv) == NULL);
-}
+	t_envlst	*envlst;
+	t_envlst	lst1;
+	t_envlst	lst2;
+	t_envlst	lst3;
 
-/*
-**------------------------------------------------------------------------------
-*/
-
-TestSuite(env_var_join_key_value);
-
-Test(env_var_join_key_value, basic)
-{
-	cr_expect_str_eq(env_var_join_key_value("lolo", "lala"), "lolo=lala");
-	cr_expect_str_eq(env_var_join_key_value("lolo===", "lala"), "lolo====lala");
-	cr_expect_str_eq(env_var_join_key_value("lolo", "===lala"), "lolo====lala");
-	cr_expect_str_eq(env_var_join_key_value("=", "="), "===");
-	cr_expect_str_eq(env_var_join_key_value("", ""), "=");
-	cr_expect_str_eq(env_var_join_key_value("", "="), "==");
-	cr_expect_str_eq(env_var_join_key_value("=", ""), "==");
-	cr_expect_str_eq(env_var_join_key_value("\t", "\t"), "\t=\t");
-}
-
-/*
-**------------------------------------------------------------------------------
-*/
-
-TestSuite(env_var_set_value);
-
-Test(env_var_set_value, basic)
-{
-	char	**fakenv;
-
-	fakenv = ft_strsplit("LOL=didi|PATH=lala|PAT=lolo", '|');
-	cr_assert(fakenv != NULL, "Failed to allocate test strings");
-	env_var_set_value("PATH", "lala", fakenv);
-	cr_expect(env_var_set_value("PATH", "changed", fakenv) == FUNCT_SUCCESS);
-	cr_expect(env_var_set_value("LI", "changed", fakenv) == FUNCT_FAILURE);
-	cr_expect_str_eq(fakenv[1], "PATH=changed");
-}
-
-/*
-**------------------------------------------------------------------------------
-*/
-
-TestSuite(env_var_add_value);
-
-Test(env_var_add_value, basic)
-{
-	char	**fakenv;
-
-	fakenv = ft_strsplit("LOL=didi|PATH=lala|PAT=lolo", '|');
-	cr_assert(fakenv != NULL, "Failed to allocate test strings");
-	cr_expect(env_var_add_value("PATH", "changed", &fakenv) == FUNCT_SUCCESS);
-	cr_expect_str_eq(fakenv[1], "PATH=changed");
-	cr_expect(env_var_add_value("TEST", "success", &fakenv) == FUNCT_SUCCESS);
-	cr_expect_str_eq(fakenv[3], "TEST=success");
+	envlst = &lst1;
+	lst1.var = "LOL=didi";
+	lst2.var = "PAT=lolo";
+	lst3.var = "PATH=lala";
+	lst1.type = ENV_EXTERN;
+	lst2.type = ENV_EXTERN;
+	lst3.type = ENV_EXTERN;
+	lst1.next = &lst2;
+	lst2.next = &lst3;
+	lst3.next = NULL;
+	cr_expect_str_eq(env_getvalue("PATH", envlst), "lala");
+	cr_expect(env_getvalue("NOEXIST", envlst) == NULL);
 }
 
 /*

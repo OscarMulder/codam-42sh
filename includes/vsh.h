@@ -6,7 +6,7 @@
 /*   By: omulder <omulder@student.codam.nl>           +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2019/04/10 20:29:42 by jbrinksm       #+#    #+#                */
-/*   Updated: 2019/06/06 00:01:08 by jbrinksm      ########   odam.nl         */
+/*   Updated: 2019/06/06 14:53:23 by jbrinksm      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -220,12 +220,7 @@ typedef struct	s_envlst
 }				t_envlst;
 
 char			**env_get_environ_cpy(void);
-char			*env_var_get_value(char *var_key, char **vararray);
-char			*env_var_join_key_value(char *var_key, char *var_value);
-int				env_var_set_value(char *var_key, char *var_value,
-					char **vararray);
-int				env_var_add_value(char *var_key, char *var_value,
-					char ***vararray);
+char			*env_getvalue(char *var_key, t_envlst *envlst);
 char			**env_free_and_return_null(char ***vshenviron);
 
 /* environment branch -jorn */
@@ -241,8 +236,7 @@ int			env_lstlen(t_envlst *lst, unsigned char minimal_type);
 */
 
 t_term			*term_prepare(t_envlst *lst);
-t_term			*term_return(t_term *term_p, int return_value);
-int				term_is_valid(char **vshenviron);
+int				term_is_valid(t_envlst *envlst);
 t_term			*term_init_struct(void);
 int				term_get_attributes(int fd, t_term *term_p);
 int				term_set_attributes(t_term *term_p);
@@ -345,10 +339,6 @@ void			parser_astdel(t_ast **ast);
 void			builtin_exit(char **args, int *exit_code);
 void			builtin_echo(char **args, int *exit_code);
 char			builtin_echo_set_flags(char **args, int *arg_i);
-void			builtin_assign(char **args, t_envlst *envlst, int *exit_code);
-void			builtin_export(char **args, t_envlst *envlst, int *exit_code);
-void			builtin_export_var(char *varname, t_envlst *envlst, int *exit_code);
-void			builtin_export_noargs(t_envlst *envlst, int flags, int *exit_code);
 
 /*
 **---------------------------------tools----------------------------------------

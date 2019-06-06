@@ -6,7 +6,7 @@
 /*   By: omulder <omulder@student.codam.nl>           +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2019/05/29 17:17:48 by omulder        #+#    #+#                */
-/*   Updated: 2019/05/31 11:06:08 by tde-jong      ########   odam.nl         */
+/*   Updated: 2019/06/06 14:27:38 by jbrinksm      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -29,6 +29,7 @@ void		exec_cmd(char **args, t_envlst *envlst, int *exit_code)
 			ft_printf("%s: Command not found.\n", args[0]);
 			*exit_code = EXIT_NOTFOUND;
 		}
+		free(vshenviron);
 	}
 	ft_strarrdel(&args);
 }
