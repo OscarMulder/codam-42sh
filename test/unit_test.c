@@ -490,14 +490,14 @@ Test(command_exec, basic, .init=redirect_all_stdout)
 	int			exit_code;
 	t_envlst	*envlst;
 
-	str = ft_strdup("1=1");
+	str = ft_strdup("ls");
 	lst = NULL;
 	ast = NULL;
 	envlst = env_getlst();
 	cr_expect(lexer(&(str), &lst) == FUNCT_SUCCESS);
 	cr_expect(parser_start(&lst, &ast) == FUNCT_SUCCESS);
 	exec_start(ast, envlst, &exit_code);
-	cr_expect(exit_code == 0);
+	cr_expect(exit_code == EXIT_SUCCESS);
 	parser_astdel(&ast);
 }
 
