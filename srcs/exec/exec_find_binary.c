@@ -6,7 +6,7 @@
 /*   By: tde-jong <tde-jong@student.codam.nl>         +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2019/06/05 15:16:46 by tde-jong       #+#    #+#                */
-/*   Updated: 2019/06/06 10:11:37 by tde-jong      ########   odam.nl         */
+/*   Updated: 2019/06/06 10:20:26 by tde-jong      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -42,12 +42,13 @@ char			*exec_find_binary(char *filename, char **vararray)
 	DIR				*d;
 	char			**paths;
 	char			*ret;
-	char			**tofree;
+	size_t			i;
 
-	ret = NULL;
 	paths = get_paths(vararray);
-	tofree = paths;
-	while (paths != NULL && *paths != NULL)
+	if (paths == NULL)
+		return (NULL);
+	i = 0;
+	while (paths[i] != NULL)
 	{
 		d = opendir(*paths);
 		if (d != NULL)
@@ -57,8 +58,8 @@ char			*exec_find_binary(char *filename, char **vararray)
 			if (ret != NULL)
 				break ;
 		}
-		paths++;
+		i++;
 	}
-	ft_freearray(&tofree);
+	ft_freearray(&paths);
 	return (ret);
 }
