@@ -32,8 +32,8 @@ static bool	exec_bin(char **args, char **vshenviron, int *exit_code)
 				ft_eprintf("vsh: %s: no such file or directory\n", args[0]);
 			else
 				ft_eprintf("vsh: %s: command not found\n", args[0]);
-			ft_strarrdel&vshenviron);
-			ft_strarrdel&args);
+			ft_strarrdel(&vshenviron);
+			ft_strarrdel(&args);
 			exit(ret);
 		}
 	}
