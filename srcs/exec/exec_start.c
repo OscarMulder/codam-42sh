@@ -79,6 +79,13 @@ void	exec_start(t_ast *ast, t_envlst *envlst, int *exit_code)
 			return ;
 		exec_cmd(args, envlst, exit_code);
 	}
+	else if (ast->type == ASSIGN)
+	{
+		args = create_args(ast);
+		if (args == NULL)
+			return ;
+		builtin_assign(args, envlst, exit_code);
+	}
 	else
 		ft_printf("N0p3: I only do the easy shit, don't fuckup!\n");
 }
