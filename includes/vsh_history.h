@@ -13,17 +13,22 @@
 #ifndef VSH_HISTORY_H
 # define VSH_HISTORY_H
 
-int		history_i;
-int		history_tmp;
-char	**history;
+int	history_i;
+int	history_cur;
+int	history_tmp;
 
-#define ARROW_UP 1
-#define ARROW_DOWN 2
+char	**history;
+char	**history_copy;
+
+# define HISTORY_MAX	500
+# define ARROW_UP	1
+# define ARROW_DOWN	2
 
 int				history_to_file(void);
 int				history_get_file_content(void);
-int				history_line_to_array(char *line);
+int				history_line_to_array(char **line);
 void			history_print(void);
 void			history_change_line(char **line, unsigned *index, char arrow);
+void			history_copy_history(void);
 
 #endif

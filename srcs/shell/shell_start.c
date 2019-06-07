@@ -30,16 +30,17 @@ int		shell_start(void)
 
 	exit_code = 0;
 	status = 1;
-	line = NULL;
 	token_lst = NULL;
 	ast = NULL;
 	while (status != CTRLD)
 	{
+		history_copy_history();
+		line = history_copy[history_cur];
 		shell_display_prompt();
 		status = input_read(&line);
 		while (shell_quote_checker(&line) != FUNCT_SUCCESS)
 			continue ;
-		history_line_to_array(line);
+		history_line_to_array(&line);
 		#ifdef DEBUG
 		ft_printf("\n>>>> LINE <<<<\n%s\n\n>>>> TOKEN_LST <<<<\n", line);
 		#endif

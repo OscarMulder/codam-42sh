@@ -22,7 +22,7 @@ int		history_get_file_content(void)
 	int		ret;
 	char	*line;
 
-	history = (char **)ft_memalloc(sizeof(char *) * (500 + 1));
+	history = (char **)ft_memalloc(sizeof(char *) * HISTORY_MAX);
 	if (history == NULL)
 		return (FUNCT_ERROR);
 	fd = open("/tmp/.vsh_history", O_RDWR | O_CREAT, S_IRUSR | S_IWUSR);
@@ -30,7 +30,7 @@ int		history_get_file_content(void)
 		return (FUNCT_ERROR);
 	ret = 1;
 	history_i = 0;
-	while (ret > 0 && history_i < 500)
+	while (ret > 0 && history_i < HISTORY_MAX - 5)
 	{
 		line = NULL;
 		ret = ft_get_next_line(fd, &line);
@@ -41,6 +41,6 @@ int		history_get_file_content(void)
 			history_i++;
 	}
 	close(fd);
-	history_tmp = history_i;
+	history_tmp = history_cur = history_i;
 	return (FUNCT_SUCCESS);
 }

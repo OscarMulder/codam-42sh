@@ -31,15 +31,18 @@ static void	history_clear_line(unsigned *index, unsigned linelen)
 void		history_change_line(char **line, unsigned *index, char arrow)
 {
 	history_clear_line(index, ft_strlen(*line));
-	if (arrow == ARROW_UP && history_tmp != 0)
+	if (arrow == ARROW_UP && history_tmp > 0)
 	{
 		history_tmp--;
-		*line = history[history_tmp];
+		*line = history_copy[history_tmp];
 	}
-	else if (arrow == ARROW_DOWN && history_tmp < history_i % 500)
+	else if (arrow == ARROW_DOWN)
 	{
-		history_tmp++;
-		*line = history[history_tmp];
+		if (history_tmp < ((history_i < HISTORY_MAX) ? history_i : HISTORY_MAX))
+		{
+			history_tmp++;
+			*line = history_copy[history_tmp];
+		}
 	}
 	else
 		ft_printf("\a");

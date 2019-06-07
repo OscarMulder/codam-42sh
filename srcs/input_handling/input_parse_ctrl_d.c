@@ -20,7 +20,7 @@ int	input_parse_ctrl_d(char c, unsigned *index, char **line)
 	{
 		len = ft_strlen(*line);
 		if (len == 0)
-			exit(0);
+			builtin_exit((char*[2]){ NULL, NULL }, (int[1]){ 0 });
 		if (*index < len)
 		{
 			input_clear_char_at(line, *index);

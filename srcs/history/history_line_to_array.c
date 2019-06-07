@@ -14,30 +14,47 @@
 #include "vsh_history.h"
 #include "libft.h"
 
-int		history_line_to_array(char *line)
+int		history_line_to_array(char **line)
 {
-	int i;
+	int	i;
 
-	if (history_i < 500)
+	/*
+	** Loop through the history and check if there are changed strings
+	** other than the last modified string (history_tmp).
+	** If there are, overwrite the original history with the history copy.
+	*/
+	i = 0;
+	while (i < HISTORY_MAX && history_copy[i])
 	{
-		history[history_i] = ft_strdup(line);
-		if (history[history_i] == NULL)
-			return (FUNCT_ERROR);
-	}
-	else
-	{
-		ft_strdel(&history[0]);
-		i = 0;
-		while (i < 500 - 1)
+		if (i != history_tmp && ft_strequ(history[i], history_copy[i]) == 0)
 		{
-			history[i] = history[i + 1];
+			ft_strdel(&history[i]);
+			history[i] = ft_strdup(history_copy[i]);
+			// Failsave check.
+		}
+		else if (i == history_tmp)
+		{
+			ft_printf("\nCopying over current string from %d to %d: %s\n", history_tmp, history_cur, history_copy[history_tmp]);
+			if (history[history_cur])
+				ft_strdel(&history[history_cur]);
+			history[history_cur] = ft_strdup(history_copy[i]);
+			ft_printf("Copy: %s\n", history[history_cur]);
+		}
+		i++;
+	}
+	// Failsave check
+	*line = ft_strdup(history_copy[history_tmp]);
+	if (history_i >= HISTORY_MAX)
+	{
+		i = HISTORY_MAX - 1;
+		while (i > 0)
+		{
+			history[i] = history[i - 1];
 			i++;
 		}
-		history[500 - 1] = ft_strdup(line);
-		if (history[500 - 1] == NULL)
-			return (FUNCT_ERROR);
 	}
 	history_i++;
-	history_tmp = history_i;
+	history_tmp = (history_i < HISTORY_MAX) ? history_i : HISTORY_MAX - 1;
+	history_cur = history_tmp;
 	return (FUNCT_SUCCESS);
 }

@@ -34,7 +34,7 @@ int		input_read(char **line)
 
 	index = 0;
 	input_state = 0;
-	*line = ft_strnew(0);
+	//*line = ft_strnew(0);
 	while (read(STDIN_FILENO, &c, 1) > 0)
 	{
 		if (c == '\n')
