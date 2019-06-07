@@ -23,5 +23,5 @@ void		exec_cmd(char **args, t_envlst *envlst, int *exit_code)
 			*exit_code = EXIT_NOTFOUND;
 		}
 	}
-	ft_freestrarray(&args);
+	ft_strarrdel(&args);
 }

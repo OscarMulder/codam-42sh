@@ -1,7 +1,7 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        ::::::::            */
-/*   ft_freestrarray.c                                  :+:    :+:            */
+/*   ft_strarrdel.c                                     :+:    :+:            */
 /*                                                     +:+                    */
 /*   By: omulder <omulder@student.codam.nl>           +#+                     */
 /*                                                   +#+                      */
@@ -12,7 +12,7 @@
 
 #include "libft.h"
 
-void	ft_freestrarray(char ***array_p)
+void	ft_strarrdel(char ***array_p)
 {
 	int index;
 

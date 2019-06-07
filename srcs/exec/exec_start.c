@@ -24,7 +24,7 @@ static char	**init_array(t_ast *ast)
 	args[0] = ft_strdup(ast->value);
 	if (args[0] == NULL)
 	{
-		ft_freestrarray(&args);
+		ft_strarrdel(&args);
 		return (NULL);
 	}
 	return (args);
@@ -37,13 +37,13 @@ static int	add_argument(char ***args, char *value)
 	temp = ft_strdup(value);
 	if (temp == NULL)
 	{
-		ft_freestrarray(args);
+		ft_strarrdel(args);
 		return (FUNCT_FAILURE);
 	}
 	if (ft_strarradd(args, temp) == FUNCT_FAILURE)
 	{
 		ft_strdel(&temp);
-		ft_freestrarray(args);
+		ft_strarrdel(args);
 		return (FUNCT_FAILURE);
 	}
 	ft_strdel(&temp);

@@ -57,7 +57,7 @@ char				*ft_strjoinfree(char *s1, char *s2, int i);
 int					ft_strcmp(const char *s1, const char *s2);
 int					ft_isprint(int c);
 char				*ft_strcdup(char *str, char c);
-void				ft_freestrarray(char ***array_p);
+void				ft_strarrdel(char ***array_p);
 int					ft_arraylen(char **array);
 int					ft_strncmp(const char *s1, const char *s2, size_t n);
 t_list				*ft_lstnew(void *content, size_t content_size);
