@@ -6,7 +6,7 @@
 /*   By: jbrinksm <jbrinksm@student.codam.nl>         +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2019/06/05 10:33:08 by jbrinksm       #+#    #+#                */
-/*   Updated: 2019/06/06 00:14:12 by jbrinksm      ########   odam.nl         */
+/*   Updated: 2019/06/07 18:00:13 by codam         ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -73,27 +73,19 @@ void			builtin_export_var(char *varname, t_envlst *envlst, int *exit_code)
 {
 	t_envlst	*probe;
 	int			varlen;
-	char		*match;
 
 	probe = envlst;
 	varlen = ft_strlen(varname);
-	match = ft_strjoinchr(varname, '=');
-	if (match == NULL)
-	{
-		*exit_code = EXIT_FAILURE;
-		return ;
-	}
 	while (probe != NULL)
 	{
-		if (ft_strncmp(match, probe->var, varlen + 1) == 0)
+		if (ft_strncmp(varname, probe->var, varlen) == 0 &&
+		probe->var[varlen] == '=')
 		{
 			probe->type = ENV_EXTERN;
-			ft_strdel(&match);
 			return ;
 		}
 		probe = probe->next;
 	}
-	ft_strdel(&match);
 	*exit_code = EXIT_FAILURE;
 }
 
