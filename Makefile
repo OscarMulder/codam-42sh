@@ -33,7 +33,7 @@ term_prepare term_is_valid term_init_struct term_get_attributes \
 term_set_attributes term_reset_attributes term_free_struct \
 env_getvalue env_getlst env_lsttoarr \
 tools_is_char_escaped tool_is_redirect_tk \
-builtin_echo builtin_echo_set_flags builtin_exit \
+builtin_echo builtin_echo_set_flags builtin_exit builtin_export \
 lexer lexer_utils lexer_debug lexer_evaluator lexer_scanner \
 lexer_state_if_else lexer_state_single lexer_state_start lexer_state_strings \
 parser_start parser_debug parser_utils parser_command parser_error \
