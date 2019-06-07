@@ -19,10 +19,10 @@
 
 int		ft_strclen(char *arg, char c)
 {
-	int len;
+	int i;
 
-	len = 0;
-	while (arg[len] != c && arg[len] != '\0')
-		len++;
-	return (len);
+	i = 0;
+	while (arg[i] != c && arg[i] != '\0')
+		i++;
+	return (i);
 }
