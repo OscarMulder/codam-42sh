@@ -330,7 +330,7 @@ void			parser_astdel(t_ast **ast);
 void			builtin_exit(char **args, int *exit_code);
 void			builtin_echo(char **args, int *exit_code);
 char			builtin_echo_set_flags(char **args, int *arg_i);
-void			builtin_assign(char **args, t_envlst *envlst, int *exit_code);
+void			builtin_assign(char *arg, t_envlst *envlst, int *exit_code);
 
 /*
 **---------------------------------tools----------------------------------------

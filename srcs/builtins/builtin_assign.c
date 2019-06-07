@@ -14,13 +14,13 @@
 
 /*
 **	NOT SURE IF CORRECT ASSUMPTIONS AS OF HOW IT IS SUPPOSED TO WORK:
-**	Changes the envlst contents based on args.
+**	Changes the envlst contents based on arg.
 **	If a new lst item has to be made, the variable will be defaulted
 **	to ENV_LOCAL. If the variable already is ENV_EXTERN it's value
 **	will be changed and it will remain ENV_EXTERN.
 */
 
-void	builtin_assign(char **args, t_envlst *envlst, int *exit_code)
+void	builtin_assign(char *arg, t_envlst *envlst, int *exit_code)
 {
 	t_envlst	*probe;
 	int			varlen;
@@ -28,16 +28,16 @@ void	builtin_assign(char **args, t_envlst *envlst, int *exit_code)
 
 	probe = envlst;
 	*exit_code = EXIT_FAILURE;
-	if (probe == NULL || args == NULL || *args == NULL)
+	if (probe == NULL || arg == NULL)
 		return ;
-	var = ft_strdup(args[0]);
+	var = ft_strdup(arg);
 	if (var == NULL)
 		return ;
 	*exit_code = EXIT_SUCCESS;
-	varlen = ft_strclen(args[0], '=');
+	varlen = ft_strclen(arg, '=');
 	while (probe->next != NULL)
 	{
-		if (ft_strncmp(args[0], probe->var, varlen + 1) == 0)
+		if (ft_strncmp(arg, probe->var, varlen + 1) == 0)
 		{
 			probe->var = var;
 			return ;
