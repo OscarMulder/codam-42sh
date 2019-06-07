@@ -20,30 +20,54 @@
 **	will be changed and it will remain ENV_EXTERN.
 */
 
-void	builtin_assign(char *arg, t_envlst *envlst, int *exit_code)
+int		builtin_assign_addexist(t_envlst *envlst, char *arg, char *var)
 {
 	t_envlst	*probe;
 	int			varlen;
-	char		*var;
 
 	probe = envlst;
-	*exit_code = EXIT_FAILURE;
-	if (probe == NULL || arg == NULL)
-		return ;
-	var = ft_strdup(arg);
-	if (var == NULL)
-		return ;
-	*exit_code = EXIT_SUCCESS;
 	varlen = ft_strclen(arg, '=');
 	while (probe->next != NULL)
 	{
 		if (ft_strncmp(arg, probe->var, varlen + 1) == 0)
 		{
 			probe->var = var;
-			return ;
+			return (FUNCT_SUCCESS);
 		}
 		probe = probe->next;
 	}
-	probe->next = env_lstnew(var, ENV_LOCAL);
+	return (FUNCT_FAILURE);
+}
+
+int		builtin_assign_addnew(t_envlst *envlst, char *var)
+{
+	t_envlst	*newitem;
+
+	newitem = env_lstnew(var, ENV_LOCAL);
+	if (newitem == NULL)
+		return (FUNCT_ERROR);
+	env_lstaddback(&envlst, newitem);
+	return (FUNCT_SUCCESS);
+}
+
+void	builtin_assign(char *arg, t_envlst *envlst, int *exit_code)
+{
+	char		*var;
+
+	*exit_code = EXIT_FAILURE;
+	if (envlst == NULL || arg == NULL)
+		return ;
+	var = ft_strdup(arg);
+	if (var == NULL)
+		return ;
+	*exit_code = EXIT_SUCCESS;
+	if (builtin_assign_addexist(envlst, arg, var) != FUNCT_SUCCESS)
+	{
+		if (builtin_assign_addnew(envlst, var) != FUNCT_SUCCESS)
+		{
+			ft_printf("assign: failed to allocate enough memory\n");
+			*exit_code = EXIT_FAILURE;
+		}
+	}
 	ft_strdel(&var);
 }

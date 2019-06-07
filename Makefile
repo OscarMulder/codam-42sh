@@ -41,7 +41,7 @@ parser_astdel \
 history_to_file history_get_file_content history_line_to_array history_print \
 history_change_line \
 exec_builtin exec_cmd exec_external exec_start exec_find_binary
-TESTS = unit_test
+TESTS = unit_test builtin_assign_test
 OBJECTS := $(SRCS:%=%.o)
 TESTOBJECTS := $(TESTS:%=%.o)
 SRCS := $(SRCS:%=%.c)
