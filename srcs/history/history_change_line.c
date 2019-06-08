@@ -38,7 +38,7 @@ void		history_change_line(char **line, unsigned *index, char arrow)
 	}
 	else if (arrow == ARROW_DOWN)
 	{
-		if (history_tmp < ((history_i < HISTORY_MAX) ? history_i : HISTORY_MAX))
+		if (history_tmp < ((history_i < HISTORY_MAX) ? history_i : HISTORY_MAX - 1))
 		{
 			history_tmp++;
 			*line = history_copy[history_tmp];

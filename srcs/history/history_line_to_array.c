@@ -11,38 +11,26 @@
 /* ************************************************************************** */
 
 #include "vsh.h"
-#include "vsh_history.h"
 #include "libft.h"
+#include "vsh_history.h"
 
 int		history_line_to_array(char **line)
 {
 	int	i;
 
-	/*
-	** Loop through the history and check if there are changed strings
-	** other than the last modified string (history_tmp).
-	** If there are, overwrite the original history with the history copy.
-	*/
 	i = 0;
-	while (i < HISTORY_MAX && history_copy[i])
+	while (i < HISTORY_MAX - 1 && history_copy[i])
 	{
 		if (i != history_tmp && ft_strequ(history[i], history_copy[i]) == 0)
 		{
 			ft_strdel(&history[i]);
 			history[i] = ft_strdup(history_copy[i]);
-			// Failsave check.
-		}
-		else if (i == history_tmp)
-		{
-			ft_printf("\nCopying over current string from %d to %d: %s\n", history_tmp, history_cur, history_copy[history_tmp]);
-			if (history[history_cur])
-				ft_strdel(&history[history_cur]);
-			history[history_cur] = ft_strdup(history_copy[i]);
-			ft_printf("Copy: %s\n", history[history_cur]);
 		}
 		i++;
 	}
-	// Failsave check
+	if (history[history_cur])
+		ft_strdel(&history[history_cur]);
+	history[history_cur] = ft_strdup(*line);
 	*line = ft_strdup(history_copy[history_tmp]);
 	if (history_i >= HISTORY_MAX)
 	{

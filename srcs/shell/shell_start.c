@@ -38,9 +38,12 @@ int		shell_start(void)
 		line = history_copy[history_cur];
 		shell_display_prompt();
 		status = input_read(&line);
+		ft_printf("\nOutput: %s\n", line);
 		while (shell_quote_checker(&line) != FUNCT_SUCCESS)
 			continue ;
+		ft_printf("After quote checker: %s\n", line);
 		history_line_to_array(&line);
+		ft_printf("After adding to history: %s\n", line);
 		#ifdef DEBUG
 		ft_printf("\n>>>> LINE <<<<\n%s\n\n>>>> TOKEN_LST <<<<\n", line);
 		#endif
