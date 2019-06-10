@@ -6,19 +6,11 @@
 /*   By: jbrinksm <jbrinksm@student.codam.nl>         +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2019/06/05 09:09:49 by jbrinksm       #+#    #+#                */
-/*   Updated: 2019/06/07 17:53:46 by codam         ########   odam.nl         */
+/*   Updated: 2019/06/07 17:53:46 by jbrinksm      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "vsh.h"
-
-/*
-**	NOT SURE IF CORRECT ASSUMPTIONS AS OF HOW IT IS SUPPOSED TO WORK:
-**	Changes the envlst contents based on arg.
-**	If a new lst item has to be made, the variable will be defaulted
-**	to ENV_LOCAL. If the variable already is ENV_EXTERN it's value
-**	will be changed and it will remain ENV_EXTERN.
-*/
 
 int		builtin_assign_addexist(t_envlst *envlst, char *arg, char *var)
 {
@@ -32,6 +24,7 @@ int		builtin_assign_addexist(t_envlst *envlst, char *arg, char *var)
 		if (ft_strncmp(arg, probe->var, varlen) == 0 &&
 		probe->var[varlen] == '=')
 		{
+			ft_strdel(&probe->var);
 			probe->var = var;
 			return (FUNCT_SUCCESS);
 		}
@@ -45,11 +38,20 @@ int		builtin_assign_addnew(t_envlst *envlst, char *var)
 	t_envlst	*newitem;
 
 	newitem = env_lstnew(var, ENV_LOCAL);
+	ft_strdel(&var);
 	if (newitem == NULL)
 		return (FUNCT_ERROR);
 	env_lstaddback(&envlst, newitem);
 	return (FUNCT_SUCCESS);
 }
+
+/*
+**	NOT SURE IF CORRECT ASSUMPTIONS AS OF HOW IT IS SUPPOSED TO WORK:
+**	Changes the envlst contents based on arg.
+**	If a new lst item has to be made, the variable will be defaulted
+**	to ENV_LOCAL. If the variable already is ENV_EXTERN it's value
+**	will be changed and it will remain ENV_EXTERN.
+*/
 
 void	builtin_assign(char *arg, t_envlst *envlst, int *exit_code)
 {
@@ -70,5 +72,4 @@ void	builtin_assign(char *arg, t_envlst *envlst, int *exit_code)
 			*exit_code = EXIT_FAILURE;
 		}
 	}
-	ft_strdel(&var);
 }
