@@ -1,30 +1,25 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        ::::::::            */
-/*   ft_freearray.c                                     :+:    :+:            */
+/*   env_lstaddback.c                                   :+:    :+:            */
 /*                                                     +:+                    */
-/*   By: omulder <omulder@student.codam.nl>           +#+                     */
+/*   By: jbrinksm <jbrinksm@jbrinksm.codam.nl>        +#+                     */
 /*                                                   +#+                      */
-/*   Created: 2019/03/30 01:48:39 by jbrinksm       #+#    #+#                */
-/*   Updated: 2019/04/23 14:51:05 by omulder       ########   odam.nl         */
+/*   Created: 2019/06/07 18:35:11 by jbrinksm       #+#    #+#                */
+/*   Updated: 2019/06/07 18:37:05 by jbrinksm      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "libft.h"
+#include "vsh.h"
 
-void	ft_freearray(char ***array_p)
+void		env_lstaddback(t_envlst **lst, t_envlst *new)
 {
-	int index;
-
-	index = 0;
-	if (*array_p)
-	{
-		while ((*array_p)[index] != NULL)
-		{
-			ft_strdel(&(*array_p)[index]);
-			index++;
-		}
-		free(*array_p);
-		*array_p = NULL;
-	}
+	if (lst == NULL)
+		return ;
+	if (*lst == NULL)
+		*lst = new;
+	else if ((*lst)->next == NULL)
+		(*lst)->next = new;
+	else
+		env_lstaddback(&(*lst)->next, new);
 }
