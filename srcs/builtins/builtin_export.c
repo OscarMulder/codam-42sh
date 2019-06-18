@@ -11,39 +11,39 @@
 /* ************************************************************************** */
 
 /*
-** export: usage: export [-n] [name[=value] ...] or export -p
+**	export: usage: export [-n] [name[=value] ...] or export -p
 **
-** TO DO:
-** Read in flags -n -p  (remove from var_extern to var_intern)
-** OPTION -p
-** List var_extern except if args are given
-** OPTION -n
-** remove arg keys from var_extern to var_intern (or add new key when it does not exist)
-** ARGS:
+**	TO DO:
+**	- We currently do not add quotes for -p, this is because of our
+**	wrong envlst structure, we need to seperate value from varname.
+**	- print usage on invalid option.
+**
+**	OPTION -n
+**	remove arg keys from var_extern to var_intern (or add new key when it does not exist)
+**	ARGS:
 **	for each arg:
-	- If the key is followed by =value, the value of the key is set to value.
-	- check if key exists in var_intern (if yes, remove)
-	- check if key exists in var_extern (if yes, replace, return)
-	- else add key to var_extern
-
-	ERROR:
-	export =hoi
-bash: export: `=hoi': not a valid identifier
-	export -x
-bash: export: -x: invalid option
-export: usage: export [-n] [name[=value] ...] or export -p
-
-DOne:
-
-** NO ARGS:
-**	List var_extern, including empty keys.
+**	- If the key is followed by =value, the value of the key is set to value.
+**	- check if key exists in var_intern (if yes, remove)
+**	- check if key exists in var_extern (if yes, replace, return)
+**	- else add key to var_extern
+**
+**	DOne:
+**
+**	- Read in flags -n -p  (remove from var_extern to var_intern)
+**	- checks for valid identifier. Will print error for every invalid identifier and
+**  any valid identifier will still be handled.
+**	- checks for valid options. (will exit on invalid option)
+**	- OPTION -p
+**		- List var_extern except if args are given
+**	- NO ARGS:
+**		- List var_extern, including empty keys.
 
 ??????????? If the -f option is supplied, the names refer to shell functions; otherwise the names refer to shell variables.
 */
 
 #include "vsh.h"
 
-void	builtin_export_noargs(t_envlst *envlst, int flags, int *exit_code)
+void	builtin_export_print(t_envlst *envlst, int flags, int *exit_code)
 {
 	t_envlst	*probe;
 
@@ -59,6 +59,8 @@ void	builtin_export_noargs(t_envlst *envlst, int flags, int *exit_code)
 			return ;
 		}
 		#endif
+		if (flags &= EXP_FLAG_LP)
+			ft_putstr("declare -x ");
 		ft_putendl(probe->var);
 		probe = probe->next;
 	}
@@ -71,7 +73,7 @@ void	builtin_export_noargs(t_envlst *envlst, int flags, int *exit_code)
 **	set exit_code to EXIT_FAILURE.
 */
 
-void	builtin_change_var_to_type(char *varname, t_envlst *envlst, int *exit_code, int type)
+void	builtin_export_var_to_type(char *varname, t_envlst *envlst, int *exit_code, int type)
 {
 	t_envlst	*probe;
 	int			varlen;
@@ -88,7 +90,9 @@ void	builtin_change_var_to_type(char *varname, t_envlst *envlst, int *exit_code,
 		}
 		probe = probe->next;
 	}
+	/* remove */
 	*exit_code = EXIT_FAILURE;
+	/* add builtin_assign with proper type given */
 }
 
 int		builtin_export_readflags(char *arg, int *flags)
@@ -155,9 +159,25 @@ void	builtin_export(char **args, t_envlst *envlst, int *exit_code)
 		return ;
 	*exit_code = EXIT_SUCCESS;
 	if (args[i] == NULL)
-		builtin_export_noargs(envlst, flags, exit_code);
+		builtin_export_print(envlst, flags, exit_code);
 	else
 		builtin_export_args(&args[i], envlst, exit_code, flags);
+}
+
+bool	tools_is_valid_identifier(char *str)
+{
+	int i;
+
+	if (str == NULL || *str == '\0')
+		return (false);
+	i = 0;
+	while (str[i] != '\0')
+	{
+		if (ft_isalnum(str[i]) == false && str[i] != '_')
+			return (false);
+		i++;
+	}
+	return (true);
 }
 
 void	builtin_export_args(char **args, t_envlst *envlst, int *exit_code, int flags)
@@ -171,7 +191,10 @@ void	builtin_export_args(char **args, t_envlst *envlst, int *exit_code, int flag
 		type = ENV_LOCAL;
 	while (args[i] != NULL)
 	{
-		builtin_change_var_to_type(args[i], envlst, exit_code, type);
+		if (tools_is_valid_identifier(args[i]) == true)
+			builtin_export_var_to_type(args[i], envlst, exit_code, type);
+		else
+			ft_printf("vsh: export: '%s': not a valid identifier\n", args[i]);
 		i++;
 	}
 }

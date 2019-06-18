@@ -92,5 +92,7 @@ char				*ft_strjoinfree_s1(char *s1, char *s2);
 char				*ft_strjoinfree_s2(char *s1, char *s2);
 char				*ft_strjoinfree_all(char *s1, char *s2);
 int					ft_strclen(char *arg, char c);
+int					ft_isalnum(int c);
+int					ft_isalpha(int c);
 
 #endif

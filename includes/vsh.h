@@ -340,8 +340,8 @@ void			builtin_echo(char **args, int *exit_code);
 char			builtin_echo_set_flags(char **args, int *arg_i);
 void			builtin_assign(char **args, t_envlst *envlst, int *exit_code);
 void			builtin_export(char **args, t_envlst *envlst, int *exit_code);
-void			builtin_change_var_to_type(char *varname, t_envlst *envlst, int *exit_code, int type);
-void			builtin_export_noargs(t_envlst *envlst, int flags, int *exit_code);
+void			builtin_export_var_to_type(char *varname, t_envlst *envlst, int *exit_code, int type);
+void			builtin_export_print(t_envlst *envlst, int flags, int *exit_code);
 void			builtin_export_args(char **args, t_envlst *envlst, int *exit_code, int i);
 
 /*
@@ -353,6 +353,7 @@ bool			tools_is_char_escaped(char *line, int i);
 int				tools_update_quote_status(char *line, int cur_index,
 					char *quote);
 bool			tool_is_redirect_tk(t_tokens type);
+bool			tools_is_valid_identifier(char *str);
 
 /*
 **----------------------------------execution-----------------------------------
