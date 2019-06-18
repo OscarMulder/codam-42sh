@@ -11,12 +11,9 @@
 /* ************************************************************************** */
 
 /*
-** WORK IN PROGRESS
 ** export: usage: export [-n] [name[=value] ...] or export -p
 **
 ** TO DO:
-** NO ARGS:
-**	List var_extern, including empty keys.
 ** Read in flags -n -p  (remove from var_extern to var_intern)
 ** OPTION -p
 ** List var_extern except if args are given
@@ -36,12 +33,17 @@ bash: export: `=hoi': not a valid identifier
 bash: export: -x: invalid option
 export: usage: export [-n] [name[=value] ...] or export -p
 
+DOne:
+
+** NO ARGS:
+**	List var_extern, including empty keys.
+
 ??????????? If the -f option is supplied, the names refer to shell functions; otherwise the names refer to shell variables.
 */
 
 #include "vsh.h"
 
-void			builtin_export_noargs(t_envlst *envlst, int flags, int *exit_code)
+void	builtin_export_noargs(t_envlst *envlst, int flags, int *exit_code)
 {
 	t_envlst	*probe;
 
@@ -69,7 +71,7 @@ void			builtin_export_noargs(t_envlst *envlst, int flags, int *exit_code)
 **	set exit_code to EXIT_FAILURE.
 */
 
-void			builtin_export_var(char *varname, t_envlst *envlst, int *exit_code)
+void	builtin_change_var_to_type(char *varname, t_envlst *envlst, int *exit_code, int type)
 {
 	t_envlst	*probe;
 	int			varlen;
@@ -81,7 +83,7 @@ void			builtin_export_var(char *varname, t_envlst *envlst, int *exit_code)
 		if (ft_strncmp(varname, probe->var, varlen) == 0 &&
 		probe->var[varlen] == '=')
 		{
-			probe->type = ENV_EXTERN;
+			probe->type = type;
 			return ;
 		}
 		probe = probe->next;
@@ -89,7 +91,7 @@ void			builtin_export_var(char *varname, t_envlst *envlst, int *exit_code)
 	*exit_code = EXIT_FAILURE;
 }
 
-int				builtin_export_readflags(char *arg, int *flags)
+int		builtin_export_readflags(char *arg, int *flags)
 {
 	int i;
 
@@ -112,9 +114,9 @@ int				builtin_export_readflags(char *arg, int *flags)
 	return (FUNCT_SUCCESS);
 }
 
-int				builtin_export_getflags(char **args, int *flags, int *argc)
+int		builtin_export_getflags(char **args, int *flags, int *argc)
 {
-	int				i;
+	int	i;
 
 	if (args == NULL)
 		return (FUNCT_ERROR);
@@ -122,7 +124,7 @@ int				builtin_export_getflags(char **args, int *flags, int *argc)
 	while (args[i] != NULL)
 	{
 		(*argc)++;
-		if (ft_strcmp(args[i], "--") == 0)
+		if (ft_strequ(args[i], "--") == true)
 			return (FUNCT_SUCCESS);
 		if (args[i][0] == '-')
 		{
@@ -139,32 +141,37 @@ int				builtin_export_getflags(char **args, int *flags, int *argc)
 	return (FUNCT_SUCCESS);
 }
 
-void			builtin_export(char **args, t_envlst *envlst, int *exit_code)
+void	builtin_export(char **args, t_envlst *envlst, int *exit_code)
 {
 	int	i;
 	int	flags;
 
 	i = 1;
+	*exit_code = EXIT_FAILURE;
 	if (args == NULL /* should be redundant --> */|| args[0] == NULL)
-	{
-		*exit_code = EXIT_FAILURE;
 		return ;
-	}
 	flags = 0;
 	if (builtin_export_getflags(&(args[1]), &flags, &i) == FUNCT_ERROR)
-	{
-		*exit_code = EXIT_FAILURE;
 		return ;
-	}
+	*exit_code = EXIT_SUCCESS;
 	if (args[i] == NULL)
 		builtin_export_noargs(envlst, flags, exit_code);
 	else
+		builtin_export_args(&args[i], envlst, exit_code, flags);
+}
+
+void	builtin_export_args(char **args, t_envlst *envlst, int *exit_code, int flags)
+{
+	int i;
+	int	type;
+
+	i = 0;
+	type = ENV_EXTERN;
+	if (flags &= EXP_FLAG_LN)
+		type = ENV_LOCAL;
+	while (args[i] != NULL)
 	{
-		*exit_code = EXIT_SUCCESS;
-		while (args[i] != NULL)
-		{
-			builtin_export_var(args[i], envlst, exit_code);
-			i++;
-		}
+		builtin_change_var_to_type(args[i], envlst, exit_code, type);
+		i++;
 	}
 }
