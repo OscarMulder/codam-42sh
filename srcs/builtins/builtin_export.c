@@ -6,7 +6,7 @@
 /*   By: jbrinksm <jbrinksm@student.codam.nl>         +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2019/06/05 10:33:08 by jbrinksm       #+#    #+#                */
-/*   Updated: 2019/06/19 11:27:50 by jbrinksm      ########   odam.nl         */
+/*   Updated: 2019/06/19 11:41:59 by jbrinksm      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,8 +16,6 @@
 **	TO DO:
 **	- We currently do not add quotes for -p, this is because of our
 **	wrong envlst structure, we need to seperate value from varname.
-**	- print usage on invalid option.
-**
 **	OPTION -n
 **	remove arg keys from var_extern to var_intern (or add new key when it does not exist)
 **	ARGS:
@@ -30,6 +28,7 @@
 **	DOne:
 **
 **	- Read in flags -n -p  (remove from var_extern to var_intern)
+**	- print usage on invalid option.
 **	- checks for valid identifier. Will print error for every invalid identifier and
 **  any valid identifier will still be handled.
 **	- checks for valid options. (will exit on invalid option)
@@ -53,7 +52,7 @@ void	builtin_export_print(t_envlst *envlst, int flags, int *exit_code)
 		#ifdef DEBUG
 		if (probe->var == NULL)
 		{
-			ft_printf("builtin_export: error envlst->var == NULL !!!\n");
+			ft_putendl("builtin_export: error envlst->var == NULL !!!");
 			*exit_code = EXIT_FAILURE;
 			return ;
 		}
@@ -63,7 +62,6 @@ void	builtin_export_print(t_envlst *envlst, int flags, int *exit_code)
 		ft_putendl(probe->var);
 		probe = probe->next;
 	}
-	*exit_code = EXIT_SUCCESS;
 }
 
 /*
@@ -81,7 +79,7 @@ void	builtin_export_var_to_type(char *varname, t_envlst *envlst, int *exit_code,
 	varlen = ft_strlen(varname);
 	while (probe != NULL)
 	{
-		if (ft_strncmp(varname, probe->var, varlen) == 0 &&
+		if (ft_strnequ(varname, probe->var, varlen) == true &&
 		probe->var[varlen] == '=')
 		{
 			probe->type = type;
@@ -89,9 +87,9 @@ void	builtin_export_var_to_type(char *varname, t_envlst *envlst, int *exit_code,
 		}
 		probe = probe->next;
 	}
-	/* remove */
+	/* remove \/ */
 	*exit_code = EXIT_FAILURE;
-	/* add builtin_assign with proper type given */
+	/* add builtin_assign with proper type given \/ */
 }
 
 int		builtin_export_readflags(char *arg, int *flags)
@@ -109,7 +107,8 @@ int		builtin_export_readflags(char *arg, int *flags)
 			*flags |= EXP_FLAG_LP;
 		else
 		{
-			ft_printf("export: invalid option %c\n", arg[i]);
+			ft_printf("vsh: export: -%c: invalid option\n", arg[i]);
+			ft_putendl("export: usage: export [-n] [name[=value] ...] or export -p");
 			return (FUNCT_ERROR);
 		}
 		i++;
@@ -157,8 +156,14 @@ void	builtin_export_args(char **args, t_envlst *envlst, int *exit_code, int flag
 	{
 		if (tools_is_valid_identifier(args[i]) == true)
 			builtin_export_var_to_type(args[i], envlst, exit_code, type);
+		/*
+		else if it has =value after it, set identifier to value
+		*/
 		else
+		{
+			*exit_code = EXIT_FAILURE;
 			ft_printf("vsh: export: '%s': not a valid identifier\n", args[i]);
+		}
 		i++;
 	}
 }
