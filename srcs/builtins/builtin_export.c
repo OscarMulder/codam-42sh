@@ -6,7 +6,7 @@
 /*   By: jbrinksm <jbrinksm@student.codam.nl>         +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2019/06/05 10:33:08 by jbrinksm       #+#    #+#                */
-/*   Updated: 2019/06/13 17:28:40 by jbrinksm      ########   odam.nl         */
+/*   Updated: 2019/06/19 11:27:50 by jbrinksm      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -47,7 +47,6 @@ void	builtin_export_print(t_envlst *envlst, int flags, int *exit_code)
 {
 	t_envlst	*probe;
 
-	(void)flags;
 	probe = envlst;
 	while (probe != NULL)
 	{
@@ -145,41 +144,6 @@ int		builtin_export_getflags(char **args, int *flags, int *argc)
 	return (FUNCT_SUCCESS);
 }
 
-void	builtin_export(char **args, t_envlst *envlst, int *exit_code)
-{
-	int	i;
-	int	flags;
-
-	i = 1;
-	*exit_code = EXIT_FAILURE;
-	if (args == NULL /* should be redundant --> */|| args[0] == NULL)
-		return ;
-	flags = 0;
-	if (builtin_export_getflags(&(args[1]), &flags, &i) == FUNCT_ERROR)
-		return ;
-	*exit_code = EXIT_SUCCESS;
-	if (args[i] == NULL)
-		builtin_export_print(envlst, flags, exit_code);
-	else
-		builtin_export_args(&args[i], envlst, exit_code, flags);
-}
-
-bool	tools_is_valid_identifier(char *str)
-{
-	int i;
-
-	if (str == NULL || *str == '\0')
-		return (false);
-	i = 0;
-	while (str[i] != '\0')
-	{
-		if (ft_isalnum(str[i]) == false && str[i] != '_')
-			return (false);
-		i++;
-	}
-	return (true);
-}
-
 void	builtin_export_args(char **args, t_envlst *envlst, int *exit_code, int flags)
 {
 	int i;
@@ -197,4 +161,23 @@ void	builtin_export_args(char **args, t_envlst *envlst, int *exit_code, int flag
 			ft_printf("vsh: export: '%s': not a valid identifier\n", args[i]);
 		i++;
 	}
+}
+
+void	builtin_export(char **args, t_envlst *envlst, int *exit_code)
+{
+	int	i;
+	int	flags;
+
+	i = 1;
+	*exit_code = EXIT_FAILURE;
+	if (args == NULL /* should be redundant --> */|| args[0] == NULL)
+		return ;
+	flags = 0;
+	if (builtin_export_getflags(&(args[1]), &flags, &i) == FUNCT_ERROR)
+		return ;
+	*exit_code = EXIT_SUCCESS;
+	if (args[i] == NULL)
+		builtin_export_print(envlst, flags, exit_code);
+	else
+		builtin_export_args(&args[i], envlst, exit_code, flags);
 }
