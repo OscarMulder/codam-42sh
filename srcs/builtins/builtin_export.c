@@ -6,7 +6,7 @@
 /*   By: jbrinksm <jbrinksm@student.codam.nl>         +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2019/06/05 10:33:08 by jbrinksm       #+#    #+#                */
-/*   Updated: 2019/06/19 11:41:59 by jbrinksm      ########   odam.nl         */
+/*   Updated: 2019/06/20 17:32:12 by jbrinksm      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -57,7 +57,7 @@ void	builtin_export_print(t_envlst *envlst, int flags, int *exit_code)
 			return ;
 		}
 		#endif
-		if (flags &= EXP_FLAG_LP)
+		if (flags & EXP_FLAG_LP)
 			ft_putstr("declare -x ");
 		ft_putendl(probe->var);
 		probe = probe->next;
@@ -150,7 +150,7 @@ void	builtin_export_args(char **args, t_envlst *envlst, int *exit_code, int flag
 
 	i = 0;
 	type = ENV_EXTERN;
-	if (flags &= EXP_FLAG_LN)
+	if (flags & EXP_FLAG_LN)
 		type = ENV_LOCAL;
 	while (args[i] != NULL)
 	{
