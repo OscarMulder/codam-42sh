@@ -6,7 +6,7 @@
 /*   By: jbrinksm <jbrinksm@student.codam.nl>         +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2019/06/05 10:33:08 by jbrinksm       #+#    #+#                */
-/*   Updated: 2019/06/20 17:32:12 by jbrinksm      ########   odam.nl         */
+/*   Updated: 2019/06/20 17:37:50 by jbrinksm      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -63,12 +63,6 @@ void	builtin_export_print(t_envlst *envlst, int flags, int *exit_code)
 		probe = probe->next;
 	}
 }
-
-/*
-**	Not sure if we want to create a new variable if the one to be
-**	exported doesn't exist yet. Currently now it will do nothing but
-**	set exit_code to EXIT_FAILURE.
-*/
 
 void	builtin_export_var_to_type(char *varname, t_envlst *envlst, int *exit_code, int type)
 {
