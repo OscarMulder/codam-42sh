@@ -6,7 +6,7 @@
 /*   By: omulder <omulder@student.codam.nl>           +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2019/04/18 16:44:50 by omulder        #+#    #+#                */
-/*   Updated: 2019/06/05 17:08:47 by tde-jong      ########   odam.nl         */
+/*   Updated: 2019/07/04 20:28:52 by jbrinksm      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -39,6 +39,7 @@ int		shell_start(t_envlst *envlst)
 		status = input_read(&line);
 		while (shell_quote_checker(&line) != FUNCT_SUCCESS)
 			continue ;
+		ft_putchar('\n');
 		history_line_to_array(line);
 		#ifdef DEBUG
 		ft_printf("\n>>>> LINE <<<<\n%s\n\n>>>> TOKEN_LST <<<<\n", line);
@@ -63,7 +64,6 @@ int		shell_start(t_envlst *envlst)
 		/* ADD EVALUATOR */
 		/* ADD EXPANSION FUNC ? */
 		lexer_tokenlstdel(&token_lst);
-		ft_putchar('\n');
 		ft_strdel(&line);
 	}
 	return (FUNCT_SUCCESS);

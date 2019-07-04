@@ -6,7 +6,7 @@
 /*   By: mavan-he <mavan-he@student.codam.nl>         +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2019/05/25 19:13:12 by mavan-he       #+#    #+#                */
-/*   Updated: 2019/05/29 14:13:09 by mavan-he      ########   odam.nl         */
+/*   Updated: 2019/07/04 21:23:27 by jbrinksm      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -34,16 +34,31 @@ static bool	parser_io_redirect(t_tokenlst **token_lst, t_ast **ast)
 	return (true);
 }
 
+/*
+**	My edits make it so that ASSIGN items are seperated from the
+**	WORD child-flow. They are now in the child-flow of ASSIGN or redirects
+*/
+
 static bool	parser_cmd_suffix(t_tokenlst **token_lst, t_ast **suffix,
 			t_ast **prefix)
 {
 	t_ast *next_ast;
 
 	next_ast = NULL;
-	if (TK_TYPE == IO_NUMBER || tool_is_redirect_tk(TK_TYPE) == true)
+	if (TK_TYPE == IO_NUMBER || tool_is_redirect_tk(TK_TYPE) == true /* temp add-> */ || TK_TYPE == ASSIGN)
 	{
-		if (parser_io_redirect(token_lst, &next_ast) == false)
-			return (false);
+		/* temporary */
+		if (TK_TYPE == ASSIGN)
+		{
+			if (parser_add_astnode(token_lst, &next_ast) == false)
+				return (false);
+		}
+		else
+		/* end of temporary */
+		{
+			if (parser_io_redirect(token_lst, &next_ast) == false)
+				return (false);
+		}
 		if (*prefix == NULL)
 			*prefix = next_ast;
 		else
@@ -51,7 +66,7 @@ static bool	parser_cmd_suffix(t_tokenlst **token_lst, t_ast **suffix,
 		if (parser_cmd_suffix(token_lst, suffix, &next_ast) == false)
 			return (false);
 	}
-	else if (TK_TYPE == WORD || TK_TYPE == ASSIGN)
+	else if (TK_TYPE == WORD /* temp remove -> || TK_TYPE == ASSIGN */)
 	{
 		if (parser_add_astnode(token_lst, &next_ast) == false)
 			return (false);

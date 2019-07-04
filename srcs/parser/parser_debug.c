@@ -6,7 +6,7 @@
 /*   By: mavan-he <mavan-he@student.codam.nl>         +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2019/05/21 21:13:37 by mavan-he       #+#    #+#                */
-/*   Updated: 2019/06/28 20:40:25 by jbrinksm      ########   odam.nl         */
+/*   Updated: 2019/07/04 20:25:10 by jbrinksm      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -67,14 +67,6 @@
 
 static void		tree_print_rec(t_ast *root, int depth, int width, int is_child, char ***lines)
 {
-	char *buf;
-
-	buf = ft_strnew(10);
-	if (root->type == WORD || root->type == ASSIGN)
-	{
-		sprintf(buf, "%-10.10s", root->value);
-		ft_printf("\n%s\n\n", buf);
-	}
 	if (is_child == true)
 	{
 		if (root->type == WORD || root->type == ASSIGN)
