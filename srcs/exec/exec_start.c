@@ -6,7 +6,7 @@
 /*   By: omulder <omulder@student.codam.nl>           +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2019/05/29 17:52:22 by omulder        #+#    #+#                */
-/*   Updated: 2019/07/05 18:47:00 by jbrinksm      ########   odam.nl         */
+/*   Updated: 2019/07/05 18:48:20 by jbrinksm      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -95,10 +95,7 @@ static void exec_redir(t_ast *node, t_envlst *envlst, int *exit_code)
 
 static void exec_assign(t_ast *node, t_envlst *envlst, int *exit_code)
 {
-	(void)envlst;
-	(void)exit_code;
-
-	ft_printf("Assignment: %s\n", node->value);
+	builtin_assign(node->value, envlst, exit_code);
 }
 
 static void exec_redirs_or_assigns(t_ast *node, t_envlst *envlst, int *exit_code)
