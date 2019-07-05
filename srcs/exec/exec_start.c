@@ -6,7 +6,7 @@
 /*   By: omulder <omulder@student.codam.nl>           +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2019/05/29 17:52:22 by omulder        #+#    #+#                */
-/*   Updated: 2019/07/04 21:49:41 by jbrinksm      ########   odam.nl         */
+/*   Updated: 2019/07/05 14:47:29 by jbrinksm      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -132,10 +132,14 @@ void		exec_start(t_ast *ast, t_envlst *envlst, int *exit_code)
 {
 	if (ast->type != WORD && ast->child != NULL)
 		exec_start(ast->child, envlst, exit_code);
+	if (ast->type == PIPE)
+		ft_putendl("Pipe previous output into next command");
+	else if (ast->type == BG)
+		ft_putendl("Run previous process in the background");
 	if (ast->type == AND_IF && *exit_code != EXIT_SUCCESS)
 		return ;
-	else if (ast->type == AND_IF || ast->type == OR_IF || ast->type == SEMICOL)
-		exec_start(ast->sibling, envlst, exit_code);
 	else if (ast->type == WORD)
 		exec_tempruntest(ast, envlst, exit_code);
+	else
+		exec_start(ast->sibling, envlst, exit_code);
 }
