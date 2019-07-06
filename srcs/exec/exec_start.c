@@ -6,7 +6,7 @@
 /*   By: omulder <omulder@student.codam.nl>           +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2019/05/29 17:52:22 by omulder        #+#    #+#                */
-/*   Updated: 2019/07/06 17:35:26 by jbrinksm      ########   odam.nl         */
+/*   Updated: 2019/07/06 18:10:02 by jbrinksm      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -122,12 +122,18 @@ static void	exec_complete_command(t_ast *node, t_envlst *envlst, int *exit_code)
 {
 	char	**command;
 
+	/* Replace wildcards */
+	/* Replace variables */
+
 	/* There is atleast one cmd_word in complete_command */
 	if (node->type == WORD)
 	{
 		if (node->sibling)
 			exec_redirs_or_assigns(node->sibling, envlst, exit_code);
 
+		/* Remove useless quotes */
+		/* Remove useless escape chars */
+		
 		command = create_args(node);
 		if (command != NULL)
 			exec_cmd(command, envlst, exit_code);
@@ -138,24 +144,24 @@ static void	exec_complete_command(t_ast *node, t_envlst *envlst, int *exit_code)
 		exec_redirs_or_assigns(node, envlst, exit_code);
 }
 
-void		exec_start(t_ast *ast, t_envlst *envlst, int *exit_code)
+void		exec_start(t_ast *ast, t_envlst *envlst, int *exit_code, int flags)
 {
 	/* Set flags */
 	if (ast->type == PIPE)
-		ft_putendl("Set PIPE flag");
+		flags &= ~EXEC_PIPE;
 	else if (ast->type == BG)
-		ft_putendl("Set BG flag");
+		flags &= ~EXEC_BG;
 	else if (ast->type == AND_IF)
-		ft_putendl("Set AND_IF flag");
+		flags &= ~EXEC_AND_IF;
 	else if (ast->type == OR_IF)
-		ft_putendl("Set OR_IF flag");
+		flags &= ~EXEC_OR_IF;
 	else if (ast->type == SEMICOL)
-		ft_putendl("Set SEMICOL flag");
+		flags &= ~EXEC_SEMICOL;
 
 	/* Goes through the tree to find complete_commands first */
 	/* problem if there are no WORD's but only prefix or suffix */
 	if (ast->type != WORD && ast->type != ASSIGN && ast->type != SGREAT)
-		exec_start(ast->child, envlst, exit_code);
+		exec_start(ast->child, envlst, exit_code, flags);
 	
 	/* Runs after the above function returns */
 	if (ast->type == AND_IF && *exit_code != EXIT_SUCCESS)
@@ -163,5 +169,5 @@ void		exec_start(t_ast *ast, t_envlst *envlst, int *exit_code)
 	else if (ast->type == WORD || ast->type == ASSIGN || ast->type == SGREAT)
 		exec_complete_command(ast, envlst, exit_code);
 	else if (ast->sibling != NULL)
-		exec_start(ast->sibling, envlst, exit_code);
+		exec_start(ast->sibling, envlst, exit_code, flags);
 }

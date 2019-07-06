@@ -6,7 +6,7 @@
 /*   By: omulder <omulder@student.codam.nl>           +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2019/04/10 20:29:42 by jbrinksm       #+#    #+#                */
-/*   Updated: 2019/07/05 13:39:26 by jbrinksm      ########   odam.nl         */
+/*   Updated: 2019/07/06 17:57:05 by jbrinksm      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -54,6 +54,16 @@
 # define T_STATE_DQUOTE (1 << 2)
 # define T_FLAG_HASEQUAL (1 << 3)
 # define T_MALLOC_ERROR (1 << 4)
+
+/*
+**-----------------------------------executor-----------------------------------
+*/
+
+# define EXEC_PIPE (1 << 0)
+# define EXEC_BG (1 << 1)
+# define EXEC_AND_IF (1 << 2)
+# define EXEC_OR_IF (1 << 3)
+# define EXEC_SEMICOL (1 << 4)
 
 /*
 **---------------------------------environment----------------------------------
@@ -349,7 +359,7 @@ bool			tool_is_redirect_tk(t_tokens type);
 **----------------------------------execution-----------------------------------
 */
 
-void	exec_start(t_ast *ast, t_envlst *envlst, int *exit_code);
+void	exec_start(t_ast *ast, t_envlst *envlst, int *exit_code, int flags);
 void	exec_cmd(char **args, t_envlst *envlst, int *exit_code);
 bool	exec_builtin(char **args, t_envlst *envlst, int *exit_code);
 bool	exec_external(char **args, t_envlst *envlst, int *exit_code);

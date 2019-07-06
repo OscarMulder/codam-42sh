@@ -6,7 +6,7 @@
 /*   By: omulder <omulder@student.codam.nl>           +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2019/04/18 16:44:50 by omulder        #+#    #+#                */
-/*   Updated: 2019/07/04 20:28:52 by jbrinksm      ########   odam.nl         */
+/*   Updated: 2019/07/06 17:55:19 by jbrinksm      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -59,7 +59,7 @@ int		shell_start(t_envlst *envlst)
 		#ifdef DEBUG
 		print_tree(ast);
 		#endif
-		exec_start(ast, envlst, &exit_code);
+		exec_start(ast, envlst, &exit_code, 0);
 		parser_astdel(&ast);
 		/* ADD EVALUATOR */
 		/* ADD EXPANSION FUNC ? */
