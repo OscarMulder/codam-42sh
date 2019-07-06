@@ -10,6 +10,5 @@
 ## Executor
 - Connect to wildcard expansion function
 - Implement redirections between commands
-- Connect to assignment functions
 - Connect to taskmanager
 - Connect to function that allows for background processes
