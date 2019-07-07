@@ -6,7 +6,7 @@
 /*   By: jbrinksm <jbrinksm@student.codam.nl>         +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2019/06/05 10:33:08 by jbrinksm       #+#    #+#                */
-/*   Updated: 2019/06/20 17:37:50 by jbrinksm      ########   odam.nl         */
+/*   Updated: 2019/07/07 22:37:35 by jbrinksm      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -81,9 +81,7 @@ void	builtin_export_var_to_type(char *varname, t_envlst *envlst, int *exit_code,
 		}
 		probe = probe->next;
 	}
-	/* remove \/ */
-	*exit_code = EXIT_FAILURE;
-	/* add builtin_assign with proper type given \/ */
+	builtin_assign(varname, envlst, exit_code); /* should add option to change assign type */
 }
 
 int		builtin_export_readflags(char *arg, int *flags)
@@ -148,6 +146,8 @@ void	builtin_export_args(char **args, t_envlst *envlst, int *exit_code, int flag
 		type = ENV_LOCAL;
 	while (args[i] != NULL)
 	{
+		/* The arg needs to be checked and split if it is not just identifier,
+		also in the above functions the names like "varname" are wrong */
 		if (tools_is_valid_identifier(args[i]) == true)
 			builtin_export_var_to_type(args[i], envlst, exit_code, type);
 		/*
