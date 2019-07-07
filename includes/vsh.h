@@ -6,7 +6,7 @@
 /*   By: omulder <omulder@student.codam.nl>           +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2019/04/10 20:29:42 by jbrinksm       #+#    #+#                */
-/*   Updated: 2019/07/07 21:13:27 by jbrinksm      ########   odam.nl         */
+/*   Updated: 2019/07/07 21:46:00 by jbrinksm      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -364,7 +364,7 @@ void	exec_cmd(char **args, t_envlst *envlst, int *exit_code);
 bool	exec_builtin(char **args, t_envlst *envlst, int *exit_code);
 bool	exec_external(char **args, t_envlst *envlst, int *exit_code);
 char	*exec_find_binary(char *filename, t_envlst *envlst);
-void	exec_replace_variables(t_ast *complete_command, t_envlst *envlst);
+void	exec_handle_variables(t_ast *complete_command, t_envlst *envlst);
 
 /*
 **----------------------------------debugging-----------------------------------
