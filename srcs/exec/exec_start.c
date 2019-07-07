@@ -6,7 +6,7 @@
 /*   By: omulder <omulder@student.codam.nl>           +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2019/05/29 17:52:22 by omulder        #+#    #+#                */
-/*   Updated: 2019/07/06 18:42:57 by jbrinksm      ########   odam.nl         */
+/*   Updated: 2019/07/07 20:54:08 by jbrinksm      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -131,7 +131,7 @@ static void	exec_complete_command(t_ast *node, t_envlst *envlst, int *exit_code,
 	(void)flags;
 
 	/* Replace wildcards */
-	/* Replace variables */
+	exec_replace_variables(node, envlst);
 
 	/* There is atleast one cmd_word in complete_command */
 	if (node->type == WORD)
