@@ -6,7 +6,7 @@
 /*   By: omulder <omulder@student.codam.nl>           +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2019/05/29 17:52:22 by omulder        #+#    #+#                */
-/*   Updated: 2019/07/06 18:42:57 by jbrinksm      ########   odam.nl         */
+/*   Updated: 2019/07/07 21:42:07 by jbrinksm      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -140,7 +140,7 @@ static void	exec_complete_command(t_ast *node, t_envlst *envlst, int *exit_code,
 			exec_redirs_or_assigns(node->sibling, envlst, exit_code);
 
 		/* Remove useless quotes */
-		/* Remove useless escape chars */
+		exec_remove_escapechars(node);
 		
 		command = create_args(node);
 		/* add handling of flag = EXEC_PIPE */
