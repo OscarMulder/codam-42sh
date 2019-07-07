@@ -6,21 +6,26 @@
 /*   By: jbrinksm <jbrinksm@student.codam.nl>         +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2019/07/07 11:09:03 by jbrinksm       #+#    #+#                */
-/*   Updated: 2019/07/07 18:13:30 by jbrinksm      ########   odam.nl         */
+/*   Updated: 2019/07/07 18:45:50 by jbrinksm      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "vsh.h"
 
 /*
-**	The new list items should have a new type, since we don't want these
-**	to be stripped of quotes once again after the wildcard expansion.
+**	The new list items should have a new type, since we don't want the
+**	new list items to be stripped of quotes which have nothing to do
+**	with the original input anymore.
 */
 
-static void	exec_match_wildcards(t_ast *item, int index)
+static void	exec_match_wildcards(t_ast *item, int index, t_list **matches)
 {
-	char	*left;
-	char	*right;
+	if (*matches == NULL)
+		*matches = ft_lstnew(item->value, ft_strlen(item->value) + 1);
+	else
+	{
+
+	}
 }
 
 static void	exec_scan_wildcards(t_ast *item)
@@ -28,18 +33,20 @@ static void	exec_scan_wildcards(t_ast *item)
 	char	*value;
 	char	quote;
 	int		i;
+	t_list	*matches;
 
 	if (item == NULL || item->type != WORD)
 		return ;
 	i = 0;
 	quote = '\0';
+	matches = NULL;
 	while (item->value[i] != '\0')
 	{
 		tools_update_quote_status(item->value, i, &quote);
 		if (item->value[i] == '*' && quote == '\0' &&
 			tools_is_char_escaped(item->value, i))
 		{
-			exec_match_wildcards(item, i);
+			exec_match_wildcards(item, i, &matches);
 			i = 0;
 			continue;
 		}
