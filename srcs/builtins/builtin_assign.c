@@ -6,7 +6,7 @@
 /*   By: jbrinksm <jbrinksm@student.codam.nl>         +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2019/06/05 09:09:49 by jbrinksm       #+#    #+#                */
-/*   Updated: 2019/06/13 15:37:48 by jbrinksm      ########   odam.nl         */
+/*   Updated: 2019/07/07 22:33:04 by jbrinksm      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -49,7 +49,7 @@ int		builtin_assign_addnew(t_envlst *envlst, char *var)
 **	NOT SURE IF CORRECT ASSUMPTIONS AS OF HOW IT IS SUPPOSED TO WORK:
 **	Changes the envlst contents based on arg.
 **	If a new lst item has to be made, the variable will be defaulted
-**	to ENV_LOCAL. If the variable already is ENV_EXTERN it's value
+**	to ENV_LOCAL. If the variable already is ENV_EXTERN its value
 **	will be changed and it will remain ENV_EXTERN.
 */
 
