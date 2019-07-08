@@ -6,7 +6,7 @@
 /*   By: jbrinksm <jbrinksm@student.codam.nl>         +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2019/06/05 10:33:08 by jbrinksm       #+#    #+#                */
-/*   Updated: 2019/07/07 22:37:35 by jbrinksm      ########   odam.nl         */
+/*   Updated: 2019/07/08 13:11:16 by jbrinksm      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -64,16 +64,16 @@ void	builtin_export_print(t_envlst *envlst, int flags, int *exit_code)
 	}
 }
 
-void	builtin_export_var_to_type(char *varname, t_envlst *envlst, int *exit_code, int type)
+void	builtin_export_var_to_type(char *arg, t_envlst *envlst, int *exit_code, int type)
 {
 	t_envlst	*probe;
 	int			varlen;
 
 	probe = envlst;
-	varlen = ft_strlen(varname);
+	varlen = ft_strlen(arg);
 	while (probe != NULL)
 	{
-		if (ft_strnequ(varname, probe->var, varlen) == true &&
+		if (ft_strnequ(arg, probe->var, varlen) == true &&
 		probe->var[varlen] == '=')
 		{
 			probe->type = type;
@@ -81,7 +81,7 @@ void	builtin_export_var_to_type(char *varname, t_envlst *envlst, int *exit_code,
 		}
 		probe = probe->next;
 	}
-	builtin_assign(varname, envlst, exit_code); /* should add option to change assign type */
+	builtin_assign(arg, envlst, exit_code); /* should add option to change assign type */
 }
 
 int		builtin_export_readflags(char *arg, int *flags)
