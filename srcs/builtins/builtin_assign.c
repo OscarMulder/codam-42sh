@@ -6,7 +6,7 @@
 /*   By: jbrinksm <jbrinksm@student.codam.nl>         +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2019/06/05 09:09:49 by jbrinksm       #+#    #+#                */
-/*   Updated: 2019/07/07 22:33:04 by jbrinksm      ########   odam.nl         */
+/*   Updated: 2019/07/08 16:51:32 by jbrinksm      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -33,11 +33,11 @@ int		builtin_assign_addexist(t_envlst *envlst, char *arg, char *var)
 	return (FUNCT_FAILURE);
 }
 
-int		builtin_assign_addnew(t_envlst *envlst, char *var)
+int		builtin_assign_addnew(t_envlst *envlst, char *var, int env_type)
 {
 	t_envlst	*newitem;
 
-	newitem = env_lstnew(var, ENV_LOCAL);
+	newitem = env_lstnew(var, env_type);
 	ft_strdel(&var);
 	if (newitem == NULL)
 		return (FUNCT_ERROR);
@@ -53,7 +53,7 @@ int		builtin_assign_addnew(t_envlst *envlst, char *var)
 **	will be changed and it will remain ENV_EXTERN.
 */
 
-void	builtin_assign(char *arg, t_envlst *envlst, int *exit_code)
+void	builtin_assign(char *arg, t_envlst *envlst, int *exit_code, int env_type)
 {
 	char		*var;
 
@@ -66,7 +66,7 @@ void	builtin_assign(char *arg, t_envlst *envlst, int *exit_code)
 	*exit_code = EXIT_SUCCESS;
 	if (builtin_assign_addexist(envlst, arg, var) != FUNCT_SUCCESS)
 	{
-		if (builtin_assign_addnew(envlst, var) != FUNCT_SUCCESS)
+		if (builtin_assign_addnew(envlst, var, env_type) != FUNCT_SUCCESS)
 		{
 			ft_printf("assign: failed to allocate enough memory\n");
 			*exit_code = EXIT_FAILURE;

@@ -6,7 +6,7 @@
 /*   By: jbrinksm <jbrinksm@student.codam.nl>         +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2019/06/05 10:33:08 by jbrinksm       #+#    #+#                */
-/*   Updated: 2019/07/08 13:11:16 by jbrinksm      ########   odam.nl         */
+/*   Updated: 2019/07/08 17:10:07 by jbrinksm      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -64,16 +64,53 @@ void	builtin_export_print(t_envlst *envlst, int flags, int *exit_code)
 	}
 }
 
+static bool	tools_is_assignment(char *arg)
+{
+	int i;
+
+	if (arg == NULL || *arg == '=')
+		return (false);
+	i = 0;
+	while (arg[i] != '\0')
+	{
+		if (arg[i] == '=')
+			return (true);
+		i++;
+	}
+	return (false);
+}
+
+static char	*tools_get_identifier(char *envstr)
+{
+	int		len;
+	char	*identifier;
+
+	len = ft_strclen(envstr, '=');
+	if (len == 0)
+		return (NULL);
+	identifier = ft_strcdup(envstr, '=');
+	return (identifier);
+}
+
 void	builtin_export_var_to_type(char *arg, t_envlst *envlst, int *exit_code, int type)
 {
 	t_envlst	*probe;
 	int			varlen;
+	char		*identifier;
 
 	probe = envlst;
 	varlen = ft_strlen(arg);
+	identifier = arg;
+	if (tools_is_assignment(arg) == true)
+		identifier = tools_get_identifier(arg);
+	if (identifier == NULL)
+	{
+		*exit_code = EXIT_FAILURE;
+		return ;
+	}
 	while (probe != NULL)
 	{
-		if (ft_strnequ(arg, probe->var, varlen) == true &&
+		if (ft_strnequ(identifier, probe->var, varlen) == true &&
 		probe->var[varlen] == '=')
 		{
 			probe->type = type;
@@ -81,7 +118,7 @@ void	builtin_export_var_to_type(char *arg, t_envlst *envlst, int *exit_code, int
 		}
 		probe = probe->next;
 	}
-	builtin_assign(arg, envlst, exit_code); /* should add option to change assign type */
+	builtin_assign(arg, envlst, exit_code, ENV_EXTERN); /* should add option to change assign type */
 }
 
 int		builtin_export_readflags(char *arg, int *flags)
@@ -161,6 +198,11 @@ void	builtin_export_args(char **args, t_envlst *envlst, int *exit_code, int flag
 		i++;
 	}
 }
+
+/*
+**	Problem because assigns are automatically not considered as
+**	export, or do we need to use quotes???
+*/
 
 void	builtin_export(char **args, t_envlst *envlst, int *exit_code)
 {

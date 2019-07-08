@@ -6,7 +6,7 @@
 /*   By: omulder <omulder@student.codam.nl>           +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2019/05/29 17:52:22 by omulder        #+#    #+#                */
-/*   Updated: 2019/06/06 13:51:14 by jbrinksm      ########   odam.nl         */
+/*   Updated: 2019/07/08 17:09:21 by jbrinksm      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -86,7 +86,7 @@ void		exec_start(t_ast *ast, t_envlst *envlst, int *exit_code)
 		if (assign == NULL)
 			return ;
 		/* Builtin assign will only take one ASSIGN at a time */	
-		builtin_assign(assign, envlst, exit_code);
+		builtin_assign(assign, envlst, exit_code, ENV_LOCAL);
 	}
 	else
 		ft_printf("N0p3: I only do the easy shit, don't fuckup!\n");
