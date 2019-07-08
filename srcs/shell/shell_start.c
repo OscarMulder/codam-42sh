@@ -6,7 +6,7 @@
 /*   By: omulder <omulder@student.codam.nl>           +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2019/04/18 16:44:50 by omulder        #+#    #+#                */
-/*   Updated: 2019/06/05 17:08:47 by tde-jong      ########   odam.nl         */
+/*   Updated: 2019/07/01 13:21:30 by jbrinksm      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -56,6 +56,7 @@ int		shell_start(t_envlst *envlst)
 		if (parser_start(&token_lst, &ast) != FUNCT_SUCCESS)
 			continue ;
 		#ifdef DEBUG
+		ft_putstr("\n\n\nTREE:\n\n");
 		print_tree(ast);
 		#endif
 		exec_start(ast, envlst, &exit_code);
