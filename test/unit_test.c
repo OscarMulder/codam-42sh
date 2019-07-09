@@ -6,7 +6,7 @@
 /*   By: jbrinksm <jbrinksm@student.codam.nl>         +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2019/04/18 16:37:32 by omulder        #+#    #+#                */
-/*   Updated: 2019/06/02 08:53:10 by jbrinksm      ########   odam.nl         */
+/*   Updated: 2019/06/06 15:09:17 by jbrinksm      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -38,13 +38,17 @@ TestSuite(term_is_valid);
 
 Test(term_is_valid, basic, .init=redirect_all_stdout)
 {
-	char *env1;
-	char *env2;
+	t_envlst	lst1;
+	t_envlst	lst2;
 
-	env1 = "TERM=non_valid_term";
-	env2 = "TERM=vt100";
-	cr_expect_eq(term_is_valid(&env1), FUNCT_FAILURE);
-	cr_expect_eq(term_is_valid(&env2), FUNCT_SUCCESS);
+	lst1.var = "TERM=non_valid_term";
+	lst2.var = "TERM=vt100";
+	lst1.type = ENV_EXTERN;
+	lst2.type = ENV_EXTERN;
+	lst1.next = NULL;
+	lst2.next = NULL;
+	cr_expect_eq(term_is_valid(&lst1), FUNCT_FAILURE);
+	cr_expect_eq(term_is_valid(&lst2), FUNCT_SUCCESS);
 }
 
 /*
@@ -86,32 +90,7 @@ Test(term_free_struct, basic)
 **------------------------------------------------------------------------------
 */
 
-TestSuite(env_get_environ_cpy);
-
-Test(env_get_environ_cpy, basic)
-{
-	extern char **environ;
-	char		**environ_cpy;
-	int			index;
-
-	environ_cpy = env_get_environ_cpy();
-	index = 0;
-	cr_assert(environ_cpy != NULL);
-	while (environ_cpy[index] != NULL && environ[index] != NULL)
-	{
-		cr_expect_str_eq(environ_cpy[index], environ[index]);
-		index++;
-	}
-	cr_expect_eq(environ_cpy[index], environ[index]);
-}
-
-/*
-**------------------------------------------------------------------------------
-*/
-
 TestSuite(term_get_attributes);
-
-
 
 Test(term_get_attributes, basic)
 {
@@ -243,6 +222,7 @@ Test(shell_quote_checker, basic)
 /*
 **------------------------------------------------------------------------------
 */
+
 TestSuite(builtin_echo);
 
 Test(builtin_echo, basic, .init=redirect_all_stdout)
@@ -254,19 +234,19 @@ Test(builtin_echo, basic, .init=redirect_all_stdout)
 	exit_code = INT_MIN;
 	builtin_echo(args, &exit_code);
 	cr_expect(exit_code == 0);
-	ft_freearray(&args);
+	ft_strarrdel(&args);
 
 	args = ft_strsplit("echo|-Eea|\n", '|');
 	exit_code = INT_MIN;
 	builtin_echo(args, &exit_code);
 	cr_expect(exit_code == 0);
-	ft_freearray(&args);
+	ft_strarrdel(&args);
 
 	args = ft_strsplit("echo|-nEe", '|');
 	exit_code = INT_MIN;
 	builtin_echo(args, &exit_code);
 	cr_expect(exit_code == 0);
-	ft_freearray(&args);
+	ft_strarrdel(&args);
 
 	args = ft_strsplit("echo|-E", '|');
 	exit_code = INT_MIN;
@@ -280,67 +260,27 @@ Test(builtin_echo, basic, .init=redirect_all_stdout)
 **------------------------------------------------------------------------------
 */
 
-TestSuite(env_var_get_value);
+TestSuite(env_getvalue);
 
-Test(env_var_get_value, basic)
+Test(env_getvalue, basic)
 {
-	char	*fakenv[] = {"LOL=didi", "PATH=lala", "PAT=lolo", NULL};
-	cr_expect_str_eq(env_var_get_value("PATH", fakenv), "lala");
-	cr_expect(env_var_get_value("NOEXIST", fakenv) == NULL);
-}
+	t_envlst	*envlst;
+	t_envlst	lst1;
+	t_envlst	lst2;
+	t_envlst	lst3;
 
-/*
-**------------------------------------------------------------------------------
-*/
-
-TestSuite(env_var_join_key_value);
-
-Test(env_var_join_key_value, basic)
-{
-	cr_expect_str_eq(env_var_join_key_value("lolo", "lala"), "lolo=lala");
-	cr_expect_str_eq(env_var_join_key_value("lolo===", "lala"), "lolo====lala");
-	cr_expect_str_eq(env_var_join_key_value("lolo", "===lala"), "lolo====lala");
-	cr_expect_str_eq(env_var_join_key_value("=", "="), "===");
-	cr_expect_str_eq(env_var_join_key_value("", ""), "=");
-	cr_expect_str_eq(env_var_join_key_value("", "="), "==");
-	cr_expect_str_eq(env_var_join_key_value("=", ""), "==");
-	cr_expect_str_eq(env_var_join_key_value("\t", "\t"), "\t=\t");
-}
-
-/*
-**------------------------------------------------------------------------------
-*/
-
-TestSuite(env_var_set_value);
-
-Test(env_var_set_value, basic)
-{
-	char	**fakenv;
-
-	fakenv = ft_strsplit("LOL=didi|PATH=lala|PAT=lolo", '|');
-	cr_assert(fakenv != NULL, "Failed to allocate test strings");
-	env_var_set_value("PATH", "lala", fakenv);
-	cr_expect(env_var_set_value("PATH", "changed", fakenv) == FUNCT_SUCCESS);
-	cr_expect(env_var_set_value("LI", "changed", fakenv) == FUNCT_FAILURE);
-	cr_expect_str_eq(fakenv[1], "PATH=changed");
-}
-
-/*
-**------------------------------------------------------------------------------
-*/
-
-TestSuite(env_var_add_value);
-
-Test(env_var_add_value, basic)
-{
-	char	**fakenv;
-
-	fakenv = ft_strsplit("LOL=didi|PATH=lala|PAT=lolo", '|');
-	cr_assert(fakenv != NULL, "Failed to allocate test strings");
-	cr_expect(env_var_add_value("PATH", "changed", &fakenv) == FUNCT_SUCCESS);
-	cr_expect_str_eq(fakenv[1], "PATH=changed");
-	cr_expect(env_var_add_value("TEST", "success", &fakenv) == FUNCT_SUCCESS);
-	cr_expect_str_eq(fakenv[3], "TEST=success");
+	envlst = &lst1;
+	lst1.var = "LOL=didi";
+	lst2.var = "PAT=lolo";
+	lst3.var = "PATH=lala";
+	lst1.type = ENV_EXTERN;
+	lst2.type = ENV_EXTERN;
+	lst3.type = ENV_EXTERN;
+	lst1.next = &lst2;
+	lst2.next = &lst3;
+	lst3.next = NULL;
+	cr_expect_str_eq(env_getvalue("PATH", envlst), "lala");
+	cr_expect(env_getvalue("NOEXIST", envlst) == NULL);
 }
 
 /*
@@ -473,9 +413,9 @@ Test(lexer, basic)
 	char 		*str;
 
 	str = ft_strdup("HOME=/ ls -la || ls 2>file \"Documents\";");
+	cr_assert(str != NULL);
 	lst = NULL;
-	cr_expect(lexer(&(str), &lst) == FUNCT_SUCCESS);
-	cr_expect(str == NULL);
+	cr_expect(lexer(&str, &lst) == FUNCT_SUCCESS);
 	tmp = lst;
 	cr_expect(lst->type == START);
 	cr_expect(lst->value == NULL);
@@ -526,7 +466,7 @@ Test(parser, basic)
 	str = ft_strdup("HOME=/ ls -la || ls 2>file \"Documents\";");
 	lst = NULL;
 	ast = NULL;
-	cr_expect(lexer(&(str), &lst) == FUNCT_SUCCESS);
+	cr_expect(lexer(&str, &lst) == FUNCT_SUCCESS);
 	cr_expect(parser_start(&lst, &ast) == FUNCT_SUCCESS);
 	tmp_ast = ast;
 	cr_expect(ast->type == SEMICOL);
@@ -548,13 +488,16 @@ Test(command_exec, basic, .init=redirect_all_stdout)
 	t_ast		*ast;
 	char 		*str;
 	int			exit_code;
+	t_envlst	*envlst;
 
-	str = ft_strdup("1=1");
+	str = ft_strdup("ls");
 	lst = NULL;
 	ast = NULL;
+	envlst = env_getlst();
 	cr_expect(lexer(&(str), &lst) == FUNCT_SUCCESS);
 	cr_expect(parser_start(&lst, &ast) == FUNCT_SUCCESS);
-	cr_expect(exec_start(ast, &exit_code) == FUNCT_FAILURE); // this fails in the first version, shoudln't fail later
+	exec_start(ast, envlst, &exit_code);
+	cr_expect(exit_code == EXIT_SUCCESS);
 	parser_astdel(&ast);
 }
 
@@ -629,13 +572,16 @@ Test(exec_echo, basic, .init=redirect_all_stdout)
 	t_ast		*ast;
 	char 		*str;
 	int			exit_code;
+	t_envlst	*envlst;
 
 	str = ft_strdup("echo hoi");
 	lst = NULL;
 	ast = NULL;
+	envlst = env_getlst();
 	cr_expect(lexer(&(str), &lst) == FUNCT_SUCCESS);
 	cr_expect(parser_start(&lst, &ast) == FUNCT_SUCCESS);
-	cr_expect(exec_start(ast, &exit_code) == FUNCT_SUCCESS);
+	exec_start(ast, envlst, &exit_code);
+	cr_expect(exit_code == 0);
 	cr_expect_stdout_eq_str("hoi\n");
 	parser_astdel(&ast);
 }
@@ -646,13 +592,178 @@ Test(exec_echo, basic2, .init=redirect_all_stdout)
 	t_ast		*ast;
 	char 		*str;
 	int			exit_code;
+	t_envlst	*envlst;
 
 	str = ft_strdup("echo \"Hi, this is a string\"");
 	lst = NULL;
 	ast = NULL;
+	envlst = env_getlst();
 	cr_expect(lexer(&(str), &lst) == FUNCT_SUCCESS);
 	cr_expect(parser_start(&lst, &ast) == FUNCT_SUCCESS);
-	cr_expect(exec_start(ast, &exit_code) == FUNCT_SUCCESS);
+	exec_start(ast, envlst, &exit_code);
+	cr_expect(exit_code == 0);
 	cr_expect_stdout_eq_str("\"Hi, this is a string\"\n");
+	parser_astdel(&ast);
+} 
+
+/*
+**------------------------------------------------------------------------------
+*/
+
+TestSuite(exec_cmd);
+
+Test(exec_cmd, basic, .init=redirect_all_stdout)
+{
+	t_tokenlst	*lst;
+	t_ast		*ast;
+	char 		*str;
+	char 		*cwd;
+	int			exit_code;
+	t_envlst	*envlst;
+
+	str = ft_strdup("/bin/pwd");
+	cwd = getcwd(NULL, 0);
+	lst = NULL;
+	ast = NULL;
+	envlst = env_getlst();
+	cr_expect(lexer(&(str), &lst) == FUNCT_SUCCESS);
+	cr_expect(parser_start(&lst, &ast) == FUNCT_SUCCESS);
+	exec_start(ast, envlst, &exit_code);
+	cr_expect(exit_code == 0);
+	ft_strdel(&str);
+	str = ft_strjoin(cwd, "\n");
+	cr_expect_stdout_eq_str(str);
+	ft_strdel(&str);
+	ft_strdel(&cwd);
+	parser_astdel(&ast);
+}
+
+Test(exec_cmd, basic2, .init=redirect_all_stdout)
+{
+	t_tokenlst	*lst;
+	t_ast		*ast;
+	char 		*str;
+	int			exit_code;
+	t_envlst	*envlst;
+
+	str = ft_strdup("/bin/echo hoi");
+	lst = NULL;
+	ast = NULL;
+	envlst = env_getlst();
+	cr_expect(lexer(&(str), &lst) == FUNCT_SUCCESS);
+	cr_expect(parser_start(&lst, &ast) == FUNCT_SUCCESS);
+	exec_start(ast, envlst, &exit_code);
+	cr_expect(exit_code == 0);
+	cr_expect_stdout_eq_str("hoi\n");
+	parser_astdel(&ast);
+} 
+
+/*
+**------------------------------------------------------------------------------
+*/
+
+TestSuite(exec_find_bin);
+
+Test(exec_find_bin, basic)
+{
+	char 		*str;
+	char		*bin;
+	t_envlst	lst;
+
+	lst.var = "PATH=./";
+	lst.type = ENV_EXTERN;
+	lst.next = NULL;
+	str = ft_strdup("vsh");
+	bin = exec_find_binary(str, &lst);
+	cr_expect_str_eq(bin, ".//vsh");
+	ft_strdel(&bin);
+	ft_strdel(&str);
+}
+
+Test(exec_find_bin, basic2)
+{
+	char 		*str;
+	char		*bin;
+	t_envlst	lst;
+
+	lst.var = "PATH=/bin:./";
+	lst.type = ENV_EXTERN;
+	lst.next = NULL;
+	str = ft_strdup("ls");
+	bin = exec_find_binary(str, &lst);
+	cr_expect_str_eq(bin, "/bin/ls");
+	ft_strdel(&bin);
+	ft_strdel(&str);
+}
+
+Test(exec_find_bin, advanced)
+{
+	char 		*str;
+	char		*bin;
+	t_envlst	lst;
+
+	lst.var = "PATH=/Users/travis/.rvm/gems/ruby-2.4.2/bin:/Users/travis/.rvm/gems/ruby-2.4.2@global/bin:/Users/travis/.rvm/rubies/ruby-2.4.2/bin:/Users/travis/.rvm/bin:/Users/travis/bin:/Users/travis/.local/bin:/Users/travis/.nvm/versions/node/v6.11.4/bin:/bin:/usr/local/bin:/usr/bin:/usr/sbin:/sbin:/opt/X11/bin";
+	lst.type = ENV_EXTERN;
+	lst.next = NULL;
+	str = ft_strdup("ls");
+	bin = exec_find_binary(str, &lst);
+	cr_expect_str_eq(bin, "/bin/ls");
+	ft_strdel(&bin);
+	ft_strdel(&str);
+}
+
+Test(exec_find_bin, nopath)
+{
+	char 		*str;
+	char		*bin;
+	t_envlst	lst;
+
+	lst.var = "PATH=";
+	lst.type = ENV_EXTERN;
+	lst.next = NULL;
+	str = ft_strdup("ls");
+	bin = exec_find_binary(str, &lst);
+	cr_expect(bin == NULL);
+	ft_strdel(&bin);
+	ft_strdel(&str);
+}
+
+Test(exec_find_bin, execution, .init=redirect_all_stdout)
+{
+	t_tokenlst	*lst;
+	t_ast		*ast;
+	char 		*str;
+	int			exit_code;
+	t_envlst	*envlst;
+
+	envlst = env_getlst();
+	str = ft_strdup("ls vsh");
+	lst = NULL;
+	ast = NULL;
+	cr_expect(lexer(&(str), &lst) == FUNCT_SUCCESS);
+	cr_expect(parser_start(&lst, &ast) == FUNCT_SUCCESS);
+	exec_start(ast, envlst, &exit_code);
+	cr_expect(exit_code == EXIT_SUCCESS);
+	cr_expect_stdout_eq_str("vsh\n");
+	parser_astdel(&ast);
+}
+
+Test(exec_find_bin, execnonexistent, .init=redirect_all_stdout)
+{
+	t_tokenlst	*lst;
+	t_ast		*ast;
+	char 		*str;
+	int			exit_code;
+	t_envlst	*envlst;
+
+	envlst = env_getlst();
+	str = ft_strdup("idontexist");
+	lst = NULL;
+	ast = NULL;
+	cr_expect(lexer(&(str), &lst) == FUNCT_SUCCESS);
+	cr_expect(parser_start(&lst, &ast) == FUNCT_SUCCESS);
+	exec_start(ast, envlst, &exit_code);
+	cr_expect(exit_code == EXIT_NOTFOUND);
+	cr_expect_stdout_eq_str("idontexist: Command not found.\n");
 	parser_astdel(&ast);
 }

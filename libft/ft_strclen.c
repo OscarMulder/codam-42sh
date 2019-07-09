@@ -1,30 +1,28 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        ::::::::            */
-/*   ft_strarrdel.c                                     :+:    :+:            */
+/*   ft_strclen.c                                       :+:    :+:            */
 /*                                                     +:+                    */
-/*   By: omulder <omulder@student.codam.nl>           +#+                     */
+/*   By: jbrinksm <jbrinksm@student.codam.nl>         +#+                     */
 /*                                                   +#+                      */
-/*   Created: 2019/03/30 01:48:39 by jbrinksm       #+#    #+#                */
-/*   Updated: 2019/04/23 14:51:05 by omulder       ########   odam.nl         */
+/*   Created: 2019/06/05 09:34:22 by jbrinksm       #+#    #+#                */
+/*   Updated: 2019/06/05 09:36:07 by jbrinskm      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "libft.h"
 
-void	ft_strarrdel(char ***array_p)
-{
-	int index;
+/*
+**	Return length string until 'c' or '\0' is found.
+**	This can be used by strncmp to find a match.
+*/
 
-	index = 0;
-	if (array_p != NULL && *array_p != NULL)
-	{
-		while ((*array_p)[index] != NULL)
-		{
-			ft_strdel(&(*array_p)[index]);
-			index++;
-		}
-		free(*array_p);
-		*array_p = NULL;
-	}
+int		ft_strclen(char *arg, char c)
+{
+	int i;
+
+	i = 0;
+	while (arg[i] != c && arg[i] != '\0')
+		i++;
+	return (i);
 }

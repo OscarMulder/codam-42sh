@@ -1,30 +1,33 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        ::::::::            */
-/*   env_var_get_value.c                                :+:    :+:            */
+/*   env_lstnew.c                                       :+:    :+:            */
 /*                                                     +:+                    */
 /*   By: jbrinksm <jbrinksm@student.codam.nl>         +#+                     */
 /*                                                   +#+                      */
-/*   Created: 2019/04/03 18:45:30 by jbrinksm       #+#    #+#                */
-/*   Updated: 2019/05/27 15:51:34 by omulder       ########   odam.nl         */
+/*   Created: 2019/06/07 18:35:25 by jbrinksm       #+#    #+#                */
+/*   Updated: 2019/06/07 18:36:52 by jbrinksm      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "vsh.h"
 
-char		*env_var_get_value(char *var_key, char **vararray)
+t_envlst	*env_lstnew(char *var, unsigned char type)
 {
-	int		var_len;
-	int		env_i;
+	t_envlst	*new;
 
-	var_len = ft_strlen(var_key);
-	env_i = 0;
-	while (vararray[env_i] != NULL)
+	if (var == NULL)
+		return (NULL);
+	new = (t_envlst*)ft_memalloc(sizeof(t_envlst));
+	if (new == NULL)
+		return (NULL);
+	new->var = ft_strdup(var);
+	if (new->var == NULL)
 	{
-		if (ft_strncmp(var_key, vararray[env_i], var_len) == 0 &&
-			vararray[env_i][var_len] == '=')
-			return (ft_strchr(vararray[env_i], '=') + 1);
-		env_i++;
+		free(new);
+		return (NULL);
 	}
-	return (NULL);
+	new->type = type;
+	new->next = NULL;
+	return (new);
 }

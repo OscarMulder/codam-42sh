@@ -6,7 +6,7 @@
 /*   By: omulder <omulder@student.codam.nl>           +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2019/04/18 16:44:50 by omulder        #+#    #+#                */
-/*   Updated: 2019/06/01 06:19:35 by jbrinksm      ########   odam.nl         */
+/*   Updated: 2019/06/05 17:08:47 by tde-jong      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -20,7 +20,7 @@ void	lexer_tokenlstiter(t_tokenlst *lst, void (*f)(t_tokenlst *elem))
 	lexer_tokenlstiter(lst->next, f);
 }
 
-int		shell_start(void)
+int		shell_start(t_envlst *envlst)
 {
 	int			status;
 	int			exit_code;
@@ -28,7 +28,7 @@ int		shell_start(void)
 	t_tokenlst	*token_lst;
 	t_ast		*ast;
 
-	exit_code = 0;
+	exit_code = EXIT_SUCCESS;
 	status = 1;
 	token_lst = NULL;
 	ast = NULL;
@@ -52,14 +52,23 @@ int		shell_start(void)
 		#ifdef DEBUG
 		lexer_tokenlstiter(token_lst, print_node);
 		#endif
+		if (shell_dless_input(token_lst) != FUNCT_SUCCESS)
+			continue ;
+		#ifdef DEBUG
+ 		lexer_tokenlstiter(token_lst, print_node);
+		#endif
 		if (parser_start(&token_lst, &ast) != FUNCT_SUCCESS)
 			continue ;
 		#ifdef DEBUG
 		print_tree(ast);
 		#endif
-		exec_start(ast, &exit_code);
+		exec_start(ast, envlst, &exit_code);
 		parser_astdel(&ast);
+		/* ADD EVALUATOR */
+		/* ADD EXPANSION FUNC ? */
+		lexer_tokenlstdel(&token_lst);
 		ft_putchar('\n');
+		ft_strdel(&line);
 	}
 	return (FUNCT_SUCCESS);
 }

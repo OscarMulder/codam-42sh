@@ -6,7 +6,7 @@
 /*   By: jbrinksm <jbrinksm@student.codam.nl>         +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2019/01/09 11:10:09 by omulder        #+#    #+#                */
-/*   Updated: 2019/05/29 18:36:01 by jbrinksm      ########   odam.nl         */
+/*   Updated: 2019/06/06 12:16:51 by tde-jong      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,6 +15,7 @@
 
 # define BUFF_SIZE 64
 # include "ft_printf.h"
+# include <stdbool.h>
 
 typedef struct		s_list
 {
@@ -56,13 +57,14 @@ char				*ft_strjoinfree(char *s1, char *s2, int i);
 int					ft_strcmp(const char *s1, const char *s2);
 int					ft_isprint(int c);
 char				*ft_strcdup(char *str, char c);
-void				ft_freearray(char ***array_p);
+void				ft_strarrdel(char ***array_p);
 int					ft_arraylen(char **array);
 int					ft_strncmp(const char *s1, const char *s2, size_t n);
 t_list				*ft_lstnew(void *content, size_t content_size);
 void				ft_lstadd(t_list **alst, t_list *new);
 char				*ft_strndup(const char *s1, size_t n);
 int					ft_strequ(char const *s1, char const *s2);
+int					ft_strnequ(char const *s1, char const *s2, size_t n);
 void				ft_putchar_fd(char c, int fd);
 void				ft_putstr_fd(char const *s, int fd);
 void				ft_putendl_fd(char const *s, int fd);
@@ -85,7 +87,10 @@ char				*ft_joinstrcstr_free_s2(char *s1, char c, char *s2);
 char				*ft_joinstrcstr_free_all(char *s1, char c, char *s2);
 char				*ft_chartostr(char c);
 int					ft_get_next_line(const int fd, char **line);
-int					ft_strarradd(char ***arr, char *add); // Not sure if this func is save2use
-void				ft_strarrdel(char ***arr);
+int					ft_strarradd(char ***arr, const char *add);
+char				*ft_strjoinfree_s1(char *s1, char *s2);
+char				*ft_strjoinfree_s2(char *s1, char *s2);
+char				*ft_strjoinfree_all(char *s1, char *s2);
+int					ft_strclen(char *arg, char c);
 
 #endif

@@ -1,30 +1,22 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        ::::::::            */
-/*   ft_strarrdel.c                                     :+:    :+:            */
+/*   ft_strjoinfree_s1.c                                :+:    :+:            */
 /*                                                     +:+                    */
-/*   By: omulder <omulder@student.codam.nl>           +#+                     */
+/*   By: jbrinksm <jbrinksm@student.codam.nl>         +#+                     */
 /*                                                   +#+                      */
-/*   Created: 2019/03/30 01:48:39 by jbrinksm       #+#    #+#                */
-/*   Updated: 2019/04/23 14:51:05 by omulder       ########   odam.nl         */
+/*   Created: 2019/04/16 20:15:07 by jbrinksm       #+#    #+#                */
+/*   Updated: 2019/04/16 20:20:01 by jbrinksm      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "libft.h"
 
-void	ft_strarrdel(char ***array_p)
+char	*ft_strjoinfree_s1(char *s1, char *s2)
 {
-	int index;
+	char	*str;
 
-	index = 0;
-	if (array_p != NULL && *array_p != NULL)
-	{
-		while ((*array_p)[index] != NULL)
-		{
-			ft_strdel(&(*array_p)[index]);
-			index++;
-		}
-		free(*array_p);
-		*array_p = NULL;
-	}
+	str = ft_strjoin(s1, s2);
+	ft_strdel(&s1);
+	return (str);
 }

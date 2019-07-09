@@ -1,30 +1,23 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        ::::::::            */
-/*   ft_strarrdel.c                                     :+:    :+:            */
+/*   ft_strnequ.c                                       :+:    :+:            */
 /*                                                     +:+                    */
-/*   By: omulder <omulder@student.codam.nl>           +#+                     */
+/*   By: tde-jong <tde-jong@student.codam.nl>         +#+                     */
 /*                                                   +#+                      */
-/*   Created: 2019/03/30 01:48:39 by jbrinksm       #+#    #+#                */
-/*   Updated: 2019/04/23 14:51:05 by omulder       ########   odam.nl         */
+/*   Created: 2019/01/11 12:50:32 by tde-jong       #+#    #+#                */
+/*   Updated: 2019/01/28 09:42:28 by tde-jong      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "libft.h"
 
-void	ft_strarrdel(char ***array_p)
+int	ft_strnequ(char const *s1, char const *s2, size_t n)
 {
-	int index;
-
-	index = 0;
-	if (array_p != NULL && *array_p != NULL)
-	{
-		while ((*array_p)[index] != NULL)
-		{
-			ft_strdel(&(*array_p)[index]);
-			index++;
-		}
-		free(*array_p);
-		*array_p = NULL;
-	}
+	if (n == 0)
+		return (1);
+	if (s1 && s2)
+		return (ft_strncmp(s1, s2, n) == 0);
+	else
+		return (0);
 }
