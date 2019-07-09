@@ -6,7 +6,7 @@
 /*   By: omulder <omulder@student.codam.nl>           +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2019/05/29 17:52:22 by omulder        #+#    #+#                */
-/*   Updated: 2019/07/06 18:42:57 by jbrinksm      ########   odam.nl         */
+/*   Updated: 2019/07/09 16:59:02 by tde-jong      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -27,18 +27,6 @@ static size_t	count_args(t_ast *ast)
 	return (i);
 }
 
-static void	init_strarr(char **array, size_t size)
-{
-	size_t i;
-
-	i = 0;
-	while (i < size)
-	{
-		array[i] = NULL;
-		i++;
-	}
-}
-
 static char	**create_args(t_ast *ast)
 {
 	char	**args;
@@ -47,10 +35,9 @@ static char	**create_args(t_ast *ast)
 	size_t	i;
 
 	total_args = count_args(ast);
-	args = (char**)ft_memalloc(sizeof(char*) * total_args + 1);
+	args = (char**)ft_memalloc(sizeof(char*) * (total_args + 1));
 	if (args == NULL)
 		return (NULL);
-	init_strarr(args, total_args + 1);
 	i = 0;
 	probe = ast;
 	while (i < total_args)
