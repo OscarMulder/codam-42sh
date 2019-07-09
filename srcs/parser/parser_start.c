@@ -6,7 +6,7 @@
 /*   By: jbrinksm <jbrinksm@student.codam.nl>         +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2019/05/19 19:58:40 by jbrinksm       #+#    #+#                */
-/*   Updated: 2019/07/09 19:02:53 by jbrinksm      ########   odam.nl         */
+/*   Updated: 2019/07/09 20:48:04 by jbrinksm      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -70,10 +70,17 @@ static bool	parser_list(t_tokenlst **token_lst, t_ast **ast)
 	return (false);
 }
 
+/*
+**	SEGFAULT
+*/
+
 static bool	parser_complete_command(t_tokenlst **token_lst, t_ast **ast)
 {
 	if (parser_list(token_lst, ast) == true && TK_TYPE == NEWLINE)
 		return (true);
+	else if (TK_TYPE == NEWLINE)
+		return (true);
+	ft_printf("TK TYPE: >%i<\n", TK_TYPE);
 	return (false);
 }
 
