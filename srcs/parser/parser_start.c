@@ -6,7 +6,7 @@
 /*   By: jbrinksm <jbrinksm@student.codam.nl>         +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2019/05/19 19:58:40 by jbrinksm       #+#    #+#                */
-/*   Updated: 2019/07/09 15:48:06 by tde-jong      ########   odam.nl         */
+/*   Updated: 2019/07/09 17:14:52 by jbrinksm      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -70,9 +70,24 @@ static bool	parser_list(t_tokenlst **token_lst, t_ast **ast)
 	return (false);
 }
 
+static bool	parser_semicol(t_tokenlst **token_lst, t_ast **ast)
+{
+	if (TK_TYPE == SEMICOL)
+	{
+		if (*ast == NULL)
+			parser_new_node(token_lst, ast) == false)
+		else if (parser_add_sibling(token_lst, ast, &parser_add_astnode) == false)
+			return (false);
+		return (true);
+	}
+	return (false);
+}
+
 static bool	parser_complete_command(t_tokenlst **token_lst, t_ast **ast)
 {
 	if (parser_list(token_lst, ast) == true && TK_TYPE == NEWLINE)
+		return (true);
+	else if (parser_semicol(token_lst, ast) == true && TK_TYPE == NEWLINE)
 		return (true);
 	return (false);
 }
