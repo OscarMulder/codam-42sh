@@ -6,7 +6,7 @@
 /*   By: omulder <omulder@student.codam.nl>           +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2019/04/18 16:44:50 by omulder        #+#    #+#                */
-/*   Updated: 2019/07/06 17:55:19 by jbrinksm      ########   odam.nl         */
+/*   Updated: 2019/07/09 13:07:21 by tde-jong      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -46,9 +46,6 @@ int		shell_start(t_envlst *envlst)
 		#endif
 		if (lexer(&line, &token_lst) != FUNCT_SUCCESS)
 			continue ;
-		#ifdef DEBUG
-		lexer_tokenlstiter(token_lst, print_node);
-		#endif
 		if (shell_dless_input(token_lst) != FUNCT_SUCCESS)
 			continue ;
 		#ifdef DEBUG
