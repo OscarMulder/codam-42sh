@@ -6,7 +6,7 @@
 /*   By: omulder <omulder@student.codam.nl>           +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2019/04/18 16:44:50 by omulder        #+#    #+#                */
-/*   Updated: 2019/07/09 16:43:48 by omulder       ########   odam.nl         */
+/*   Updated: 2019/07/09 17:23:01 by omulder       ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -32,6 +32,7 @@ int		shell_start(t_envlst *envlst)
 	status = 1;
 	token_lst = NULL;
 	ast = NULL;
+	history_copy = NULL;
 	while (status != CTRLD)
 	{
 		history_copy_history();
