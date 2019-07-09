@@ -6,7 +6,7 @@
 /*   By: mavan-he <mavan-he@student.codam.nl>         +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2019/05/19 12:14:21 by mavan-he       #+#    #+#                */
-/*   Updated: 2019/05/27 16:50:01 by omulder       ########   odam.nl         */
+/*   Updated: 2019/07/09 15:23:00 by tde-jong      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -30,4 +30,9 @@ void	lexer_state_greatand(t_scanner *scanner)
 void	lexer_state_lessand(t_scanner *scanner)
 {
 	scanner->tk_type = LESSAND;
+}
+
+void	lexer_state_newline(t_scanner *scanner)
+{
+	scanner->tk_type = NEWLINE;
 }

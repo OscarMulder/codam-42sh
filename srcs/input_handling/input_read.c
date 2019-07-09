@@ -6,7 +6,7 @@
 /*   By: jbrinksm <jbrinksm@student.codam.nl>         +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2019/04/17 14:03:16 by jbrinksm       #+#    #+#                */
-/*   Updated: 2019/05/31 15:17:34 by tde-jong      ########   odam.nl         */
+/*   Updated: 2019/07/09 15:44:25 by tde-jong      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -36,8 +36,6 @@ int		input_read(char **line)
 	input_state = 0;
 	while (read(STDIN_FILENO, &c, 1) > 0)
 	{
-		if (c == '\n')
-			break ;
 		status = 0;
 		status |= input_parse_escape(c, &input_state);
 		status |= input_parse_home(c, &input_state, &index);
@@ -52,9 +50,10 @@ int		input_read(char **line)
 		status |= input_parse_backspace(c, &index, line);
 		status |= input_parse_ctrl_d(c, &index, line);
 		status |= input_parse_ctrl_k(c, &index, line);
-		if (status == 0 &&
-			input_parse_char(c, &index, line) == FUNCT_FAILURE)
+		if (status == 0 && input_parse_char(c, &index, line) == FUNCT_FAILURE)
 			return (FUNCT_FAILURE);
+		if (c == '\n')
+			break ;
 	}
 	return (status);
 }

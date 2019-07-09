@@ -6,7 +6,7 @@
 /*   By: rkuijper <rkuijper@student.codam.nl>         +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2019/05/16 13:33:54 by rkuijper       #+#    #+#                */
-/*   Updated: 2019/05/22 11:54:00 by tde-jong      ########   odam.nl         */
+/*   Updated: 2019/07/09 15:04:41 by tde-jong      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -38,7 +38,7 @@ int			input_parse_char(char c, unsigned *index, char **line)
 {
 	unsigned len;
 
-	if (ft_isprint(c))
+	if (ft_isprint(c) || c == '\n')
 	{
 		if (add_char_at(line, *index, c) == FUNCT_FAILURE)
 			return (FUNCT_FAILURE);
