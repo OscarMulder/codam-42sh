@@ -74,9 +74,6 @@ static bool	parser_complete_command(t_tokenlst **token_lst, t_ast **ast)
 {
 	if (parser_list(token_lst, ast) == true && TK_TYPE == NEWLINE)
 		return (true);
-	else if (TK_TYPE == NEWLINE)
-		return (true);
-	ft_printf("TK TYPE: >%i<\n", TK_TYPE);
 	return (false);
 }
 

@@ -6,7 +6,7 @@
 /*   By: mavan-he <mavan-he@student.codam.nl>         +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2019/05/25 19:13:12 by mavan-he       #+#    #+#                */
-/*   Updated: 2019/07/04 21:23:27 by jbrinksm      ########   odam.nl         */
+/*   Updated: 2019/07/10 17:49:02 by mavan-he      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -34,117 +34,106 @@ static bool	parser_io_redirect(t_tokenlst **token_lst, t_ast **ast)
 	return (true);
 }
 
-/*
-**	My edits make it so that ASSIGN items are seperated from the
-**	WORD child-flow. They are now in the child-flow of ASSIGN or redirects
-*/
-
-static bool	parser_cmd_suffix(t_tokenlst **token_lst, t_ast **suffix,
-			t_ast **prefix)
+static bool	parser_cmd_suffix(t_tokenlst **token_lst, t_ast **cmd,
+	t_ast **last_cmd_arg, t_ast **last_prefix)
 {
-	t_ast *next_ast;
+	t_ast *new_ast;
 
-	next_ast = NULL;
-	if (TK_TYPE == IO_NUMBER || tool_is_redirect_tk(TK_TYPE) == true /* temp add-> */ || TK_TYPE == ASSIGN)
+	new_ast = NULL;
+	if (TK_TYPE == IO_NUMBER || tool_is_redirect_tk(TK_TYPE) == true)
 	{
-		/* temporary */
-		if (TK_TYPE == ASSIGN)
-		{
-			if (parser_add_astnode(token_lst, &next_ast) == false)
-				return (false);
-		}
+		if (parser_io_redirect(token_lst, &new_ast) == false)
+			return (false);
+		if ((*cmd)->sibling == NULL)
+			(*cmd)->sibling = new_ast;
 		else
-		/* end of temporary */
-		{
-			if (parser_io_redirect(token_lst, &next_ast) == false)
-				return (false);
-		}
-		if (*prefix == NULL)
-			*prefix = next_ast;
-		else
-			(*prefix)->child = next_ast;
-		if (parser_cmd_suffix(token_lst, suffix, &next_ast) == false)
+			(*last_prefix)->child = new_ast;
+		*last_prefix = new_ast;
+		if (parser_cmd_suffix(token_lst, cmd, last_cmd_arg, last_prefix)
+			== false)
 			return (false);
 	}
-	else if (TK_TYPE == WORD /* temp remove -> || TK_TYPE == ASSIGN */)
+	else if (TK_TYPE == WORD || TK_TYPE == ASSIGN)
 	{
-		if (parser_add_astnode(token_lst, &next_ast) == false)
+		if (parser_add_astnode(token_lst, &new_ast) == false)
 			return (false);
-		if (*suffix == NULL)
-			*suffix = next_ast;
+		if (*last_cmd_arg == NULL)
+			(*cmd)->child = new_ast;
 		else
-			(*suffix)->child = next_ast;
-		if (parser_cmd_suffix(token_lst, &next_ast, prefix) == false)
+			(*last_cmd_arg)->child = new_ast;
+		*last_cmd_arg = new_ast;
+		if (parser_cmd_suffix(token_lst, cmd, last_cmd_arg, last_prefix)
+			== false)
 			return (false);
 	}
 	return (true);
 }
 
-static bool	parser_cmd_prefix(t_tokenlst **token_lst,
-			t_ast **ast, t_ast **prefix)
+static bool	parser_cmd_prefix(t_tokenlst **token_lst, t_ast **prefix,
+	t_ast **last_prefix)
 {
-	t_ast *next_prefix;
+	t_ast *new_prefix;
 
-	next_prefix = NULL;
+	new_prefix = NULL;
 	if (TK_TYPE == ASSIGN || TK_TYPE == IO_NUMBER ||
 		tool_is_redirect_tk(TK_TYPE) == true)
 	{
 		if (TK_TYPE == ASSIGN)
 		{
-			if (parser_add_astnode(token_lst, ast) == false)
+			if (parser_add_astnode(token_lst, &new_prefix) == false)
 				return (false);
 		}
-		else if (parser_io_redirect(token_lst, ast) == false)
+		else if (parser_io_redirect(token_lst, &new_prefix) == false)
 			return (false);
-		*prefix = *ast;
-		if (parser_cmd_prefix(token_lst, &next_prefix, prefix) == false)
+		if (*prefix == NULL)
+			*prefix = new_prefix;
+		else
+			(*last_prefix)->child = new_prefix;
+		*last_prefix = new_prefix;
+		if (parser_cmd_prefix(token_lst, prefix, last_prefix) == false)
 			return (false);
-		(*ast)->child = next_prefix;
 	}
 	return (true);
 }
 
-static bool	parser_cmd_word(t_tokenlst **token_lst, t_ast **ast,
+static bool	parser_cmd_word(t_tokenlst **token_lst, t_ast **cmd,
 			t_ast **prefix)
 {
 	if (TK_TYPE == WORD)
 	{
-		if (parser_add_astnode(token_lst, ast) == false)
+		if (parser_add_astnode(token_lst, cmd) == false)
 			return (false);
-		(*ast)->sibling = (*ast)->child;
-		(*ast)->child = NULL;
+		(*cmd)->sibling = *prefix;
 		return (true);
 	}
-	else if (*ast != NULL)
+	else if (*prefix != NULL)
 	{
-		*prefix = NULL;
+		*cmd = *prefix;
 		return (true);
 	}
 	else
 		return (false);
 }
 
-bool		parser_command(t_tokenlst **token_lst, t_ast **ast)
+bool		parser_command(t_tokenlst **token_lst, t_ast **cmd)
 {
 	t_ast	*prefix;
-	t_ast	*suffix;
+	t_ast	*last_prefix;
+	t_ast	*last_cmd_arg;
 
 	prefix = NULL;
-	suffix = NULL;
+	last_prefix = NULL;
+	last_cmd_arg = NULL;
 	if (TK_TYPE == WORD || TK_TYPE == ASSIGN || TK_TYPE == IO_NUMBER ||
 		tool_is_redirect_tk(TK_TYPE) == true)
 	{
-		if (parser_cmd_prefix(token_lst, ast, &prefix) == false)
+		if (parser_cmd_prefix(token_lst, &prefix, &last_prefix) == false)
 			return (false);
-		if (parser_cmd_word(token_lst, ast, &prefix) == false)
+		if (parser_cmd_word(token_lst, cmd, &prefix) == false)
 			return (false);
-		if (parser_cmd_suffix(token_lst, &suffix, &prefix) == false)
+		if (parser_cmd_suffix(token_lst, cmd, &last_cmd_arg, &last_prefix)
+			== false)
 			return (false);
-		if ((*ast)->child == NULL)
-			(*ast)->sibling = prefix;
-		else
-			(*ast)->sibling = (*ast)->child;
-		(*ast)->child = suffix;
 		return (true);
 	}
 	else
