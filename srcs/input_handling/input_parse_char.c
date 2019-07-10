@@ -6,41 +6,39 @@
 /*   By: rkuijper <rkuijper@student.codam.nl>         +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2019/05/16 13:33:54 by rkuijper       #+#    #+#                */
-/*   Updated: 2019/07/09 15:04:41 by tde-jong      ########   odam.nl         */
+/*   Updated: 2019/07/10 13:08:05 by jbrinksm      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "vsh.h"
 
-static int	add_char_at(char **line, int index, char c)
+static int	add_char_at(char **line, int index, char c, int *len_max)
 {
-	int			i;
 	char		*tmp;
 
-	i = ft_strlen(*line);
-	tmp = ft_strnew(i + 1);
-	if (tmp == NULL)
-		return (FUNCT_FAILURE);
-	ft_strncpy(tmp, *line, i);
-	i--;
-	while (i >= index)
+	if (index < *len_max)
+		(*line)[index] = c;
+	else
 	{
-		tmp[i + 1] = (*line)[i];
-		i--;
+		*len_max *= 2;
+		tmp = ft_strnew(*len_max);
+		if (tmp == NULL)
+			return (FUNCT_FAILURE);
+		ft_strcpy(tmp, *line);
+		tmp[index] = c;
+		ft_strdel(line);
+		*line = tmp;
 	}
-	tmp[index] = c;
-	ft_strdel(line);
-	*line = tmp;
 	return (FUNCT_SUCCESS);
 }
 
-int			input_parse_char(char c, unsigned *index, char **line)
+int			input_parse_char(char c, unsigned *index, char **line, int *len_max)
 {
 	unsigned len;
 
 	if (ft_isprint(c) || c == '\n')
 	{
-		if (add_char_at(line, *index, c) == FUNCT_FAILURE)
+		if (add_char_at(line, *index, c, len_max) == FUNCT_FAILURE)
 			return (FUNCT_FAILURE);
 		len = ft_strlen(*line + *index);
 		ft_printf("%s", *line + *index);

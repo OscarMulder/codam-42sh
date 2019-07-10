@@ -6,7 +6,7 @@
 /*   By: omulder <omulder@student.codam.nl>           +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2019/05/29 17:52:22 by omulder        #+#    #+#                */
-/*   Updated: 2019/07/09 18:27:39 by jbrinksm      ########   odam.nl         */
+/*   Updated: 2019/07/10 15:18:24 by jbrinksm      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -155,6 +155,8 @@ static void	exec_complete_command(t_ast *node, t_envlst *envlst, int *exit_code,
 
 void		exec_start(t_ast *ast, t_envlst *envlst, int *exit_code, int flags)
 {
+	if (ast == NULL)
+		return ;
 	/* Set flags */
 	if (ast->type == PIPE)
 		flags &= ~EXEC_PIPE;
