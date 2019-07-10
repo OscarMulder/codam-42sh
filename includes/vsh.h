@@ -6,7 +6,7 @@
 /*   By: omulder <omulder@student.codam.nl>           +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2019/04/10 20:29:42 by jbrinksm       #+#    #+#                */
-/*   Updated: 2019/07/09 15:13:20 by tde-jong      ########   odam.nl         */
+/*   Updated: 2019/07/10 13:07:50 by jbrinksm      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -254,7 +254,7 @@ int				input_read(char **line);
 int				input_is_word_start(char *str, int i1, int i2);
 void			input_clear_char_at(char **line, unsigned index);
 int				input_parse_escape(char c, int *input_state);
-int				input_parse_char(char c, unsigned *index, char **line);
+int				input_parse_char(char c, unsigned *index, char **line, int *len_max);
 int				input_parse_home(char c, int *input_state, unsigned *index);
 int				input_parse_backspace(char c, unsigned *index, char **line);
 int				input_parse_end(char c, int *input_state, unsigned *index,
