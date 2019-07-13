@@ -6,13 +6,13 @@
 /*   By: omulder <omulder@student.codam.nl>           +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2019/04/10 20:29:42 by jbrinksm       #+#    #+#                */
-/*   Updated: 2019/07/10 15:24:11 by jbrinksm      ########   odam.nl         */
+/*   Updated: 2019/07/13 13:05:17 by mavan-he      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
 #ifndef VSH_H
 # define VSH_H
-// # define DEBUG
+# define DEBUG
 
 /*
 **==================================defines=====================================
@@ -365,6 +365,7 @@ void	exec_cmd(char **args, t_envlst *envlst, int *exit_code);
 bool	exec_builtin(char **args, t_envlst *envlst, int *exit_code);
 bool	exec_external(char **args, t_envlst *envlst, int *exit_code);
 char	*exec_find_binary(char *filename, t_envlst *envlst);
+void	exec_quote_remove(t_ast *node);
 
 /*
 **----------------------------------debugging-----------------------------------
