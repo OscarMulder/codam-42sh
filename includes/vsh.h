@@ -6,7 +6,7 @@
 /*   By: omulder <omulder@student.codam.nl>           +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2019/04/10 20:29:42 by jbrinksm       #+#    #+#                */
-/*   Updated: 2019/07/13 20:25:07 by jbrinksm      ########   odam.nl         */
+/*   Updated: 2019/07/14 01:08:08 by jbrinksm      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -367,6 +367,8 @@ bool	exec_builtin(char **args, t_envlst *envlst, int *exit_code);
 bool	exec_external(char **args, t_envlst *envlst, int *exit_code);
 char	*exec_find_binary(char *filename, t_envlst *envlst);
 int		exec_handle_variables(t_ast *complete_command, t_envlst *envlst);
+int		exec_handle_bracketed_var(t_ast *item, int *i, t_envlst *envlst);
+int		exec_handle_regular_var(t_ast *item, int *i, t_envlst *envlst);
 void	exec_quote_remove(t_ast *node);
 
 /*
