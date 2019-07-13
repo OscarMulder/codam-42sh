@@ -6,7 +6,7 @@
 /*   By: mavan-he <mavan-he@student.codam.nl>         +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2019/07/13 11:20:18 by mavan-he       #+#    #+#                */
-/*   Updated: 2019/07/13 13:18:02 by mavan-he      ########   odam.nl         */
+/*   Updated: 2019/07/13 13:25:08 by mavan-he      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -84,7 +84,5 @@ void		exec_quote_remove(t_ast *node)
 			remove_first_last(str);
 		else
 			remove_backslash(str);
-		ft_putstr("test: ");
-		ft_putstr(node->value);
 	}
 }
