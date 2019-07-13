@@ -6,18 +6,36 @@
 /*   By: rkuijper <rkuijper@student.codam.nl>         +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2019/05/16 13:33:54 by rkuijper       #+#    #+#                */
-/*   Updated: 2019/07/10 13:08:05 by jbrinksm      ########   odam.nl         */
+/*   Updated: 2019/07/13 17:44:36 by jbrinksm      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "vsh.h"
 
+static void	create_char_gap(char *line, int len, int gap_index)
+{
+	int	i;
+
+	i = len;
+	i--;
+	while (i >= gap_index)
+	{
+		line[i + 1] = line[i];
+		i--;
+	}
+}
+
 static int	add_char_at(char **line, int index, char c, int *len_max)
 {
 	char		*tmp;
+	int			len;
 
-	if (index < *len_max)
+	len = ft_strlen(*line);
+	if (len < *len_max)
+	{
+		create_char_gap(*line, len, index);
 		(*line)[index] = c;
+	}
 	else
 	{
 		*len_max *= 2;
@@ -25,8 +43,9 @@ static int	add_char_at(char **line, int index, char c, int *len_max)
 		if (tmp == NULL)
 			return (FUNCT_FAILURE);
 		ft_strcpy(tmp, *line);
-		tmp[index] = c;
 		ft_strdel(line);
+		create_char_gap(tmp, len, index);
+		tmp[index] = c;
 		*line = tmp;
 	}
 	return (FUNCT_SUCCESS);
