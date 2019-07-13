@@ -6,7 +6,7 @@
 /*   By: jbrinksm <jbrinksm@student.codam.nl>         +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2019/07/14 01:05:00 by jbrinksm       #+#    #+#                */
-/*   Updated: 2019/07/14 01:05:25 by jbrinksm      ########   odam.nl         */
+/*   Updated: 2019/07/14 01:18:30 by jbrinksm      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -59,7 +59,7 @@ int			exec_handle_regular_var(t_ast *item, int *i, t_envlst *envlst)
 	/* offsets parent 'i' with length if val, so it doesn't check
 	it for '$' later */
 	if (val != NULL)
-		i_offset += ft_strlen(val) - 1;
+		i_offset += ft_strlen(val);
 	*i = i_offset; //is this correct?
 	return (FUNCT_SUCCESS);
 }

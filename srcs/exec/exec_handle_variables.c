@@ -6,11 +6,22 @@
 /*   By: jbrinksm <jbrinksm@student.codam.nl>         +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2019/07/07 20:54:47 by jbrinksm       #+#    #+#                */
-/*   Updated: 2019/07/14 01:05:58 by jbrinksm      ########   odam.nl         */
+/*   Updated: 2019/07/14 01:19:50 by jbrinksm      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "vsh.h"
+
+/*
+**	Finds unquoted and unescaped '$', then checks if
+**	it is a bracketed parameter/variable or not,
+**	and then executes the proper functions on it.
+**
+**	Notice the '&i' gets sent with these functions, because
+**	when it is done, it will point to the characted after
+**	the var with which the $PARAM was just replaced. (to avoid
+**	faulty param replacement).
+*/
 
 static int	scan_var(t_ast *item, t_envlst *envlst)
 {
@@ -37,6 +48,7 @@ static int	scan_var(t_ast *item, t_envlst *envlst)
 			}
 			if (ret != FUNCT_SUCCESS)
 				return (FUNCT_FAILURE);
+			continue ;
 		}
 		i++;
 	}
@@ -66,7 +78,7 @@ int		exec_handle_variables(t_ast *complete_command, t_envlst *envlst)
 		#ifdef DEBUG
 		else
 		{
-			ft_printf("warning: exec_replace_variables found a %s\n",
+			ft_printf("warning: exec_handle_variables found a %s\n",
 			parser_return_token_str(probe->type));
 		}
 		#endif
