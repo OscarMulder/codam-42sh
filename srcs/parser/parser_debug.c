@@ -6,7 +6,7 @@
 /*   By: mavan-he <mavan-he@student.codam.nl>         +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2019/05/21 21:13:37 by mavan-he       #+#    #+#                */
-/*   Updated: 2019/07/10 14:31:25 by mavan-he      ########   odam.nl         */
+/*   Updated: 2019/07/13 13:52:55 by jbrinksm      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -148,12 +148,12 @@ static void		tree_print_rec(t_ast *root, int depth, int space, int width)
 void			print_tree(t_ast *root)
 {
 	int width;
-	int height;
+	// int height;
 
 	width = 4;
 	if (!root)
 		return ;
-	height = get_tree_height(root);
+	// height = get_tree_height(root);
 	printf("\n>>>> TREE <<<<\n");
 	get_tree_width(root, &width);
 	tree_print_rec(root, 0, 0, width);
