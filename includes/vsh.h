@@ -6,7 +6,7 @@
 /*   By: omulder <omulder@student.codam.nl>           +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2019/04/10 20:29:42 by jbrinksm       #+#    #+#                */
-/*   Updated: 2019/07/13 18:59:17 by jbrinksm      ########   odam.nl         */
+/*   Updated: 2019/07/13 20:25:07 by jbrinksm      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -355,6 +355,7 @@ bool			tools_is_char_escaped(char *line, int i);
 int				tools_update_quote_status(char *line, int cur_index,
 					char *quote);
 bool			tool_is_redirect_tk(t_tokens type);
+bool			tools_isidentifierchar(char c);
 
 /*
 **----------------------------------execution-----------------------------------
@@ -365,7 +366,7 @@ void	exec_cmd(char **args, t_envlst *envlst, int *exit_code);
 bool	exec_builtin(char **args, t_envlst *envlst, int *exit_code);
 bool	exec_external(char **args, t_envlst *envlst, int *exit_code);
 char	*exec_find_binary(char *filename, t_envlst *envlst);
-void	exec_handle_variables(t_ast *complete_command, t_envlst *envlst);
+int		exec_handle_variables(t_ast *complete_command, t_envlst *envlst);
 void	exec_quote_remove(t_ast *node);
 
 /*
