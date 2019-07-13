@@ -6,7 +6,7 @@
 /*   By: omulder <omulder@student.codam.nl>           +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2019/04/10 20:29:42 by jbrinksm       #+#    #+#                */
-/*   Updated: 2019/07/07 21:46:00 by jbrinksm      ########   odam.nl         */
+/*   Updated: 2019/07/13 18:59:17 by jbrinksm      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -49,6 +49,7 @@
 */
 
 # define CURRENT_CHAR (scanner->str)[scanner->str_index]
+# define SCANNER_CHAR scanner.str[scanner.str_index]
 # define T_FLAG_HASDOLLAR (1 << 0)
 # define T_STATE_SQUOTE (1 << 1)
 # define T_STATE_DQUOTE (1 << 2)
@@ -253,7 +254,7 @@ int				input_read(char **line);
 int				input_is_word_start(char *str, int i1, int i2);
 void			input_clear_char_at(char **line, unsigned index);
 int				input_parse_escape(char c, int *input_state);
-int				input_parse_char(char c, unsigned *index, char **line);
+int				input_parse_char(char c, unsigned *index, char **line, int *len_max);
 int				input_parse_home(char c, int *input_state, unsigned *index);
 int				input_parse_backspace(char c, unsigned *index, char **line);
 int				input_parse_end(char c, int *input_state, unsigned *index,
@@ -365,6 +366,7 @@ bool	exec_builtin(char **args, t_envlst *envlst, int *exit_code);
 bool	exec_external(char **args, t_envlst *envlst, int *exit_code);
 char	*exec_find_binary(char *filename, t_envlst *envlst);
 void	exec_handle_variables(t_ast *complete_command, t_envlst *envlst);
+void	exec_quote_remove(t_ast *node);
 
 /*
 **----------------------------------debugging-----------------------------------

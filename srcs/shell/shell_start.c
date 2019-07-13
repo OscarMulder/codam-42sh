@@ -6,7 +6,7 @@
 /*   By: omulder <omulder@student.codam.nl>           +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2019/04/18 16:44:50 by omulder        #+#    #+#                */
-/*   Updated: 2019/07/06 17:55:19 by jbrinksm      ########   odam.nl         */
+/*   Updated: 2019/07/10 18:25:37 by mavan-he      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -46,11 +46,14 @@ int		shell_start(t_envlst *envlst)
 		#endif
 		if (lexer(&line, &token_lst) != FUNCT_SUCCESS)
 			continue ;
-		#ifdef DEBUG
-		lexer_tokenlstiter(token_lst, print_node);
-		#endif
 		if (shell_dless_input(token_lst) != FUNCT_SUCCESS)
 			continue ;
+		if ((token_lst->next)->type == NEWLINE)
+		{
+			lexer_tokenlstdel(&token_lst);
+			continue ;
+		}
+
 		#ifdef DEBUG
  		lexer_tokenlstiter(token_lst, print_node);
 		#endif
@@ -61,10 +64,6 @@ int		shell_start(t_envlst *envlst)
 		#endif
 		exec_start(ast, envlst, &exit_code, 0);
 		parser_astdel(&ast);
-		/* ADD EVALUATOR */
-		/* ADD EXPANSION FUNC ? */
-		lexer_tokenlstdel(&token_lst);
-		ft_strdel(&line);
 	}
 	return (FUNCT_SUCCESS);
 }
