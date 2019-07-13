@@ -6,7 +6,7 @@
 /*   By: mavan-he <mavan-he@student.codam.nl>         +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2019/05/21 21:13:37 by mavan-he       #+#    #+#                */
-/*   Updated: 2019/07/13 13:52:55 by jbrinksm      ########   odam.nl         */
+/*   Updated: 2019/07/13 14:16:55 by jbrinksm      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -69,22 +69,22 @@ void			print_tree(t_ast *root)
 	ft_putchar('\n');
 } */
 
-static int		get_tree_height(t_ast *root)
-{
-	int lh;
-	int rh;
+// static int		get_tree_height(t_ast *root)
+// {
+// 	int lh;
+// 	int rh;
 
-	if (root == NULL)
-		return (0);
-	if (root->type != END)
-	{
-		lh = get_tree_height(root->child);
-		rh = get_tree_height(root->sibling);
-		return (1 + ((lh > rh) ? lh : rh));
-	}
-	else
-		return (1);
-}
+// 	if (root == NULL)
+// 		return (0);
+// 	if (root->type != END)
+// 	{
+// 		lh = get_tree_height(root->child);
+// 		rh = get_tree_height(root->sibling);
+// 		return (1 + ((lh > rh) ? lh : rh));
+// 	}
+// 	else
+// 		return (1);
+// }
 
 static void		get_tree_width(t_ast *root, int *l_width)
 {
@@ -148,12 +148,10 @@ static void		tree_print_rec(t_ast *root, int depth, int space, int width)
 void			print_tree(t_ast *root)
 {
 	int width;
-	// int height;
 
 	width = 4;
 	if (!root)
 		return ;
-	// height = get_tree_height(root);
 	printf("\n>>>> TREE <<<<\n");
 	get_tree_width(root, &width);
 	tree_print_rec(root, 0, 0, width);
