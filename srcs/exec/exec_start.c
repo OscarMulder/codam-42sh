@@ -6,7 +6,7 @@
 /*   By: omulder <omulder@student.codam.nl>           +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2019/05/29 17:52:22 by omulder        #+#    #+#                */
-/*   Updated: 2019/07/10 15:18:24 by jbrinksm      ########   odam.nl         */
+/*   Updated: 2019/07/14 11:08:14 by jbrinksm      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -159,7 +159,7 @@ void		exec_start(t_ast *ast, t_envlst *envlst, int *exit_code, int flags)
 		return ;
 	/* Set flags */
 	if (ast->type == PIPE)
-		flags &= ~EXEC_PIPE;
+		redir_pipe(ast);
 	else if (ast->type == BG)
 		flags &= ~EXEC_BG;
 	else if (ast->type == AND_IF)
