@@ -6,7 +6,7 @@
 /*   By: jbrinksm <jbrinksm@student.codam.nl>         +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2019/07/14 10:37:41 by jbrinksm       #+#    #+#                */
-/*   Updated: 2019/07/14 12:43:28 by jbrinksm      ########   odam.nl         */
+/*   Updated: 2019/07/14 18:34:38 by jbrinksm      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,54 +14,66 @@
 #include <unistd.h>
 #include <sys/wait.h>
 
-int		redir_pipe(t_ast *pipe_node)
+int		handle_pipe(int *pipefds, int pipeside)
 {
-	int	pipe_ends[2];
+	if (pipefds != NULL)
+	{
+		if (pipeside == LEFT)
+		{
+			close(STDIN_FILENO);
+			dup2(pipefds[1], STDOUT_FILENO);
+			close(pipefds[1]);
+		}
+		else if (pipeside == RIGHT)
+		{
+			// ft_printf("b WRITE2 IS (%i) READ2 IS (%i)\n", pipefds[0], pipefds[1]);
+			if (dup2(pipefds[0], STDIN_FILENO) == -1)
+				ft_putendl("PIPE ERROR");
+			// ft_printf("a WRITE2 IS (%i) READ2 IS (%i)\n", pipefds[0], pipefds[1]);
+			close(pipefds[0]);
+		}
+	}
+	return (FUNCT_SUCCESS);
+}
 
-	(void)pipe_node;
-	int	status;
+int		close_pipe(int *pipefds)
+{
+	if (pipefds != NULL)
+	{
+		close(pipefds[0]);
+		close(pipefds[1]);
+	}
+	return (FUNCT_SUCCESS);
+}
 
-	if (pipe(pipe_ends) != 0)
-		return (FUNCT_FAILURE);
-	ft_printf("fds: R: %i W: %i\n", pipe_ends[0], pipe_ends[1]);
-	
+int		redir_pipe_test(t_ast *pipenode, t_envlst *envlst, int *exit_code)
+{
+	int		pipefds[2];
+	char	**command;
 
-	int	ret;
-	ret = fork();
-	if (ret == -1)
+	if (pipe(pipefds) != 0)
+	{
+		ft_putendl("ERROR TRYING TO MAKE PIPE");
 		return (FUNCT_ERROR);
-	if (ret == 0)
-	{
-		dup2(pipe_ends[1], STDOUT_FILENO);
-		close(pipe_ends[1]);
-
-		ft_putendl("INPUT");
-		exit(0);
 	}
-	else
-	{
-		wait(&status);
-		int ret2;
+	
+	exec_quote_remove(pipenode->sibling);
+	if (pipenode->child->sibling)
+		exec_redirs_or_assigns(pipenode->child->sibling, envlst, exit_code);
+	command = create_args(pipenode->child);
+	if (command != NULL)
+		exec_cmd(command, envlst, exit_code, LEFT, pipefds);
 
-		ret2 = fork();
-		if (ret2 == -1)
-			return (FUNCT_ERROR);
-		if (ret2 == 0)
-		{
-			char	*str = ft_strnew(100);
-			dup2(pipe_ends[0], STDIN_FILENO);
-			close(pipe_ends[0]);
-			read(STDIN_FILENO, str, 100);
-			ft_printf("Found this on STDIN: %s\n", str);
-			exit(0);
-		}
-		else
-		{
-			wait(&status);
+	close(pipefds[1]);
 
-			close(pipe_ends[1]);
-			close(pipe_ends[0]);
-		}
-	}
+	exec_quote_remove(pipenode->child);
+	if (pipenode->sibling->sibling)
+		exec_redirs_or_assigns(pipenode->sibling->sibling, envlst, exit_code);
+	command = create_args(pipenode->sibling);
+	if (command != NULL)
+		exec_cmd(command, envlst, exit_code, RIGHT, pipefds);
+
+
+	close(pipefds[0]);
 	return (FUNCT_SUCCESS);
 }

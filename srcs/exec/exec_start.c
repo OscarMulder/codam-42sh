@@ -6,7 +6,7 @@
 /*   By: omulder <omulder@student.codam.nl>           +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2019/05/29 17:52:22 by omulder        #+#    #+#                */
-/*   Updated: 2019/07/14 11:14:27 by jbrinksm      ########   odam.nl         */
+/*   Updated: 2019/07/14 18:17:45 by jbrinksm      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -27,7 +27,7 @@ static size_t	count_args(t_ast *ast)
 	return (i);
 }
 
-static char	**create_args(t_ast *ast)
+char	**create_args(t_ast *ast)
 {
 	char	**args;
 	t_ast	*probe;
@@ -98,7 +98,7 @@ static void	exec_assign(t_ast *node, t_envlst *envlst, int *exit_code)
 **	complete_command
 */
 
-static void	exec_redirs_or_assigns(t_ast *node, t_envlst *envlst, int *exit_code)
+void	exec_redirs_or_assigns(t_ast *node, t_envlst *envlst, int *exit_code)
 {
 	t_ast	*probe;
 
@@ -141,7 +141,7 @@ static void	exec_complete_command(t_ast *node, t_envlst *envlst, int *exit_code,
 		/* add handling of flag = EXEC_PIPE */
 		/* add option for flag = EXEC_BG */
 		if (command != NULL)
-			exec_cmd(command, envlst, exit_code);
+			exec_cmd(command, envlst, exit_code, 0, NULL);
 	}
 
 	/* There is no cmd_word in complete_command */
@@ -160,7 +160,10 @@ void		exec_start(t_ast *ast, t_envlst *envlst, int *exit_code, int flags)
 		return ;
 	/* Set flags */
 	if (ast->type == PIPE)
-		redir_pipe(ast);
+	{
+		redir_pipe_test(ast, envlst, exit_code);
+		return ;
+	}
 	else if (ast->type == BG)
 		flags &= ~EXEC_BG;
 	else if (ast->type == AND_IF)

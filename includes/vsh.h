@@ -6,13 +6,13 @@
 /*   By: omulder <omulder@student.codam.nl>           +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2019/04/10 20:29:42 by jbrinksm       #+#    #+#                */
-/*   Updated: 2019/07/14 11:13:39 by jbrinksm      ########   odam.nl         */
+/*   Updated: 2019/07/14 15:45:38 by jbrinksm      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
 #ifndef VSH_H
 # define VSH_H
-# define DEBUG
+// # define DEBUG
 
 /*
 **==================================defines=====================================
@@ -360,16 +360,21 @@ bool			tool_is_redirect_tk(t_tokens type);
 **----------------------------------execution-----------------------------------
 */
 
-void	exec_start(t_ast *ast, t_envlst *envlst, int *exit_code, int flags);
-void	exec_cmd(char **args, t_envlst *envlst, int *exit_code);
-bool	exec_builtin(char **args, t_envlst *envlst, int *exit_code);
-bool	exec_external(char **args, t_envlst *envlst, int *exit_code);
-char	*exec_find_binary(char *filename, t_envlst *envlst);
-void	exec_quote_remove(t_ast *node);
+void			exec_start(t_ast *ast, t_envlst *envlst, int *exit_code, int flags);
+void			exec_cmd(char **args, t_envlst *envlst, int *exit_code, int pipeside, int *pipefds);
+bool			exec_builtin(char **args, t_envlst *envlst, int *exit_code);
+bool			exec_external(char **args, t_envlst *envlst, int *exit_code, int pipeside, int *pipefds);
+char			*exec_find_binary(char *filename, t_envlst *envlst);
+void			exec_quote_remove(t_ast *node);
 
-
+# define LEFT 1000
+# define RIGHT 1001
 int				redir_pipe(t_ast *pipe_node);
-
+int				redir_pipe_test(t_ast *pipenode, t_envlst *envlst, int *exit_code);
+int				close_pipe(int *pipefds);
+int				handle_pipe(int *pipefds, int pipeside);
+void			exec_redirs_or_assigns(t_ast *node, t_envlst *envlst, int *exit_code);
+char			**create_args(t_ast *ast);
 /*
 **----------------------------------debugging-----------------------------------
 */

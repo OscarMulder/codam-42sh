@@ -6,11 +6,12 @@
 /*   By: omulder <omulder@student.codam.nl>           +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2019/05/29 16:59:41 by omulder        #+#    #+#                */
-/*   Updated: 2019/06/06 13:51:54 by jbrinksm      ########   odam.nl         */
+/*   Updated: 2019/07/14 15:46:02 by jbrinksm      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "vsh.h"
+#include <unistd.h>
 
 /*
 *** Other builtins to be added
@@ -28,7 +29,9 @@ bool	exec_builtin(char **args, t_envlst *envlst, int *exit_code)
 {
 	(void)envlst;
 	if (ft_strequ(args[0], "echo"))
+	{
 		builtin_echo(args, exit_code);
+	}
 	else if (ft_strequ(args[0], "exit"))
 		builtin_exit(args, exit_code);
 	else

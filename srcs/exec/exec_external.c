@@ -6,7 +6,7 @@
 /*   By: tde-jong <tde-jong@student.codam.nl>         +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2019/05/31 10:47:19 by tde-jong       #+#    #+#                */
-/*   Updated: 2019/06/13 16:07:06 by jbrinksm      ########   odam.nl         */
+/*   Updated: 2019/07/14 18:26:34 by jbrinksm      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,7 +14,7 @@
 #include "unistd.h"
 #include <sys/wait.h>
 
-static bool	exec_bin(char **args, char **vshenviron, int *exit_code)
+static bool	exec_bin(char **args, char **vshenviron, int *exit_code, int pipeside, int *pipefds)
 {
 	pid_t	pid;
 	int		status;
@@ -23,7 +23,11 @@ static bool	exec_bin(char **args, char **vshenviron, int *exit_code)
 	if (pid < 0)
 		return (false);
 	if (pid == 0)
+	{
+		if (pipeside != 0)
+			handle_pipe(pipefds, pipeside);
 		execve(args[0], args, vshenviron);
+	}
 	waitpid(pid, &status, WUNTRACED);
 	if (WIFEXITED(status))
 		*exit_code = WEXITSTATUS(status);
@@ -32,7 +36,7 @@ static bool	exec_bin(char **args, char **vshenviron, int *exit_code)
 	return (true);
 }
 
-bool		exec_external(char **args, t_envlst *envlst, int *exit_code)
+bool		exec_external(char **args, t_envlst *envlst, int *exit_code, int pipeside, int *pipefds)
 {
 	char	**vshenviron;
 	char	*binary;
@@ -53,7 +57,7 @@ bool		exec_external(char **args, t_envlst *envlst, int *exit_code)
 		*exit_code = EXIT_FAILURE;
 		return (false);
 	}
-	ret = exec_bin(args, vshenviron, exit_code);
+	ret = exec_bin(args, vshenviron, exit_code, pipeside, pipefds);
 	free(vshenviron);
 	return (ret);
 }
