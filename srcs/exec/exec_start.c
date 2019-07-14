@@ -6,7 +6,7 @@
 /*   By: omulder <omulder@student.codam.nl>           +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2019/05/29 17:52:22 by omulder        #+#    #+#                */
-/*   Updated: 2019/07/14 11:08:14 by jbrinksm      ########   odam.nl         */
+/*   Updated: 2019/07/14 11:14:27 by jbrinksm      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -128,6 +128,7 @@ static void	exec_complete_command(t_ast *node, t_envlst *envlst, int *exit_code,
 	/* Replace variables */
 
 	/* There is atleast one cmd_word in complete_command */
+	exec_quote_remove(node);
 	if (node->type == WORD)
 	{
 		if (node->sibling)

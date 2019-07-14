@@ -6,7 +6,7 @@
 /*   By: jbrinksm <jbrinksm@student.codam.nl>         +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2019/04/18 16:37:32 by omulder        #+#    #+#                */
-/*   Updated: 2019/07/10 20:10:15 by jbrinksm      ########   odam.nl         */
+/*   Updated: 2019/07/13 13:27:37 by mavan-he      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -602,7 +602,7 @@ Test(exec_echo, basic2, .init=redirect_all_stdout)
 	cr_expect(parser_start(&lst, &ast) == FUNCT_SUCCESS);
 	exec_start(ast, envlst, &exit_code, 0);
 	cr_expect(exit_code == 0);
-	cr_expect_stdout_eq_str("\"Hi, this is a string\"\n");
+	cr_expect_stdout_eq_str("Hi, this is a string\n");
 	parser_astdel(&ast);
 } 
 
