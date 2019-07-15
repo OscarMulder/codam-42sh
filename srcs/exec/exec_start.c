@@ -6,7 +6,7 @@
 /*   By: omulder <omulder@student.codam.nl>           +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2019/05/29 17:52:22 by omulder        #+#    #+#                */
-/*   Updated: 2019/07/14 18:17:45 by jbrinksm      ########   odam.nl         */
+/*   Updated: 2019/07/15 21:11:38 by jbrinksm      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -141,7 +141,7 @@ static void	exec_complete_command(t_ast *node, t_envlst *envlst, int *exit_code,
 		/* add handling of flag = EXEC_PIPE */
 		/* add option for flag = EXEC_BG */
 		if (command != NULL)
-			exec_cmd(command, envlst, exit_code, 0, NULL);
+			exec_cmd(command, envlst, exit_code, 0, NULL, NULL);
 	}
 
 	/* There is no cmd_word in complete_command */
@@ -161,7 +161,7 @@ void		exec_start(t_ast *ast, t_envlst *envlst, int *exit_code, int flags)
 	/* Set flags */
 	if (ast->type == PIPE)
 	{
-		redir_pipe_test(ast, envlst, exit_code);
+		redir_loop_pipes(ast, envlst, exit_code, NULL);
 		return ;
 	}
 	else if (ast->type == BG)

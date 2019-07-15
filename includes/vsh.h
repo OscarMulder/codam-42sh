@@ -6,7 +6,7 @@
 /*   By: omulder <omulder@student.codam.nl>           +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2019/04/10 20:29:42 by jbrinksm       #+#    #+#                */
-/*   Updated: 2019/07/15 16:35:06 by jbrinksm      ########   odam.nl         */
+/*   Updated: 2019/07/15 21:10:08 by jbrinksm      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -363,9 +363,9 @@ bool			tool_is_redirect_tk(t_tokens type);
 */
 
 void			exec_start(t_ast *ast, t_envlst *envlst, int *exit_code, int flags);
-void			exec_cmd(char **args, t_envlst *envlst, int *exit_code, int pipeside, int *pipefds);
+void			exec_cmd(char **args, t_envlst *envlst, int *exit_code, int pipeside, int *pipefdshere, int *pipefdsprev);
 bool			exec_builtin(char **args, t_envlst *envlst, int *exit_code, int pipeside, int *pipefds);
-bool			exec_external(char **args, t_envlst *envlst, int *exit_code, int pipeside, int *pipefds);
+bool			exec_external(char **args, t_envlst *envlst, int *exit_code, int pipeside, int *pipefdshere, int *pipefdsprev);
 char			*exec_find_binary(char *filename, t_envlst *envlst);
 void			exec_quote_remove(t_ast *node);
 
@@ -373,8 +373,9 @@ void			exec_quote_remove(t_ast *node);
 # define EXTEND 1001
 int				redir_pipe(t_ast *pipe_node);
 int				redir_pipe_test(t_ast *pipenode, t_envlst *envlst, int *exit_code);
+int				redir_loop_pipes(t_ast *pipenode, t_envlst *envlst, int *exit_code, int *pipefdsprev);
 int				close_pipe(int *pipefds);
-int				handle_pipe(int *pipefds, int pipeside);
+int				handle_pipe(int *pipefdshere, int *pipefdsprev, int pipeside);
 void			exec_redirs_or_assigns(t_ast *node, t_envlst *envlst, int *exit_code);
 char			**create_args(t_ast *ast);
 /*

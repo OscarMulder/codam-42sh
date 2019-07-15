@@ -6,7 +6,7 @@
 /*   By: jbrinksm <jbrinksm@student.codam.nl>         +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2019/07/14 10:37:41 by jbrinksm       #+#    #+#                */
-/*   Updated: 2019/07/15 16:40:31 by jbrinksm      ########   odam.nl         */
+/*   Updated: 2019/07/15 21:13:20 by jbrinksm      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -25,17 +25,19 @@ int		handle_pipe(int *pipefdshere, int *pipefdsprev, int pipeside)
 				ft_putendl("PIPE ERROR");
 			close(pipefdshere[1]);
 		}
-		else if (pipeside == EXTEND && pipefdsprev != NULL)
+		else if (pipeside == EXTEND)
 		{
 			// Take previous output as input
 			if (dup2(pipefdshere[0], STDIN_FILENO) == -1)
 				ft_putendl("PIPE ERROR");
 			close(pipefdshere[0]);
-
-			// pipe output of this execution to parent pipe
-			if (dup2(pipefdsprev[1], STDOUT_FILENO) == -1)
-				ft_putendl("PIPE ERROR");
-			close(pipefdsprev[1]);
+			if (pipefdsprev != NULL)
+			{
+				// pipe output of this execution to parent pipe
+				if (dup2(pipefdsprev[1], STDOUT_FILENO) == -1)
+					ft_putendl("PIPE ERROR");
+				close(pipefdsprev[1]);
+			}
 		}
 	}
 	return (FUNCT_SUCCESS);
@@ -73,6 +75,8 @@ int		redir_loop_pipes(t_ast *pipenode, t_envlst *envlst, int *exit_code, int *pi
 			exec_cmd(command, envlst, exit_code, START, pipefdshere, pipefdsprev);
 	}
 
+	close(pipefdshere[1]);
+
 	if (pipenode->sibling != NULL)
 	{
 		// ADD ANY PIPE EXTENSION (runs always)
@@ -81,6 +85,9 @@ int		redir_loop_pipes(t_ast *pipenode, t_envlst *envlst, int *exit_code, int *pi
 			exec_cmd(command, envlst, exit_code, EXTEND, pipefdshere, pipefdsprev);
 		
 	}
+
+	close(pipefdshere[0]);
+	return (FUNCT_SUCCESS);
 }
 
 // int		redir_pipe_test(t_ast *pipenode, t_envlst *envlst, int *exit_code)
