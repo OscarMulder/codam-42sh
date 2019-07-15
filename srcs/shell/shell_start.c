@@ -6,7 +6,7 @@
 /*   By: omulder <omulder@student.codam.nl>           +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2019/04/18 16:44:50 by omulder        #+#    #+#                */
-/*   Updated: 2019/07/09 13:07:21 by tde-jong      ########   odam.nl         */
+/*   Updated: 2019/07/15 16:55:02 by omulder       ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -27,26 +27,27 @@ int		shell_start(t_envlst *envlst)
 	char		*line;
 	t_tokenlst	*token_lst;
 	t_ast		*ast;
+	t_history	**history;
 
 	exit_code = EXIT_SUCCESS;
 	status = 1;
 	line = NULL;
 	token_lst = NULL;
 	ast = NULL;
+	history_get_file_content(&history);
 	while (status != CTRLD)
 	{
 		shell_display_prompt();
-		status = input_read(&line);
-		while (shell_quote_checker(&line) != FUNCT_SUCCESS)
+		status = input_read(&line, history);
+		while (shell_quote_checker(&line, history) != FUNCT_SUCCESS)
 			continue ;
 		ft_putchar('\n');
-		history_line_to_array(line);
 		#ifdef DEBUG
 		ft_printf("\n>>>> LINE <<<<\n%s\n\n>>>> TOKEN_LST <<<<\n", line);
 		#endif
 		if (lexer(&line, &token_lst) != FUNCT_SUCCESS)
 			continue ;
-		if (shell_dless_input(token_lst) != FUNCT_SUCCESS)
+		if (shell_dless_input(token_lst, history) != FUNCT_SUCCESS)
 			continue ;
 		#ifdef DEBUG
  		lexer_tokenlstiter(token_lst, print_node);

@@ -6,7 +6,7 @@
 /*   By: mavan-he <mavan-he@student.codam.nl>         +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2019/06/02 14:28:54 by mavan-he       #+#    #+#                */
-/*   Updated: 2019/07/15 15:37:44 by omulder       ########   odam.nl         */
+/*   Updated: 2019/07/15 16:56:53 by omulder       ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -28,41 +28,40 @@ static void	history_clear_line(unsigned *index, unsigned linelen)
 		ft_printf("\e[%dD", *index);
 }
 
-void	find_start(t_history **history, int *number, int *start)
-{
-	int i;
-	int	smallest;
+// static void	find_start(t_history **history, int *number, int *start)
+// {
+// 	int i;
+// 	int	smallest;
 
-	i = 0;
-	*start = 0;
-	*number = -1;
-	smallest = HISTORY_MAX + 1;
-	while (i < HISTORY_MAX && history[i] != NULL)
-	{
-		if (history[i]->number < smallest)
-		{
-			*start = i;
-			smallest = history[i]->number;
-		}
-		if (history[i]->number > number)
-			*number = history[i]->number;
-		i++;
-	}
-}
+// 	i = 0;
+// 	*start = 0;
+// 	*number = -1;
+// 	smallest = HISTORY_MAX + 1;
+// 	while (i < HISTORY_MAX && history[i] != NULL)
+// 	{
+// 		if (history[i]->number < smallest)
+// 		{
+// 			*start = i;
+// 			smallest = history[i]->number;
+// 		}
+// 		if (history[i]->number > *number)
+// 			*number = history[i]->number;
+// 		i++;
+// 	}
+// }
 
 void		history_change_line(t_history **history, char **line, unsigned *index, char arrow)
 {
-	static int hist_index;
-
+	(void)history;
+	(void)arrow;
 	history_clear_line(index, ft_strlen(*line));
-	if (arrow == ARROW_UP && history[0] != NULL)
-	{
-		*line = history[];
-	}
-	else if (arrow == ARROW_DOWN)
-	{
-	}
-	else
+	// if (arrow == ARROW_UP && history[0] != NULL)
+	// {
+	// }
+	// else if (arrow == ARROW_DOWN)
+	// {
+	// }
+	// else
 		ft_printf("\a");
 	ft_putstr(*line);
 	*index = ft_strlen(*line);

@@ -6,7 +6,7 @@
 /*   By: mavan-he <mavan-he@student.codam.nl>         +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2019/05/30 20:47:41 by mavan-he       #+#    #+#                */
-/*   Updated: 2019/07/15 13:21:41 by omulder       ########   odam.nl         */
+/*   Updated: 2019/07/15 16:42:09 by omulder       ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -41,7 +41,7 @@ void	history_print(t_history **history)
 	int	smallest;
 	int start;
 
-	find_start(history, smallest, start);
+	find_start(history, &smallest, &start);
 	i = start;
 	while (i < HISTORY_MAX && history[i] != NULL)
 	{

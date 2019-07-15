@@ -6,14 +6,14 @@
 /*   By: jbrinksm <jbrinksm@student.codam.nl>         +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2019/04/17 14:03:16 by jbrinksm       #+#    #+#                */
-/*   Updated: 2019/07/09 15:44:25 by tde-jong      ########   odam.nl         */
+/*   Updated: 2019/07/15 16:44:47 by omulder       ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "vsh.h"
 #include <unistd.h>
 
-void	input_clear_char_at(char **line, unsigned index)
+void		input_clear_char_at(char **line, unsigned index)
 {
 	unsigned i;
 
@@ -25,35 +25,44 @@ void	input_clear_char_at(char **line, unsigned index)
 	}
 }
 
-int		input_read(char **line)
+t_inputdata	*init_inputdata(void)
 {
-	char		c;
-	unsigned	index;
-	int			status;
-	int			input_state;
+	t_inputdata	*new;
 
-	index = 0;
-	input_state = 0;
+	new = (t_inputdata*)ft_memalloc(sizeof(t_inputdata));
+	new->c = 0;
+	new->index = 0;
+	new->input_state = 0;
+	new->hist_index = 0;
+	return (new);
+}
+
+int			input_read(char **line, t_history **history)
+{
+	t_inputdata	*data;
+	int			status;
+
+	data = init_inputdata();
 	*line = ft_strnew(0);
-	while (read(STDIN_FILENO, &c, 1) > 0)
+	while (read(STDIN_FILENO, &data->c, 1) > 0)
 	{
 		status = 0;
-		status |= input_parse_escape(c, &input_state);
-		status |= input_parse_home(c, &input_state, &index);
-		status |= input_parse_end(c, &input_state, &index, line);
-		status |= input_parse_prev(c, &input_state, &index, line);
-		status |= input_parse_next(c, &input_state, &index, line);
-		status |= input_parse_delete(c, &input_state, &index, line);
-		status |= input_parse_ctrl_up(c, &input_state, &index, line);
-		status |= input_parse_ctrl_down(c, &input_state, &index, line);
+		status |= input_parse_escape(data);
+		status |= input_parse_home(data);
+		status |= input_parse_end(data, line);
+		status |= input_parse_prev(data, line);
+		status |= input_parse_next(data, line);
+		status |= input_parse_delete(data, line);
+		status |= input_parse_ctrl_up(data, history, line);
+		status |= input_parse_ctrl_down(data, history, line);
 		if (status == 0)
-			input_state = 0;
-		status |= input_parse_backspace(c, &index, line);
-		status |= input_parse_ctrl_d(c, &index, line);
-		status |= input_parse_ctrl_k(c, &index, line);
-		if (status == 0 && input_parse_char(c, &index, line) == FUNCT_FAILURE)
+			data->input_state = 0;
+		status |= input_parse_backspace(data, line);
+		status |= input_parse_ctrl_d(data, line);
+		status |= input_parse_ctrl_k(data, line);
+		if (status == 0 && input_parse_char(data, line) == FUNCT_FAILURE)
 			return (FUNCT_FAILURE);
-		if (c == '\n')
+		if (data->c == '\n')
 			break ;
 	}
 	return (status);

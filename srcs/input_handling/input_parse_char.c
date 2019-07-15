@@ -6,7 +6,7 @@
 /*   By: rkuijper <rkuijper@student.codam.nl>         +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2019/05/16 13:33:54 by rkuijper       #+#    #+#                */
-/*   Updated: 2019/07/09 15:04:41 by tde-jong      ########   odam.nl         */
+/*   Updated: 2019/07/15 16:31:16 by omulder       ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -34,19 +34,19 @@ static int	add_char_at(char **line, int index, char c)
 	return (FUNCT_SUCCESS);
 }
 
-int			input_parse_char(char c, unsigned *index, char **line)
+int			input_parse_char(t_inputdata *data, char **line)
 {
 	unsigned len;
 
-	if (ft_isprint(c) || c == '\n')
+	if (ft_isprint(data->c) || data->c == '\n')
 	{
-		if (add_char_at(line, *index, c) == FUNCT_FAILURE)
+		if (add_char_at(line, data->index, data->c) == FUNCT_FAILURE)
 			return (FUNCT_FAILURE);
-		len = ft_strlen(*line + *index);
-		ft_printf("%s", *line + *index);
+		len = ft_strlen(*line + data->index);
+		ft_printf("%s", *line + data->index);
 		if (len - 1 > 0)
 			ft_printf("\e[%dD", len - 1);
-		*index += 1;
+		data->index += 1;
 	}
 	return (FUNCT_SUCCESS);
 }

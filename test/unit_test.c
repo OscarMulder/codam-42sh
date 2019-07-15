@@ -6,7 +6,7 @@
 /*   By: jbrinksm <jbrinksm@student.codam.nl>         +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2019/04/18 16:37:32 by omulder        #+#    #+#                */
-/*   Updated: 2019/07/06 18:42:33 by jbrinksm      ########   odam.nl         */
+/*   Updated: 2019/07/15 16:53:03 by omulder       ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -200,21 +200,23 @@ TestSuite(shell_quote_checker);
 Test(shell_quote_checker, basic)
 {
 	char *line;
+	t_history	**history;
 
+	history_get_file_content(&history);
 	line = strdup("lala");
-	shell_quote_checker(&line);
+	shell_quote_checker(&line, history);
 	cr_expect_str_eq(line, "lala");
 	ft_strdel(&line);
 	line = strdup("lala''");
-	shell_quote_checker(&line);
+	shell_quote_checker(&line, history);
 	cr_expect_str_eq(line, "lala''");
 	ft_strdel(&line);
 	line = strdup("lala\"\"");
-	shell_quote_checker(&line);
+	shell_quote_checker(&line, history);
 	cr_expect_str_eq(line, "lala\"\"");
 	ft_strdel(&line);
 	line = strdup("lala'\"'");
-	shell_quote_checker(&line);
+	shell_quote_checker(&line, history);
 	cr_expect_str_eq(line, "lala'\"'");
 	ft_strdel(&line);
 }

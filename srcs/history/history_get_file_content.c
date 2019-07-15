@@ -6,7 +6,7 @@
 /*   By: mavan-he <mavan-he@student.codam.nl>         +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2019/05/30 13:49:22 by mavan-he       #+#    #+#                */
-/*   Updated: 2019/07/15 15:36:54 by omulder       ########   odam.nl         */
+/*   Updated: 2019/07/15 16:40:14 by omulder       ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -27,7 +27,7 @@ int		history_get_file_content(t_history ***history)
 	int		i;
 	char	*line;
 
-	*history = (char **)ft_memalloc(sizeof(char *) * HISTORY_MAX);
+	*history = (t_history **)ft_memalloc(sizeof(t_history *) * HISTORY_MAX);
 	if (*history == NULL)
 		return (FUNCT_ERROR);
 	fd = open(HISTFILE, O_RDWR | O_CREAT, S_IRUSR | S_IWUSR);
