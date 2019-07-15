@@ -6,7 +6,7 @@
 /*   By: omulder <omulder@student.codam.nl>           +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2019/04/10 20:29:42 by jbrinksm       #+#    #+#                */
-/*   Updated: 2019/07/14 15:45:38 by jbrinksm      ########   odam.nl         */
+/*   Updated: 2019/07/15 13:17:26 by jbrinksm      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -212,8 +212,20 @@ typedef struct	s_ast
 }				t_ast;
 
 /*
+**--------------------------------redirects-------------------------------------
+*/
+
+typedef struct	s_piperedirs
+{
+	int					pipefds[2];
+	bool				handled;
+	struct s_piperedirs	*next;
+}				t_piperedirs;
+
+/*
 **---------------------------------environment----------------------------------
 */
+
 
 typedef struct	s_envlst
 {
@@ -221,6 +233,7 @@ typedef struct	s_envlst
 	unsigned char	type;
 	struct s_envlst	*next;
 }				t_envlst;
+
 
 char			*env_getvalue(char *var_key, t_envlst *envlst);
 char			**env_free_and_return_null(char ***vshenviron);
@@ -362,7 +375,7 @@ bool			tool_is_redirect_tk(t_tokens type);
 
 void			exec_start(t_ast *ast, t_envlst *envlst, int *exit_code, int flags);
 void			exec_cmd(char **args, t_envlst *envlst, int *exit_code, int pipeside, int *pipefds);
-bool			exec_builtin(char **args, t_envlst *envlst, int *exit_code);
+bool			exec_builtin(char **args, t_envlst *envlst, int *exit_code, int pipeside, int *pipefds);
 bool			exec_external(char **args, t_envlst *envlst, int *exit_code, int pipeside, int *pipefds);
 char			*exec_find_binary(char *filename, t_envlst *envlst);
 void			exec_quote_remove(t_ast *node);

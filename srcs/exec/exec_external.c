@@ -6,7 +6,7 @@
 /*   By: tde-jong <tde-jong@student.codam.nl>         +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2019/05/31 10:47:19 by tde-jong       #+#    #+#                */
-/*   Updated: 2019/07/14 18:26:34 by jbrinksm      ########   odam.nl         */
+/*   Updated: 2019/07/14 18:44:24 by jbrinksm      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -24,8 +24,7 @@ static bool	exec_bin(char **args, char **vshenviron, int *exit_code, int pipesid
 		return (false);
 	if (pid == 0)
 	{
-		if (pipeside != 0)
-			handle_pipe(pipefds, pipeside);
+		handle_pipe(pipefds, pipeside);
 		execve(args[0], args, vshenviron);
 	}
 	waitpid(pid, &status, WUNTRACED);
