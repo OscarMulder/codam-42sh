@@ -6,7 +6,7 @@
 /*   By: jbrinksm <jbrinksm@student.codam.nl>         +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2019/04/17 14:03:16 by jbrinksm       #+#    #+#                */
-/*   Updated: 2019/07/15 17:04:45 by omulder       ########   odam.nl         */
+/*   Updated: 2019/07/15 17:06:13 by omulder       ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -62,7 +62,7 @@ int			input_read(char **line, t_history **history)
 		status |= input_parse_backspace(data, line);
 		status |= input_parse_ctrl_d(data, line);
 		status |= input_parse_ctrl_k(data, line);
-		if (status == 0 && input_parse_char(data, line) == FUNCT_FAILURE)
+		if (status == 0 && input_parse_char(data, line, &maxstrlen) == FUNCT_FAILURE)
 			return (FUNCT_FAILURE);
 		if (data->c == '\n')
 			break ;
