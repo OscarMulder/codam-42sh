@@ -6,7 +6,7 @@
 /*   By: omulder <omulder@student.codam.nl>           +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2019/04/10 20:29:42 by jbrinksm       #+#    #+#                */
-/*   Updated: 2019/07/15 13:17:26 by jbrinksm      ########   odam.nl         */
+/*   Updated: 2019/07/15 16:35:06 by jbrinksm      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -212,17 +212,6 @@ typedef struct	s_ast
 }				t_ast;
 
 /*
-**--------------------------------redirects-------------------------------------
-*/
-
-typedef struct	s_piperedirs
-{
-	int					pipefds[2];
-	bool				handled;
-	struct s_piperedirs	*next;
-}				t_piperedirs;
-
-/*
 **---------------------------------environment----------------------------------
 */
 
@@ -380,8 +369,8 @@ bool			exec_external(char **args, t_envlst *envlst, int *exit_code, int pipeside
 char			*exec_find_binary(char *filename, t_envlst *envlst);
 void			exec_quote_remove(t_ast *node);
 
-# define LEFT 1000
-# define RIGHT 1001
+# define START 1000
+# define EXTEND 1001
 int				redir_pipe(t_ast *pipe_node);
 int				redir_pipe_test(t_ast *pipenode, t_envlst *envlst, int *exit_code);
 int				close_pipe(int *pipefds);
