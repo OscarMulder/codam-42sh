@@ -6,7 +6,7 @@
 /*   By: omulder <omulder@student.codam.nl>           +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2019/04/10 20:29:42 by jbrinksm       #+#    #+#                */
-/*   Updated: 2019/07/15 16:54:39 by omulder       ########   odam.nl         */
+/*   Updated: 2019/07/15 17:01:41 by omulder       ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -262,7 +262,7 @@ int				input_read(char **line, t_history **history);
 int				input_is_word_start(char *str, int i1, int i2);
 void			input_clear_char_at(char **line, unsigned index);
 int				input_parse_escape(t_inputdata *data);
-int				input_parse_char(t_inputdata *data, char **line);
+int				input_parse_char(t_inputdata *data, char **line, int *len_max);
 int				input_parse_home(t_inputdata *data);
 int				input_parse_backspace(t_inputdata *data, char **line);
 int				input_parse_end(t_inputdata *data, char **line);
@@ -366,6 +366,7 @@ void	exec_cmd(char **args, t_envlst *envlst, int *exit_code);
 bool	exec_builtin(char **args, t_envlst *envlst, int *exit_code);
 bool	exec_external(char **args, t_envlst *envlst, int *exit_code);
 char	*exec_find_binary(char *filename, t_envlst *envlst);
+void	exec_quote_remove(t_ast *node);
 
 /*
 **----------------------------------debugging-----------------------------------

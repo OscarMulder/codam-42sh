@@ -6,7 +6,7 @@
 /*   By: jbrinksm <jbrinksm@student.codam.nl>         +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2019/04/17 14:03:16 by jbrinksm       #+#    #+#                */
-/*   Updated: 2019/07/15 16:44:47 by omulder       ########   odam.nl         */
+/*   Updated: 2019/07/15 17:04:45 by omulder       ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -41,9 +41,11 @@ int			input_read(char **line, t_history **history)
 {
 	t_inputdata	*data;
 	int			status;
+	int			maxstrlen;
 
 	data = init_inputdata();
-	*line = ft_strnew(0);
+	*line = ft_strnew(64);
+	maxstrlen = 64;
 	while (read(STDIN_FILENO, &data->c, 1) > 0)
 	{
 		status = 0;
