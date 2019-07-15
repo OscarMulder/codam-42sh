@@ -6,7 +6,7 @@
 /*   By: mavan-he <mavan-he@student.codam.nl>         +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2019/06/02 14:28:54 by mavan-he       #+#    #+#                */
-/*   Updated: 2019/07/15 15:37:44 by omulder       ########   odam.nl         */
+/*   Updated: 2019/06/03 16:28:32 by mavan-he      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -28,39 +28,21 @@ static void	history_clear_line(unsigned *index, unsigned linelen)
 		ft_printf("\e[%dD", *index);
 }
 
-void	find_start(t_history **history, int *number, int *start)
+void		history_change_line(char **line, unsigned *index, char arrow)
 {
-	int i;
-	int	smallest;
-
-	i = 0;
-	*start = 0;
-	*number = -1;
-	smallest = HISTORY_MAX + 1;
-	while (i < HISTORY_MAX && history[i] != NULL)
-	{
-		if (history[i]->number < smallest)
-		{
-			*start = i;
-			smallest = history[i]->number;
-		}
-		if (history[i]->number > number)
-			*number = history[i]->number;
-		i++;
-	}
-}
-
-void		history_change_line(t_history **history, char **line, unsigned *index, char arrow)
-{
-	static int hist_index;
-
 	history_clear_line(index, ft_strlen(*line));
-	if (arrow == ARROW_UP && history[0] != NULL)
+	if (arrow == ARROW_UP && history_tmp > 0)
 	{
-		*line = history[];
+		history_tmp--;
+		*line = history_copy[history_tmp];
 	}
 	else if (arrow == ARROW_DOWN)
 	{
+		if (history_tmp < ((history_i < HISTORY_MAX) ? history_i : HISTORY_MAX - 1))
+		{
+			history_tmp++;
+			*line = history_copy[history_tmp];
+		}
 	}
 	else
 		ft_printf("\a");

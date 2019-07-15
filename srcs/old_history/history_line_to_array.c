@@ -6,53 +6,43 @@
 /*   By: mavan-he <mavan-he@student.codam.nl>         +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2019/05/30 18:55:25 by mavan-he       #+#    #+#                */
-/*   Updated: 2019/07/15 15:37:35 by omulder       ########   odam.nl         */
+/*   Updated: 2019/07/09 16:48:48 by omulder       ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "vsh.h"
-#include "vsh_history.h"
 #include "libft.h"
+#include "vsh_history.h"
 
-/*
-** Add one line to the history array
-*/
-
-void	find_start(t_history **history, int *number, int *start)
+int		history_line_to_array(char **line)
 {
-	int i;
-	int	smallest;
+	int	i;
 
 	i = 0;
-	*start = 0;
-	*number = -1;
-	smallest = HISTORY_MAX + 1;
-	while (i < HISTORY_MAX && history[i] != NULL)
+	while (i < HISTORY_MAX - 1 && history_copy[i])
 	{
-		if (history[i]->number < smallest)
+		if (i != history_tmp && ft_strequ(history[i], history_copy[i]) == 0)
 		{
-			*start = i;
-			smallest = history[i]->number;
+			ft_strdel(&history[i]);
+			history[i] = ft_strdup(history_copy[i]); // malloc protec
 		}
-		if (history[i]->number > number)
-			*number = history[i]->number;
 		i++;
 	}
-}
-
-int		history_line_to_array(t_history **history, char *line)
-{
-	int start;
-	int number;
-	int i;
-
-	find_start(history, number, start);
-	i = start;
-	if (history[i] != NULL)
-		ft_strdel(history[i]->str);
-	history[i]->str = ft_strdup(line);
-	if (history[i]->str == NULL)
-		return (false);
-	history[i]->number = number + 1;
-	return (true);
+	if (history[history_cur])
+		ft_strdel(&history[history_cur]);
+	history[history_cur] = ft_strdup(*line); // malloc protec
+	*line = ft_strdup(history_copy[history_tmp]); // malloc protec
+	if (history_i >= HISTORY_MAX)
+	{
+		i = HISTORY_MAX - 1;
+		while (i > 0)
+		{
+			history[i] = history[i - 1];
+			i++;
+		}
+	}
+	history_i++;
+	history_tmp = (history_i < HISTORY_MAX) ? history_i : HISTORY_MAX - 1;
+	history_cur = history_tmp;
+	return (FUNCT_SUCCESS);
 }

@@ -6,24 +6,35 @@
 /*   By: mavan-he <mavan-he@student.codam.nl>         +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2019/05/30 17:42:22 by mavan-he       #+#    #+#                */
-/*   Updated: 2019/06/02 15:12:20 by mavan-he      ########   odam.nl         */
+/*   Updated: 2019/07/15 15:36:08 by omulder       ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
 #ifndef VSH_HISTORY_H
 # define VSH_HISTORY_H
+# define HISTFILE "~/.vsh_history"
 
-int		history_i;
-int		history_tmp;
-char	**history;
+// int	history_i;
+// int	history_cur;
+// int	history_tmp;
 
-#define ARROW_UP 1
-#define ARROW_DOWN 2
+// char	**history;
+// char	**history_copy;
 
-int				history_to_file(void);
-int				history_get_file_content(void);
-int				history_line_to_array(char *line);
-void			history_print(void);
+typedef struct  s_history
+{
+    int     number;
+    char    *str;
+}               t_history;
+
+# define HISTORY_MAX	500
+# define ARROW_UP	    1
+# define ARROW_DOWN	    2
+
+int		        history_to_file(t_history **history);
+int		        history_get_file_content(t_history ***history);
+int		        history_line_to_array(t_history **history, char *line);
+void	        history_print(t_history **history);
 void			history_change_line(char **line, unsigned *index, char arrow);
 
 #endif

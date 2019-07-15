@@ -6,7 +6,7 @@
 /*   By: mavan-he <mavan-he@student.codam.nl>         +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2019/05/29 15:25:10 by mavan-he       #+#    #+#                */
-/*   Updated: 2019/07/15 13:22:25 by omulder       ########   odam.nl         */
+/*   Updated: 2019/06/02 10:37:20 by mavan-he      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,16 +16,13 @@
 #include <fcntl.h>
 #include <unistd.h>
 
-/*
-** Write the history to file
-*/
-
-int		history_to_file(t_history **history)
+int		history_to_file(void)
 {
 	int		fd;
 	int		i;
 
-	fd = open(HISTFILE, O_RDWR | O_CREAT | O_TRUNC, S_IRUSR | S_IWUSR);
+	fd = open("/tmp/.vsh_history",
+		O_RDWR | O_CREAT | O_TRUNC, S_IRUSR | S_IWUSR);
 	if (fd == -1)
 	{
 		ft_putstr_fd("Cannot open/create vsh history file \n", STDERR_FILENO);
@@ -34,7 +31,7 @@ int		history_to_file(t_history **history)
 	i = 0;
 	while (history[i] != NULL)
 	{
-		ft_putendl_fd(history[i]->str, fd);
+		ft_putendl_fd(history[i], fd);
 		i++;
 	}
 	close(fd);

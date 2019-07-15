@@ -6,7 +6,7 @@
 /*   By: mavan-he <mavan-he@student.codam.nl>         +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2019/05/30 13:49:22 by mavan-he       #+#    #+#                */
-/*   Updated: 2019/06/03 15:42:49 by mavan-he      ########   odam.nl         */
+/*   Updated: 2019/07/15 15:36:54 by omulder       ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,31 +16,35 @@
 #include "libft.h"
 #include <unistd.h>
 
-int		history_get_file_content(void)
+/*
+** Get the content out of the history file
+*/
+
+int		history_get_file_content(t_history ***history)
 {
 	int		fd;
 	int		ret;
+	int		i;
 	char	*line;
 
-	history = (char **)ft_memalloc(sizeof(char *) * (500 + 1));
-	if (history == NULL)
+	*history = (char **)ft_memalloc(sizeof(char *) * HISTORY_MAX);
+	if (*history == NULL)
 		return (FUNCT_ERROR);
-	fd = open("/tmp/.vsh_history", O_RDWR | O_CREAT, S_IRUSR | S_IWUSR);
+	fd = open(HISTFILE, O_RDWR | O_CREAT, S_IRUSR | S_IWUSR);
 	if (fd == -1)
 		return (FUNCT_ERROR);
 	ret = 1;
-	history_i = 0;
-	while (ret > 0 && history_i < 500)
+	i = 0;
+	while (ret > 0 && i < HISTORY_MAX)
 	{
 		line = NULL;
 		ret = ft_get_next_line(fd, &line);
 		if (ret == -1)
 			return (FUNCT_ERROR);
-		history[history_i] = line;
-		if (ret != 0)
-			history_i++;
+		(*history)[i]->number = i;
+		(*history)[i]->str = line;
+		i++;
 	}
 	close(fd);
-	history_tmp = history_i;
 	return (FUNCT_SUCCESS);
 }

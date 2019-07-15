@@ -1,42 +1,47 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        ::::::::            */
-/*   history_to_file.c                                  :+:    :+:            */
+/*   history_get_file_content.c                         :+:    :+:            */
 /*                                                     +:+                    */
 /*   By: mavan-he <mavan-he@student.codam.nl>         +#+                     */
 /*                                                   +#+                      */
-/*   Created: 2019/05/29 15:25:10 by mavan-he       #+#    #+#                */
-/*   Updated: 2019/07/15 13:22:25 by omulder       ########   odam.nl         */
+/*   Created: 2019/05/30 13:49:22 by mavan-he       #+#    #+#                */
+/*   Updated: 2019/07/09 12:24:24 by omulder       ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "vsh.h"
 #include "vsh_history.h"
-#include "libft.h"
 #include <fcntl.h>
+#include "libft.h"
 #include <unistd.h>
 
-/*
-** Write the history to file
-*/
-
-int		history_to_file(t_history **history)
+int		history_get_file_content(void)
 {
 	int		fd;
-	int		i;
+	int		ret;
+	char	*line;
 
-	fd = open(HISTFILE, O_RDWR | O_CREAT | O_TRUNC, S_IRUSR | S_IWUSR);
-	if (fd == -1)
-	{
-		ft_putstr_fd("Cannot open/create vsh history file \n", STDERR_FILENO);
+	history = (char **)ft_memalloc(sizeof(char *) * HISTORY_MAX);
+	if (history == NULL)
 		return (FUNCT_ERROR);
-	}
-	i = 0;
-	while (history[i] != NULL)
+	fd = open("/tmp/.vsh_history", O_RDWR | O_CREAT, S_IRUSR | S_IWUSR);
+	if (fd == -1)
+		return (FUNCT_ERROR);
+	ret = 1;
+	history_i = 0;
+	while (ret > 0 && history_i < HISTORY_MAX - 5)
 	{
-		ft_putendl_fd(history[i]->str, fd);
-		i++;
+		line = NULL;
+		ret = ft_get_next_line(fd, &line);
+		if (ret == -1)
+			return (FUNCT_ERROR);
+		history[history_i] = line;
+		if (ret != 0)
+			history_i++;
 	}
 	close(fd);
+	history_tmp = history_i;
+	history_cur = history_i;
 	return (FUNCT_SUCCESS);
 }
