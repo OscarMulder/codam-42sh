@@ -6,7 +6,7 @@
 /*   By: omulder <omulder@student.codam.nl>           +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2019/04/10 20:29:42 by jbrinksm       #+#    #+#                */
-/*   Updated: 2019/07/13 13:05:17 by mavan-he      ########   odam.nl         */
+/*   Updated: 2019/07/16 15:16:51 by mavan-he      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -334,6 +334,7 @@ t_ast			*parser_new_node(t_tokenlst *token);
 bool			parser_command(t_tokenlst **token_lst, t_ast **ast);
 char			*parser_return_token_str(t_tokens type);
 void			parser_astdel(t_ast **ast);
+bool			parser_return_del(t_ast **ast);
 
 /*
 **----------------------------------builtins------------------------------------

@@ -6,7 +6,7 @@
 /*   By: mavan-he <mavan-he@student.codam.nl>         +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2019/05/25 19:13:12 by mavan-he       #+#    #+#                */
-/*   Updated: 2019/07/10 17:49:02 by mavan-he      ########   odam.nl         */
+/*   Updated: 2019/07/16 15:15:45 by mavan-he      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -21,10 +21,10 @@ static bool	parser_io_redirect(t_tokenlst **token_lst, t_ast **ast)
 		return (false);
 	if (tool_is_redirect_tk(TK_TYPE) == false ||
 		parser_add_astnode(token_lst, ast) == false)
-		return (false);
+		return (parser_return_del(ast));
 	if ((TK_TYPE != WORD && TK_TYPE != ASSIGN) ||
 		parser_add_astnode(token_lst, &redir) == false)
-		return (false);
+		return (parser_return_del(ast));
 	if ((*ast)->child == NULL)
 		(*ast)->child = redir;
 	else
@@ -81,10 +81,10 @@ static bool	parser_cmd_prefix(t_tokenlst **token_lst, t_ast **prefix,
 		if (TK_TYPE == ASSIGN)
 		{
 			if (parser_add_astnode(token_lst, &new_prefix) == false)
-				return (false);
+				return (parser_return_del(prefix));
 		}
 		else if (parser_io_redirect(token_lst, &new_prefix) == false)
-			return (false);
+			return (parser_return_del(prefix));
 		if (*prefix == NULL)
 			*prefix = new_prefix;
 		else
@@ -130,10 +130,10 @@ bool		parser_command(t_tokenlst **token_lst, t_ast **cmd)
 		if (parser_cmd_prefix(token_lst, &prefix, &last_prefix) == false)
 			return (false);
 		if (parser_cmd_word(token_lst, cmd, &prefix) == false)
-			return (false);
+			return (parser_return_del(cmd));
 		if (parser_cmd_suffix(token_lst, cmd, &last_cmd_arg, &last_prefix)
 			== false)
-			return (false);
+			return (parser_return_del(cmd));
 		return (true);
 	}
 	else
