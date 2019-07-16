@@ -6,7 +6,7 @@
 /*   By: omulder <omulder@student.codam.nl>           +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2019/05/29 16:59:41 by omulder        #+#    #+#                */
-/*   Updated: 2019/07/15 21:07:21 by jbrinksm      ########   odam.nl         */
+/*   Updated: 2019/07/16 17:35:20 by jbrinksm      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -25,11 +25,12 @@
 **		builtin_env(args, exit_code);
 */
 
-bool	exec_builtin(char **args, t_envlst *envlst, int *exit_code, int pipeside, int *pipefds)
+bool	exec_builtin(char **args, t_envlst *envlst, int *exit_code, int pipeside, int *currentpipe, int *parentpipe)
 {
 	(void)envlst;
 	(void)pipeside;
-	(void)pipefds;
+	(void)currentpipe;
+	(void)parentpipe;
 	if (ft_strequ(args[0], "echo"))
 	{
 		// handle_pipe(pipefds, NULL, pipeside);

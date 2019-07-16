@@ -6,7 +6,7 @@
 /*   By: tde-jong <tde-jong@student.codam.nl>         +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2019/05/31 10:47:19 by tde-jong       #+#    #+#                */
-/*   Updated: 2019/07/16 10:34:18 by jbrinksm      ########   odam.nl         */
+/*   Updated: 2019/07/16 17:38:27 by jbrinksm      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,7 +14,7 @@
 #include "unistd.h"
 #include <sys/wait.h>
 
-static bool	exec_bin(char **args, char **vshenviron, int *exit_code, int pipeside, int *pipefdshere, int *pipefdsprev)
+static bool	exec_bin(char **args, char **vshenviron, int *exit_code, int pipeside, int *currentpipe, int *parentpipe)
 {
 	pid_t	pid;
 	int		status;
@@ -24,7 +24,7 @@ static bool	exec_bin(char **args, char **vshenviron, int *exit_code, int pipesid
 		return (false);
 	if (pid == 0)
 	{
-		handle_pipe_bin(pipefdshere, pipefdsprev, pipeside);
+		handle_pipe_bin(currentpipe, parentpipe, pipeside);
 		execve(args[0], args, vshenviron);
 	}
 	waitpid(pid, &status, WUNTRACED);
@@ -35,7 +35,7 @@ static bool	exec_bin(char **args, char **vshenviron, int *exit_code, int pipesid
 	return (true);
 }
 
-bool		exec_external(char **args, t_envlst *envlst, int *exit_code, int pipeside, int *pipefdshere, int *pipefdsprev)
+bool		exec_external(char **args, t_envlst *envlst, int *exit_code, int pipeside, int *currentpipe, int *parentpipe)
 {
 	char	**vshenviron;
 	char	*binary;
@@ -56,7 +56,7 @@ bool		exec_external(char **args, t_envlst *envlst, int *exit_code, int pipeside,
 		*exit_code = EXIT_FAILURE;
 		return (false);
 	}
-	ret = exec_bin(args, vshenviron, exit_code, pipeside, pipefdshere, pipefdsprev);
+	ret = exec_bin(args, vshenviron, exit_code, pipeside, currentpipe, parentpipe);
 	free(vshenviron);
 	return (ret);
 }
