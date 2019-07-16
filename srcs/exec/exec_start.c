@@ -6,7 +6,7 @@
 /*   By: omulder <omulder@student.codam.nl>           +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2019/05/29 17:52:22 by omulder        #+#    #+#                */
-/*   Updated: 2019/07/15 21:11:38 by jbrinksm      ########   odam.nl         */
+/*   Updated: 2019/07/16 19:28:43 by jbrinksm      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -118,7 +118,7 @@ void	exec_redirs_or_assigns(t_ast *node, t_envlst *envlst, int *exit_code)
 **	execution. Wildcard, quote removal, variables.
 */
 
-static void	exec_complete_command(t_ast *node, t_envlst *envlst, int *exit_code, int flags)
+static void	exec_complete_command(t_ast *node, t_envlst *envlst, int *exit_code, int flags, t_stdfds fds)
 {
 	char	**command;
 
@@ -141,7 +141,7 @@ static void	exec_complete_command(t_ast *node, t_envlst *envlst, int *exit_code,
 		/* add handling of flag = EXEC_PIPE */
 		/* add option for flag = EXEC_BG */
 		if (command != NULL)
-			exec_cmd(command, envlst, exit_code, 0, NULL, NULL);
+			exec_cmd(command, envlst, exit_code, 0, NULL, NULL, fds);
 	}
 
 	/* There is no cmd_word in complete_command */
@@ -154,14 +154,14 @@ static void	exec_complete_command(t_ast *node, t_envlst *envlst, int *exit_code,
 **	Read PR.
 */
 
-void		exec_start(t_ast *ast, t_envlst *envlst, int *exit_code, int flags)
+void		exec_start(t_ast *ast, t_envlst *envlst, int *exit_code, int flags, t_stdfds fds)
 {
 	if (ast == NULL)
 		return ;
 	/* Set flags */
 	if (ast->type == PIPE)
 	{
-		redir_loop_pipes(ast, envlst, exit_code, NULL);
+		redir_loop_pipes(ast, envlst, exit_code, NULL, fds);
 		return ;
 	}
 	else if (ast->type == BG)
@@ -176,13 +176,13 @@ void		exec_start(t_ast *ast, t_envlst *envlst, int *exit_code, int flags)
 	/* Goes through the tree to find complete_commands first */
 	/* problem if there are no WORD's but only prefix or suffix */
 	if (ast->type != WORD && ast->type != ASSIGN && ast->type != SGREAT)
-		exec_start(ast->child, envlst, exit_code, flags);
+		exec_start(ast->child, envlst, exit_code, flags, fds);
 	
 	/* Runs after the above exec_start returns or isn't run */
 	if (ast->type == AND_IF && *exit_code != EXIT_SUCCESS)
 		return ;
 	else if (ast->type == WORD || ast->type == ASSIGN || ast->type == SGREAT)
-		exec_complete_command(ast, envlst, exit_code, flags);
+		exec_complete_command(ast, envlst, exit_code, flags, fds);
 	else if (ast->sibling != NULL)
-		exec_start(ast->sibling, envlst, exit_code, flags);
+		exec_start(ast->sibling, envlst, exit_code, flags, fds);
 }

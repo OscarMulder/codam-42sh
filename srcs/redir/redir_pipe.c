@@ -6,7 +6,7 @@
 /*   By: jbrinksm <jbrinksm@student.codam.nl>         +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2019/07/14 10:37:41 by jbrinksm       #+#    #+#                */
-/*   Updated: 2019/07/16 17:41:26 by jbrinksm      ########   odam.nl         */
+/*   Updated: 2019/07/16 21:29:47 by jbrinksm      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,7 +14,7 @@
 #include <unistd.h>
 #include <sys/wait.h>
 
-int		handle_pipe_bin(int *currentpipe, int *parentpipe, int pipeside)
+int		handle_pipe(int *currentpipe, int *parentpipe, int pipeside)
 {
 	if (currentpipe != NULL)
 	{
@@ -43,7 +43,7 @@ int		handle_pipe_bin(int *currentpipe, int *parentpipe, int pipeside)
 	return (FUNCT_SUCCESS);
 }
 
-int		redir_loop_pipes(t_ast *pipenode, t_envlst *envlst, int *exit_code, int *parentpipe)
+int		redir_loop_pipes(t_ast *pipenode, t_envlst *envlst, int *exit_code, int *parentpipe, t_stdfds fds)
 {
 	int		currentpipe[2];
 	char	**command;
@@ -55,14 +55,14 @@ int		redir_loop_pipes(t_ast *pipenode, t_envlst *envlst, int *exit_code, int *pa
 	}
 	
 	if (pipenode->child != NULL && pipenode->child->type == PIPE)
-		redir_loop_pipes(pipenode->child, envlst, exit_code, currentpipe);
+		redir_loop_pipes(pipenode->child, envlst, exit_code, currentpipe, fds);
 
 	if (pipenode->child != NULL && pipenode->child->type != PIPE)
 	{
 		// START THE PIPE (only runs once)
 		command = create_args(pipenode->child);
 		if (command != NULL)
-			exec_cmd(command, envlst, exit_code, START_PIPE, currentpipe, parentpipe);
+			exec_cmd(command, envlst, exit_code, START_PIPE, currentpipe, parentpipe, fds);
 	}
 
 	close(currentpipe[1]);
@@ -72,7 +72,7 @@ int		redir_loop_pipes(t_ast *pipenode, t_envlst *envlst, int *exit_code, int *pa
 		// ADD ANY PIPE EXTENSION (runs always)
 		command = create_args(pipenode->sibling);
 		if (command != NULL)
-			exec_cmd(command, envlst, exit_code, EXTEND_PIPE, currentpipe, parentpipe);
+			exec_cmd(command, envlst, exit_code, EXTEND_PIPE, currentpipe, parentpipe, fds);
 		
 	}
 
