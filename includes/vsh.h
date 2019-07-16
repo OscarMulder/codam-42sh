@@ -6,7 +6,7 @@
 /*   By: omulder <omulder@student.codam.nl>           +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2019/04/10 20:29:42 by jbrinksm       #+#    #+#                */
-/*   Updated: 2019/07/16 16:55:13 by jbrinksm      ########   odam.nl         */
+/*   Updated: 2019/07/16 17:07:11 by jbrinksm      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -364,7 +364,7 @@ bool			tool_is_redirect_tk(t_tokens type);
 
 void			exec_start(t_ast *ast, t_envlst *envlst, int *exit_code, int flags);
 void			exec_cmd(char **args, t_envlst *envlst, int *exit_code, int pipeside, int *pipefdshere, int *pipefdsprev);
-bool			exec_builtin(char **args, t_envlst *envlst, int *exit_code, int pipeside, int *pipefds);
+bool			exec_builtin(char **args, t_envlst *envlst, int *exit_code, int pipeside, int *pipefds, int *pipefdsprev);
 bool			exec_external(char **args, t_envlst *envlst, int *exit_code, int pipeside, int *pipefdshere, int *pipefdsprev);
 char			*exec_find_binary(char *filename, t_envlst *envlst);
 void			exec_quote_remove(t_ast *node);
