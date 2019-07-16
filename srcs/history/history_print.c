@@ -6,7 +6,7 @@
 /*   By: mavan-he <mavan-he@student.codam.nl>         +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2019/05/30 20:47:41 by mavan-he       #+#    #+#                */
-/*   Updated: 2019/07/15 16:42:09 by omulder       ########   odam.nl         */
+/*   Updated: 2019/07/16 16:49:33 by omulder       ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,13 +18,13 @@
 ** Print the history
 */
 
-void	find_start(t_history **history, int *smallest, int *start)
+static void	find_start(t_history **history, int *smallest, int *start)
 {
 	int i;
 
 	i = 0;
-	*start = HISTORY_MAX + 1;
-	while (i < HISTORY_MAX && history[i] != NULL)
+	*smallest = HISTORY_MAX + 1;
+	while (i < HISTORY_MAX && history[i]->str != NULL)
 	{
 		if (history[i]->number < *smallest)
 		{
@@ -43,13 +43,13 @@ void	history_print(t_history **history)
 
 	find_start(history, &smallest, &start);
 	i = start;
-	while (i < HISTORY_MAX && history[i] != NULL)
+	while (i < HISTORY_MAX && history[i]->str != NULL)
 	{
 		ft_printf("%5d  %s\n", history[i]->number, history[i]->str);
 		i++;
 	}
 	i = 0;
-	while (start != 0 && i < start && history[i] != NULL)
+	while (start != 0 && i < start && history[i]->str != NULL)
 	{
 		ft_printf("%5d  %s\n", history[i]->number, history[i]->str);
 		i++;

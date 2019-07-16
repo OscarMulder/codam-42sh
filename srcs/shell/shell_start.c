@@ -6,7 +6,7 @@
 /*   By: omulder <omulder@student.codam.nl>           +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2019/04/18 16:44:50 by omulder        #+#    #+#                */
-/*   Updated: 2019/07/15 17:05:14 by omulder       ########   odam.nl         */
+/*   Updated: 2019/07/16 16:59:07 by omulder       ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -39,6 +39,7 @@ int		shell_start(t_envlst *envlst)
 	{
 		shell_display_prompt();
 		status = input_read(&line, history);
+		history_line_to_array(history, line);
 		while (shell_quote_checker(&line, history) != FUNCT_SUCCESS)
 			continue ;
 		ft_putchar('\n');
@@ -64,6 +65,8 @@ int		shell_start(t_envlst *envlst)
 		print_tree(ast);
 		#endif
 		exec_start(ast, envlst, &exit_code, 0);
+		history_print(history);
+		history_to_file(history);
 		parser_astdel(&ast);
 	}
 	return (FUNCT_SUCCESS);

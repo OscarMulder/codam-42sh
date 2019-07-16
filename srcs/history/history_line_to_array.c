@@ -6,7 +6,7 @@
 /*   By: mavan-he <mavan-he@student.codam.nl>         +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2019/05/30 18:55:25 by mavan-he       #+#    #+#                */
-/*   Updated: 2019/07/15 16:56:39 by omulder       ########   odam.nl         */
+/*   Updated: 2019/07/16 16:55:28 by omulder       ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,7 +18,7 @@
 ** Add one line to the history array
 */
 
-static void	find_start(t_history **history, int *number, int *start)
+void	history_find_start(t_history **history, int *number, int *start)
 {
 	int i;
 	int	smallest;
@@ -27,11 +27,19 @@ static void	find_start(t_history **history, int *number, int *start)
 	*start = 0;
 	*number = -1;
 	smallest = HISTORY_MAX + 1;
+	while (i < HISTORY_MAX && history[i]->str != NULL)
+		i++;
+	if (i != HISTORY_MAX)
+	{
+		*start = i;
+		*number = i;
+		return ;
+	}
 	while (i < HISTORY_MAX && history[i] != NULL)
 	{
 		if (history[i]->number < smallest)
 		{
-			*start = i;
+			*start = i + 1;
 			smallest = history[i]->number;
 		}
 		if (history[i]->number > *number)
@@ -46,13 +54,14 @@ int		history_line_to_array(t_history **history, char *line)
 	int number;
 	int i;
 
-	find_start(history, &number, &start);
+	history_find_start(history, &number, &start);
 	i = start;
-	if (history[i] != NULL)
+	if (history[i]->str != NULL)
 		ft_strdel(&history[i]->str);
-	history[i]->str = ft_strdup(line);
+	ft_printf("history i: %i\n", i);
+	history[i]->number = number + 1;
+	history[i]->str = ft_strsub(line, 0, ft_strlen(line) - 1);
 	if (history[i]->str == NULL)
 		return (false);
-	history[i]->number = number + 1;
 	return (true);
 }
