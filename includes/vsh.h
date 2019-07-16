@@ -6,7 +6,7 @@
 /*   By: omulder <omulder@student.codam.nl>           +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2019/04/10 20:29:42 by jbrinksm       #+#    #+#                */
-/*   Updated: 2019/07/15 21:10:08 by jbrinksm      ########   odam.nl         */
+/*   Updated: 2019/07/16 16:55:13 by jbrinksm      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -369,13 +369,13 @@ bool			exec_external(char **args, t_envlst *envlst, int *exit_code, int pipeside
 char			*exec_find_binary(char *filename, t_envlst *envlst);
 void			exec_quote_remove(t_ast *node);
 
-# define START 1000
-# define EXTEND 1001
+# define START_PIPE 1000
+# define EXTEND_PIPE 1001
 int				redir_pipe(t_ast *pipe_node);
 int				redir_pipe_test(t_ast *pipenode, t_envlst *envlst, int *exit_code);
 int				redir_loop_pipes(t_ast *pipenode, t_envlst *envlst, int *exit_code, int *pipefdsprev);
 int				close_pipe(int *pipefds);
-int				handle_pipe(int *pipefdshere, int *pipefdsprev, int pipeside);
+int				handle_pipe_bin(int *pipefdshere, int *pipefdsprev, int pipeside);
 void			exec_redirs_or_assigns(t_ast *node, t_envlst *envlst, int *exit_code);
 char			**create_args(t_ast *ast);
 /*
