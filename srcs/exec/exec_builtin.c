@@ -6,7 +6,7 @@
 /*   By: omulder <omulder@student.codam.nl>           +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2019/05/29 16:59:41 by omulder        #+#    #+#                */
-/*   Updated: 2019/07/16 21:30:07 by jbrinksm      ########   odam.nl         */
+/*   Updated: 2019/07/16 22:37:35 by jbrinksm      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -25,21 +25,21 @@
 **		builtin_env(args, exit_code);
 */
 
-bool	exec_builtin(char **args, t_envlst *envlst, int *exit_code, int pipeside, int *currentpipe, int *parentpipe, t_stdfds fds)
+bool	exec_builtin(char **args, t_envlst *envlst, int *exit_code, t_pipes pipes)
 {
 	(void)envlst;
 	
 	if (ft_strequ(args[0], "echo"))
 	{
-		dup2(fds.stdin, STDIN_FILENO);
-		handle_pipe(currentpipe, parentpipe, pipeside);
+		dup2(pipes.fds.stdin, STDIN_FILENO);
+		handle_pipe(pipes);
 		builtin_echo(args, exit_code);
-		dup2(fds.stdout, STDOUT_FILENO);
-		dup2(fds.stdin, STDIN_FILENO);
+		dup2(pipes.fds.stdout, STDOUT_FILENO);
+		dup2(pipes.fds.stdin, STDIN_FILENO);
 	}
 	else if (ft_strequ(args[0], "exit"))
 	{
-		handle_pipe(currentpipe, parentpipe, pipeside);
+		handle_pipe(pipes);
 		builtin_exit(args, exit_code);
 	}
 	else

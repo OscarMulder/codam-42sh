@@ -6,7 +6,7 @@
 /*   By: omulder <omulder@student.codam.nl>           +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2019/05/29 17:52:22 by omulder        #+#    #+#                */
-/*   Updated: 2019/07/16 19:28:43 by jbrinksm      ########   odam.nl         */
+/*   Updated: 2019/07/16 22:56:21 by jbrinksm      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -118,11 +118,9 @@ void	exec_redirs_or_assigns(t_ast *node, t_envlst *envlst, int *exit_code)
 **	execution. Wildcard, quote removal, variables.
 */
 
-static void	exec_complete_command(t_ast *node, t_envlst *envlst, int *exit_code, int flags, t_stdfds fds)
+static void	exec_complete_command(t_ast *node, t_envlst *envlst, int *exit_code, t_pipes pipes)
 {
 	char	**command;
-
-	(void)flags;
 
 	/* Replace wildcards */
 	/* Replace variables */
@@ -141,7 +139,7 @@ static void	exec_complete_command(t_ast *node, t_envlst *envlst, int *exit_code,
 		/* add handling of flag = EXEC_PIPE */
 		/* add option for flag = EXEC_BG */
 		if (command != NULL)
-			exec_cmd(command, envlst, exit_code, 0, NULL, NULL, fds);
+			exec_cmd(command, envlst, exit_code, pipes);
 	}
 
 	/* There is no cmd_word in complete_command */
@@ -154,35 +152,26 @@ static void	exec_complete_command(t_ast *node, t_envlst *envlst, int *exit_code,
 **	Read PR.
 */
 
-void		exec_start(t_ast *ast, t_envlst *envlst, int *exit_code, int flags, t_stdfds fds)
+void		exec_start(t_ast *ast, t_envlst *envlst, int *exit_code, t_pipes *pipes)
 {
 	if (ast == NULL)
 		return ;
-	/* Set flags */
 	if (ast->type == PIPE)
 	{
-		redir_loop_pipes(ast, envlst, exit_code, NULL, fds);
+		redir_loop_pipes(ast, envlst, exit_code, pipes);
 		return ;
 	}
-	else if (ast->type == BG)
-		flags &= ~EXEC_BG;
-	else if (ast->type == AND_IF)
-		flags &= ~EXEC_AND_IF;
-	else if (ast->type == OR_IF)
-		flags &= ~EXEC_OR_IF;
-	else if (ast->type == SEMICOL)
-		flags &= ~EXEC_SEMICOL;
 
 	/* Goes through the tree to find complete_commands first */
 	/* problem if there are no WORD's but only prefix or suffix */
 	if (ast->type != WORD && ast->type != ASSIGN && ast->type != SGREAT)
-		exec_start(ast->child, envlst, exit_code, flags, fds);
+		exec_start(ast->child, envlst, exit_code, pipes);
 	
 	/* Runs after the above exec_start returns or isn't run */
 	if (ast->type == AND_IF && *exit_code != EXIT_SUCCESS)
 		return ;
 	else if (ast->type == WORD || ast->type == ASSIGN || ast->type == SGREAT)
-		exec_complete_command(ast, envlst, exit_code, flags, fds);
+		exec_complete_command(ast, envlst, exit_code, pipes);
 	else if (ast->sibling != NULL)
-		exec_start(ast->sibling, envlst, exit_code, flags, fds);
+		exec_start(ast->sibling, envlst, exit_code, pipes);
 }
