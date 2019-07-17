@@ -6,7 +6,7 @@
 /*   By: omulder <omulder@student.codam.nl>           +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2019/05/29 17:52:22 by omulder        #+#    #+#                */
-/*   Updated: 2019/07/16 22:56:21 by jbrinksm      ########   odam.nl         */
+/*   Updated: 2019/07/17 10:09:00 by jbrinksm      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -152,7 +152,7 @@ static void	exec_complete_command(t_ast *node, t_envlst *envlst, int *exit_code,
 **	Read PR.
 */
 
-void		exec_start(t_ast *ast, t_envlst *envlst, int *exit_code, t_pipes *pipes)
+void		exec_start(t_ast *ast, t_envlst *envlst, int *exit_code, t_pipes pipes)
 {
 	if (ast == NULL)
 		return ;
