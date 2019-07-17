@@ -6,11 +6,13 @@
 /*   By: omulder <omulder@student.codam.nl>           +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2019/05/29 17:52:22 by omulder        #+#    #+#                */
-/*   Updated: 2019/07/17 16:14:16 by jbrinksm      ########   odam.nl         */
+/*   Updated: 2019/07/17 17:14:23 by jbrinksm      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "vsh.h"
+#include "unistd.h"
+#include "fcntl.h"
 
 static size_t	count_args(t_ast *ast)
 {
@@ -60,21 +62,27 @@ static char	**create_args(t_ast *ast)
 
 static void	redir_input(t_ast *node, int *exit_code)
 {
+	(void)exit_code;
 	t_ast	*right;
 
-	right = node->sibling;
+	if (node->sibling->child == NULL)
+		right = node->sibling;
+	else
+		right = node->sibling->child;
 	if (node->type == SLESS)
 	{
-		
+		ft_putendl("BEFORE");
+		write(STDIN_FILENO, node->sibling->value, ft_strlen(node->sibling->value));
+		ft_putendl("FINISHED");
 	}
 }
 
-static void	redir_output(t_ast *node, int *exit_code)
-{
-	t_ast	*right;
+// static void	redir_output(t_ast *node, int *exit_code)
+// {
+// 	t_ast	*right;
 
-	right = node->sibling;
-}
+// 	right = node->sibling;
+// }
 
 /*
 **	This will edit the I/O table based on the redirect given as input.
@@ -83,25 +91,25 @@ static void	redir_output(t_ast *node, int *exit_code)
 
 static void exec_redir(t_ast *node, t_envlst *envlst, int *exit_code)
 {
-	t_ast	*probe;
+	// t_ast	*probe;
 	t_ast	*left;
 
 	(void)exit_code;
 	(void)envlst;
 
 	#ifdef DEBUG
-	char	*leftstr;
-	char	*rightstr;
-	if (node->sibling->type == WORD)
-		leftstr = node->sibling->value;
-	else
-		leftstr = parser_return_token_str(node->sibling);
-	if (node->child->type == WORD)
-		rightstr = node->child->value;
-	else
-		rightstr = parser_return_token_str(node->child);
-	ft_printf("Redirect: %s %s %s\n", leftstr,
-		parser_return_token_str(node->type), rightstr);
+	// char	*leftstr;
+	// char	*rightstr;
+	// if (node->sibling->type == WORD)
+	// 	leftstr = node->sibling->value;
+	// else
+	// 	leftstr = parser_return_token_str(node->sibling->type);
+	// if (node->child->type == WORD)
+	// 	rightstr = node->child->value;
+	// else
+	// 	rightstr = parser_return_token_str(node->child->type);
+	// ft_printf("Redirect: %s %s %s\n", leftstr,
+	// 	parser_return_token_str(node->type), rightstr);
 	#endif
 
 	left = node->sibling;
@@ -111,11 +119,11 @@ static void exec_redir(t_ast *node, t_envlst *envlst, int *exit_code)
 		{
 			redir_input(node, exit_code);
 		}
-		else if (node->type == SGREAT || node->type == DGREAT
-			|| node->type == GREATAND)
-		{
-			redir_output(node, exit_code);
-		}
+		// else if (node->type == SGREAT || node->type == DGREAT
+		// 	|| node->type == GREATAND)
+		// {
+		// 	redir_output(node, exit_code);
+		// }
 	}
 }
 
@@ -203,7 +211,7 @@ void		exec_start(t_ast *ast, t_envlst *envlst, int *exit_code, int flags)
 
 	/* Goes through the tree to find complete_commands first */
 	/* problem if there are no WORD's but only prefix or suffix */
-	if (ast->type != WORD && ast->type != ASSIGN && ast->type != SGREAT )
+	if (ast->type != WORD && ast->type != ASSIGN && tool_is_redirect_tk(ast->type) == false)
 		exec_start(ast->child, envlst, exit_code, flags);
 	
 	/* Runs after the above exec_start returns or isn't run */
