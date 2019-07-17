@@ -6,7 +6,7 @@
 /*   By: omulder <omulder@student.codam.nl>           +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2019/05/29 17:52:22 by omulder        #+#    #+#                */
-/*   Updated: 2019/07/13 13:04:47 by mavan-he      ########   odam.nl         */
+/*   Updated: 2019/07/17 16:14:16 by jbrinksm      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -58,8 +58,23 @@ static char	**create_args(t_ast *ast)
 	return (args);
 }
 
+static void	redir_input(t_ast *node, int *exit_code)
+{
+	t_ast	*right;
 
+	right = node->sibling;
+	if (node->type == SLESS)
+	{
+		
+	}
+}
 
+static void	redir_output(t_ast *node, int *exit_code)
+{
+	t_ast	*right;
+
+	right = node->sibling;
+}
 
 /*
 **	This will edit the I/O table based on the redirect given as input.
@@ -69,23 +84,39 @@ static char	**create_args(t_ast *ast)
 static void exec_redir(t_ast *node, t_envlst *envlst, int *exit_code)
 {
 	t_ast	*probe;
-	char	*left;
-	char	*right;
+	t_ast	*left;
 
 	(void)exit_code;
 	(void)envlst;
 
-	probe = node->sibling;
-	if (probe->type == WORD)
-		left = probe->value;
+	#ifdef DEBUG
+	char	*leftstr;
+	char	*rightstr;
+	if (node->sibling->type == WORD)
+		leftstr = node->sibling->value;
 	else
-		left = parser_return_token_str(probe->type);
-	probe = node->sibling->child;
-	if (probe->type == WORD)
-		right = probe->value;
+		leftstr = parser_return_token_str(node->sibling);
+	if (node->child->type == WORD)
+		rightstr = node->child->value;
 	else
-		right = parser_return_token_str(probe->type);
-	ft_printf("Redirect: %s > %s\n", left, right);
+		rightstr = parser_return_token_str(node->child);
+	ft_printf("Redirect: %s %s %s\n", leftstr,
+		parser_return_token_str(node->type), rightstr);
+	#endif
+
+	left = node->sibling;
+	if (left->type == IO_NUMBER || left->type == WORD)
+	{
+		if (node->type == SLESS || node->type == DLESS || node->type == LESSAND)
+		{
+			redir_input(node, exit_code);
+		}
+		else if (node->type == SGREAT || node->type == DGREAT
+			|| node->type == GREATAND)
+		{
+			redir_output(node, exit_code);
+		}
+	}
 }
 
 static void	exec_assign(t_ast *node, t_envlst *envlst, int *exit_code)
@@ -105,7 +136,7 @@ static void	exec_redirs_or_assigns(t_ast *node, t_envlst *envlst, int *exit_code
 	probe = node;
 	while (probe != NULL)
 	{
-		if (probe->type == SGREAT)
+		if (tool_is_redirect_tk(node->type) == true)
 			exec_redir(probe, envlst, exit_code);
 		else if (probe->type == ASSIGN)
 			exec_assign(probe, envlst, exit_code);
@@ -145,7 +176,7 @@ static void	exec_complete_command(t_ast *node, t_envlst *envlst, int *exit_code,
 	}
 
 	/* There is no cmd_word in complete_command */
-	else if (node->type == ASSIGN || node->type == SGREAT)
+	else if (node->type == ASSIGN || tool_is_redirect_tk(node->type) == true)
 		exec_redirs_or_assigns(node, envlst, exit_code);
 }
 
@@ -172,13 +203,13 @@ void		exec_start(t_ast *ast, t_envlst *envlst, int *exit_code, int flags)
 
 	/* Goes through the tree to find complete_commands first */
 	/* problem if there are no WORD's but only prefix or suffix */
-	if (ast->type != WORD && ast->type != ASSIGN && ast->type != SGREAT)
+	if (ast->type != WORD && ast->type != ASSIGN && ast->type != SGREAT )
 		exec_start(ast->child, envlst, exit_code, flags);
 	
 	/* Runs after the above exec_start returns or isn't run */
 	if (ast->type == AND_IF && *exit_code != EXIT_SUCCESS)
 		return ;
-	else if (ast->type == WORD || ast->type == ASSIGN || ast->type == SGREAT)
+	else if (ast->type == WORD || tool_is_redirect_tk(ast->type) == true)
 		exec_complete_command(ast, envlst, exit_code, flags);
 	else if (ast->sibling != NULL)
 		exec_start(ast->sibling, envlst, exit_code, flags);
