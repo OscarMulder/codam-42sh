@@ -6,7 +6,7 @@
 /*   By: omulder <omulder@student.codam.nl>           +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2019/04/10 20:29:42 by jbrinksm       #+#    #+#                */
-/*   Updated: 2019/07/17 10:10:17 by jbrinksm      ########   odam.nl         */
+/*   Updated: 2019/07/17 11:15:05 by jbrinksm      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -92,6 +92,13 @@
 # define INPUT_D_BRACE		5
 # define INPUT_D_THREE		6
 # define INPUT_BACKSPACE	127
+
+/*
+**=================================pipe defines=================================
+*/
+
+# define START_PIPE 1000
+# define EXTEND_PIPE 1001
 
 /*
 **===============================personal headers===============================
@@ -387,9 +394,6 @@ bool			exec_builtin(char **args, t_envlst *envlst, int *exit_code, t_pipes pipes
 bool			exec_external(char **args, t_envlst *envlst, int *exit_code, t_pipes pipes);
 char			*exec_find_binary(char *filename, t_envlst *envlst);
 void			exec_quote_remove(t_ast *node);
-
-# define START_PIPE 1000
-# define EXTEND_PIPE 1001
 
 t_pipes			init_pipestruct(void);
 int				redir_pipe(t_ast *pipe_node);
