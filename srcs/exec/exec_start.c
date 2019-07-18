@@ -6,7 +6,7 @@
 /*   By: omulder <omulder@student.codam.nl>           +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2019/05/29 17:52:22 by omulder        #+#    #+#                */
-/*   Updated: 2019/07/17 17:14:23 by jbrinksm      ########   odam.nl         */
+/*   Updated: 2019/07/18 16:41:04 by jbrinksm      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -63,26 +63,56 @@ static char	**create_args(t_ast *ast)
 static void	redir_input(t_ast *node, int *exit_code)
 {
 	(void)exit_code;
-	t_ast	*right;
+	int		fd;
+	int		filefd;
+	int		pipefds[2];
 
-	if (node->sibling->child == NULL)
-		right = node->sibling;
-	else
-		right = node->sibling->child;
 	if (node->type == SLESS)
 	{
-		ft_putendl("BEFORE");
-		write(STDIN_FILENO, node->sibling->value, ft_strlen(node->sibling->value));
-		ft_putendl("FINISHED");
+		fd = STDIN_FILENO;
+		/* If there is a IONUM on left side of redir */
+		if (node->sibling->child != NULL)
+		{
+			fd = ft_atoi(node->sibling->value);
+			filefd = open(node->sibling->child->value, O_RDONLY);
+		}
+		else
+			filefd = open(node->sibling->value, O_RDONLY);
+		dup2(filefd, fd);
+		close(filefd);
 	}
+	else if (node->type == DLESS)
+	{
+		fd = STDIN_FILENO;
+		pipe(pipefds);
+		/* If there is a IONUM on left side of redir */
+		if (node->sibling->child != NULL)
+		{
+			fd = ft_atoi(node->sibling->value);
+			write(pipefds[1], node->sibling->child->value, ft_strlen(node->sibling->child->value));
+		}
+		else
+			write(pipefds[1], node->sibling->value, ft_strlen(node->sibling->value));
+		close(pipefds[1]);
+		filefd = pipefds[0];
+		dup2(filefd, fd);
+		close(filefd);
+	}
+	// else if (node->type == LESSAND)
+	// {
+	// 	fd = STDIN_FILENO;
+	// 	/* If there is a IONUM on left side of redir */
+	// 	if (node->sibling->child != NULL)
+	// 	{
+	// 		fd = ft_atoi(node->sibling->value);
+	// 		filefd = open(node->sibling->child->value, O_RDONLY);
+	// 	}
+	// 	else
+	// 		filefd = open(node->sibling->value, O_RDONLY);
+	// 	dup2(filefd, fd);
+	// 	close(filefd);
+	// }
 }
-
-// static void	redir_output(t_ast *node, int *exit_code)
-// {
-// 	t_ast	*right;
-
-// 	right = node->sibling;
-// }
 
 /*
 **	This will edit the I/O table based on the redirect given as input.
@@ -96,21 +126,6 @@ static void exec_redir(t_ast *node, t_envlst *envlst, int *exit_code)
 
 	(void)exit_code;
 	(void)envlst;
-
-	#ifdef DEBUG
-	// char	*leftstr;
-	// char	*rightstr;
-	// if (node->sibling->type == WORD)
-	// 	leftstr = node->sibling->value;
-	// else
-	// 	leftstr = parser_return_token_str(node->sibling->type);
-	// if (node->child->type == WORD)
-	// 	rightstr = node->child->value;
-	// else
-	// 	rightstr = parser_return_token_str(node->child->type);
-	// ft_printf("Redirect: %s %s %s\n", leftstr,
-	// 	parser_return_token_str(node->type), rightstr);
-	#endif
 
 	left = node->sibling;
 	if (left->type == IO_NUMBER || left->type == WORD)
@@ -161,8 +176,15 @@ static void	exec_complete_command(t_ast *node, t_envlst *envlst, int *exit_code,
 {
 	char	**command;
 
+	int fdstdin;
+	int	fdstdout;
+	int fdstderr;
+
 	(void)flags;
 
+	fdstdin = dup(STDIN_FILENO);
+	fdstdout = dup(STDOUT_FILENO);
+	fdstderr = dup(STDERR_FILENO);
 	/* Replace wildcards */
 	/* Replace variables */
 
@@ -186,6 +208,10 @@ static void	exec_complete_command(t_ast *node, t_envlst *envlst, int *exit_code,
 	/* There is no cmd_word in complete_command */
 	else if (node->type == ASSIGN || tool_is_redirect_tk(node->type) == true)
 		exec_redirs_or_assigns(node, envlst, exit_code);
+	
+	dup2(fdstdin, STDIN_FILENO);
+	dup2(fdstdout, STDOUT_FILENO);
+	dup2(fdstderr, STDERR_FILENO);
 }
 
 /*
@@ -195,6 +221,7 @@ static void	exec_complete_command(t_ast *node, t_envlst *envlst, int *exit_code,
 
 void		exec_start(t_ast *ast, t_envlst *envlst, int *exit_code, int flags)
 {
+
 	if (ast == NULL)
 		return ;
 	/* Set flags */
@@ -221,4 +248,5 @@ void		exec_start(t_ast *ast, t_envlst *envlst, int *exit_code, int flags)
 		exec_complete_command(ast, envlst, exit_code, flags);
 	else if (ast->sibling != NULL)
 		exec_start(ast->sibling, envlst, exit_code, flags);
+
 }
