@@ -6,7 +6,7 @@
 /*   By: omulder <omulder@student.codam.nl>           +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2019/04/10 20:29:42 by jbrinksm       #+#    #+#                */
-/*   Updated: 2019/07/18 11:17:49 by mavan-he      ########   odam.nl         */
+/*   Updated: 2019/07/18 12:34:53 by mavan-he      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -80,6 +80,7 @@
 # define ENV_EXTERN 2
 # define ENV_LOCAL 1
 # define ENV_TEMP 0
+# define ENV_HEAD -1
 
 /*
 **------------------------------------parser------------------------------------
@@ -240,6 +241,7 @@ t_envlst	*env_lstnew(char *var, unsigned char type);
 char		**env_lsttoarr(t_envlst *lst, unsigned char minimal_type);
 int			env_lstlen(t_envlst *lst, unsigned char minimal_type);
 void		env_lstdel(t_envlst **envlst);
+void   		 env_remove_tmp(t_envlst *env);
 
 /*
 **----------------------------------terminal------------------------------------

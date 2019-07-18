@@ -6,7 +6,7 @@
 /*   By: jbrinksm <jbrinksm@student.codam.nl>         +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2019/06/05 10:33:08 by jbrinksm       #+#    #+#                */
-/*   Updated: 2019/07/08 17:10:07 by jbrinksm      ########   odam.nl         */
+/*   Updated: 2019/07/18 14:01:02 by mavan-he      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -211,7 +211,7 @@ void	builtin_export(char **args, t_envlst *envlst, int *exit_code)
 
 	i = 1;
 	*exit_code = EXIT_FAILURE;
-	if (args == NULL /* should be redundant --> */|| args[0] == NULL)
+	if (args == NULL)
 		return ;
 	flags = 0;
 	if (builtin_export_getflags(&(args[1]), &flags, &i) == FUNCT_ERROR)
