@@ -6,18 +6,12 @@
 /*   By: jbrinksm <jbrinksm@student.codam.nl>         +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2019/06/05 10:33:08 by jbrinksm       #+#    #+#                */
-/*   Updated: 2019/07/18 17:44:50 by mavan-he      ########   odam.nl         */
+/*   Updated: 2019/07/18 17:56:24 by mavan-he      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
 /*
 **	export: usage: export [-n] [name[=value] ...] or export -p
-**
-**	TO DO:
-**
-**	Fix bug with export hoi=doei ; export hoi=nudit ; export
-**
-**	Done:
 **
 **	- Read in flags -n -p  (remove from var_extern to var_intern)
 **	- print usage on invalid option.
@@ -67,63 +61,6 @@ void	builtin_export_print(t_envlst *envlst, int flags, int *exit_code)
 		probe = probe->next;
 	}
 }
-
-/* static bool	tools_is_assignment(char *arg)
-{
-	int i;
-
-	if (arg == NULL || *arg == '=')
-		return (false);
-	i = 0;
-	while (arg[i] != '\0')
-	{
-		if (arg[i] == '=')
-			return (true);
-		i++;
-	}
-	return (false);
-}
-
-static char	*tools_get_identifier(char *envstr)
-{
-	int		len;
-	char	*identifier;
-
-	len = ft_strclen(envstr, '=');
-	if (len == 0)
-		return (NULL);
-	identifier = ft_strcdup(envstr, '=');
-	return (identifier);
-} */
-
-/* void	builtin_export_var_to_type(char *arg, t_envlst *envlst, int *exit_code, int type)
-{
-	t_envlst	*probe;
-	int			varlen;
-	char		*identifier;
-
-	probe = envlst;
-	varlen = ft_strlen(arg);
-	identifier = arg;
-	if (tools_is_assignment(arg) == true)
-		identifier = tools_get_identifier(arg);
-	if (identifier == NULL)
-	{
-		*exit_code = EXIT_FAILURE;
-		return ;
-	}
-	while (probe != NULL)
-	{
-		if (ft_strnequ(identifier, probe->var, varlen) == true &&
-		probe->var[varlen] == '=')
-		{
-			probe->type = type;
-			return ;
-		}
-		probe = probe->next;
-	}
-	builtin_assign(arg, envlst, exit_code, type);
-} */
 
 static void	builtin_export_arg(char *arg, t_envlst *envlst, int *exit_code, int type)
 {
