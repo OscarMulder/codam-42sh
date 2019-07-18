@@ -29,7 +29,7 @@ ft_joinstrcstr.c ft_chartostr.c ft_joinstrcstr_free_s1.c \
 ft_joinstrcstr_free_s2.c ft_joinstrcstr_free_all.c \
 ft_get_next_line.c \
 ft_strjoinfree_s1.c ft_strjoinfree_s2.c ft_strjoinfree_all.c \
-ft_strclen.c
+ft_strclen.c ft_isalpha.c ft_isalnum.c
 OBJECTS = $(FILES:.c=.o)
 
 all: $(OBJECTS) $(NAME)

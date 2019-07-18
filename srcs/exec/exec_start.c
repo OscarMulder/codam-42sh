@@ -6,7 +6,7 @@
 /*   By: omulder <omulder@student.codam.nl>           +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2019/05/29 17:52:22 by omulder        #+#    #+#                */
-/*   Updated: 2019/07/13 13:04:47 by mavan-he      ########   odam.nl         */
+/*   Updated: 2019/07/18 11:17:12 by mavan-he      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -142,6 +142,14 @@ static void	exec_complete_command(t_ast *node, t_envlst *envlst, int *exit_code,
 		/* add option for flag = EXEC_BG */
 		if (command != NULL)
 			exec_cmd(command, envlst, exit_code);
+		
+		/*
+		assign = ast->value;
+		if (assign == NULL)
+			return ;*/
+		/* Builtin assign will only take one ASSIGN at a time */	
+		/* builtin_assign(assign, envlst, exit_code, ENV_LOCAL); */
+		
 	}
 
 	/* There is no cmd_word in complete_command */

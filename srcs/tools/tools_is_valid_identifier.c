@@ -1,34 +1,29 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        ::::::::            */
-/*   ft_strcdup.c                                       :+:    :+:            */
+/*   tools_is_valid_identifier.c                        :+:    :+:            */
 /*                                                     +:+                    */
 /*   By: jbrinksm <jbrinksm@student.codam.nl>         +#+                     */
 /*                                                   +#+                      */
-/*   Created: 2019/03/30 05:29:59 by jbrinksm       #+#    #+#                */
-/*   Updated: 2019/07/08 16:42:17 by jbrinksm      ########   odam.nl         */
+/*   Created: 2019/06/18 16:31:00 by jbrinksm       #+#    #+#                */
+/*   Updated: 2019/07/08 15:07:54 by jbrinksm      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "libft.h"
+#include "vsh.h"
 
-char	*ft_strcdup(char *str, char c)
+bool	tools_is_valid_identifier(char *str)
 {
-	int		index;
-	char	*result;
+	int i;
 
-	index = 0;
-	while (str[index] != c && str[index] != '\0')
-		index++;
-	result = ft_strnew(index + 1);
-	if (result == NULL)
-		return (NULL);
-	index = 0;
-	while (str[index] != c && str[index] != '\0')
+	if (str == NULL || *str == '\0' || *str == '=')
+		return (false);
+	i = 0;
+	while (str[i] != '\0' && str[i] != '=')
 	{
-		result[index] = str[index];
-		index++;
+		if (ft_isalnum(str[i]) == false && str[i] != '_')
+			return (false);
+		i++;
 	}
-	result[index] = '\0';
-	return (result);
+	return (true);
 }
