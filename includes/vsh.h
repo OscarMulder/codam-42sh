@@ -6,7 +6,7 @@
 /*   By: omulder <omulder@student.codam.nl>           +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2019/04/10 20:29:42 by jbrinksm       #+#    #+#                */
-/*   Updated: 2019/07/17 11:15:05 by jbrinksm      ########   odam.nl         */
+/*   Updated: 2019/07/18 12:48:28 by tde-jong      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -97,8 +97,9 @@
 **=================================pipe defines=================================
 */
 
-# define START_PIPE 1000
-# define EXTEND_PIPE 1001
+# define PIPE_UNINIT -42
+# define PIPE_START 0
+# define PIPE_EXTEND 1
 
 /*
 **===============================personal headers===============================
@@ -219,7 +220,7 @@ typedef struct	s_ast
 }				t_ast;
 
 /*
-**----------------------------------pipe shit-----------------------------------
+**----------------------------------pipes---------------------------------------
 */
 
 typedef struct	s_stdfds

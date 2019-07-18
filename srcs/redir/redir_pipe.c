@@ -6,7 +6,7 @@
 /*   By: jbrinksm <jbrinksm@student.codam.nl>         +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2019/07/14 10:37:41 by jbrinksm       #+#    #+#                */
-/*   Updated: 2019/07/17 10:24:59 by jbrinksm      ########   odam.nl         */
+/*   Updated: 2019/07/18 12:54:02 by tde-jong      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -21,32 +21,32 @@ t_pipes	init_pipestruct(void)
 	pipes.fds.stdin = dup(STDIN_FILENO);
 	pipes.fds.stdout = dup(STDOUT_FILENO);
 	pipes.fds.stderr = dup(STDERR_FILENO);
-	pipes.pipeside = 0;
-	pipes.parentpipe[0] = -1;
-	pipes.parentpipe[1] = -1;
-	pipes.currentpipe[0] = -1;
-	pipes.currentpipe[1] = -1;
+	pipes.pipeside = PIPE_UNINIT;
+	pipes.parentpipe[0] = PIPE_UNINIT;
+	pipes.parentpipe[1] = PIPE_UNINIT;
+	pipes.currentpipe[0] = PIPE_UNINIT;
+	pipes.currentpipe[1] = PIPE_UNINIT;
 	return (pipes);
 }
 
 int		handle_pipe(t_pipes pipes)
 {
-	if (pipes.currentpipe[0] != -1 && pipes.currentpipe[1] != -1)
+	if (pipes.currentpipe[0] != PIPE_UNINIT && pipes.currentpipe[1] != PIPE_UNINIT)
 	{
-		if (pipes.pipeside == START_PIPE)
+		if (pipes.pipeside == PIPE_START)
 		{	
 			// pipe output of this execution to pipe
 			if (dup2(pipes.currentpipe[1], STDOUT_FILENO) == -1)
 				ft_putendl("PIPE ERROR");
 			close(pipes.currentpipe[1]);
 		}
-		else if (pipes.pipeside == EXTEND_PIPE)
+		else if (pipes.pipeside == PIPE_EXTEND)
 		{
 			// Take previous output as input
 			if (dup2(pipes.currentpipe[0], STDIN_FILENO) == -1)
 				ft_putendl("PIPE ERROR");
 			close(pipes.currentpipe[0]);
-			if (pipes.parentpipe[0] != -1 && pipes.parentpipe[1] != -1)
+			if (pipes.parentpipe[0] != PIPE_UNINIT && pipes.parentpipe[1] != PIPE_UNINIT)
 			{
 				// pipe output of this execution to parent pipe
 				if (dup2(pipes.parentpipe[1], STDOUT_FILENO) == -1)
@@ -81,7 +81,7 @@ int		redir_loop_pipes(t_ast *pipenode, t_envlst *envlst, int *exit_code, t_pipes
 		command = create_args(pipenode->child);
 		if (command != NULL)
 		{
-			pipes.pipeside = START_PIPE;
+			pipes.pipeside = PIPE_START;
 			exec_cmd(command, envlst, exit_code, pipes);
 		}
 	}
@@ -92,7 +92,7 @@ int		redir_loop_pipes(t_ast *pipenode, t_envlst *envlst, int *exit_code, t_pipes
 		command = create_args(pipenode->sibling);
 		if (command != NULL)
 		{
-			pipes.pipeside = EXTEND_PIPE;
+			pipes.pipeside = PIPE_EXTEND;
 			exec_cmd(command, envlst, exit_code, pipes);
 		}
 	}
