@@ -6,29 +6,64 @@
 /*   By: omulder <omulder@student.codam.nl>           +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2019/04/18 16:44:50 by omulder        #+#    #+#                */
-/*   Updated: 2019/04/23 19:36:04 by tde-jong      ########   odam.nl         */
+/*   Updated: 2019/07/10 18:25:37 by mavan-he      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "vsh.h"
 
-int		shell_start(void)
+void	lexer_tokenlstiter(t_tokenlst *lst, void (*f)(t_tokenlst *elem))
 {
-	int		status;
-	char	*line;
-	// char	***cmd_tab;
+	if (lst == NULL || f == NULL)
+		return ;
+	f(lst);
+	lexer_tokenlstiter(lst->next, f);
+}
 
+int		shell_start(t_envlst *envlst)
+{
+	int			status;
+	int			exit_code;
+	char		*line;
+	t_tokenlst	*token_lst;
+	t_ast		*ast;
+
+	exit_code = EXIT_SUCCESS;
 	status = 1;
 	line = NULL;
-	// cmd_tab = NULL;
+	token_lst = NULL;
+	ast = NULL;
 	while (status != CTRLD)
 	{
 		shell_display_prompt();
 		status = input_read(&line);
-		// if (status != CTRLD)
-		// 	status = parser(&cmd_tab, line);ß
-		ft_strdel(&line);
-		ft_putendl("");
+		while (shell_quote_checker(&line) != FUNCT_SUCCESS)
+			continue ;
+		ft_putchar('\n');
+		history_line_to_array(line);
+		#ifdef DEBUG
+		ft_printf("\n>>>> LINE <<<<\n%s\n\n>>>> TOKEN_LST <<<<\n", line);
+		#endif
+		if (lexer(&line, &token_lst) != FUNCT_SUCCESS)
+			continue ;
+		if (shell_dless_input(token_lst) != FUNCT_SUCCESS)
+			continue ;
+		if ((token_lst->next)->type == NEWLINE)
+		{
+			lexer_tokenlstdel(&token_lst);
+			continue ;
+		}
+
+		#ifdef DEBUG
+ 		lexer_tokenlstiter(token_lst, print_node);
+		#endif
+		if (parser_start(&token_lst, &ast) != FUNCT_SUCCESS)
+			continue ;
+		#ifdef DEBUG
+		print_tree(ast);
+		#endif
+		exec_start(ast, envlst, &exit_code, 0);
+		parser_astdel(&ast);
 	}
 	return (FUNCT_SUCCESS);
 }

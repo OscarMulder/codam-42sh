@@ -1,30 +1,24 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        ::::::::            */
-/*   ft_freearray.c                                     :+:    :+:            */
+/*   ft_chartostr.c                                     :+:    :+:            */
 /*                                                     +:+                    */
-/*   By: omulder <omulder@student.codam.nl>           +#+                     */
+/*   By: jbrinksm <jbrinksm@student.codam.nl>         +#+                     */
 /*                                                   +#+                      */
-/*   Created: 2019/03/30 01:48:39 by jbrinksm       #+#    #+#                */
-/*   Updated: 2019/04/23 14:51:05 by omulder       ########   odam.nl         */
+/*   Created: 2019/05/29 18:35:35 by jbrinksm       #+#    #+#                */
+/*   Updated: 2019/06/02 08:31:02 by jbrinksm      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "libft.h"
 
-void	ft_freearray(char ***array_p)
+char		*ft_chartostr(char c)
 {
-	int index;
+	char	*str;
 
-	index = 0;
-	if (*array_p)
-	{
-		while ((*array_p)[index] != NULL)
-		{
-			ft_strdel(&(*array_p)[index]);
-			index++;
-		}
-		free(*array_p);
-		*array_p = NULL;
-	}
+	str = ft_strnew(1);
+	if (str == NULL)
+		return (NULL);
+	str[0] = c;
+	return (str);
 }

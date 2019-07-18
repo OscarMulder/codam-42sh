@@ -6,13 +6,13 @@
 /*   By: jbrinksm <jbrinksm@student.codam.nl>         +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2019/03/28 10:21:20 by jbrinksm       #+#    #+#                */
-/*   Updated: 2019/05/03 17:03:19 by mavan-he      ########   odam.nl         */
+/*   Updated: 2019/06/05 17:08:36 by tde-jong      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "vsh.h"
 
-static char	echo_replacespecial(char c)
+static char	builtin_echo_replacespecial(char c)
 {
 	if (c == 'a')
 		return ('\a');
@@ -35,7 +35,7 @@ static char	echo_replacespecial(char c)
 	return (0);
 }
 
-static void	echo_escape_chars(char *arg)
+static void	builtin_echo_escape_chars(char *arg)
 {
 	int		i;
 	int		i_new;
@@ -45,7 +45,7 @@ static void	echo_escape_chars(char *arg)
 	i_new = 0;
 	while (arg[i] != '\0')
 	{
-		replace_char = echo_replacespecial(arg[i + 1]);
+		replace_char = builtin_echo_replacespecial(arg[i + 1]);
 		if (arg[i] == '\\' && replace_char != 0)
 		{
 			i++;
@@ -72,17 +72,17 @@ static void	echo_escape_chars(char *arg)
 ** Option -E disables interpretation of escape characters.
 */
 
-int			builtin_echo(char **args)
+void		builtin_echo(char **args, int *exit_code)
 {
 	int		arg_i;
 	char	flags;
 
 	arg_i = 1;
-	flags = echo_set_flags(args, &arg_i);
+	flags = builtin_echo_set_flags(args, &arg_i);
 	while (args[arg_i])
 	{
 		if (flags & ECHO_OPT_EL)
-			echo_escape_chars(args[arg_i]);
+			builtin_echo_escape_chars(args[arg_i]);
 		ft_putstr(args[arg_i]);
 		if (args[arg_i + 1] != NULL)
 			ft_putchar(' ');
@@ -90,5 +90,5 @@ int			builtin_echo(char **args)
 	}
 	if ((flags & ECHO_OPT_NL) == 0)
 		ft_putchar('\n');
-	return (FUNCT_SUCCESS);
+	*exit_code = EXIT_SUCCESS;
 }

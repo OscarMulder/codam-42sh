@@ -1,36 +1,36 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        ::::::::            */
-/*   var_get_value.c                                    :+:    :+:            */
+/*   env_getlst.c                                       :+:    :+:            */
 /*                                                     +:+                    */
 /*   By: jbrinksm <jbrinksm@student.codam.nl>         +#+                     */
 /*                                                   +#+                      */
-/*   Created: 2019/04/03 18:45:30 by jbrinksm       #+#    #+#                */
-/*   Updated: 2019/05/02 10:23:53 by rkuijper      ########   odam.nl         */
+/*   Created: 2019/06/04 08:06:54 by jbrinksm       #+#    #+#                */
+/*   Updated: 2019/06/13 16:06:46 by jbrinksm      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "vsh.h"
 
-char		*var_get_value(char *var_key, char **vararray)
+t_envlst	*env_getlst(void)
 {
-	int		var_len;
-	int		env_i;
-	int		i;
+	t_envlst	*envlst;
+	t_envlst	*new;
+	extern char	**environ;
+	int			i;
 
-	var_len = ft_strlen(var_key);
-	env_i = 0;
-	while (vararray[env_i] != NULL)
+	i = 0;
+	envlst = NULL;
+	while (environ[i] != NULL)
 	{
-		if (ft_strncmp(var_key, vararray[env_i], var_len) == 0 &&
-			vararray[env_i][var_len] == '=')
+		new = env_lstnew(environ[i], ENV_EXTERN);
+		if (new == NULL)
 		{
-			i = 0;
-			while (vararray[env_i][i] != '=')
-				i++;
-			return (&vararray[env_i][i + 1]);
+			env_lstdel(&envlst);
+			return (NULL);
 		}
-		env_i++;
+		env_lstaddback(&envlst, new);
+		i++;
 	}
-	return (NULL);
+	return (envlst);
 }

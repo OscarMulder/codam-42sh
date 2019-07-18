@@ -13,3 +13,10 @@
 vsh
 vsh_tests
 test_coverage
+
+# VSCode
+.vscode/
+*.dSYM/
+
+# MacOS X
+.DS_Store
