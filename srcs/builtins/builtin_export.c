@@ -6,7 +6,7 @@
 /*   By: jbrinksm <jbrinksm@student.codam.nl>         +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2019/06/05 10:33:08 by jbrinksm       #+#    #+#                */
-/*   Updated: 2019/07/18 14:01:02 by mavan-he      ########   odam.nl         */
+/*   Updated: 2019/07/18 17:44:50 by mavan-he      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,30 +14,21 @@
 **	export: usage: export [-n] [name[=value] ...] or export -p
 **
 **	TO DO:
-**	- We currently do not add quotes for -p, this is because of our
-**	wrong envlst structure, we need to seperate value from varname.
-**	OPTION -n
-**	remove arg keys from var_extern to var_intern (or add new key when it does not exist)
-**	ARGS:
-**	for each arg:
-**	- If the key is followed by =value, the value of the key is set to value.
-**	- check if key exists in var_intern (if yes, remove)
-**	- check if key exists in var_extern (if yes, replace, return)
-**	- else add key to var_extern
 **
-**	DOne:
+**	Fix bug with export hoi=doei ; export hoi=nudit ; export
+**
+**	Done:
 **
 **	- Read in flags -n -p  (remove from var_extern to var_intern)
 **	- print usage on invalid option.
-**	- checks for valid identifier. Will print error for every invalid identifier and
-**  any valid identifier will still be handled.
-**	- checks for valid options. (will exit on invalid option)
+**	- checks for valid identifier. Print error for every invalid identifier
 **	- OPTION -p
 **		- List var_extern except if args are given
+**	- OPTION -n
+**		- remove arg keys from var_extern to var_intern 
+**		(or add new key when it does not exist)
 **	- NO ARGS:
-**		- List var_extern, including empty keys.
-
-??????????? If the -f option is supplied, the names refer to shell functions; otherwise the names refer to shell variables.
+**		- List var_extern, including empty keys and value surrounded by quotes
 */
 
 #include "vsh.h"
@@ -45,6 +36,7 @@
 void	builtin_export_print(t_envlst *envlst, int flags, int *exit_code)
 {
 	t_envlst	*probe;
+	char		*value;
 
 	probe = envlst;
 	while (probe != NULL)
@@ -57,14 +49,26 @@ void	builtin_export_print(t_envlst *envlst, int flags, int *exit_code)
 			return ;
 		}
 		#endif
-		if (flags & EXP_FLAG_LP)
-			ft_putstr("declare -x ");
-		ft_putendl(probe->var);
+		if (probe->type == ENV_EXTERN)
+		{
+			if (flags & EXP_FLAG_LP)
+				ft_putstr("declare -x ");
+			value =	ft_strchr(probe->var, '=');
+			if (value != NULL)
+			{
+				ft_putsubstr(probe->var, 0, value - probe->var + 1);
+				ft_putchar('"');
+				ft_putstr(value + 1);
+				ft_putstr("\"\n");
+			}
+			else
+				ft_putendl(probe->var);
+		}
 		probe = probe->next;
 	}
 }
 
-static bool	tools_is_assignment(char *arg)
+/* static bool	tools_is_assignment(char *arg)
 {
 	int i;
 
@@ -90,9 +94,9 @@ static char	*tools_get_identifier(char *envstr)
 		return (NULL);
 	identifier = ft_strcdup(envstr, '=');
 	return (identifier);
-}
+} */
 
-void	builtin_export_var_to_type(char *arg, t_envlst *envlst, int *exit_code, int type)
+/* void	builtin_export_var_to_type(char *arg, t_envlst *envlst, int *exit_code, int type)
 {
 	t_envlst	*probe;
 	int			varlen;
@@ -118,15 +122,38 @@ void	builtin_export_var_to_type(char *arg, t_envlst *envlst, int *exit_code, int
 		}
 		probe = probe->next;
 	}
-	builtin_assign(arg, envlst, exit_code, ENV_EXTERN); /* should add option to change assign type */
+	builtin_assign(arg, envlst, exit_code, type);
+} */
+
+static void	builtin_export_arg(char *arg, t_envlst *envlst, int *exit_code, int type)
+{
+	t_envlst	*probe;
+	int			arglen;
+	
+	probe = envlst;
+	arglen = ft_strlen(arg);
+	if (ft_strchr(arg, '=') == NULL)
+	{
+		while (probe != NULL)
+		{
+			if (ft_strnequ(arg, probe->var, arglen) == true &&
+			(probe->var[arglen] == '=' || probe->var[arglen] == '\0'))
+			{
+				probe->type = type;
+				return ;
+			}
+			probe = probe->next;
+		}
+		builtin_assign(arg, envlst, exit_code, type);
+	}
+	else
+		builtin_assign(arg, envlst, exit_code, type);
 }
 
-int		builtin_export_readflags(char *arg, int *flags)
+int			builtin_export_readflags(char *arg, int *flags)
 {
 	int i;
 
-	if (arg == NULL /* <-- should be redundant */|| arg[0] == '\0')
-		return (FUNCT_ERROR);
 	i = 1;
 	while (arg[i] != '\0')
 	{
@@ -183,13 +210,8 @@ void	builtin_export_args(char **args, t_envlst *envlst, int *exit_code, int flag
 		type = ENV_LOCAL;
 	while (args[i] != NULL)
 	{
-		/* The arg needs to be checked and split if it is not just identifier,
-		also in the above functions the names like "varname" are wrong */
 		if (tools_is_valid_identifier(args[i]) == true)
-			builtin_export_var_to_type(args[i], envlst, exit_code, type);
-		/*
-		else if it has =value after it, set identifier to value
-		*/
+			builtin_export_arg(args[i], envlst, exit_code, type);
 		else
 		{
 			*exit_code = EXIT_FAILURE;
@@ -198,11 +220,6 @@ void	builtin_export_args(char **args, t_envlst *envlst, int *exit_code, int flag
 		i++;
 	}
 }
-
-/*
-**	Problem because assigns are automatically not considered as
-**	export, or do we need to use quotes???
-*/
 
 void	builtin_export(char **args, t_envlst *envlst, int *exit_code)
 {

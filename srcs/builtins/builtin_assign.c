@@ -6,13 +6,14 @@
 /*   By: jbrinksm <jbrinksm@student.codam.nl>         +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2019/06/05 09:09:49 by jbrinksm       #+#    #+#                */
-/*   Updated: 2019/07/08 16:51:32 by jbrinksm      ########   odam.nl         */
+/*   Updated: 2019/07/18 16:57:37 by mavan-he      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "vsh.h"
 
-int		builtin_assign_addexist(t_envlst *envlst, char *arg, char *var)
+int		builtin_assign_addexist(t_envlst *envlst, char *arg,
+		char *var, int env_type)
 {
 	t_envlst	*probe;
 	int			varlen;
@@ -25,6 +26,7 @@ int		builtin_assign_addexist(t_envlst *envlst, char *arg, char *var)
 		probe->var[varlen] == '=')
 		{
 			ft_strdel(&probe->var);
+			probe->type = env_type;
 			probe->var = var;
 			return (FUNCT_SUCCESS);
 		}
@@ -64,7 +66,7 @@ void	builtin_assign(char *arg, t_envlst *envlst, int *exit_code, int env_type)
 	if (var == NULL)
 		return ;
 	*exit_code = EXIT_SUCCESS;
-	if (builtin_assign_addexist(envlst, arg, var) != FUNCT_SUCCESS)
+	if (builtin_assign_addexist(envlst, arg, var, env_type) != FUNCT_SUCCESS)
 	{
 		if (builtin_assign_addnew(envlst, var, env_type) != FUNCT_SUCCESS)
 		{
