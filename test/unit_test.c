@@ -6,7 +6,7 @@
 /*   By: jbrinksm <jbrinksm@student.codam.nl>         +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2019/04/18 16:37:32 by omulder        #+#    #+#                */
-/*   Updated: 2019/07/16 22:08:30 by jbrinksm      ########   odam.nl         */
+/*   Updated: 2019/07/18 10:06:43 by tde-jong      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -489,15 +489,16 @@ Test(command_exec, basic, .init=redirect_all_stdout)
 	char 		*str;
 	int			exit_code;
 	t_envlst	*envlst;
-	t_stdfds	fds;
+	t_pipes		pipes;
 
+	pipes = init_pipestruct();
 	str = ft_strdup("ls\n");
 	lst = NULL;
 	ast = NULL;
 	envlst = env_getlst();
 	cr_expect(lexer(&(str), &lst) == FUNCT_SUCCESS);
 	cr_expect(parser_start(&lst, &ast) == FUNCT_SUCCESS);
-	exec_start(ast, envlst, &exit_code, 0, fds);
+	exec_start(ast, envlst, &exit_code, pipes);
 	cr_expect(exit_code == EXIT_SUCCESS);
 	parser_astdel(&ast);
 }
@@ -574,15 +575,16 @@ Test(exec_echo, basic, .init=redirect_all_stdout)
 	char 		*str;
 	int			exit_code;
 	t_envlst	*envlst;
-	t_stdfds	fds;
+	t_pipes		pipes;
 
+	pipes = init_pipestruct();
 	str = ft_strdup("echo hoi\n");
 	lst = NULL;
 	ast = NULL;
 	envlst = env_getlst();
 	cr_expect(lexer(&(str), &lst) == FUNCT_SUCCESS);
 	cr_expect(parser_start(&lst, &ast) == FUNCT_SUCCESS);
-	exec_start(ast, envlst, &exit_code, 0, fds);
+	exec_start(ast, envlst, &exit_code, pipes);
 	cr_expect(exit_code == 0);
 	cr_expect_stdout_eq_str("hoi\n");
 	parser_astdel(&ast);
@@ -595,15 +597,16 @@ Test(exec_echo, basic2, .init=redirect_all_stdout)
 	char 		*str;
 	int			exit_code;
 	t_envlst	*envlst;
-	t_stdfds	fds;
+	t_pipes		pipes;
 
+	pipes = init_pipestruct();
 	str = ft_strdup("echo \"Hi, this is a string\"\n");
 	lst = NULL;
 	ast = NULL;
 	envlst = env_getlst();
 	cr_expect(lexer(&(str), &lst) == FUNCT_SUCCESS);
 	cr_expect(parser_start(&lst, &ast) == FUNCT_SUCCESS);
-	exec_start(ast, envlst, &exit_code, 0, fds);
+	exec_start(ast, envlst, &exit_code, pipes);
 	cr_expect(exit_code == 0);
 	cr_expect_stdout_eq_str("Hi, this is a string\n");
 	parser_astdel(&ast);
@@ -623,8 +626,9 @@ Test(exec_cmd, basic, .init=redirect_all_stdout)
 	char 		*cwd;
 	int			exit_code;
 	t_envlst	*envlst;
-	t_stdfds	fds;
+	t_pipes		pipes;
 
+	pipes = init_pipestruct();
 	str = ft_strdup("/bin/pwd\n");
 	cwd = getcwd(NULL, 0);
 	lst = NULL;
@@ -632,7 +636,7 @@ Test(exec_cmd, basic, .init=redirect_all_stdout)
 	envlst = env_getlst();
 	cr_expect(lexer(&(str), &lst) == FUNCT_SUCCESS);
 	cr_expect(parser_start(&lst, &ast) == FUNCT_SUCCESS);
-	exec_start(ast, envlst, &exit_code, 0, fds);
+	exec_start(ast, envlst, &exit_code, pipes);
 	cr_expect(exit_code == 0);
 	ft_strdel(&str);
 	str = ft_strjoin(cwd, "\n");
@@ -649,15 +653,16 @@ Test(exec_cmd, basic2, .init=redirect_all_stdout)
 	char 		*str;
 	int			exit_code;
 	t_envlst	*envlst;
-	t_stdfds	fds;
+	t_pipes		pipes;
 
+	pipes = init_pipestruct();
 	str = ft_strdup("/bin/echo hoi\n");
 	lst = NULL;
 	ast = NULL;
 	envlst = env_getlst();
 	cr_expect(lexer(&(str), &lst) == FUNCT_SUCCESS);
 	cr_expect(parser_start(&lst, &ast) == FUNCT_SUCCESS);
-	exec_start(ast, envlst, &exit_code, 0, fds);
+	exec_start(ast, envlst, &exit_code, pipes);
 	cr_expect(exit_code == 0);
 	cr_expect_stdout_eq_str("hoi\n");
 	parser_astdel(&ast);
@@ -740,15 +745,16 @@ Test(exec_find_bin, execution, .init=redirect_all_stdout)
 	char 		*str;
 	int			exit_code;
 	t_envlst	*envlst;
-	t_stdfds	fds;
+	t_pipes		pipes;
 
+	pipes = init_pipestruct();
 	envlst = env_getlst();
 	str = ft_strdup("ls vsh\n");
 	lst = NULL;
 	ast = NULL;
 	cr_expect(lexer(&(str), &lst) == FUNCT_SUCCESS);
 	cr_expect(parser_start(&lst, &ast) == FUNCT_SUCCESS);
-	exec_start(ast, envlst, &exit_code, 0, fds);
+	exec_start(ast, envlst, &exit_code, pipes);
 	cr_expect(exit_code == EXIT_SUCCESS);
 	cr_expect_stdout_eq_str("vsh\n");
 	parser_astdel(&ast);
@@ -761,15 +767,16 @@ Test(exec_find_bin, execnonexistent, .init=redirect_all_stdout)
 	char 		*str;
 	int			exit_code;
 	t_envlst	*envlst;
-	t_stdfds	fds;
+	t_pipes		pipes;
 
+	pipes = init_pipestruct();
 	envlst = env_getlst();
 	str = ft_strdup("idontexist\n");
 	lst = NULL;
 	ast = NULL;
 	cr_expect(lexer(&(str), &lst) == FUNCT_SUCCESS);
 	cr_expect(parser_start(&lst, &ast) == FUNCT_SUCCESS);
-	exec_start(ast, envlst, &exit_code, 0, fds);
+	exec_start(ast, envlst, &exit_code, pipes);
 	cr_expect(exit_code == EXIT_NOTFOUND);
 	cr_expect_stdout_eq_str("idontexist: Command not found.\n");
 	parser_astdel(&ast);
