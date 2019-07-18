@@ -6,7 +6,7 @@
 #    By: jbrinksm <jbrinksm@student.codam.nl>         +#+                      #
 #                                                    +#+                       #
 #    Created: 2019/04/10 20:30:07 by jbrinksm       #+#    #+#                 #
-#    Updated: 2019/07/17 17:27:07 by jbrinksm      ########   odam.nl          #
+#    Updated: 2019/07/18 12:28:05 by jbrinksm      ########   odam.nl          #
 #                                                                              #
 # **************************************************************************** #
 
@@ -55,8 +55,7 @@ $(NAME): $(OBJECTS) main.o
 	@echo "[ + ] vsh has been compiled"
 
 %.o: %.c
-	@printf 'compiling $<'
-	@$(CC) -o $@ $(FLAGS) $< $(COVERAGE) $(INCLUDES) -c
+	@$(CC) -o $@ $(FLAGS) $^ $(COVERAGE) $(INCLUDES) -c
 
 $(LIBFT):
 	@$(MAKE) -C libft
