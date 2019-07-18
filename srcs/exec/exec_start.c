@@ -6,7 +6,7 @@
 /*   By: omulder <omulder@student.codam.nl>           +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2019/05/29 17:52:22 by omulder        #+#    #+#                */
-/*   Updated: 2019/07/18 16:41:04 by jbrinksm      ########   odam.nl         */
+/*   Updated: 2019/07/18 23:45:07 by jbrinksm      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -98,20 +98,72 @@ static void	redir_input(t_ast *node, int *exit_code)
 		dup2(filefd, fd);
 		close(filefd);
 	}
-	// else if (node->type == LESSAND)
-	// {
-	// 	fd = STDIN_FILENO;
-	// 	/* If there is a IONUM on left side of redir */
-	// 	if (node->sibling->child != NULL)
-	// 	{
-	// 		fd = ft_atoi(node->sibling->value);
-	// 		filefd = open(node->sibling->child->value, O_RDONLY);
-	// 	}
-	// 	else
-	// 		filefd = open(node->sibling->value, O_RDONLY);
-	// 	dup2(filefd, fd);
-	// 	close(filefd);
-	// }
+	else if (node->type == LESSAND)
+	{
+		fd = STDIN_FILENO;
+		/* If there is a IONUM on left side of redir */
+		if (node->sibling->child != NULL)
+		{
+			fd = ft_atoi(node->sibling->value);
+			filefd = ft_atoi(node->sibling->child->value);
+		}
+		else
+			filefd = ft_atoi(node->sibling->value);
+		dup2(filefd, fd);
+		close(filefd);
+	}
+}
+
+static void	redir_output(t_ast *node, int *exit_code)
+{
+	(void)exit_code;
+	int		fd;
+	int		filefd;
+
+	if (node->type == SGREAT)
+	{
+		/* DOESNT CLEAN WHOLE FILE YET */
+
+		fd = STDOUT_FILENO;
+		/* If there is a IONUM on left side of redir */
+		if (node->sibling->child != NULL)
+		{
+			fd = ft_atoi(node->sibling->value);
+			filefd = open(node->sibling->child->value, O_WRONLY | O_CREAT);
+		}
+		else
+			filefd = open(node->sibling->value, O_WRONLY | O_CREAT);
+		dup2(filefd, fd);
+		close(filefd);
+	}
+	else if (node->type == DGREAT)
+	{
+		fd = STDOUT_FILENO;
+		/* If there is a IONUM on left side of redir */
+		if (node->sibling->child != NULL)
+		{
+			fd = ft_atoi(node->sibling->value);
+			filefd = open(node->sibling->child->value, O_WRONLY | O_CREAT | O_APPEND);
+		}
+		else
+			filefd = open(node->sibling->value, O_WRONLY | O_CREAT | O_APPEND);
+		dup2(filefd, fd);
+		close(filefd);
+	}
+	else if (node->type == GREATAND)
+	{
+		fd = STDIN_FILENO;
+		/* If there is a IONUM on left side of redir */
+		if (node->sibling->child != NULL)
+		{
+			fd = ft_atoi(node->sibling->value);
+			filefd = ft_atoi(node->sibling->child->value);
+		}
+		else
+			filefd = ft_atoi(node->sibling->value);
+		dup2(filefd, fd);
+		close(filefd);
+	}
 }
 
 /*
@@ -134,11 +186,11 @@ static void exec_redir(t_ast *node, t_envlst *envlst, int *exit_code)
 		{
 			redir_input(node, exit_code);
 		}
-		// else if (node->type == SGREAT || node->type == DGREAT
-		// 	|| node->type == GREATAND)
-		// {
-		// 	redir_output(node, exit_code);
-		// }
+		else if (node->type == SGREAT || node->type == DGREAT
+			|| node->type == GREATAND)
+		{
+			redir_output(node, exit_code);
+		}
 	}
 }
 
