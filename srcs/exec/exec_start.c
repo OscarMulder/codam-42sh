@@ -6,7 +6,7 @@
 /*   By: omulder <omulder@student.codam.nl>           +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2019/05/29 17:52:22 by omulder        #+#    #+#                */
-/*   Updated: 2019/07/18 23:45:07 by jbrinksm      ########   odam.nl         */
+/*   Updated: 2019/07/19 10:54:57 by jbrinksm      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -152,7 +152,7 @@ static void	redir_output(t_ast *node, int *exit_code)
 	}
 	else if (node->type == GREATAND)
 	{
-		fd = STDIN_FILENO;
+		fd = STDOUT_FILENO;
 		/* If there is a IONUM on left side of redir */
 		if (node->sibling->child != NULL)
 		{
