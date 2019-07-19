@@ -6,7 +6,7 @@
 /*   By: omulder <omulder@student.codam.nl>           +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2019/05/29 17:52:22 by omulder        #+#    #+#                */
-/*   Updated: 2019/07/13 13:04:47 by mavan-he      ########   odam.nl         */
+/*   Updated: 2019/07/18 12:26:35 by mavan-he      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -88,17 +88,12 @@ static void exec_redir(t_ast *node, t_envlst *envlst, int *exit_code)
 	ft_printf("Redirect: %s > %s\n", left, right);
 }
 
-static void	exec_assign(t_ast *node, t_envlst *envlst, int *exit_code)
-{
-	builtin_assign(node->value, envlst, exit_code);
-}
-
 /*
 **	This is used to handle all the redirects and/or assignments in a
 **	complete_command
 */
 
-static void	exec_redirs_or_assigns(t_ast *node, t_envlst *envlst, int *exit_code)
+static void	exec_redirs_or_assigns(t_ast *node, t_envlst *envlst, int env_type, int *exit_code)
 {
 	t_ast	*probe;
 
@@ -108,7 +103,7 @@ static void	exec_redirs_or_assigns(t_ast *node, t_envlst *envlst, int *exit_code
 		if (probe->type == SGREAT)
 			exec_redir(probe, envlst, exit_code);
 		else if (probe->type == ASSIGN)
-			exec_assign(probe, envlst, exit_code);
+			builtin_assign(probe->value, envlst, exit_code, env_type);
 		probe = probe->child;
 	}
 }
@@ -132,11 +127,7 @@ static void	exec_complete_command(t_ast *node, t_envlst *envlst, int *exit_code,
 	if (node->type == WORD)
 	{
 		if (node->sibling)
-			exec_redirs_or_assigns(node->sibling, envlst, exit_code);
-
-		/* Remove useless quotes */
-		/* Remove useless escape chars */
-		
+			exec_redirs_or_assigns(node->sibling, envlst, ENV_TEMP, exit_code);
 		command = create_args(node);
 		/* add handling of flag = EXEC_PIPE */
 		/* add option for flag = EXEC_BG */
@@ -146,7 +137,7 @@ static void	exec_complete_command(t_ast *node, t_envlst *envlst, int *exit_code,
 
 	/* There is no cmd_word in complete_command */
 	else if (node->type == ASSIGN || node->type == SGREAT)
-		exec_redirs_or_assigns(node, envlst, exit_code);
+		exec_redirs_or_assigns(node, envlst, ENV_LOCAL, exit_code);
 }
 
 /*
