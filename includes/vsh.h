@@ -6,7 +6,7 @@
 /*   By: omulder <omulder@student.codam.nl>           +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2019/04/10 20:29:42 by jbrinksm       #+#    #+#                */
-/*   Updated: 2019/07/17 14:30:08 by mavan-he      ########   odam.nl         */
+/*   Updated: 2019/07/19 10:54:47 by tde-jong      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -250,7 +250,7 @@ void			term_free_struct(t_term **term_p);
 **-----------------------------------input--------------------------------------
 */
 
-int				input_read(char **line);
+int				input_read(char **line, int *status);
 int				input_is_word_start(char *str, int i1, int i2);
 void			input_clear_char_at(char **line, unsigned index);
 int				input_parse_escape(char c, int *input_state);
@@ -280,7 +280,7 @@ void			shell_display_prompt(void);
 int				shell_dless_read_till_stop(char **heredoc, char *stop);
 int				shell_dless_set_tk_val(t_tokenlst *probe, char **heredoc, char *stop);
 int				shell_dless_input(t_tokenlst *token_lst);
-int				shell_quote_checker(char **line);
+int				shell_quote_checker(char **line, int *status);
 char			shell_quote_checker_find_quote(char *line);
 int				shell_start(t_envlst *envlst);
 
