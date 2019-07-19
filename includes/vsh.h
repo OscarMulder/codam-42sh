@@ -6,7 +6,7 @@
 /*   By: omulder <omulder@student.codam.nl>           +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2019/04/10 20:29:42 by jbrinksm       #+#    #+#                */
-/*   Updated: 2019/07/19 12:21:32 by mavan-he      ########   odam.nl         */
+/*   Updated: 2019/07/19 19:34:36 by mavan-he      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -364,6 +364,8 @@ void			builtin_export_args(char **args, t_envlst *envlst, int *exit_code, int i)
 void			builtin_assign(char *arg, t_envlst *envlst, int *exit_code, int env_type);
 int				builtin_assign_addexist(t_envlst *envlst, char *arg, char *var, int env_type);
 int				builtin_assign_addnew(t_envlst *envlst, char *var, int env_type);
+void			builtin_set(char **args, t_envlst *envlst, int *exit_code);
+void			builtin_unset(char **args, t_envlst *envlst, int *exit_code);
 
 /*
 **---------------------------------tools----------------------------------------
