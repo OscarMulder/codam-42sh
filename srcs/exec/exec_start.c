@@ -6,7 +6,7 @@
 /*   By: omulder <omulder@student.codam.nl>           +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2019/05/29 17:52:22 by omulder        #+#    #+#                */
-/*   Updated: 2019/07/19 10:54:57 by jbrinksm      ########   odam.nl         */
+/*   Updated: 2019/07/19 22:48:38 by jbrinksm      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -166,6 +166,37 @@ static void	redir_output(t_ast *node, int *exit_code)
 	}
 }
 
+
+
+// }
+// 	char	**args;
+// 	t_ast	*probe;
+// 	size_t	total_args;
+// 	size_t	i;
+
+// 	total_args = count_args(ast);
+// 	args = (char**)ft_memalloc(sizeof(char*) * (total_args + 1));
+// 	if (args == NULL)
+// 		return (NULL);
+// 	i = 0;
+// 	probe = ast;
+// 	while (i < total_args)
+// 	{
+// 		#ifdef DEBUG
+// 		if (probe->type != WORD)
+// 			ft_putendl("Found non-WORD item in child-flow of WORD's (aka I messed something up -Jorn)");
+// 		#endif
+// 		args[i] = ft_strdup(probe->value);
+// 		if (args[i] == NULL)
+// 		{
+// 			ft_strarrdel(&args);
+// 			return (NULL);
+// 		}
+// 		probe = probe->child;
+// 		i++;
+// 	}
+// }
+
 /*
 **	This will edit the I/O table based on the redirect given as input.
 **	DOESNT WORK YET
@@ -196,7 +227,7 @@ static void exec_redir(t_ast *node, t_envlst *envlst, int *exit_code)
 
 static void	exec_assign(t_ast *node, t_envlst *envlst, int *exit_code)
 {
-	builtin_assign(node->value, envlst, exit_code);
+	builtin_assign(node->value, envlst, exit_code, ENV_TEMP);
 }
 
 /*
@@ -266,6 +297,26 @@ static void	exec_complete_command(t_ast *node, t_envlst *envlst, int *exit_code,
 	dup2(fdstderr, STDERR_FILENO);
 }
 
+// 	t_ast	*probe;
+// 	char	*left;
+// 	char	*right;
+
+// 	(void)exit_code;
+// 	(void)envlst;
+
+// 	probe = node->sibling;
+// 	if (probe->type == WORD)
+// 		left = probe->value;
+// 	else
+// 		left = parser_return_token_str(probe->type);
+// 	probe = node->sibling->child;
+// 	if (probe->type == WORD)
+// 		right = probe->value;
+// 	else
+// 		right = parser_return_token_str(probe->type);
+// 	ft_printf("Redirect: %s > %s\n", left, right);
+// }
+
 /*
 **	General structure:
 **	Read PR.
@@ -273,7 +324,6 @@ static void	exec_complete_command(t_ast *node, t_envlst *envlst, int *exit_code,
 
 void		exec_start(t_ast *ast, t_envlst *envlst, int *exit_code, int flags)
 {
-
 	if (ast == NULL)
 		return ;
 	/* Set flags */
@@ -300,5 +350,4 @@ void		exec_start(t_ast *ast, t_envlst *envlst, int *exit_code, int flags)
 		exec_complete_command(ast, envlst, exit_code, flags);
 	else if (ast->sibling != NULL)
 		exec_start(ast->sibling, envlst, exit_code, flags);
-
 }

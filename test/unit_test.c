@@ -6,7 +6,7 @@
 /*   By: jbrinksm <jbrinksm@student.codam.nl>         +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2019/04/18 16:37:32 by omulder        #+#    #+#                */
-/*   Updated: 2019/07/13 13:27:37 by mavan-he      ########   odam.nl         */
+/*   Updated: 2019/07/19 22:37:11 by jbrinksm      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -766,4 +766,65 @@ Test(exec_find_bin, execnonexistent, .init=redirect_all_stdout)
 	cr_expect(exit_code == EXIT_NOTFOUND);
 	cr_expect_stdout_eq_str("idontexist: Command not found.\n");
 	parser_astdel(&ast);
+}
+
+TestSuite(builtin_export);
+
+Test(builtin_export, basic_test)
+{
+	t_envlst    *envlst;
+	int			exit_code;
+	char		*args[3];
+
+	args[0] = "export";
+	args[1] = "key=value";
+	args[2] = NULL;
+	envlst = env_getlst();
+	exit_code = 0;
+	builtin_export(args, envlst, &exit_code);
+	while (envlst != NULL && ft_strnequ(envlst->var, "key", 3) == 0)
+		envlst = envlst->next;
+	cr_assert(envlst != NULL);
+	cr_expect_str_eq(ft_itoa(exit_code), ft_itoa(EXIT_SUCCESS));
+	cr_expect_str_eq(ft_itoa(envlst->type), ft_itoa(ENV_EXTERN));
+	cr_expect_str_eq(envlst->var, "key=value");
+}
+
+Test(builtin_export, basic_test_n_option)
+{
+	t_envlst    *envlst;
+	int			exit_code;
+	char		*args[4];
+	args[0] = "export";
+	args[1] = "key=value";
+	args[2] = NULL;
+	envlst = env_getlst();
+	exit_code = 0;
+	builtin_export(args, envlst, &exit_code);
+	args[0] = "export";
+	args[1] = "-n";
+	args[2] = "key=value";
+	args[3] = NULL;
+	builtin_export(args, envlst, &exit_code);
+	while (envlst != NULL && ft_strnequ(envlst->var, "key", 3) == 0)
+		envlst = envlst->next;
+	cr_assert(envlst != NULL);
+	cr_expect_str_eq(ft_itoa(exit_code), ft_itoa(EXIT_SUCCESS));
+	cr_expect_str_eq(ft_itoa(envlst->type), ft_itoa(ENV_LOCAL));
+	cr_expect_str_eq(envlst->var, "key=value");
+}
+
+Test(builtin_export, basic_output_error_test, .init=redirect_all_stdout)
+{
+	t_envlst    *envlst;
+	int			exit_code;
+	char		*args[3];
+
+	args[0] = "export";
+	args[1] = "key*=value";
+	args[2] = NULL;
+	envlst = env_getlst();
+	builtin_export(args, envlst, &exit_code);
+	cr_expect(exit_code == EXIT_FAILURE);
+	cr_expect_stdout_eq_str("vsh: export: 'key*=value': not a valid identifier\n");
 }
