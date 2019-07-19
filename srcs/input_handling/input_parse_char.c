@@ -6,7 +6,7 @@
 /*   By: rkuijper <rkuijper@student.codam.nl>         +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2019/05/16 13:33:54 by rkuijper       #+#    #+#                */
-/*   Updated: 2019/07/13 18:40:43 by jbrinksm      ########   odam.nl         */
+/*   Updated: 2019/07/19 10:34:31 by tde-jong      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -81,7 +81,7 @@ static int	add_newline(char **line, int *len_max)
 		(*line)[len] = '\n';
 	else
 	{
-		*len_max += 1; // keep for clarity?
+		*len_max += 1;
 		tmp = ft_strnew(*len_max + 1);
 		if (tmp == NULL)
 			return (FUNCT_FAILURE);
