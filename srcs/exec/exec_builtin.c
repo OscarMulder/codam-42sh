@@ -31,6 +31,8 @@ bool	exec_builtin(char **args, t_envlst *envlst, int *exit_code)
 		builtin_echo(args, exit_code);
 	else if (ft_strequ(args[0], "exit"))
 		builtin_exit(args, exit_code);
+	else if (ft_strequ(args[0], "export"))
+		builtin_export(args, envlst, exit_code);
 	else
 		return (false);
 	return (true);
