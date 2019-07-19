@@ -6,7 +6,7 @@
 /*   By: jbrinksm <jbrinksm@student.codam.nl>         +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2019/04/18 16:37:32 by omulder        #+#    #+#                */
-/*   Updated: 2019/05/02 13:22:52 by jbrinksm      ########   odam.nl         */
+/*   Updated: 2019/07/13 13:27:37 by mavan-he      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,18 +18,37 @@
 
 #include "vsh.h"
 #include <criterion/criterion.h>
+#include <criterion/redirect.h>
+#include <limits.h>
+#include <unistd.h>
+#include <fcntl.h>
+#include "vsh_history.h"
+
+void redirect_all_stdout(void)
+{
+        cr_redirect_stdout();
+        cr_redirect_stderr();
+}
+
+/*
+**------------------------------------------------------------------------------
+*/
 
 TestSuite(term_is_valid);
 
-Test(term_is_valid, basic)
+Test(term_is_valid, basic, .init=redirect_all_stdout)
 {
-	char *env1;
-	char *env2;
+	t_envlst	lst1;
+	t_envlst	lst2;
 
-	env1 = "TERM=non_valid_term";
-	env2 = "TERM=vt100";
-	cr_expect_eq(term_is_valid(&env1), FUNCT_FAILURE);
-	cr_expect_eq(term_is_valid(&env2), FUNCT_SUCCESS);
+	lst1.var = "TERM=non_valid_term";
+	lst2.var = "TERM=vt100";
+	lst1.type = ENV_EXTERN;
+	lst2.type = ENV_EXTERN;
+	lst1.next = NULL;
+	lst2.next = NULL;
+	cr_expect_eq(term_is_valid(&lst1), FUNCT_FAILURE);
+	cr_expect_eq(term_is_valid(&lst2), FUNCT_SUCCESS);
 }
 
 /*
@@ -41,7 +60,7 @@ TestSuite(term_init_struct);
 Test(term_init_struct, basic)
 {
 	t_term	*term_p;
-	
+
 	term_p = term_init_struct();
 	cr_assert(term_p != NULL);
 	cr_expect_neq(term_p->termios_p, NULL);
@@ -71,32 +90,23 @@ Test(term_free_struct, basic)
 **------------------------------------------------------------------------------
 */
 
-TestSuite(get_environ_cpy);
-
-Test(get_environ_cpy, basic)
-{
-	extern char **environ;
-	char		**environ_cpy;
-	int			index;
-
-	environ_cpy = get_environ_cpy();
-	index = 0;
-	cr_assert(environ_cpy != NULL);
-	while (environ_cpy[index] != NULL && environ[index] != NULL)
-	{
-		cr_expect_str_eq(environ_cpy[index], environ[index]);
-		index++;
-	}
-	cr_expect_eq(environ_cpy[index], environ[index]);
-}
-
-/*
-**------------------------------------------------------------------------------
-*/
-
 TestSuite(term_get_attributes);
 
 Test(term_get_attributes, basic)
+{
+	t_term	*term_p;
+
+	term_p = term_init_struct();
+
+	/* not sure how to have this as prerequisite as test any other way */
+	cr_assert(term_p != NULL, "prerequisite failed: term_init_struct");
+
+	// cr_expect_eq(term_get_attributes(STDIN_FILENO, term_p), FUNCT_SUCCESS);
+	cr_expect_eq(term_get_attributes(STDOUT_FILENO, term_p), FUNCT_SUCCESS);
+	cr_expect_eq(term_get_attributes(STDERR_FILENO, term_p), FUNCT_SUCCESS);
+}
+
+Test(term_get_attributes, invalid_fd, .init=redirect_all_stdout)
 {
 	t_term	*term_p;
 
@@ -106,9 +116,6 @@ Test(term_get_attributes, basic)
 	/* not sure how to have this as prerequisite as test any other way */
 	cr_assert(term_p != NULL, "prerequisite failed: term_init_struct");
 
-	// cr_expect_eq(term_get_attributes(STDIN_FILENO, term_p), FUNCT_SUCCESS);
-	cr_expect_eq(term_get_attributes(STDOUT_FILENO, term_p), FUNCT_SUCCESS);
-	cr_expect_eq(term_get_attributes(STDERR_FILENO, term_p), FUNCT_SUCCESS);
 	cr_expect_eq(term_get_attributes(10101, term_p), FUNCT_FAILURE);
 }
 
@@ -116,213 +123,100 @@ Test(term_get_attributes, basic)
 **------------------------------------------------------------------------------
 */
 
-TestSuite(parser_split_line_to_commands);
+TestSuite(tools_is_char_escaped);
 
-Test(parser_split_line_to_commands, basic)
+Test(tools_is_char_escaped, basic)
 {
-	char	**commands;
-
-	commands = NULL;
-	parser_lexer("\"\";1'22'3'4';'1;';", &commands);
-	cr_assert(commands != NULL);
-	cr_expect_str_eq(commands[0], "");
-	cr_expect_str_eq(commands[1], "12234");
-	cr_expect_str_eq(commands[2], "1;");
-	cr_expect_str_eq(commands[3], "");
+	cr_expect_eq(tools_is_char_escaped("\\n", 1), true);
+	cr_expect_eq(tools_is_char_escaped("\\\\n", 2), false);
+	cr_expect_eq(tools_is_char_escaped("abc\\n", 4), true);
+	cr_expect_eq(tools_is_char_escaped("abc\\\\n", 5), false);
 }
 
-Test(parser_split_line_to_commands, escaped_command_seperator)
+Test(tools_is_char_escaped, edge_cases)
 {
-	char	**commands;
-
-	commands = NULL;
-	parser_lexer("lalalaffffdsdg;asdgasdgas\\;dg as; dga sgas \\\";@", &commands);
-	cr_assert(commands != NULL);
-	cr_expect_str_eq(commands[0], "lalalaffffdsdg");
-	cr_expect_str_eq(commands[1], "asdgasdgas\\;dg as");
-	cr_expect_str_eq(commands[2], " dga sgas \\\"");
-	cr_expect_str_eq(commands[3], "@");
-}
-
-Test(parser_split_line_to_commands, escaped_command_seperator2)
-{
-	char	**commands;
-
-	commands = NULL;
-	parser_lexer("123;456\\\\\\;123;456;", &commands);
-	cr_assert(commands != NULL);
-	cr_expect_str_eq(commands[0], "123");
-	cr_expect_str_eq(commands[1], "456\\\\\\;123");
-	cr_expect_str_eq(commands[2], "456");
-	cr_expect_str_eq(commands[3], "");
+	cr_expect_eq(tools_is_char_escaped("\\\"\\n", 3), true);
+	cr_expect_eq(tools_is_char_escaped("\\\"\\\\n", 4), false);
+	cr_expect_eq(tools_is_char_escaped("", 0), false);
 }
 
 /*
 **------------------------------------------------------------------------------
 */
 
-TestSuite(parser_strdup_command_from_line);
+TestSuite(shell_quote_checker_find_quote);
 
-Test(parser_strdup_command_from_line, basic)
+Test(shell_quote_checker_find_quote, basic)
 {
-	char	*result;
-	int		index;
+	char *line;
 
-	index = 0;
-	result = parser_strdup_command_from_line("simple;command;line", &index);
-	cr_assert(result != NULL);
-	cr_expect_str_eq(result, "simple");
+	line = "A simple \"line\"";
+	cr_expect_eq(shell_quote_checker_find_quote(line), '\0');
+	line = "A simple \"line";
+	cr_expect_eq(shell_quote_checker_find_quote(line), '"');
+	line = "A simple line";
+	cr_expect_eq(shell_quote_checker_find_quote(line), '\0');
+	line = "A simple line\"";
+	cr_expect_eq(shell_quote_checker_find_quote(line), '"');
+	line = "A simple 'line'";
+	cr_expect_eq(shell_quote_checker_find_quote(line), '\0');
+	line = "A simple 'line";
+	cr_expect_eq(shell_quote_checker_find_quote(line), '\'');
+	line = "A simple line";
+	cr_expect_eq(shell_quote_checker_find_quote(line), '\0');
+	line = "A simple line'";
+	cr_expect_eq(shell_quote_checker_find_quote(line), '\'');
 }
 
-Test(parser_strdup_command_from_line, moderate)
+Test(shell_quote_checker_find_quote, both_quotes)
 {
-	char	*result;
-	int		index;
+	char *line;
 
-	index = 0;
-	result = parser_strdup_command_from_line("more\\;complicated;line", &index);
-	cr_assert(result != NULL);
-	cr_expect_str_eq(result, "more\\;complicated");
-}
-
-Test(parser_strdup_command_from_line, quoted_command_seperator)
-{
-	char	*result;
-	int		index;
-
-	index = 0;
-	result = parser_strdup_command_from_line("\"quoted;command;line\"", &index);
-	cr_assert(result != NULL);
-	cr_expect_str_eq(result, "quoted;command;line");
-}
-
-/*
-**------------------------------------------------------------------------------
-*/
-
-TestSuite(parser_command_len_from_line);
-
-Test(parser_command_len_from_line, basic)
-{
-	int		index;
-
-	index = 0;
-	cr_expect_eq(parser_command_len_from_line("123456789", &index), 9);
-	cr_expect_eq(parser_command_len_from_line("1;2", &index), 1);
-}
-
-Test(parser_command_len_from_line, escaped_command_seperator)
-{
-	int		index;
-
-	index = 0;
-	cr_expect_eq(parser_command_len_from_line("123456\\;9", &index), 9);
-	cr_expect_eq(parser_command_len_from_line("1\\;\\;67", &index), 7);
-}
-
-Test(parser_command_len_from_line, quoted_command_seperator)
-{
-	int		index;
-
-	index = 0;
-	cr_expect_eq(parser_command_len_from_line("123\"5;7\"", &index), 6);
-	cr_expect_eq(parser_command_len_from_line("\"2\"\\;;aaa", &index), 3);
+	line = "A simple \"line\'";
+	cr_expect_eq(shell_quote_checker_find_quote(line), '"');
+	line = "A simple 'line\"";
+	cr_expect_eq(shell_quote_checker_find_quote(line), '\'');
+	line = "A simple ''line\"";
+	cr_expect_eq(shell_quote_checker_find_quote(line), '"');
+	line = "'A simple 'line\"";
+	cr_expect_eq(shell_quote_checker_find_quote(line), '"');
+	line = "A simple 'line\"\"";
+	cr_expect_eq(shell_quote_checker_find_quote(line), '\'');
+	line = "A simple 'line\"'\"'";
+	cr_expect_eq(shell_quote_checker_find_quote(line), '"');
 }
 
 /*
 **------------------------------------------------------------------------------
 */
 
-TestSuite(parser_total_commands_from_line);
+TestSuite(shell_quote_checker);
 
-Test(parser_total_commands_from_line, basic)
-{
-	cr_expect_eq(parser_total_commands_from_line("simple;command;line"), 3);
-	cr_expect_eq(parser_total_commands_from_line("a;lot;of;commands;though;which;might;be;too;many;?"), 11);
-
-	/* should this be 0 or 1? */
-	cr_expect_eq(parser_total_commands_from_line(""), 1);
-}
-
-Test(parser_total_commands_from_line, escaped_command_seperator)
-{
-	cr_expect_eq(parser_total_commands_from_line("simple;commandline;with;escaped\\;semi;colon;line"), 6);
-	cr_expect_eq(parser_total_commands_from_line("command\\;line\\;with;more\\;escaped;semi\\;colons"), 3);
-}
-
-Test(parser_total_commands_from_line, quoted_command_seperator)
-{
-	cr_expect_eq(parser_total_commands_from_line("commandline;with\";quoted;\"semi;colons"), 3);
-	cr_expect_eq(parser_total_commands_from_line("\"nice;weird;\";quoted\"semi;colons\""), 2);
-}
-
-/*
-**------------------------------------------------------------------------------
+/*	
+**	Not sure how to test this properly yet, since you need input if
+**	the quoting isn't correct.
 */
 
-TestSuite(is_char_escaped);
-
-Test(is_char_escaped, basic)
+Test(shell_quote_checker, basic)
 {
-	cr_expect_eq(is_char_escaped("\\n", 1), FUNCT_SUCCESS);
-	cr_expect_eq(is_char_escaped("\\\\n", 2), FUNCT_FAILURE);
-	cr_expect_eq(is_char_escaped("abc\\n", 4), FUNCT_SUCCESS);
-	cr_expect_eq(is_char_escaped("abc\\\\n", 5), FUNCT_FAILURE);
-}
+	char *line;
 
-Test(is_char_escaped, edge_cases)
-{
-	cr_expect_eq(is_char_escaped("\\\"\\n", 3), FUNCT_SUCCESS);
-	cr_expect_eq(is_char_escaped("\\\"\\\\n", 4), FUNCT_FAILURE);
-	cr_expect_eq(is_char_escaped("", 0), FUNCT_FAILURE);
-}
-
-/*
-**------------------------------------------------------------------------------
-*/
-
-TestSuite(update_quote_status);
-
-Test(update_quote_status, basic)
-{
-	char quote;
-	
-	quote = '\0';
-	cr_expect_eq(update_quote_status("easy\"line\"", 3, &quote), 0);
-	cr_expect_eq(quote, '\0');
-	quote = '\0';
-	cr_expect_eq(update_quote_status("easy\"line\"", 4, &quote), 1);
-	cr_expect_eq(quote, '"');
-	quote = '\0';
-	cr_expect_eq(update_quote_status("easy\"line\"", 5, &quote), 0);
-	cr_expect_eq(quote, '\0');
-	quote = '\0';
-	cr_expect_eq(update_quote_status("easy'line'", 3, &quote), 0);
-	cr_expect_eq(quote, '\0');
-	quote = '\0';
-	cr_expect_eq(update_quote_status("easy'line'", 4, &quote), 1);
-	cr_expect_eq(quote, '\'');
-	quote = '\0';
-	cr_expect_eq(update_quote_status("easy'line'", 5, &quote), 0);
-	cr_expect_eq(quote, '\0');
-}
-
-Test(update_quote_status, edge_cases)
-{
-	char quote;
-	
-	quote = '\'';
-	cr_expect_eq(update_quote_status("h'arde\\'rline'", 7, &quote), 0);
-	cr_expect_eq(quote, '\'');
-	quote = '\0';
-	cr_expect_eq(update_quote_status("\\'harderline", 1, &quote), 0);
-	cr_expect_eq(quote, '\0');
-	quote = '"';
-	cr_expect_eq(update_quote_status("\"harder'line\"", 7, &quote), 0);
-	cr_expect_eq(quote, '"');
-	quote = '\0';
-	cr_expect_eq(update_quote_status("\\\"harder'line", 8, &quote), 1);
-	cr_expect_eq(quote, '\'');
+	line = strdup("lala");
+	shell_quote_checker(&line);
+	cr_expect_str_eq(line, "lala");
+	ft_strdel(&line);
+	line = strdup("lala''");
+	shell_quote_checker(&line);
+	cr_expect_str_eq(line, "lala''");
+	ft_strdel(&line);
+	line = strdup("lala\"\"");
+	shell_quote_checker(&line);
+	cr_expect_str_eq(line, "lala\"\"");
+	ft_strdel(&line);
+	line = strdup("lala'\"'");
+	shell_quote_checker(&line);
+	cr_expect_str_eq(line, "lala'\"'");
+	ft_strdel(&line);
 }
 
 /*
@@ -331,91 +225,545 @@ Test(update_quote_status, edge_cases)
 
 TestSuite(builtin_echo);
 
-Test(builtin_echo, basic)
+Test(builtin_echo, basic, .init=redirect_all_stdout)
 {
-	/* Will need to use functions to change stdout to a tmp file from which
-	we can strcmp the output and clear and reset afterwards */
+	char	**args;
+	int		exit_code;
 
-	// builtin_echo({"echo", "-nEa", "\n"});
-	// builtin_echo({"echo", "-nE", "\\n"});
-	// builtin_echo({"echo", "-nEe", "\\\\abc\\t\\v\\r\\f\\n"});
-	// builtin_echo({"echo", "-nEe"});
-	// builtin_echo({"echo", "-E"});
-	// builtin_echo({"echo"});
-	cr_log_warn("Please read comments at builtin_echo testsuite (basic)");
-}
+	args = ft_strsplit("echo|-nEe|\\\\test\\a\\t\\v\\r\\n\\b\\f\\E", '|');
+	exit_code = INT_MIN;
+	builtin_echo(args, &exit_code);
+	cr_expect(exit_code == 0);
+	ft_strarrdel(&args);
 
-Test(builtin_echo, return_values)
-{
-	/* Please add proper return values for echo (invalid flags/arguments etc) */
+	args = ft_strsplit("echo|-Eea|\n", '|');
+	exit_code = INT_MIN;
+	builtin_echo(args, &exit_code);
+	cr_expect(exit_code == 0);
+	ft_strarrdel(&args);
 
-	// builtin_echo({"echo", "-nEaZ", "\n"});
-	cr_log_warn("Please read comments at builtin_echo testsuite (return_values)");
-}
+	args = ft_strsplit("echo|-nEe", '|');
+	exit_code = INT_MIN;
+	builtin_echo(args, &exit_code);
+	cr_expect(exit_code == 0);
+	ft_strarrdel(&args);
 
-/*
-**------------------------------------------------------------------------------
-*/
+	args = ft_strsplit("echo|-E", '|');
+	exit_code = INT_MIN;
+	builtin_echo(args, &exit_code);
+	cr_expect(exit_code == 0);
 
-TestSuite(var_get_value);
-
-Test(var_get_value, basic)
-{
-	char	*fakenv[] = {"LOL=didi", "PATH=lala", "PAT=lolo", NULL};
-	cr_expect_str_eq(var_get_value("PATH", fakenv), "lala");
-	cr_expect(var_get_value("NOEXIST", fakenv) == NULL);
+	cr_expect_stdout_eq_str("\\test\a\t\v\r\n\b\f\e-Eea \n\n\n");
 }
 
 /*
 **------------------------------------------------------------------------------
 */
 
-TestSuite(var_join_key_value);
+TestSuite(env_getvalue);
 
-Test(var_join_key_value, basic)
+Test(env_getvalue, basic)
 {
-	cr_expect_str_eq(var_join_key_value("lolo", "lala"), "lolo=lala");
-	cr_expect_str_eq(var_join_key_value("lolo===", "lala"), "lolo====lala");
-	cr_expect_str_eq(var_join_key_value("lolo", "===lala"), "lolo====lala");
-	cr_expect_str_eq(var_join_key_value("=", "="), "===");
-	cr_expect_str_eq(var_join_key_value("", ""), "=");
-	cr_expect_str_eq(var_join_key_value("", "="), "==");
-	cr_expect_str_eq(var_join_key_value("=", ""), "==");
-	cr_expect_str_eq(var_join_key_value("\t", "\t"), "\t=\t");
+	t_envlst	*envlst;
+	t_envlst	lst1;
+	t_envlst	lst2;
+	t_envlst	lst3;
+
+	envlst = &lst1;
+	lst1.var = "LOL=didi";
+	lst2.var = "PAT=lolo";
+	lst3.var = "PATH=lala";
+	lst1.type = ENV_EXTERN;
+	lst2.type = ENV_EXTERN;
+	lst3.type = ENV_EXTERN;
+	lst1.next = &lst2;
+	lst2.next = &lst3;
+	lst3.next = NULL;
+	cr_expect_str_eq(env_getvalue("PATH", envlst), "lala");
+	cr_expect(env_getvalue("NOEXIST", envlst) == NULL);
 }
 
 /*
 **------------------------------------------------------------------------------
 */
 
-TestSuite(var_set_value);
+TestSuite(lexer_error, .init=redirect_all_stdout);
 
-Test(var_set_value, basic)
+Test(lexer_error, one_item)
 {
-	char	*fakenv[4];
-	fakenv[0] = ft_strdup("LOL=didi");
-	fakenv[1] = ft_strdup("PATH=lala");
-	fakenv[2] = ft_strdup("PAT=lolo");
-	fakenv[3] = NULL;
-	cr_assert(fakenv[0] != NULL && fakenv[1] != NULL && fakenv[2] != NULL, "Failed to allocate test strings");
-	var_set_value("PATH", "lala", fakenv);
-	cr_expect(var_set_value("PATH", "changed", fakenv) == FUNCT_SUCCESS);
-	cr_expect(var_set_value("LI", "changed", fakenv) == FUNCT_FAILURE);
-	cr_expect_str_eq(fakenv[1], "PATH=changed");
+	t_tokenlst	*lst;
+
+	lst = NULL;
+	lexer_tokenlstaddback(&lst, START, NULL, 0);
+	lexer_error(&lst, NULL);
+	cr_expect(lst == NULL);
+	cr_expect_stderr_eq_str("vsh: lexer: malloc error\n");
 }
 
-// return (test_ret_fail("test_prompt failed!"));
-// return (test_ret_fail("test_free_and_return_null failed!"));
-// return (test_ret_fail("test_get_environ_cpy failed!"));
-// return (test_ret_fail("test_param_to_env failed!"));
-// return (test_ret_fail("test_term_is_valid failed!"));
-// return (test_ret_fail("test_term_init_struct failed!"));
-// return (test_ret_fail("test_term_free_struct failed!"));
-// return (test_ret_fail("test_term_get_attributes failed!"));
-// return (test_ret_fail("test_parser_split_commands failed!"));
-// return (test_ret_fail("test_parser_strdup_command_from_line failed!"));
-// return (test_ret_fail("test_parser_command_len_from_line failed!"));
-// return (test_ret_fail("test_parser_total_commands_from_line failed!"));
-// return (test_ret_fail("test_is_char_escaped failed!"));
-// return (test_ret_fail("test_is_char_escaped failed!"));
-// return (test_ret_fail("test_echo failed!"));
+Test(lexer_error, long_list)
+{
+	t_tokenlst	*lst;
+
+	lst = NULL;
+	lexer_tokenlstaddback(&lst, START, NULL, 0);
+	lexer_tokenlstaddback(&lst, WORD, ft_strdup("testword"), 0);
+	lexer_tokenlstaddback(&lst, PIPE, NULL, 0);
+	lexer_tokenlstaddback(&lst, PIPE, NULL, 0);
+	lexer_tokenlstaddback(&lst, WORD, ft_strdup("testword"), 0);
+	lexer_tokenlstaddback(&lst, PIPE, NULL, 0);
+	lexer_tokenlstaddback(&lst, PIPE, NULL, 0);
+	lexer_tokenlstaddback(&lst, PIPE, NULL, 0);
+	lexer_tokenlstaddback(&lst, PIPE, NULL, 0);
+	lexer_tokenlstaddback(&lst, IO_NUMBER, ft_strdup("235235"), 0);
+	lexer_tokenlstaddback(&lst, PIPE, NULL, 0);
+	lexer_tokenlstaddback(&lst, WORD, ft_strdup("testword"), 0);
+	lexer_tokenlstaddback(&lst, PIPE, NULL, 0);
+	lexer_tokenlstaddback(&lst, PIPE, NULL, 0);
+	lexer_tokenlstaddback(&lst, PIPE, NULL, 0);
+	lexer_tokenlstaddback(&lst, IO_NUMBER, ft_strdup("12351235"), 0);
+	lexer_tokenlstaddback(&lst, IO_NUMBER, ft_strdup("1235135"), 0);
+	lexer_tokenlstaddback(&lst, PIPE, NULL, 0);
+	lexer_tokenlstaddback(&lst, PIPE, NULL, 0);
+	lexer_tokenlstaddback(&lst, PIPE, NULL, 0);
+	lexer_tokenlstaddback(&lst, PIPE, NULL, 0);
+	lexer_tokenlstaddback(&lst, WORD, ft_strdup("testword"), 0);
+	lexer_tokenlstaddback(&lst, IO_NUMBER, ft_strdup("1512351"), 0);
+	lexer_tokenlstaddback(&lst, PIPE, NULL, 0);
+	lexer_tokenlstaddback(&lst, PIPE, NULL, 0);
+	lexer_tokenlstaddback(&lst, WORD, ft_strdup("testword"), 0);
+	lexer_tokenlstaddback(&lst, PIPE, NULL, 0);
+	lexer_tokenlstaddback(&lst, END, NULL, 0);
+	lexer_error(&lst, NULL);
+	cr_expect(lst == NULL);
+	cr_expect_stderr_eq_str("vsh: lexer: malloc error\n");
+}
+
+Test(lexer_error, all_items)
+{
+	t_tokenlst	*lst;
+
+	lst = NULL;
+	lexer_tokenlstaddback(&lst, START, NULL, 0);
+	lexer_tokenlstaddback(&lst, WORD, ft_strdup("testword"), 0);
+	lexer_tokenlstaddback(&lst, IO_NUMBER, ft_strdup("testword"), 0);
+	lexer_tokenlstaddback(&lst, ERROR, NULL, 0);
+	lexer_tokenlstaddback(&lst, ASSIGN, ft_strdup("testword"), 0);
+	lexer_tokenlstaddback(&lst, AND_IF, NULL, 0);
+	lexer_tokenlstaddback(&lst, OR_IF, NULL, 0);
+	lexer_tokenlstaddback(&lst, DLESS, NULL, 0);
+	lexer_tokenlstaddback(&lst, DGREAT, NULL, 0);
+	lexer_tokenlstaddback(&lst, SLESS, NULL, 0);
+	lexer_tokenlstaddback(&lst, SGREAT, NULL, 0);
+	lexer_tokenlstaddback(&lst, LESSAND, NULL, 0);
+	lexer_tokenlstaddback(&lst, GREATAND, NULL, 0);
+	lexer_tokenlstaddback(&lst, BG, NULL, 0);
+	lexer_tokenlstaddback(&lst, PIPE, NULL, 0);
+	lexer_tokenlstaddback(&lst, SEMICOL, NULL, 0);
+	lexer_tokenlstaddback(&lst, NEWLINE, NULL, 0);
+	lexer_tokenlstaddback(&lst, END,  NULL, 0);
+	lexer_error(&lst, NULL);
+	cr_expect(lst == NULL);
+	cr_expect_stderr_eq_str("vsh: lexer: malloc error\n");
+}
+
+/*
+**------------------------------------------------------------------------------
+*/
+
+TestSuite(lexer_tokenlstaddback, .init=redirect_all_stdout);
+
+Test(lexer_tokenlstaddback, invalid_values)
+{
+	t_tokenlst	*lst;
+
+	lst = NULL;
+	lexer_tokenlstaddback(&lst, END, ft_strdup("testword"), 0);
+	lexer_tokenlstaddback(&lst, WORD, ft_strdup("testword"), 0);
+	lexer_tokenlstaddback(&lst, ERROR, NULL, 0);
+	lexer_tokenlstaddback(&lst, ERROR, NULL, 0);
+	lexer_tokenlstaddback(&lst, ASSIGN, NULL, 0);
+	lexer_tokenlstaddback(&lst, AND_IF, ft_strdup("testword"), 0);
+	lexer_tokenlstaddback(&lst, OR_IF, NULL, 0);
+	lexer_tokenlstaddback(&lst, LESSAND, NULL, 0);
+	lexer_tokenlstaddback(&lst, ERROR, NULL, 0);
+	lexer_tokenlstaddback(&lst, SLESS, NULL, 0);
+	lexer_tokenlstaddback(&lst, SGREAT, ft_strdup("testword"), 0);
+	lexer_tokenlstaddback(&lst, LESSAND, NULL, 0);
+	lexer_tokenlstaddback(&lst, GREATAND, NULL, 0);
+	lexer_tokenlstaddback(&lst, BG, NULL, 0);
+	lexer_tokenlstaddback(&lst, GREATAND, NULL, 0);
+	lexer_tokenlstaddback(&lst, END, NULL, 0);
+	lexer_tokenlstaddback(&lst, START, NULL, 0);
+	lexer_tokenlstaddback(&lst, ERROR, ft_strdup("testword"), 0);
+	lexer_error(&lst, NULL);
+	cr_expect(lst == NULL);
+	cr_expect_stderr_eq_str("vsh: lexer: malloc error\n");
+}
+
+/*
+**------------------------------------------------------------------------------
+*/
+
+TestSuite(lexer);
+
+Test(lexer, basic)
+{
+	t_tokenlst	*lst;
+	t_tokenlst	*tmp;
+	char 		*str;
+
+	str = ft_strdup("HOME=/ ls -la || ls 2>file \"Documents\";");
+	cr_assert(str != NULL);
+	lst = NULL;
+	cr_expect(lexer(&str, &lst) == FUNCT_SUCCESS);
+	tmp = lst;
+	cr_expect(lst->type == START);
+	cr_expect(lst->value == NULL);
+	lst = lst->next;
+	cr_expect(lst->type == ASSIGN);
+	cr_expect_str_eq(lst->value, "HOME=/");
+	lst = lst->next;
+	cr_expect(lst->type == WORD);
+	cr_expect_str_eq(lst->value, "ls");
+	lst = lst->next;
+	cr_expect(lst->type == WORD);
+	cr_expect_str_eq(lst->value, "-la");
+	lst = lst->next;
+	cr_expect(lst->type == OR_IF);
+	cr_expect(lst->value == NULL);
+	lst = lst->next;
+	cr_expect(lst->type == WORD);
+	cr_expect_str_eq(lst->value, "ls");
+	lst = lst->next;
+	cr_expect(lst->type == IO_NUMBER);
+	cr_expect_str_eq(lst->value, "2");
+	lst = lst->next;
+	cr_expect(lst->type == SGREAT);
+	cr_expect(lst->value == NULL);
+	lst = lst->next;
+	cr_expect(lst->type == WORD);
+	cr_expect_str_eq(lst->value, "file");
+	lst = lst->next;
+	cr_expect(lst->type == WORD);
+	cr_expect_str_eq(lst->value, "\"Documents\"");
+	lst = lst->next;
+	cr_expect(lst->type == SEMICOL);
+	lst = lst->next;
+	cr_expect(lst->type == END);
+	cr_expect(lst->value == NULL);
+	lexer_tokenlstdel(&tmp);
+}
+
+TestSuite(parser);
+
+Test(parser, basic)
+{
+	t_tokenlst	*lst;
+	t_ast		*ast;
+	t_ast		*tmp_ast;
+	char 		*str;
+
+	str = ft_strdup("HOME=/ ls -la || ls 2>file \"Documents\";\n");
+	lst = NULL;
+	ast = NULL;
+	cr_expect(lexer(&str, &lst) == FUNCT_SUCCESS);
+	cr_expect(parser_start(&lst, &ast) == FUNCT_SUCCESS);
+	tmp_ast = ast;
+	cr_expect(ast->type == SEMICOL);
+	ast = ast->child;
+	cr_expect(ast->type == OR_IF);
+	parser_astdel(&tmp_ast);
+	cr_expect(tmp_ast == NULL);
+}
+
+/*
+**------------------------------------------------------------------------------
+*/
+
+TestSuite(command_exit);
+
+Test(command_exec, basic, .init=redirect_all_stdout)
+{
+	t_tokenlst	*lst;
+	t_ast		*ast;
+	char 		*str;
+	int			exit_code;
+	t_envlst	*envlst;
+
+	str = ft_strdup("ls\n");
+	lst = NULL;
+	ast = NULL;
+	envlst = env_getlst();
+	cr_expect(lexer(&(str), &lst) == FUNCT_SUCCESS);
+	cr_expect(parser_start(&lst, &ast) == FUNCT_SUCCESS);
+	exec_start(ast, envlst, &exit_code, 0);
+	cr_expect(exit_code == EXIT_SUCCESS);
+	parser_astdel(&ast);
+}
+
+/*
+**------------------------------------------------------------------------------
+*/
+/* TestSuite(history_check);
+
+Test(history_check, history_to_file)
+{
+	int		fd;
+	char	*array[4];
+	char	buf[22];
+	int 	ret;
+
+	ft_bzero(buf, 22);
+	array[0] = "check1";
+	array[1] = "check2";
+	array[2] = "check3";
+	array[3] = NULL;
+	history = array;
+	cr_expect(history_to_file() == FUNCT_SUCCESS);
+	fd = open("/tmp/.vsh_history", O_RDONLY);
+	cr_expect(fd > 0);
+	ret = read(fd, buf, 22);
+	cr_expect(ret == 21);
+	cr_expect(ft_strcmp(buf, "check1\ncheck2\ncheck3\n") == 0);
+}
+
+Test(history_check, get_file_content)
+{
+	char	*array[4];
+
+	array[0] = ft_strdup("check1");
+	array[1] = ft_strdup("check2");
+	array[2] = ft_strdup("check3");
+	array[3] = NULL;
+	history = array;
+	cr_expect(history_to_file() == FUNCT_SUCCESS);
+	cr_expect(history_get_file_content() == FUNCT_SUCCESS);
+	cr_expect_str_eq("check1", history[0]);
+	cr_expect_str_eq("check2", history[1]);
+	cr_expect_str_eq("check3", history[2]);
+	cr_expect(history[3] == NULL);
+} 
+
+TestSuite(history_output);
+
+Test(history_check, history_print, .init=redirect_all_stdout)
+{
+	char	*array[4];
+
+	history = array;
+	array[0] = ft_strdup("check1");
+	array[1] = ft_strdup("check2");
+	array[2] = ft_strdup("check3");
+	array[3] = NULL;
+	cr_expect(history_to_file() == FUNCT_SUCCESS);
+	cr_expect(history_get_file_content() == FUNCT_SUCCESS);
+	history_print();
+	cr_expect_stdout_eq_str("    0  check1\n    1  check2\n    2  check3\n");
+} */
+/*
+**------------------------------------------------------------------------------
+*/
+
+TestSuite(exec_echo);
+
+Test(exec_echo, basic, .init=redirect_all_stdout)
+{
+	t_tokenlst	*lst;
+	t_ast		*ast;
+	char 		*str;
+	int			exit_code;
+	t_envlst	*envlst;
+
+	str = ft_strdup("echo hoi\n");
+	lst = NULL;
+	ast = NULL;
+	envlst = env_getlst();
+	cr_expect(lexer(&(str), &lst) == FUNCT_SUCCESS);
+	cr_expect(parser_start(&lst, &ast) == FUNCT_SUCCESS);
+	exec_start(ast, envlst, &exit_code, 0);
+	cr_expect(exit_code == 0);
+	cr_expect_stdout_eq_str("hoi\n");
+	parser_astdel(&ast);
+}
+
+Test(exec_echo, basic2, .init=redirect_all_stdout)
+{
+	t_tokenlst	*lst;
+	t_ast		*ast;
+	char 		*str;
+	int			exit_code;
+	t_envlst	*envlst;
+
+	str = ft_strdup("echo \"Hi, this is a string\"\n");
+	lst = NULL;
+	ast = NULL;
+	envlst = env_getlst();
+	cr_expect(lexer(&(str), &lst) == FUNCT_SUCCESS);
+	cr_expect(parser_start(&lst, &ast) == FUNCT_SUCCESS);
+	exec_start(ast, envlst, &exit_code, 0);
+	cr_expect(exit_code == 0);
+	cr_expect_stdout_eq_str("Hi, this is a string\n");
+	parser_astdel(&ast);
+} 
+
+/*
+**------------------------------------------------------------------------------
+*/
+
+TestSuite(exec_cmd);
+
+Test(exec_cmd, basic, .init=redirect_all_stdout)
+{
+	t_tokenlst	*lst;
+	t_ast		*ast;
+	char 		*str;
+	char 		*cwd;
+	int			exit_code;
+	t_envlst	*envlst;
+
+	str = ft_strdup("/bin/pwd\n");
+	cwd = getcwd(NULL, 0);
+	lst = NULL;
+	ast = NULL;
+	envlst = env_getlst();
+	cr_expect(lexer(&(str), &lst) == FUNCT_SUCCESS);
+	cr_expect(parser_start(&lst, &ast) == FUNCT_SUCCESS);
+	exec_start(ast, envlst, &exit_code, 0);
+	cr_expect(exit_code == 0);
+	ft_strdel(&str);
+	str = ft_strjoin(cwd, "\n");
+	cr_expect_stdout_eq_str(str);
+	ft_strdel(&str);
+	ft_strdel(&cwd);
+	parser_astdel(&ast);
+}
+
+Test(exec_cmd, basic2, .init=redirect_all_stdout)
+{
+	t_tokenlst	*lst;
+	t_ast		*ast;
+	char 		*str;
+	int			exit_code;
+	t_envlst	*envlst;
+
+	str = ft_strdup("/bin/echo hoi\n");
+	lst = NULL;
+	ast = NULL;
+	envlst = env_getlst();
+	cr_expect(lexer(&(str), &lst) == FUNCT_SUCCESS);
+	cr_expect(parser_start(&lst, &ast) == FUNCT_SUCCESS);
+	exec_start(ast, envlst, &exit_code, 0);
+	cr_expect(exit_code == 0);
+	cr_expect_stdout_eq_str("hoi\n");
+	parser_astdel(&ast);
+} 
+
+/*
+**------------------------------------------------------------------------------
+*/
+
+TestSuite(exec_find_bin);
+
+Test(exec_find_bin, basic)
+{
+	char 		*str;
+	char		*bin;
+	t_envlst	lst;
+
+	lst.var = "PATH=./";
+	lst.type = ENV_EXTERN;
+	lst.next = NULL;
+	str = ft_strdup("vsh");
+	bin = exec_find_binary(str, &lst);
+	cr_expect_str_eq(bin, ".//vsh");
+	ft_strdel(&bin);
+	ft_strdel(&str);
+}
+
+Test(exec_find_bin, basic2)
+{
+	char 		*str;
+	char		*bin;
+	t_envlst	lst;
+
+	lst.var = "PATH=/bin:./";
+	lst.type = ENV_EXTERN;
+	lst.next = NULL;
+	str = ft_strdup("ls");
+	bin = exec_find_binary(str, &lst);
+	cr_expect_str_eq(bin, "/bin/ls");
+	ft_strdel(&bin);
+	ft_strdel(&str);
+}
+
+Test(exec_find_bin, advanced)
+{
+	char 		*str;
+	char		*bin;
+	t_envlst	lst;
+
+	lst.var = "PATH=/Users/travis/.rvm/gems/ruby-2.4.2/bin:/Users/travis/.rvm/gems/ruby-2.4.2@global/bin:/Users/travis/.rvm/rubies/ruby-2.4.2/bin:/Users/travis/.rvm/bin:/Users/travis/bin:/Users/travis/.local/bin:/Users/travis/.nvm/versions/node/v6.11.4/bin:/bin:/usr/local/bin:/usr/bin:/usr/sbin:/sbin:/opt/X11/bin";
+	lst.type = ENV_EXTERN;
+	lst.next = NULL;
+	str = ft_strdup("ls");
+	bin = exec_find_binary(str, &lst);
+	cr_expect_str_eq(bin, "/bin/ls");
+	ft_strdel(&bin);
+	ft_strdel(&str);
+}
+
+Test(exec_find_bin, nopath)
+{
+	char 		*str;
+	char		*bin;
+	t_envlst	lst;
+
+	lst.var = "PATH=";
+	lst.type = ENV_EXTERN;
+	lst.next = NULL;
+	str = ft_strdup("ls");
+	bin = exec_find_binary(str, &lst);
+	cr_expect(bin == NULL);
+	ft_strdel(&bin);
+	ft_strdel(&str);
+}
+
+Test(exec_find_bin, execution, .init=redirect_all_stdout)
+{
+	t_tokenlst	*lst;
+	t_ast		*ast;
+	char 		*str;
+	int			exit_code;
+	t_envlst	*envlst;
+
+	envlst = env_getlst();
+	str = ft_strdup("ls vsh\n");
+	lst = NULL;
+	ast = NULL;
+	cr_expect(lexer(&(str), &lst) == FUNCT_SUCCESS);
+	cr_expect(parser_start(&lst, &ast) == FUNCT_SUCCESS);
+	exec_start(ast, envlst, &exit_code, 0);
+	cr_expect(exit_code == EXIT_SUCCESS);
+	cr_expect_stdout_eq_str("vsh\n");
+	parser_astdel(&ast);
+}
+
+Test(exec_find_bin, execnonexistent, .init=redirect_all_stdout)
+{
+	t_tokenlst	*lst;
+	t_ast		*ast;
+	char 		*str;
+	int			exit_code;
+	t_envlst	*envlst;
+
+	envlst = env_getlst();
+	str = ft_strdup("idontexist\n");
+	lst = NULL;
+	ast = NULL;
+	cr_expect(lexer(&(str), &lst) == FUNCT_SUCCESS);
+	cr_expect(parser_start(&lst, &ast) == FUNCT_SUCCESS);
+	exec_start(ast, envlst, &exit_code, 0);
+	cr_expect(exit_code == EXIT_NOTFOUND);
+	cr_expect_stdout_eq_str("idontexist: Command not found.\n");
+	parser_astdel(&ast);
+}

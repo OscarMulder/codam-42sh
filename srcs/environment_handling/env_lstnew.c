@@ -1,26 +1,33 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        ::::::::            */
-/*   parser_lexer.c                                     :+:    :+:            */
+/*   env_lstnew.c                                       :+:    :+:            */
 /*                                                     +:+                    */
 /*   By: jbrinksm <jbrinksm@student.codam.nl>         +#+                     */
 /*                                                   +#+                      */
-/*   Created: 2019/04/17 14:57:49 by jbrinksm       #+#    #+#                */
-/*   Updated: 2019/04/24 15:14:13 by jbrinksm      ########   odam.nl         */
+/*   Created: 2019/06/07 18:35:25 by jbrinksm       #+#    #+#                */
+/*   Updated: 2019/06/07 18:36:52 by jbrinksm      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
-/*
-**	IMPORTANT: add check for more than one ';' command seperator.
-**	It's not allowed.
-*/
-
 #include "vsh.h"
 
-int			parser_lexer(char *line, char ***commands)
+t_envlst	*env_lstnew(char *var, unsigned char type)
 {
-	*commands = parser_split_line_to_commands(line);
-	if (*commands == NULL)
-		return (FUNCT_FAILURE);
-	return (FUNCT_SUCCESS);
+	t_envlst	*new;
+
+	if (var == NULL)
+		return (NULL);
+	new = (t_envlst*)ft_memalloc(sizeof(t_envlst));
+	if (new == NULL)
+		return (NULL);
+	new->var = ft_strdup(var);
+	if (new->var == NULL)
+	{
+		free(new);
+		return (NULL);
+	}
+	new->type = type;
+	new->next = NULL;
+	return (new);
 }
