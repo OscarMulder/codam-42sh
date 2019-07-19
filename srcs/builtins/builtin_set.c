@@ -6,21 +6,11 @@
 /*   By: mavan-he <mavan-he@student.codam.nl>         +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2019/05/03 17:50:50 by mavan-he       #+#    #+#                */
-/*   Updated: 2019/05/03 18:02:32 by mavan-he      ########   odam.nl         */
+/*   Updated: 2019/06/01 10:50:10 by omulder       ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "vsh.h"
-
-/*
-** >>>>>>>>>>> WIP <<<<<<<<<<<<<
-** SET:
-**
-** set lists both internal and external environment
-**
-** TODO:
-** sorting both lists together ?
-*/
 
 int			builtin_set(char **args, char **var_intern, char **var_extern)
 {
@@ -31,17 +21,7 @@ int			builtin_set(char **args, char **var_intern, char **var_extern)
 		ft_putendl_fd("set: too many arguments", 2);
 		return (FUNCT_FAILURE);
 	}
-	i = 0;
-	while (var_extern[i])
-	{
-		ft_putendl(var_intern[i]);
-		i++;
-	}
-	i = 0;
-	while (var_intern[i])
-	{
-		ft_putendl(var_intern[i]);
-		i++;
-	}
+	ft_putstrarr(var_extern);
+	ft_putstrarr(var_intern);
 	return (FUNCT_SUCCESS);
 }
