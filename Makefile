@@ -56,8 +56,8 @@ $(NAME): $(OBJECTS) main.o
 	@$(CC) $(FLAGS) $^ $(COVERAGE) $(INCLUDES) $(LIB) -o $(NAME)
 	@echo "[ + ] vsh has been compiled"
 
-$(OBJECTS): $(SRCS) main.c
-	@$(CC) $(FLAGS) $^ $(COVERAGE) $(INCLUDES) -c
+%.o: %.c
+	@$(CC) -o $@ $(FLAGS) $^ $(COVERAGE) $(INCLUDES) -c
 
 $(LIBFT):
 	@$(MAKE) -C libft
