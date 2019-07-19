@@ -6,7 +6,7 @@
 /*   By: jbrinksm <jbrinksm@student.codam.nl>         +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2019/06/05 10:33:08 by jbrinksm       #+#    #+#                */
-/*   Updated: 2019/07/18 17:56:24 by mavan-he      ########   odam.nl         */
+/*   Updated: 2019/07/19 12:22:09 by mavan-he      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,7 +19,7 @@
 **	- OPTION -p
 **		- List var_extern except if args are given
 **	- OPTION -n
-**		- remove arg keys from var_extern to var_intern 
+**	- remove arg keys from var_extern to var_intern
 **		(or add new key when it does not exist)
 **	- NO ARGS:
 **		- List var_extern, including empty keys and value surrounded by quotes
@@ -27,46 +27,12 @@
 
 #include "vsh.h"
 
-void	builtin_export_print(t_envlst *envlst, int flags, int *exit_code)
-{
-	t_envlst	*probe;
-	char		*value;
-
-	probe = envlst;
-	while (probe != NULL)
-	{
-		#ifdef DEBUG
-		if (probe->var == NULL)
-		{
-			ft_putendl("builtin_export: error envlst->var == NULL !!!");
-			*exit_code = EXIT_FAILURE;
-			return ;
-		}
-		#endif
-		if (probe->type == ENV_EXTERN)
-		{
-			if (flags & EXP_FLAG_LP)
-				ft_putstr("declare -x ");
-			value =	ft_strchr(probe->var, '=');
-			if (value != NULL)
-			{
-				ft_putsubstr(probe->var, 0, value - probe->var + 1);
-				ft_putchar('"');
-				ft_putstr(value + 1);
-				ft_putstr("\"\n");
-			}
-			else
-				ft_putendl(probe->var);
-		}
-		probe = probe->next;
-	}
-}
-
-static void	builtin_export_arg(char *arg, t_envlst *envlst, int *exit_code, int type)
+static void	builtin_export_arg(char *arg, t_envlst *envlst,
+	int *exit_code, int type)
 {
 	t_envlst	*probe;
 	int			arglen;
-	
+
 	probe = envlst;
 	arglen = ft_strlen(arg);
 	if (ft_strchr(arg, '=') == NULL)
@@ -100,8 +66,10 @@ int			builtin_export_readflags(char *arg, int *flags)
 			*flags |= EXP_FLAG_LP;
 		else
 		{
-			ft_printf("vsh: export: -%c: invalid option\n", arg[i]);
-			ft_putendl("export: usage: export [-n] [name[=value] ...] or export -p");
+			ft_printf("vsh: export: -%c: invalid option\n",
+			arg[i]);
+			ft_putendl("export: usage: export");
+			ft_putendl(" [-n] [name[=value] ...] or export -p");
 			return (FUNCT_ERROR);
 		}
 		i++;
@@ -109,7 +77,7 @@ int			builtin_export_readflags(char *arg, int *flags)
 	return (FUNCT_SUCCESS);
 }
 
-int		builtin_export_getflags(char **args, int *flags, int *argc)
+int			builtin_export_getflags(char **args, int *flags, int *argc)
 {
 	int	i;
 
@@ -136,7 +104,8 @@ int		builtin_export_getflags(char **args, int *flags, int *argc)
 	return (FUNCT_SUCCESS);
 }
 
-void	builtin_export_args(char **args, t_envlst *envlst, int *exit_code, int flags)
+void		builtin_export_args(char **args, t_envlst *envlst,
+	int *exit_code, int flags)
 {
 	int i;
 	int	type;
@@ -158,7 +127,7 @@ void	builtin_export_args(char **args, t_envlst *envlst, int *exit_code, int flag
 	}
 }
 
-void	builtin_export(char **args, t_envlst *envlst, int *exit_code)
+void		builtin_export(char **args, t_envlst *envlst, int *exit_code)
 {
 	int	i;
 	int	flags;
@@ -172,7 +141,7 @@ void	builtin_export(char **args, t_envlst *envlst, int *exit_code)
 		return ;
 	*exit_code = EXIT_SUCCESS;
 	if (args[i] == NULL)
-		builtin_export_print(envlst, flags, exit_code);
+		builtin_export_print(envlst, flags);
 	else
 		builtin_export_args(&args[i], envlst, exit_code, flags);
 }

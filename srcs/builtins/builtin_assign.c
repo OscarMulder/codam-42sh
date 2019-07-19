@@ -6,7 +6,7 @@
 /*   By: jbrinksm <jbrinksm@student.codam.nl>         +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2019/06/05 09:09:49 by jbrinksm       #+#    #+#                */
-/*   Updated: 2019/07/18 17:53:08 by mavan-he      ########   odam.nl         */
+/*   Updated: 2019/07/19 12:30:21 by mavan-he      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -55,7 +55,8 @@ int		builtin_assign_addnew(t_envlst *envlst, char *var, int env_type)
 **	will be changed and it will remain ENV_EXTERN.
 */
 
-void	builtin_assign(char *arg, t_envlst *envlst, int *exit_code, int env_type)
+void	builtin_assign(char *arg, t_envlst *envlst,
+	int *exit_code, int env_type)
 {
 	char		*var;
 
