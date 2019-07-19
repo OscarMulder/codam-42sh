@@ -6,7 +6,7 @@
 /*   By: mavan-he <mavan-he@student.codam.nl>         +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2019/07/18 12:14:39 by mavan-he       #+#    #+#                */
-/*   Updated: 2019/07/18 12:40:00 by mavan-he      ########   odam.nl         */
+/*   Updated: 2019/07/19 20:55:27 by mavan-he      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -21,6 +21,7 @@ static void env_node_del(t_envlst **node)
 void        env_remove_tmp(t_envlst *env)
 {
     t_envlst *tmp;
+
     if (env == NULL || env->next == NULL)
         return ;
     if (env->next->type == ENV_TEMP)
