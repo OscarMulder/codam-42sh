@@ -6,7 +6,7 @@
 /*   By: omulder <omulder@student.codam.nl>           +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2019/05/29 17:52:22 by omulder        #+#    #+#                */
-/*   Updated: 2019/07/19 22:48:38 by jbrinksm      ########   odam.nl         */
+/*   Updated: 2019/07/20 16:43:53 by jbrinksm      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -63,139 +63,56 @@ static char	**create_args(t_ast *ast)
 static void	redir_input(t_ast *node, int *exit_code)
 {
 	(void)exit_code;
-	int		fd;
-	int		filefd;
+	char	*right_side;
+	int		left_side_fd;
+	int		right_side_fd;
 	int		pipefds[2];
 
-	if (node->type == SLESS)
+	left_side_fd = STDIN_FILENO;
+	right_side = node->sibling->value;
+	if (node->sibling->child != NULL)
 	{
-		fd = STDIN_FILENO;
-		/* If there is a IONUM on left side of redir */
-		if (node->sibling->child != NULL)
-		{
-			fd = ft_atoi(node->sibling->value);
-			filefd = open(node->sibling->child->value, O_RDONLY);
-		}
-		else
-			filefd = open(node->sibling->value, O_RDONLY);
-		dup2(filefd, fd);
-		close(filefd);
+		left_side_fd = ft_atoi(node->sibling->value);
+		right_side = node->sibling->child->value;
 	}
+	if (node->type == SLESS)
+		right_side_fd = open(right_side, O_RDONLY);
 	else if (node->type == DLESS)
 	{
-		fd = STDIN_FILENO;
 		pipe(pipefds);
-		/* If there is a IONUM on left side of redir */
-		if (node->sibling->child != NULL)
-		{
-			fd = ft_atoi(node->sibling->value);
-			write(pipefds[1], node->sibling->child->value, ft_strlen(node->sibling->child->value));
-		}
-		else
-			write(pipefds[1], node->sibling->value, ft_strlen(node->sibling->value));
+		write(pipefds[1], right_side, ft_strlen(right_side));
 		close(pipefds[1]);
-		filefd = pipefds[0];
-		dup2(filefd, fd);
-		close(filefd);
+		right_side_fd = pipefds[0];
 	}
 	else if (node->type == LESSAND)
-	{
-		fd = STDIN_FILENO;
-		/* If there is a IONUM on left side of redir */
-		if (node->sibling->child != NULL)
-		{
-			fd = ft_atoi(node->sibling->value);
-			filefd = ft_atoi(node->sibling->child->value);
-		}
-		else
-			filefd = ft_atoi(node->sibling->value);
-		dup2(filefd, fd);
-		close(filefd);
-	}
+		right_side_fd = ft_atoi(right_side);
+	dup2(right_side_fd, left_side_fd);
+	close(right_side_fd);
 }
 
 static void	redir_output(t_ast *node, int *exit_code)
 {
 	(void)exit_code;
-	int		fd;
-	int		filefd;
+	char	*right_side;
+	int		left_side_fd;
+	int		right_side_fd;
 
+	left_side_fd = STDOUT_FILENO;
+	right_side = node->sibling->value;
+	if (node->sibling->child != NULL)
+	{
+		left_side_fd = ft_atoi(node->sibling->value);
+		right_side = node->sibling->child->value;
+	}
 	if (node->type == SGREAT)
-	{
-		/* DOESNT CLEAN WHOLE FILE YET */
-
-		fd = STDOUT_FILENO;
-		/* If there is a IONUM on left side of redir */
-		if (node->sibling->child != NULL)
-		{
-			fd = ft_atoi(node->sibling->value);
-			filefd = open(node->sibling->child->value, O_WRONLY | O_CREAT);
-		}
-		else
-			filefd = open(node->sibling->value, O_WRONLY | O_CREAT);
-		dup2(filefd, fd);
-		close(filefd);
-	}
+		right_side_fd = open(right_side, O_WRONLY | O_CREAT | O_TRUNC);
 	else if (node->type == DGREAT)
-	{
-		fd = STDOUT_FILENO;
-		/* If there is a IONUM on left side of redir */
-		if (node->sibling->child != NULL)
-		{
-			fd = ft_atoi(node->sibling->value);
-			filefd = open(node->sibling->child->value, O_WRONLY | O_CREAT | O_APPEND);
-		}
-		else
-			filefd = open(node->sibling->value, O_WRONLY | O_CREAT | O_APPEND);
-		dup2(filefd, fd);
-		close(filefd);
-	}
+		right_side_fd = open(right_side, O_WRONLY | O_CREAT | O_APPEND);
 	else if (node->type == GREATAND)
-	{
-		fd = STDOUT_FILENO;
-		/* If there is a IONUM on left side of redir */
-		if (node->sibling->child != NULL)
-		{
-			fd = ft_atoi(node->sibling->value);
-			filefd = ft_atoi(node->sibling->child->value);
-		}
-		else
-			filefd = ft_atoi(node->sibling->value);
-		dup2(filefd, fd);
-		close(filefd);
-	}
+		right_side_fd = ft_atoi(right_side);
+	dup2(right_side_fd, left_side_fd);
+	close(right_side_fd);
 }
-
-
-
-// }
-// 	char	**args;
-// 	t_ast	*probe;
-// 	size_t	total_args;
-// 	size_t	i;
-
-// 	total_args = count_args(ast);
-// 	args = (char**)ft_memalloc(sizeof(char*) * (total_args + 1));
-// 	if (args == NULL)
-// 		return (NULL);
-// 	i = 0;
-// 	probe = ast;
-// 	while (i < total_args)
-// 	{
-// 		#ifdef DEBUG
-// 		if (probe->type != WORD)
-// 			ft_putendl("Found non-WORD item in child-flow of WORD's (aka I messed something up -Jorn)");
-// 		#endif
-// 		args[i] = ft_strdup(probe->value);
-// 		if (args[i] == NULL)
-// 		{
-// 			ft_strarrdel(&args);
-// 			return (NULL);
-// 		}
-// 		probe = probe->child;
-// 		i++;
-// 	}
-// }
 
 /*
 **	This will edit the I/O table based on the redirect given as input.
@@ -204,7 +121,6 @@ static void	redir_output(t_ast *node, int *exit_code)
 
 static void exec_redir(t_ast *node, t_envlst *envlst, int *exit_code)
 {
-	// t_ast	*probe;
 	t_ast	*left;
 
 	(void)exit_code;
@@ -296,26 +212,6 @@ static void	exec_complete_command(t_ast *node, t_envlst *envlst, int *exit_code,
 	dup2(fdstdout, STDOUT_FILENO);
 	dup2(fdstderr, STDERR_FILENO);
 }
-
-// 	t_ast	*probe;
-// 	char	*left;
-// 	char	*right;
-
-// 	(void)exit_code;
-// 	(void)envlst;
-
-// 	probe = node->sibling;
-// 	if (probe->type == WORD)
-// 		left = probe->value;
-// 	else
-// 		left = parser_return_token_str(probe->type);
-// 	probe = node->sibling->child;
-// 	if (probe->type == WORD)
-// 		right = probe->value;
-// 	else
-// 		right = parser_return_token_str(probe->type);
-// 	ft_printf("Redirect: %s > %s\n", left, right);
-// }
 
 /*
 **	General structure:
