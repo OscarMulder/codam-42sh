@@ -6,7 +6,7 @@
 /*   By: omulder <omulder@student.codam.nl>           +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2019/05/29 17:52:22 by omulder        #+#    #+#                */
-/*   Updated: 2019/07/20 11:19:06 by jbrinksm      ########   odam.nl         */
+/*   Updated: 2019/07/20 20:21:13 by jbrinksm      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -98,7 +98,6 @@ static void	exec_assign(t_ast *node, t_envlst *envlst, int *exit_code)
 void	exec_redirs_or_assigns(t_ast *node, t_envlst *envlst, int *exit_code)
 {
 	t_ast	*probe;
-	size_t	i;
 
 	probe = node;
 	while (probe != NULL)
@@ -108,7 +107,6 @@ void	exec_redirs_or_assigns(t_ast *node, t_envlst *envlst, int *exit_code)
 		else if (probe->type == ASSIGN)
 			exec_assign(probe, envlst, exit_code);
 		probe = probe->child;
-		i++;
 	}
 }
 
