@@ -6,35 +6,35 @@
 /*   By: mavan-he <mavan-he@student.codam.nl>         +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2019/07/20 18:18:07 by mavan-he       #+#    #+#                */
-/*   Updated: 2019/07/20 18:45:26 by mavan-he      ########   odam.nl         */
+/*   Updated: 2019/07/20 20:50:42 by mavan-he      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "vsh.h"
 
-static int		sort_by_value(t_envlst *env1, t_envlst *env2)
+static int		env_is_sorted(t_envlst *env1, t_envlst *env2)
 {
 	return (ft_strcmp(env1->var, env2->var) > 0);
 }
 
 static void		split_envlst(t_envlst **env, t_envlst **half)
 {
-	t_envlst *slow;
-	t_envlst *fast;
+	t_envlst *middle;
+	t_envlst *end;
 
-	slow = *env;
-	fast = (*env)->next;
-	while (fast)
+	middle = *env;
+	end = (*env)->next;
+	while (end != NULL)
 	{
-		fast = fast->next;
-		if (fast)
+		end = end->next;
+		if (end != NULL)
 		{
-			slow = slow->next;
-			fast = fast->next;
+			middle = middle->next;
+			end = end->next;
 		}
 	}
-	*half = slow->next;
-	slow->next = NULL;
+	*half = middle->next;
+	middle->next = NULL;
 }
 
 static t_envlst	*merge_lst(t_envlst *env, t_envlst *half,
@@ -73,5 +73,5 @@ void			env_lstsort(t_envlst **env, int (*sort)(t_envlst *, t_envlst *))
 
 void			env_sort(t_envlst *head)
 {
-	env_lstsort(&head->next, sort_by_value);
+	env_lstsort(&head->next, env_is_sorted);
 }
