@@ -6,7 +6,7 @@
 /*   By: omulder <omulder@student.codam.nl>           +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2019/05/29 17:52:22 by omulder        #+#    #+#                */
-/*   Updated: 2019/07/20 16:43:53 by jbrinksm      ########   odam.nl         */
+/*   Updated: 2019/07/20 16:53:22 by jbrinksm      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -129,15 +129,12 @@ static void exec_redir(t_ast *node, t_envlst *envlst, int *exit_code)
 	left = node->sibling;
 	if (left->type == IO_NUMBER || left->type == WORD)
 	{
-		if (node->type == SLESS || node->type == DLESS || node->type == LESSAND)
-		{
+		if (node->type == SLESS || node->type == DLESS
+		|| node->type == LESSAND)
 			redir_input(node, exit_code);
-		}
 		else if (node->type == SGREAT || node->type == DGREAT
-			|| node->type == GREATAND)
-		{
+		|| node->type == GREATAND)
 			redir_output(node, exit_code);
-		}
 	}
 }
 
