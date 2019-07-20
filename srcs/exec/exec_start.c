@@ -6,7 +6,7 @@
 /*   By: omulder <omulder@student.codam.nl>           +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2019/05/29 17:52:22 by omulder        #+#    #+#                */
-/*   Updated: 2019/07/20 20:21:13 by jbrinksm      ########   odam.nl         */
+/*   Updated: 2019/07/20 21:15:16 by jbrinksm      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -115,7 +115,7 @@ void	exec_redirs_or_assigns(t_ast *node, t_envlst *envlst, int *exit_code)
 **	execution. Wildcard, quote removal, variables.
 */
 
-static void	exec_complete_command(t_ast *node, t_envlst *envlst, int *exit_code, t_pipes pipes)
+void		exec_complete_command(t_ast *node, t_envlst *envlst, int *exit_code, t_pipes pipes)
 {
 	char	**command;
 
@@ -155,7 +155,7 @@ void		exec_start(t_ast *ast, t_envlst *envlst, int *exit_code, t_pipes pipes)
 		return ;
 	if (ast->type == PIPE)
 	{
-		redir_loop_pipes(ast, envlst, exit_code, pipes);
+		redir_run_pipesequence(ast, envlst, exit_code, pipes);
 		return ;
 	}
 

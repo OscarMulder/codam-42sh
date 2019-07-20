@@ -6,7 +6,7 @@
 /*   By: jbrinksm <jbrinksm@student.codam.nl>         +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2019/07/14 10:37:41 by jbrinksm       #+#    #+#                */
-/*   Updated: 2019/07/18 12:54:02 by tde-jong      ########   odam.nl         */
+/*   Updated: 2019/07/20 21:38:02 by jbrinksm      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -29,28 +29,47 @@ t_pipes	init_pipestruct(void)
 	return (pipes);
 }
 
-int		handle_pipe(t_pipes pipes)
+/*
+**	If the command which called handle_pipe
+**	is the first of the pipe-sequence (PIPE_START),
+**	It's output will be redirected to a pipe.
+**
+**	If the command which called handle_pipe
+**	is somewhere inbetween the end and start
+**	of the pipe sequence (PIPE EXTEND and with
+**	a parentpipe NOT == UNINIT) it will take input
+**	from the previous pipe, and send it's output into
+**	it's parents pipe.
+**
+**	If the command which called handle_pipe
+**	is at the end of the pipe-sequence (PIPE_EXTEND
+**	and it's parentpipe will be UNINIT because it has
+**	no parent) only the input will be taken from the
+**	previous pipe, and the output will be to STDOUT.
+*/
+
+int		redir_handle_pipe(t_pipes pipes, int *exit_code)
 {
-	if (pipes.currentpipe[0] != PIPE_UNINIT && pipes.currentpipe[1] != PIPE_UNINIT)
+	dup2(pipes.fds.stdin, STDIN_FILENO); //not sure if necessary
+	if (pipes.currentpipe[0] != PIPE_UNINIT
+	&& pipes.currentpipe[1] != PIPE_UNINIT)
 	{
 		if (pipes.pipeside == PIPE_START)
 		{	
-			// pipe output of this execution to pipe
 			if (dup2(pipes.currentpipe[1], STDOUT_FILENO) == -1)
-				ft_putendl("PIPE ERROR");
+				*exit_code = E_DUP;
 			close(pipes.currentpipe[1]);
 		}
 		else if (pipes.pipeside == PIPE_EXTEND)
 		{
-			// Take previous output as input
 			if (dup2(pipes.currentpipe[0], STDIN_FILENO) == -1)
-				ft_putendl("PIPE ERROR");
+				*exit_code = E_DUP;
 			close(pipes.currentpipe[0]);
-			if (pipes.parentpipe[0] != PIPE_UNINIT && pipes.parentpipe[1] != PIPE_UNINIT)
+			if (pipes.parentpipe[0] != PIPE_UNINIT
+			&& pipes.parentpipe[1] != PIPE_UNINIT)
 			{
-				// pipe output of this execution to parent pipe
 				if (dup2(pipes.parentpipe[1], STDOUT_FILENO) == -1)
-					ft_putendl("PIPE ERROR");
+					*exit_code = E_DUP;
 				close(pipes.parentpipe[1]);
 			}
 		}
@@ -58,14 +77,23 @@ int		handle_pipe(t_pipes pipes)
 	return (FUNCT_SUCCESS);
 }
 
-int		redir_loop_pipes(t_ast *pipenode, t_envlst *envlst, int *exit_code, t_pipes pipes)
+/*
+**	Recursively runs commands of the whole pipesequence, and
+**	redirects their input and output according to the pipesequence.
+**
+**	The child of the last pipenode in the pipesequence is the first
+**	command in the pipesequence PIPE_START. All other commands will
+**	be siblings of pipenodes, and will thus be PIPE_EXTEND.
+*/
+
+int		redir_run_pipesequence(t_ast *pipenode, t_envlst *envlst, int *exit_code,
+t_pipes pipes)
 {
-	char	**command;
 	t_pipes	childpipes;
 
 	if (pipe(pipes.currentpipe) == -1)
 	{
-		ft_putendl("ERROR PIPE redir_loop_pipes");
+		ft_putendl("vsh: unable to create pipe");
 		return (FUNCT_FAILURE);
 	}
 	if (pipenode->child != NULL && pipenode->child->type == PIPE)
@@ -73,28 +101,18 @@ int		redir_loop_pipes(t_ast *pipenode, t_envlst *envlst, int *exit_code, t_pipes
 		childpipes = pipes;
 		childpipes.parentpipe[0] = pipes.currentpipe[0];
 		childpipes.parentpipe[1] = pipes.currentpipe[1];
-		redir_loop_pipes(pipenode->child, envlst, exit_code, childpipes);
+		redir_run_pipesequence(pipenode->child, envlst, exit_code, childpipes);
 	}
 	if (pipenode->child != NULL && pipenode->child->type != PIPE)
 	{
-		// START THE PIPE (only runs once)
-		command = create_args(pipenode->child);
-		if (command != NULL)
-		{
-			pipes.pipeside = PIPE_START;
-			exec_cmd(command, envlst, exit_code, pipes);
-		}
+		pipes.pipeside = PIPE_START;
+		exec_complete_command(pipenode->child, envlst, exit_code, pipes);
 	}
 	close(pipes.currentpipe[1]);
 	if (pipenode->sibling != NULL)
 	{
-		// ADD ANY PIPE EXTENSION (runs always)
-		command = create_args(pipenode->sibling);
-		if (command != NULL)
-		{
-			pipes.pipeside = PIPE_EXTEND;
-			exec_cmd(command, envlst, exit_code, pipes);
-		}
+		pipes.pipeside = PIPE_EXTEND;
+		exec_complete_command(pipenode->sibling, envlst, exit_code, pipes);
 	}
 	close(pipes.currentpipe[0]);
 	return (FUNCT_SUCCESS);

@@ -6,7 +6,7 @@
 /*   By: omulder <omulder@student.codam.nl>           +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2019/04/10 20:29:42 by jbrinksm       #+#    #+#                */
-/*   Updated: 2019/07/20 11:17:51 by jbrinksm      ########   odam.nl         */
+/*   Updated: 2019/07/20 21:31:31 by jbrinksm      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -24,6 +24,7 @@
 # define PROG_FAILURE 1
 # define PROG_SUCCESS 0
 # define E_ALLOC 420
+# define E_DUP 100
 # define CTRLD -1
 # define CR 0
 
@@ -406,6 +407,7 @@ int				tools_update_quote_status(char *line, int cur_index,
 					char *quote);
 bool			tool_is_redirect_tk(t_tokens type);
 bool			tools_is_valid_identifier(char *str);
+bool			tools_is_builtin(char *exec_name);
 
 /*
 **----------------------------------execution-----------------------------------
@@ -413,6 +415,7 @@ bool			tools_is_valid_identifier(char *str);
 
 void			exec_start(t_ast *ast, t_envlst *envlst, int *exit_code, t_pipes pipes);
 void			exec_cmd(char **args, t_envlst *envlst, int *exit_code, t_pipes pipes);
+void			exec_complete_command(t_ast *node, t_envlst *envlst, int *exit_code, t_pipes pipes);
 bool			exec_builtin(char **args, t_envlst *envlst, int *exit_code, t_pipes pipes);
 bool			exec_external(char **args, t_envlst *envlst, int *exit_code, t_pipes pipes);
 char			*exec_find_binary(char *filename, t_envlst *envlst);
@@ -420,8 +423,8 @@ void			exec_quote_remove(t_ast *node);
 
 t_pipes			init_pipestruct(void);
 int				redir_pipe(t_ast *pipe_node);
-int				redir_loop_pipes(t_ast *pipenode, t_envlst *envlst, int *exit_code, t_pipes pipes);
-int				handle_pipe( t_pipes pipes);
+int				redir_run_pipesequence(t_ast *pipenode, t_envlst *envlst, int *exit_code, t_pipes pipes);
+int				redir_handle_pipe( t_pipes pipes, int *exit_code);
 void			exec_redirs_or_assigns(t_ast *node, t_envlst *envlst, int *exit_code);
 char			**create_args(t_ast *ast);
 /*

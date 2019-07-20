@@ -6,7 +6,7 @@
 #    By: jbrinksm <jbrinksm@student.codam.nl>         +#+                      #
 #                                                    +#+                       #
 #    Created: 2019/04/10 20:30:07 by jbrinksm       #+#    #+#                 #
-#    Updated: 2019/07/20 11:18:43 by jbrinksm      ########   odam.nl          #
+#    Updated: 2019/07/20 21:31:57 by jbrinksm      ########   odam.nl          #
 #                                                                              #
 # **************************************************************************** #
 
@@ -34,6 +34,7 @@ term_set_attributes term_reset_attributes term_free_struct \
 env_getvalue env_getlst env_lsttoarr env_lstnew env_lstaddback env_lstdel \
 env_remove_tmp \
 tools_is_char_escaped tool_is_redirect_tk tools_is_valid_identifier \
+tools_is_builtin \
 builtin_echo builtin_echo_set_flags builtin_exit builtin_assign \
 builtin_export builtin_export_print builtin_set builtin_unset \
 lexer lexer_utils lexer_debug lexer_evaluator lexer_scanner \
