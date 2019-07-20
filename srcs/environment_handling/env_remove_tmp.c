@@ -1,31 +1,36 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        ::::::::            */
-/*   parser_astdel.c                                    :+:    :+:            */
+/*   env_remove_tmp.c                                   :+:    :+:            */
 /*                                                     +:+                    */
 /*   By: mavan-he <mavan-he@student.codam.nl>         +#+                     */
 /*                                                   +#+                      */
-/*   Created: 2019/05/26 12:21:49 by mavan-he       #+#    #+#                */
-/*   Updated: 2019/07/16 14:47:15 by mavan-he      ########   odam.nl         */
+/*   Created: 2019/07/18 12:14:39 by mavan-he       #+#    #+#                */
+/*   Updated: 2019/07/19 20:55:27 by mavan-he      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "vsh.h"
 
-bool	parser_return_del(t_ast **ast)
+static void env_node_del(t_envlst **node)
 {
-	parser_astdel(ast);
-	return (false);
+	ft_strdel(&(*node)->var);
+	ft_memdel((void**)node);
 }
 
-void	parser_astdel(t_ast **ast)
+void        env_remove_tmp(t_envlst *env)
 {
-	if (ast == NULL || *ast == NULL)
-		return ;
-	if ((*ast)->child != NULL)
-		parser_astdel(&(*ast)->child);
-	if ((*ast)->sibling != NULL)
-		parser_astdel(&(*ast)->sibling);
-	ft_strdel(&(*ast)->value);
-	ft_memdel((void**)ast);
+    t_envlst *tmp;
+
+    if (env == NULL || env->next == NULL)
+        return ;
+    if (env->next->type == ENV_TEMP)
+    {
+        tmp = env->next;
+        env->next = env->next->next;
+        env_node_del(&tmp);
+        env_remove_tmp(env);
+    }
+    else
+        env_remove_tmp(env->next);
 }
