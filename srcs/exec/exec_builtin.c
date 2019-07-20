@@ -6,7 +6,7 @@
 /*   By: omulder <omulder@student.codam.nl>           +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2019/05/29 16:59:41 by omulder        #+#    #+#                */
-/*   Updated: 2019/07/16 22:37:35 by jbrinksm      ########   odam.nl         */
+/*   Updated: 2019/07/20 11:17:17 by jbrinksm      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -38,10 +38,13 @@ bool	exec_builtin(char **args, t_envlst *envlst, int *exit_code, t_pipes pipes)
 		dup2(pipes.fds.stdin, STDIN_FILENO);
 	}
 	else if (ft_strequ(args[0], "exit"))
-	{
-		handle_pipe(pipes);
 		builtin_exit(args, exit_code);
-	}
+	else if (ft_strequ(args[0], "export"))
+		builtin_export(args, envlst, exit_code);
+	else if (ft_strequ(args[0], "set"))
+		builtin_set(args, envlst, exit_code);
+	else if (ft_strequ(args[0], "unset"))
+		builtin_unset(args, envlst, exit_code);
 	else
 		return (false);
 	return (true);

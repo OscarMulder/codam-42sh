@@ -6,7 +6,7 @@
 /*   By: omulder <omulder@student.codam.nl>           +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2019/05/29 17:17:48 by omulder        #+#    #+#                */
-/*   Updated: 2019/07/16 22:36:20 by jbrinksm      ########   odam.nl         */
+/*   Updated: 2019/07/20 11:16:39 by jbrinksm      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -23,4 +23,5 @@ void		exec_cmd(char **args, t_envlst *envlst, int *exit_code, t_pipes pipes)
 		}
 	}
 	ft_strarrdel(&args);
+	env_remove_tmp(envlst);
 }

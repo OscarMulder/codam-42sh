@@ -6,7 +6,7 @@
 /*   By: omulder <omulder@student.codam.nl>           +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2019/04/10 20:29:42 by jbrinksm       #+#    #+#                */
-/*   Updated: 2019/07/18 12:48:28 by tde-jong      ########   odam.nl         */
+/*   Updated: 2019/07/20 11:17:51 by jbrinksm      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -45,6 +45,13 @@
 # define ESC				27
 
 /*
+**-----------------------------------export-------------------------------------
+*/
+
+# define EXP_FLAG_LN	(1 << 0)
+# define EXP_FLAG_LP	(1 << 1)
+
+/*
 **------------------------------------lexer-------------------------------------
 */
 
@@ -73,6 +80,7 @@
 # define ENV_EXTERN 2
 # define ENV_LOCAL 1
 # define ENV_TEMP 0
+# define ENV_HEAD -1
 
 /*
 **------------------------------------parser------------------------------------
@@ -262,6 +270,7 @@ t_envlst	*env_lstnew(char *var, unsigned char type);
 char		**env_lsttoarr(t_envlst *lst, unsigned char minimal_type);
 int			env_lstlen(t_envlst *lst, unsigned char minimal_type);
 void		env_lstdel(t_envlst **envlst);
+void   		 env_remove_tmp(t_envlst *env);
 
 /*
 **----------------------------------terminal------------------------------------
@@ -363,6 +372,12 @@ t_ast			*parser_new_node(t_tokenlst *token);
 bool			parser_command(t_tokenlst **token_lst, t_ast **ast);
 char			*parser_return_token_str(t_tokens type);
 void			parser_astdel(t_ast **ast);
+bool			parser_return_del(t_ast **ast);
+bool			parser_io_redirect(t_tokenlst **token_lst, t_ast **ast);
+bool			parser_cmd_param(t_tokenlst **token_lst, t_ast **cmd,
+				t_ast **last_cmd_arg, t_ast **last_prefix);
+bool			parser_cmd_suffix(t_tokenlst **token_lst, t_ast **cmd,
+				t_ast **last_cmd_arg, t_ast **last_prefix);
 
 /*
 **----------------------------------builtins------------------------------------
@@ -371,9 +386,15 @@ void			parser_astdel(t_ast **ast);
 void			builtin_exit(char **args, int *exit_code);
 void			builtin_echo(char **args, int *exit_code);
 char			builtin_echo_set_flags(char **args, int *arg_i);
-void			builtin_assign(char *arg, t_envlst *envlst, int *exit_code);
-int				builtin_assign_addexist(t_envlst *envlst, char *arg, char *var);
-int				builtin_assign_addnew(t_envlst *envlst, char *var);
+void			builtin_export(char **args, t_envlst *envlst, int *exit_code);
+void			builtin_export_var_to_type(char *varname, t_envlst *envlst, int *exit_code, int type);
+void			builtin_export_print(t_envlst *envlst, int flags);
+void			builtin_export_args(char **args, t_envlst *envlst, int *exit_code, int i);
+void			builtin_assign(char *arg, t_envlst *envlst, int *exit_code, int env_type);
+int				builtin_assign_addexist(t_envlst *envlst, char *arg, char *var, int env_type);
+int				builtin_assign_addnew(t_envlst *envlst, char *var, int env_type);
+void			builtin_set(char **args, t_envlst *envlst, int *exit_code);
+void			builtin_unset(char **args, t_envlst *envlst, int *exit_code);
 
 /*
 **---------------------------------tools----------------------------------------
@@ -384,6 +405,7 @@ bool			tools_is_char_escaped(char *line, int i);
 int				tools_update_quote_status(char *line, int cur_index,
 					char *quote);
 bool			tool_is_redirect_tk(t_tokens type);
+bool			tools_is_valid_identifier(char *str);
 
 /*
 **----------------------------------execution-----------------------------------

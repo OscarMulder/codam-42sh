@@ -6,35 +6,13 @@
 /*   By: mavan-he <mavan-he@student.codam.nl>         +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2019/05/25 19:13:12 by mavan-he       #+#    #+#                */
-/*   Updated: 2019/07/10 17:49:02 by mavan-he      ########   odam.nl         */
+/*   Updated: 2019/07/20 11:10:59 by jbrinksm      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "vsh.h"
 
-static bool	parser_io_redirect(t_tokenlst **token_lst, t_ast **ast)
-{
-	t_ast *redir;
-
-	redir = NULL;
-	if (TK_TYPE == IO_NUMBER && parser_add_astnode(token_lst, ast) == false)
-		return (false);
-	if (tool_is_redirect_tk(TK_TYPE) == false ||
-		parser_add_astnode(token_lst, ast) == false)
-		return (false);
-	if ((TK_TYPE != WORD && TK_TYPE != ASSIGN) ||
-		parser_add_astnode(token_lst, &redir) == false)
-		return (false);
-	if ((*ast)->child == NULL)
-		(*ast)->child = redir;
-	else
-		(*ast)->child->child = redir;
-	(*ast)->sibling = (*ast)->child;
-	(*ast)->child = NULL;
-	return (true);
-}
-
-static bool	parser_cmd_suffix(t_tokenlst **token_lst, t_ast **cmd,
+bool		parser_cmd_suffix(t_tokenlst **token_lst, t_ast **cmd,
 	t_ast **last_cmd_arg, t_ast **last_prefix)
 {
 	t_ast *new_ast;
@@ -55,17 +33,29 @@ static bool	parser_cmd_suffix(t_tokenlst **token_lst, t_ast **cmd,
 	}
 	else if (TK_TYPE == WORD || TK_TYPE == ASSIGN)
 	{
-		if (parser_add_astnode(token_lst, &new_ast) == false)
-			return (false);
-		if (*last_cmd_arg == NULL)
-			(*cmd)->child = new_ast;
-		else
-			(*last_cmd_arg)->child = new_ast;
-		*last_cmd_arg = new_ast;
-		if (parser_cmd_suffix(token_lst, cmd, last_cmd_arg, last_prefix)
+		if (parser_cmd_param(token_lst, cmd, last_cmd_arg, last_prefix)
 			== false)
 			return (false);
 	}
+	return (true);
+}
+
+bool		parser_cmd_param(t_tokenlst **token_lst, t_ast **cmd,
+	t_ast **last_cmd_arg, t_ast **last_prefix)
+{
+	t_ast *new_ast;
+
+	new_ast = NULL;
+	if (parser_add_astnode(token_lst, &new_ast) == false)
+		return (false);
+	if (*last_cmd_arg == NULL)
+		(*cmd)->child = new_ast;
+	else
+		(*last_cmd_arg)->child = new_ast;
+	*last_cmd_arg = new_ast;
+	if (parser_cmd_suffix(token_lst, cmd, last_cmd_arg, last_prefix)
+		== false)
+		return (false);
 	return (true);
 }
 
@@ -81,10 +71,10 @@ static bool	parser_cmd_prefix(t_tokenlst **token_lst, t_ast **prefix,
 		if (TK_TYPE == ASSIGN)
 		{
 			if (parser_add_astnode(token_lst, &new_prefix) == false)
-				return (false);
+				return (parser_return_del(prefix));
 		}
 		else if (parser_io_redirect(token_lst, &new_prefix) == false)
-			return (false);
+			return (parser_return_del(prefix));
 		if (*prefix == NULL)
 			*prefix = new_prefix;
 		else
@@ -130,10 +120,10 @@ bool		parser_command(t_tokenlst **token_lst, t_ast **cmd)
 		if (parser_cmd_prefix(token_lst, &prefix, &last_prefix) == false)
 			return (false);
 		if (parser_cmd_word(token_lst, cmd, &prefix) == false)
-			return (false);
+			return (parser_return_del(cmd));
 		if (parser_cmd_suffix(token_lst, cmd, &last_cmd_arg, &last_prefix)
 			== false)
-			return (false);
+			return (parser_return_del(cmd));
 		return (true);
 	}
 	else
