@@ -6,7 +6,7 @@
 /*   By: omulder <omulder@student.codam.nl>           +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2019/05/29 17:52:22 by omulder        #+#    #+#                */
-/*   Updated: 2019/07/20 16:53:22 by jbrinksm      ########   odam.nl         */
+/*   Updated: 2019/07/20 17:14:04 by jbrinksm      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -84,7 +84,7 @@ static void	redir_input(t_ast *node, int *exit_code)
 		close(pipefds[1]);
 		right_side_fd = pipefds[0];
 	}
-	else if (node->type == LESSAND)
+	else
 		right_side_fd = ft_atoi(right_side);
 	dup2(right_side_fd, left_side_fd);
 	close(right_side_fd);
@@ -108,7 +108,7 @@ static void	redir_output(t_ast *node, int *exit_code)
 		right_side_fd = open(right_side, O_WRONLY | O_CREAT | O_TRUNC);
 	else if (node->type == DGREAT)
 		right_side_fd = open(right_side, O_WRONLY | O_CREAT | O_APPEND);
-	else if (node->type == GREATAND)
+	else
 		right_side_fd = ft_atoi(right_side);
 	dup2(right_side_fd, left_side_fd);
 	close(right_side_fd);
