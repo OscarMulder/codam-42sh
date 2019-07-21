@@ -6,11 +6,16 @@
 /*   By: jbrinksm <jbrinksm@student.codam.nl>         +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2019/07/14 01:05:00 by jbrinksm       #+#    #+#                */
-/*   Updated: 2019/07/14 01:18:30 by jbrinksm      ########   odam.nl         */
+/*   Updated: 2019/07/21 14:45:29 by jbrinksm      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "vsh.h"
+
+/*
+**	Goal of the function is to take the expansion sequence and
+**	replace it with the value of the parameter.
+*/
 
 static int	repl_regular_var(t_ast *item, char *val, int start, int len)
 {
@@ -30,9 +35,13 @@ static int	repl_regular_var(t_ast *item, char *val, int start, int len)
 	ft_strcat(new, &item->value[start + len]);
 	ft_strdel(&item->value);
 	item->value = new;
-	ft_printf("RESULT regular: %s\n", new);
 	return (FUNCT_SUCCESS);
 }
+
+/*
+**	Goal of this function is to extract the identifier
+**	and get its value (or nothing if it doesn't exist)
+*/
 
 int			exec_handle_regular_var(t_ast *item, int *i, t_envlst *envlst)
 {
@@ -41,11 +50,11 @@ int			exec_handle_regular_var(t_ast *item, int *i, t_envlst *envlst)
 	char	*identifier;
 	char	*val;
 
+	if (item == NULL || item->value == NULL)
+		return (FUNCT_FAILURE);
 	i_offset = *i;
 	str = item->value;
-	/* skip '$' */
-	(*i)++;
-
+	(*i)++; // skip '$'
 	while (tools_isidentifierchar(str[*i]) == true)
 		(*i)++;
 	identifier = ft_strndup(&str[i_offset + 1], *i - (i_offset + 1));
@@ -55,11 +64,8 @@ int			exec_handle_regular_var(t_ast *item, int *i, t_envlst *envlst)
 	ft_strdel(&identifier);
 	if (repl_regular_var(item, val, i_offset, *i - i_offset) != FUNCT_SUCCESS)
 		return (FUNCT_FAILURE);
-
-	/* offsets parent 'i' with length if val, so it doesn't check
-	it for '$' later */
-	if (val != NULL)
-		i_offset += ft_strlen(val);
-	*i = i_offset; //is this correct?
+	if (val != NULL)				// puts 'i' behind the var
+		i_offset += ft_strlen(val);	// we just placed in the string
+	*i = i_offset;
 	return (FUNCT_SUCCESS);
 }

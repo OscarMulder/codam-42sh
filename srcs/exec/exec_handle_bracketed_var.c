@@ -6,15 +6,15 @@
 /*   By: jbrinksm <jbrinksm@student.codam.nl>         +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2019/07/14 01:02:46 by jbrinksm       #+#    #+#                */
-/*   Updated: 2019/07/14 01:18:18 by jbrinksm      ########   odam.nl         */
+/*   Updated: 2019/07/21 14:28:54 by jbrinksm      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "vsh.h"
 
 /*
-**	Right now this function doesn't deal with brackets properly
-**	because it does not care if it find a closing bracket.
+**	Goal of the function is to take the expansion sequence and
+**	replace it with the value of the parameter.
 */
 
 static int	repl_bracketed_var(t_ast *item, char *val, int start, int len)
@@ -32,19 +32,23 @@ static int	repl_bracketed_var(t_ast *item, char *val, int start, int len)
 	ft_strncpy(new, item->value, start);
 	if (val != NULL)
 		ft_strcat(new, val);
-
-	/* If there is a closing bracket we will skip it when
-	copying the right side of the parameter var we just inserted */
 	if (item->value[start + len] == '}')
 		ft_strcat(new, &item->value[start + len + 1]);
 	else
 		ft_strcat(new, &item->value[start + len]);
-
 	ft_strdel(&item->value);
 	item->value = new;
-	ft_printf("RESULT bracketed: %s\n", new);
 	return (FUNCT_SUCCESS);
 }
+
+/*
+**	Right now this function doesn't deal with brackets properly
+**	because it does not care if it find a closing bracket or not.
+**	It just stops when it finds a non-identifier char.
+**
+**	Goal of this function is to extract the identifier
+**	and get its value (or nothing if it doesn't exist)
+*/
 
 int			exec_handle_bracketed_var(t_ast *item, int *i, t_envlst *envlst)
 {
@@ -53,11 +57,11 @@ int			exec_handle_bracketed_var(t_ast *item, int *i, t_envlst *envlst)
 	char	*identifier;
 	char	*val;
 
+	if (item == NULL || item->value == NULL)
+		return (FUNCT_FAILURE);
 	i_offset = *i;
 	str = item->value;
-	/* skip '$' and '{' */
-	*i += 2;
-
+	*i += 2; // skip '$' and '{'
 	while (tools_isidentifierchar(str[*i]) == true)
 		(*i)++;
 	identifier = ft_strndup(&str[i_offset + 2], *i - (i_offset + 2));
@@ -67,11 +71,8 @@ int			exec_handle_bracketed_var(t_ast *item, int *i, t_envlst *envlst)
 	ft_strdel(&identifier);
 	if (repl_bracketed_var(item, val, i_offset, *i - i_offset) != FUNCT_SUCCESS)
 		return (FUNCT_FAILURE);
-
-	/* offsets parent 'i' with length if val, so it doesn't check
-	it for '$' later */
-	if (val != NULL)
-		i_offset += ft_strlen(val);
-	*i = i_offset; //is this correct?
+	if (val != NULL) 				// puts 'i' behind the var
+		i_offset += ft_strlen(val);	// we just placed in the string
+	*i = i_offset;
 	return (FUNCT_SUCCESS);
 }
