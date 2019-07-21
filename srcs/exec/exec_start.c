@@ -6,7 +6,7 @@
 /*   By: omulder <omulder@student.codam.nl>           +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2019/05/29 17:52:22 by omulder        #+#    #+#                */
-/*   Updated: 2019/07/21 15:16:08 by jbrinksm      ########   odam.nl         */
+/*   Updated: 2019/07/21 21:21:38 by jbrinksm      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -77,7 +77,7 @@ static void	exec_redirs_or_assigns(t_ast *node, t_envlst *envlst, int *exit_code
 	while (probe != NULL)
 	{
 		if (tool_is_redirect_tk(node->type) == true)
-			redir(probe, envlst, exit_code);
+			redir(probe, exit_code);
 		else if (probe->type == ASSIGN)
 			exec_assign(probe, envlst, exit_code);
 		probe = probe->child;

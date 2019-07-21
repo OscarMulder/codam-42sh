@@ -6,7 +6,7 @@
 /*   By: omulder <omulder@student.codam.nl>           +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2019/04/10 20:29:42 by jbrinksm       #+#    #+#                */
-/*   Updated: 2019/07/21 17:34:53 by jbrinksm      ########   odam.nl         */
+/*   Updated: 2019/07/21 22:16:35 by jbrinksm      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -26,6 +26,9 @@
 # define E_ALLOC 420
 # define E_DUP 100
 # define E_OPEN 101
+# define E_BADFD 102
+# define E_CLOSE 103
+# define E_AMBRED 104
 # define CTRLD -1
 # define CR 0
 
@@ -379,6 +382,8 @@ int				tools_update_quote_status(char *line, int cur_index,
 					char *quote);
 bool			tool_is_redirect_tk(t_tokens type);
 bool			tools_is_valid_identifier(char *str);
+bool			tools_is_fdnumstr(char *str);
+bool			tools_is_open_fd(int fd);
 
 /*
 **----------------------------------execution-----------------------------------
