@@ -6,7 +6,7 @@
 /*   By: omulder <omulder@student.codam.nl>           +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2019/05/29 17:52:22 by omulder        #+#    #+#                */
-/*   Updated: 2019/07/18 12:26:35 by mavan-he      ########   odam.nl         */
+/*   Updated: 2019/07/21 17:59:52 by mavan-he      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -42,10 +42,6 @@ static char	**create_args(t_ast *ast)
 	probe = ast;
 	while (i < total_args)
 	{
-		#ifdef DEBUG
-		if (probe->type != WORD)
-			ft_putendl("Found non-WORD item in child-flow of WORD's (aka I messed something up -Jorn)");
-		#endif
 		args[i] = ft_strdup(probe->value);
 		if (args[i] == NULL)
 		{
@@ -57,9 +53,6 @@ static char	**create_args(t_ast *ast)
 	}
 	return (args);
 }
-
-
-
 
 /*
 **	This will edit the I/O table based on the redirect given as input.
