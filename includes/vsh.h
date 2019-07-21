@@ -6,7 +6,7 @@
 /*   By: omulder <omulder@student.codam.nl>           +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2019/04/10 20:29:42 by jbrinksm       #+#    #+#                */
-/*   Updated: 2019/07/21 15:10:30 by jbrinksm      ########   odam.nl         */
+/*   Updated: 2019/07/21 17:34:53 by jbrinksm      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -24,6 +24,8 @@
 # define PROG_FAILURE 1
 # define PROG_SUCCESS 0
 # define E_ALLOC 420
+# define E_DUP 100
+# define E_OPEN 101
 # define CTRLD -1
 # define CR 0
 
@@ -393,9 +395,9 @@ void	exec_quote_remove(t_ast *node);
 **------------------------------------redir-------------------------------------
 */
 
-void		redir(t_ast *node, t_envlst *envlst, int *exit_code);
-void		redir_output(t_ast *node, int *exit_code);
-void		redir_input(t_ast *node, int *exit_code);
+int			redir(t_ast *node, int *exit_code);
+int			redir_output(t_ast *node, int *exit_code);
+int			redir_input(t_ast *node, int *exit_code);
 
 /*
 **----------------------------------debugging-----------------------------------
