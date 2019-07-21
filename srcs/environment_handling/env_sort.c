@@ -6,7 +6,7 @@
 /*   By: mavan-he <mavan-he@student.codam.nl>         +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2019/07/20 18:18:07 by mavan-he       #+#    #+#                */
-/*   Updated: 2019/07/20 20:50:42 by mavan-he      ########   odam.nl         */
+/*   Updated: 2019/07/21 15:25:33 by mavan-he      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,22 +19,22 @@ static int		env_is_sorted(t_envlst *env1, t_envlst *env2)
 
 static void		split_envlst(t_envlst **env, t_envlst **half)
 {
-	t_envlst *middle;
-	t_envlst *end;
+	t_envlst *probe_to_middle;
+	t_envlst *probe_to_end;
 
-	middle = *env;
-	end = (*env)->next;
-	while (end != NULL)
+	probe_to_middle = *env;
+	probe_to_end = (*env)->next;
+	while (probe_to_end != NULL)
 	{
-		end = end->next;
-		if (end != NULL)
+		probe_to_end = probe_to_end->next;
+		if (probe_to_end != NULL)
 		{
-			middle = middle->next;
-			end = end->next;
+			probe_to_middle = probe_to_middle->next;
+			probe_to_end = probe_to_end->next;
 		}
 	}
-	*half = middle->next;
-	middle->next = NULL;
+	*half = probe_to_middle->next;
+	probe_to_middle->next = NULL;
 }
 
 static t_envlst	*merge_lst(t_envlst *env, t_envlst *half,
