@@ -6,13 +6,12 @@
 /*   By: omulder <omulder@student.codam.nl>           +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2019/05/29 17:52:22 by omulder        #+#    #+#                */
-/*   Updated: 2019/07/20 17:14:04 by jbrinksm      ########   odam.nl         */
+/*   Updated: 2019/07/21 15:16:08 by jbrinksm      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "vsh.h"
-#include "unistd.h"
-#include "fcntl.h"
+#include <unistd.h>
 
 static size_t	count_args(t_ast *ast)
 {
@@ -60,84 +59,6 @@ static char	**create_args(t_ast *ast)
 	return (args);
 }
 
-static void	redir_input(t_ast *node, int *exit_code)
-{
-	(void)exit_code;
-	char	*right_side;
-	int		left_side_fd;
-	int		right_side_fd;
-	int		pipefds[2];
-
-	left_side_fd = STDIN_FILENO;
-	right_side = node->sibling->value;
-	if (node->sibling->child != NULL)
-	{
-		left_side_fd = ft_atoi(node->sibling->value);
-		right_side = node->sibling->child->value;
-	}
-	if (node->type == SLESS)
-		right_side_fd = open(right_side, O_RDONLY);
-	else if (node->type == DLESS)
-	{
-		pipe(pipefds);
-		write(pipefds[1], right_side, ft_strlen(right_side));
-		close(pipefds[1]);
-		right_side_fd = pipefds[0];
-	}
-	else
-		right_side_fd = ft_atoi(right_side);
-	dup2(right_side_fd, left_side_fd);
-	close(right_side_fd);
-}
-
-static void	redir_output(t_ast *node, int *exit_code)
-{
-	(void)exit_code;
-	char	*right_side;
-	int		left_side_fd;
-	int		right_side_fd;
-
-	left_side_fd = STDOUT_FILENO;
-	right_side = node->sibling->value;
-	if (node->sibling->child != NULL)
-	{
-		left_side_fd = ft_atoi(node->sibling->value);
-		right_side = node->sibling->child->value;
-	}
-	if (node->type == SGREAT)
-		right_side_fd = open(right_side, O_WRONLY | O_CREAT | O_TRUNC);
-	else if (node->type == DGREAT)
-		right_side_fd = open(right_side, O_WRONLY | O_CREAT | O_APPEND);
-	else
-		right_side_fd = ft_atoi(right_side);
-	dup2(right_side_fd, left_side_fd);
-	close(right_side_fd);
-}
-
-/*
-**	This will edit the I/O table based on the redirect given as input.
-**	DOESNT WORK YET
-*/
-
-static void exec_redir(t_ast *node, t_envlst *envlst, int *exit_code)
-{
-	t_ast	*left;
-
-	(void)exit_code;
-	(void)envlst;
-
-	left = node->sibling;
-	if (left->type == IO_NUMBER || left->type == WORD)
-	{
-		if (node->type == SLESS || node->type == DLESS
-		|| node->type == LESSAND)
-			redir_input(node, exit_code);
-		else if (node->type == SGREAT || node->type == DGREAT
-		|| node->type == GREATAND)
-			redir_output(node, exit_code);
-	}
-}
-
 static void	exec_assign(t_ast *node, t_envlst *envlst, int *exit_code)
 {
 	builtin_assign(node->value, envlst, exit_code, ENV_TEMP);
@@ -156,7 +77,7 @@ static void	exec_redirs_or_assigns(t_ast *node, t_envlst *envlst, int *exit_code
 	while (probe != NULL)
 	{
 		if (tool_is_redirect_tk(node->type) == true)
-			exec_redir(probe, envlst, exit_code);
+			redir(probe, envlst, exit_code);
 		else if (probe->type == ASSIGN)
 			exec_assign(probe, envlst, exit_code);
 		probe = probe->child;
