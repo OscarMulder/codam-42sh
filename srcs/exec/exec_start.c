@@ -6,7 +6,7 @@
 /*   By: omulder <omulder@student.codam.nl>           +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2019/05/29 17:52:22 by omulder        #+#    #+#                */
-/*   Updated: 2019/07/22 17:06:16 by jbrinksm      ########   odam.nl         */
+/*   Updated: 2019/07/22 17:29:42 by jbrinksm      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -55,17 +55,12 @@ static char	**create_args(t_ast *ast)
 	return (args);
 }
 
-static void	exec_assign(t_ast *node, t_envlst *envlst, int *exit_code)
-{
-	builtin_assign(node->value, envlst, exit_code, ENV_TEMP);
-}
-
 /*
 **	This is used to handle all the redirects and/or assignments in a
 **	complete_command
 */
 
-static void	exec_redirs_or_assigns(t_ast *node, t_envlst *envlst, int *exit_code)
+static void	exec_redirs_or_assigns(t_ast *node, t_envlst *envlst, int env_type, int *exit_code)
 {
 	t_ast	*probe;
 
@@ -75,7 +70,7 @@ static void	exec_redirs_or_assigns(t_ast *node, t_envlst *envlst, int *exit_code
 		if (tool_is_redirect_tk(node->type) == true)
 			redir(probe, exit_code);
 		else if (probe->type == ASSIGN)
-			exec_assign(probe, envlst, exit_code);
+			builtin_assign(node->value, envlst, exit_code, env_type);
 		probe = probe->child;
 	}
 }
@@ -106,7 +101,7 @@ static void	exec_complete_command(t_ast *node, t_envlst *envlst, int *exit_code,
 	if (node->type == WORD)
 	{
 		if (node->sibling)
-			exec_redirs_or_assigns(node->sibling, envlst, exit_code);
+			exec_redirs_or_assigns(node->sibling, envlst, ENV_TEMP, exit_code);
 
 		/* Remove useless quotes */
 		/* Remove useless escape chars */
@@ -120,7 +115,7 @@ static void	exec_complete_command(t_ast *node, t_envlst *envlst, int *exit_code,
 
 	/* There is no cmd_word in complete_command */
 	else if (node->type == ASSIGN || tool_is_redirect_tk(node->type) == true)
-		exec_redirs_or_assigns(node, envlst, exit_code);
+		exec_redirs_or_assigns(node, envlst, ENV_LOCAL, exit_code);
 	
 	dup2(fdstdin, STDIN_FILENO);
 	dup2(fdstdout, STDOUT_FILENO);
