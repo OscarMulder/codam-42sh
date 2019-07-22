@@ -6,7 +6,7 @@
 /*   By: omulder <omulder@student.codam.nl>           +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2019/04/10 20:29:42 by jbrinksm       #+#    #+#                */
-/*   Updated: 2019/07/21 17:55:53 by mavan-he      ########   odam.nl         */
+/*   Updated: 2019/07/22 10:56:14 by mavan-he      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -79,7 +79,6 @@
 
 
 # define ENV_MASK 0xF8
-# define ENV_MASK_SPACE 0xF7
 # define ENV_WHITESPACE (1 << 3)
 # define ENV_EXTERN (1 << 2)
 # define ENV_LOCAL (1 << 1)

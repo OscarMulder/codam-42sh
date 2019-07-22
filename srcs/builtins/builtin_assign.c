@@ -6,7 +6,7 @@
 /*   By: jbrinksm <jbrinksm@student.codam.nl>         +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2019/06/05 09:09:49 by jbrinksm       #+#    #+#                */
-/*   Updated: 2019/07/21 18:07:26 by mavan-he      ########   odam.nl         */
+/*   Updated: 2019/07/22 10:51:08 by mavan-he      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -69,7 +69,7 @@ void		builtin_assign(char *arg, t_envlst *envlst,
 	if (tool_check_for_whitespace(arg) == true)
 		env_type |= ENV_WHITESPACE;
 	else
-		env_type &= ENV_MASK_SPACE;
+		env_type &= ~ENV_WHITESPACE;
 	*exit_code = EXIT_SUCCESS;
 	if (builtin_assign_addexist(envlst, arg, var, env_type) != FUNCT_SUCCESS)
 	{
