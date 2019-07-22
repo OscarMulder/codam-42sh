@@ -12,6 +12,19 @@
 
 #include "vsh.h"
 
+static int	env_add_to_list(char *str, t_envlst **new)
+{
+	int type;
+
+	type = ENV_EXTERN;
+	if (tool_check_for_whitespace(str) == true)
+		type |= ENV_WHITESPACE;
+	*new = env_lstnew(str, type);
+	if (*new == NULL)
+		return (FUNCT_ERROR);
+	return (FUNCT_SUCCESS);
+}
+
 t_envlst	*env_getlst(void)
 {
 	t_envlst	*envlst;
@@ -20,13 +33,12 @@ t_envlst	*env_getlst(void)
 	int			i;
 
 	i = 0;
-	envlst = env_lstnew("HEAD", ENV_HEAD);
+	envlst = env_lstnew("*HEAD*", ENV_HEAD);
 	if (envlst == NULL)
 		return (NULL);
 	while (environ[i] != NULL)
 	{
-		new = env_lstnew(environ[i], ENV_EXTERN);
-		if (new == NULL)
+		if (env_add_to_list(environ[i], &new) == FUNCT_FAILURE)
 		{
 			env_lstdel(&envlst);
 			return (NULL);

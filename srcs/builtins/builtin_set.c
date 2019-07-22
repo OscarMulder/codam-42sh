@@ -14,10 +14,21 @@
 
 static void	builtin_set_print(t_envlst *envlst)
 {
+	char	*str_equal;
+
 	while (envlst != NULL)
 	{
-		if (envlst->type == ENV_EXTERN || envlst->type == ENV_LOCAL)
-			ft_putendl(envlst->var);
+		if (envlst->type & ENV_EXTERN || envlst->type & ENV_LOCAL)
+		{
+			if (envlst->type & ENV_WHITESPACE)
+			{
+				str_equal = ft_strchr(envlst->var, '=');
+				ft_printf("%.*s\'%s\'\n", str_equal - envlst->var + 1,
+				envlst->var, str_equal + 1);
+			}
+			else
+				ft_putendl(envlst->var);
+		}
 		envlst = envlst->next;
 	}
 }
