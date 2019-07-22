@@ -6,7 +6,7 @@
 /*   By: omulder <omulder@student.codam.nl>           +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2019/04/10 20:29:42 by jbrinksm       #+#    #+#                */
-/*   Updated: 2019/07/21 22:16:35 by jbrinksm      ########   odam.nl         */
+/*   Updated: 2019/07/22 09:55:32 by jbrinksm      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -77,6 +77,12 @@
 # define EXEC_AND_IF (1 << 2)
 # define EXEC_OR_IF (1 << 3)
 # define EXEC_SEMICOL (1 << 4)
+
+/*
+**--------------------------------redirections----------------------------------
+*/
+
+# define FD_UNINIT -1
 
 /*
 **---------------------------------environment----------------------------------
@@ -383,7 +389,6 @@ int				tools_update_quote_status(char *line, int cur_index,
 bool			tool_is_redirect_tk(t_tokens type);
 bool			tools_is_valid_identifier(char *str);
 bool			tools_is_fdnumstr(char *str);
-bool			tools_is_open_fd(int fd);
 
 /*
 **----------------------------------execution-----------------------------------
@@ -403,6 +408,12 @@ void	exec_quote_remove(t_ast *node);
 int			redir(t_ast *node, int *exit_code);
 int			redir_output(t_ast *node, int *exit_code);
 int			redir_input(t_ast *node, int *exit_code);
+bool		redir_is_open_fd(int fd);
+int			redir_input_closefd(int left_side_fd, int *exit_code);
+void		redir_change_if_leftside(t_ast *node, int *left_side_fd,
+char **right_side);
+int			redir_create_heredoc_fd(char *right_side, int *exit_code);
+
 
 /*
 **----------------------------------debugging-----------------------------------
