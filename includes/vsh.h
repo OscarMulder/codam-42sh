@@ -6,7 +6,7 @@
 /*   By: omulder <omulder@student.codam.nl>           +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2019/04/10 20:29:42 by jbrinksm       #+#    #+#                */
-/*   Updated: 2019/07/22 10:27:04 by jbrinksm      ########   odam.nl         */
+/*   Updated: 2019/07/22 16:34:43 by jbrinksm      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -25,11 +25,15 @@
 # define PROG_SUCCESS 0
 # define E_ALLOC 420
 # define E_DUP 100
+# define E_OPEN 101
+# define E_BADFD 102
+# define E_CLOSE 103
+# define E_BADRED 104
 # define CTRLD -1
 # define CR 0
 
 /*
-**=================================exit codes====================================
+**=================================exit codes===================================
 */
 
 # define EXIT_NOTFOUND 127
@@ -413,7 +417,7 @@ bool			tools_is_builtin(char *exec_name);
 **----------------------------------execution-----------------------------------
 */
 
-void			exec_start(t_ast *ast, t_envlst *envlst, int *exit_code, t_pipes pipes);
+int				exec_start(t_ast *ast, t_envlst *envlst, int *exit_code, t_pipes pipes);
 void			exec_cmd(char **args, t_envlst *envlst, int *exit_code, t_pipes pipes);
 int				exec_complete_command(t_ast *node, t_envlst *envlst, int *exit_code, t_pipes pipes);
 bool			exec_builtin(char **args, t_envlst *envlst, int *exit_code, t_pipes pipes);
@@ -427,6 +431,13 @@ int				redir_run_pipesequence(t_ast *pipenode, t_envlst *envlst, int *exit_code,
 int				redir_handle_pipe( t_pipes pipes, int *exit_code);
 void			exec_redirs_or_assigns(t_ast *node, t_envlst *envlst, int *exit_code);
 char			**create_args(t_ast *ast);
+
+/*
+**--------------------------------error_handling--------------------------------
+*/
+
+int				error_return(int ret, int error, int *exit_code, char *opt_str);
+
 /*
 **----------------------------------debugging-----------------------------------
 */

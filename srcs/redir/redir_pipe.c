@@ -6,7 +6,7 @@
 /*   By: jbrinksm <jbrinksm@student.codam.nl>         +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2019/07/14 10:37:41 by jbrinksm       #+#    #+#                */
-/*   Updated: 2019/07/22 10:26:40 by jbrinksm      ########   odam.nl         */
+/*   Updated: 2019/07/22 16:35:19 by jbrinksm      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -24,8 +24,7 @@ int *exit_code, t_pipes pipes)
 		!= FUNCT_SUCCESS)
 			return (FUNCT_ERROR);
 	}
-	if (close(pipes.currentpipe[1]) == -1)
-		return (FUNCT_ERROR);
+	close(pipes.currentpipe[1]);
 	if (pipenode->sibling != NULL)
 	{
 		pipes.pipeside = PIPE_EXTEND;
@@ -33,8 +32,7 @@ int *exit_code, t_pipes pipes)
 		!= FUNCT_SUCCESS)
 			return (FUNCT_ERROR);
 	}
-	if (close(pipes.currentpipe[0]) != FUNCT_SUCCESS)
-		return (FUNCT_ERROR);
+	close(pipes.currentpipe[0]);
 	return (FUNCT_SUCCESS);
 }
 
@@ -81,19 +79,19 @@ int			redir_handle_pipe(t_pipes pipes, int *exit_code)
 		if (pipes.pipeside == PIPE_START)
 		{
 			if (dup2(pipes.currentpipe[1], STDOUT_FILENO) == -1)
-				*exit_code = E_DUP;
+				error_return(FUNCT_ERROR, E_DUP, exit_code, NULL);
 			close(pipes.currentpipe[1]);
 		}
 		else if (pipes.pipeside == PIPE_EXTEND)
 		{
 			if (dup2(pipes.currentpipe[0], STDIN_FILENO) == -1)
-				*exit_code = E_DUP;
+				error_return(FUNCT_ERROR, E_DUP, exit_code, NULL);
 			close(pipes.currentpipe[0]);
 			if (pipes.parentpipe[0] != PIPE_UNINIT
 			&& pipes.parentpipe[1] != PIPE_UNINIT)
 			{
 				if (dup2(pipes.parentpipe[1], STDOUT_FILENO) == -1)
-					*exit_code = E_DUP;
+					error_return(FUNCT_ERROR, E_DUP, exit_code, NULL);
 				close(pipes.parentpipe[1]);
 			}
 		}
@@ -127,5 +125,7 @@ int *exit_code, t_pipes pipes)
 		childpipes.parentpipe[1] = pipes.currentpipe[1];
 		redir_run_pipesequence(pipenode->child, envlst, exit_code, childpipes);
 	}
+	if (exec_pipe(pipenode, envlst, exit_code, pipes) != FUNCT_SUCCESS)
+		return (FUNCT_ERROR);
 	return (FUNCT_SUCCESS);
 }

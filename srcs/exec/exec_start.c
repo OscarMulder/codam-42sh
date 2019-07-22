@@ -6,7 +6,7 @@
 /*   By: omulder <omulder@student.codam.nl>           +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2019/05/29 17:52:22 by omulder        #+#    #+#                */
-/*   Updated: 2019/07/22 11:03:18 by jbrinksm      ########   odam.nl         */
+/*   Updated: 2019/07/22 16:47:01 by jbrinksm      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -27,7 +27,7 @@ static size_t	count_args(t_ast *ast)
 	return (i);
 }
 
-char	**create_args(t_ast *ast)
+char		**create_args(t_ast *ast)
 {
 	char	**args;
 	t_ast	*probe;
@@ -63,7 +63,7 @@ char	**create_args(t_ast *ast)
 **	DOESNT WORK YET
 */
 
-static void exec_redir(t_ast *node, t_envlst *envlst, int *exit_code)
+static void	exec_redir(t_ast *node, t_envlst *envlst, int *exit_code)
 {
 	t_ast	*probe;
 	char	*left;
@@ -95,7 +95,7 @@ static void	exec_assign(t_ast *node, t_envlst *envlst, int *exit_code)
 **	complete_command
 */
 
-void	exec_redirs_or_assigns(t_ast *node, t_envlst *envlst, int *exit_code)
+void		exec_redirs_or_assigns(t_ast *node, t_envlst *envlst, int *exit_code)
 {
 	t_ast	*probe;
 
@@ -115,7 +115,7 @@ void	exec_redirs_or_assigns(t_ast *node, t_envlst *envlst, int *exit_code)
 **	execution. Wildcard, quote removal, variables.
 */
 
-int		exec_complete_command(t_ast *node, t_envlst *envlst, int *exit_code, t_pipes pipes)
+int			exec_complete_command(t_ast *node, t_envlst *envlst, int *exit_code, t_pipes pipes)
 {
 	char	**command;
 
@@ -150,27 +150,25 @@ int		exec_complete_command(t_ast *node, t_envlst *envlst, int *exit_code, t_pipe
 **	Read PR.
 */
 
-int		exec_start(t_ast *ast, t_envlst *envlst, int *exit_code, t_pipes pipes)
+int			exec_start(t_ast *ast, t_envlst *envlst, int *exit_code, t_pipes pipes)
 {
 	if (ast == NULL)
-		return ;
+		return (FUNCT_ERROR);
 	if (ast->type == PIPE)
 	{
-		if (redir_run_pipesequence(ast, envlst, exit_code, pipes) != FUNCT_SUCCESS)
+		if (redir_run_pipesequence(ast, envlst, exit_code, pipes)
+		!= FUNCT_SUCCESS)
 			return (FUNCT_ERROR);
 		return (FUNCT_SUCCESS);
 	}
-
 	/* Goes through the tree to find complete_commands first */
-	/* problem if there are no WORD's but only prefix or suffix */
-	if (ast->type != WORD && ast->type != ASSIGN && ast->type != SGREAT
+	if ((ast->type != WORD && ast->type != ASSIGN && ast->type != SGREAT)
 	&& exec_start(ast->child, envlst, exit_code, pipes) != FUNCT_SUCCESS)
 		return (FUNCT_ERROR);
-	
 	/* Runs after the above exec_start returns or isn't run */
 	if (ast->type == AND_IF && *exit_code != EXIT_SUCCESS)
 		return (FUNCT_SUCCESS);
-	else if (ast->type == WORD || ast->type == ASSIGN || ast->type == SGREAT
+	else if ((ast->type == WORD || ast->type == ASSIGN || ast->type == SGREAT)
 	&& exec_complete_command(ast, envlst, exit_code, pipes) != FUNCT_SUCCESS)
 		return (FUNCT_ERROR);
 	else if (ast->sibling != NULL)
@@ -178,4 +176,5 @@ int		exec_start(t_ast *ast, t_envlst *envlst, int *exit_code, t_pipes pipes)
 		if (exec_start(ast->sibling, envlst, exit_code, pipes) != FUNCT_SUCCESS)
 			return (FUNCT_ERROR);
 	}
+	return (FUNCT_SUCCESS);
 }
