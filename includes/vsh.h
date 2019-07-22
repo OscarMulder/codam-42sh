@@ -6,7 +6,7 @@
 /*   By: omulder <omulder@student.codam.nl>           +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2019/04/10 20:29:42 by jbrinksm       #+#    #+#                */
-/*   Updated: 2019/07/20 19:08:49 by mavan-he      ########   odam.nl         */
+/*   Updated: 2019/07/22 11:52:24 by mavan-he      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -57,7 +57,7 @@
 
 # define CURRENT_CHAR (scanner->str)[scanner->str_index]
 # define SCANNER_CHAR scanner.str[scanner.str_index]
-# define T_FLAG_HASDOLLAR (1 << 0)
+# define T_FLAG_HAS_SPECIAL (1 << 0)
 # define T_STATE_SQUOTE (1 << 1)
 # define T_STATE_DQUOTE (1 << 2)
 # define T_FLAG_HASEQUAL (1 << 3)
@@ -379,6 +379,7 @@ int				tools_update_quote_status(char *line, int cur_index,
 					char *quote);
 bool			tool_is_redirect_tk(t_tokens type);
 bool			tools_is_valid_identifier(char *str);
+bool			tool_has_special(char c);
 
 /*
 **----------------------------------execution-----------------------------------
