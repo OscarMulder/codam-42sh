@@ -32,9 +32,9 @@ input_parse_ctrl_up input_parse_ctrl_down input_is_word_start \
 term_prepare term_is_valid term_init_struct term_get_attributes \
 term_set_attributes term_reset_attributes term_free_struct \
 env_getvalue env_getlst env_lsttoarr env_lstnew env_lstaddback env_lstdel \
-env_remove_tmp \
+env_remove_tmp env_sort env_lstadd_to_sortlst \
 tools_is_char_escaped tool_is_redirect_tk tools_is_valid_identifier \
-tools_is_fdnumstr \
+tool_has_special tool_check_for_whitespace tools_is_fdnumstr \
 builtin_echo builtin_echo_set_flags builtin_exit builtin_assign \
 builtin_export builtin_export_print builtin_set builtin_unset \
 lexer lexer_utils lexer_debug lexer_evaluator lexer_scanner \
