@@ -6,7 +6,7 @@
 /*   By: jbrinksm <jbrinksm@student.codam.nl>         +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2019/07/14 10:37:41 by jbrinksm       #+#    #+#                */
-/*   Updated: 2019/07/20 21:38:02 by jbrinksm      ########   odam.nl         */
+/*   Updated: 2019/07/22 10:26:40 by jbrinksm      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,7 +14,31 @@
 #include <unistd.h>
 #include <sys/wait.h>
 
-t_pipes	init_pipestruct(void)
+static int	exec_pipe(t_ast *pipenode, t_envlst *envlst,
+int *exit_code, t_pipes pipes)
+{
+	if (pipenode->child != NULL && pipenode->child->type != PIPE)
+	{
+		pipes.pipeside = PIPE_START;
+		if (exec_complete_command(pipenode->child, envlst, exit_code, pipes)
+		!= FUNCT_SUCCESS)
+			return (FUNCT_ERROR);
+	}
+	if (close(pipes.currentpipe[1]) == -1)
+		return (FUNCT_ERROR);
+	if (pipenode->sibling != NULL)
+	{
+		pipes.pipeside = PIPE_EXTEND;
+		if (exec_complete_command(pipenode->sibling, envlst, exit_code, pipes)
+		!= FUNCT_SUCCESS)
+			return (FUNCT_ERROR);
+	}
+	if (close(pipes.currentpipe[0]) != FUNCT_SUCCESS)
+		return (FUNCT_ERROR);
+	return (FUNCT_SUCCESS);
+}
+
+t_pipes		init_pipestruct(void)
 {
 	t_pipes	pipes;
 
@@ -48,14 +72,14 @@ t_pipes	init_pipestruct(void)
 **	previous pipe, and the output will be to STDOUT.
 */
 
-int		redir_handle_pipe(t_pipes pipes, int *exit_code)
+int			redir_handle_pipe(t_pipes pipes, int *exit_code)
 {
-	dup2(pipes.fds.stdin, STDIN_FILENO); //not sure if necessary
+	dup2(pipes.fds.stdin, STDIN_FILENO);
 	if (pipes.currentpipe[0] != PIPE_UNINIT
 	&& pipes.currentpipe[1] != PIPE_UNINIT)
 	{
 		if (pipes.pipeside == PIPE_START)
-		{	
+		{
 			if (dup2(pipes.currentpipe[1], STDOUT_FILENO) == -1)
 				*exit_code = E_DUP;
 			close(pipes.currentpipe[1]);
@@ -86,8 +110,8 @@ int		redir_handle_pipe(t_pipes pipes, int *exit_code)
 **	be siblings of pipenodes, and will thus be PIPE_EXTEND.
 */
 
-int		redir_run_pipesequence(t_ast *pipenode, t_envlst *envlst, int *exit_code,
-t_pipes pipes)
+int			redir_run_pipesequence(t_ast *pipenode, t_envlst *envlst,
+int *exit_code, t_pipes pipes)
 {
 	t_pipes	childpipes;
 
@@ -103,17 +127,5 @@ t_pipes pipes)
 		childpipes.parentpipe[1] = pipes.currentpipe[1];
 		redir_run_pipesequence(pipenode->child, envlst, exit_code, childpipes);
 	}
-	if (pipenode->child != NULL && pipenode->child->type != PIPE)
-	{
-		pipes.pipeside = PIPE_START;
-		exec_complete_command(pipenode->child, envlst, exit_code, pipes);
-	}
-	close(pipes.currentpipe[1]);
-	if (pipenode->sibling != NULL)
-	{
-		pipes.pipeside = PIPE_EXTEND;
-		exec_complete_command(pipenode->sibling, envlst, exit_code, pipes);
-	}
-	close(pipes.currentpipe[0]);
 	return (FUNCT_SUCCESS);
 }

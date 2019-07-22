@@ -6,7 +6,7 @@
 /*   By: omulder <omulder@student.codam.nl>           +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2019/05/29 17:52:22 by omulder        #+#    #+#                */
-/*   Updated: 2019/07/20 21:15:16 by jbrinksm      ########   odam.nl         */
+/*   Updated: 2019/07/22 11:03:18 by jbrinksm      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -115,7 +115,7 @@ void	exec_redirs_or_assigns(t_ast *node, t_envlst *envlst, int *exit_code)
 **	execution. Wildcard, quote removal, variables.
 */
 
-void		exec_complete_command(t_ast *node, t_envlst *envlst, int *exit_code, t_pipes pipes)
+int		exec_complete_command(t_ast *node, t_envlst *envlst, int *exit_code, t_pipes pipes)
 {
 	char	**command;
 
@@ -142,6 +142,7 @@ void		exec_complete_command(t_ast *node, t_envlst *envlst, int *exit_code, t_pip
 	/* There is no cmd_word in complete_command */
 	else if (node->type == ASSIGN || node->type == SGREAT)
 		exec_redirs_or_assigns(node, envlst, exit_code);
+	return (FUNCT_SUCCESS);
 }
 
 /*
@@ -149,26 +150,32 @@ void		exec_complete_command(t_ast *node, t_envlst *envlst, int *exit_code, t_pip
 **	Read PR.
 */
 
-void		exec_start(t_ast *ast, t_envlst *envlst, int *exit_code, t_pipes pipes)
+int		exec_start(t_ast *ast, t_envlst *envlst, int *exit_code, t_pipes pipes)
 {
 	if (ast == NULL)
 		return ;
 	if (ast->type == PIPE)
 	{
-		redir_run_pipesequence(ast, envlst, exit_code, pipes);
-		return ;
+		if (redir_run_pipesequence(ast, envlst, exit_code, pipes) != FUNCT_SUCCESS)
+			return (FUNCT_ERROR);
+		return (FUNCT_SUCCESS);
 	}
 
 	/* Goes through the tree to find complete_commands first */
 	/* problem if there are no WORD's but only prefix or suffix */
-	if (ast->type != WORD && ast->type != ASSIGN && ast->type != SGREAT)
-		exec_start(ast->child, envlst, exit_code, pipes);
+	if (ast->type != WORD && ast->type != ASSIGN && ast->type != SGREAT
+	&& exec_start(ast->child, envlst, exit_code, pipes) != FUNCT_SUCCESS)
+		return (FUNCT_ERROR);
 	
 	/* Runs after the above exec_start returns or isn't run */
 	if (ast->type == AND_IF && *exit_code != EXIT_SUCCESS)
-		return ;
-	else if (ast->type == WORD || ast->type == ASSIGN || ast->type == SGREAT)
-		exec_complete_command(ast, envlst, exit_code, pipes);
+		return (FUNCT_SUCCESS);
+	else if (ast->type == WORD || ast->type == ASSIGN || ast->type == SGREAT
+	&& exec_complete_command(ast, envlst, exit_code, pipes) != FUNCT_SUCCESS)
+		return (FUNCT_ERROR);
 	else if (ast->sibling != NULL)
-		exec_start(ast->sibling, envlst, exit_code, pipes);
+	{
+		if (exec_start(ast->sibling, envlst, exit_code, pipes) != FUNCT_SUCCESS)
+			return (FUNCT_ERROR);
+	}
 }
