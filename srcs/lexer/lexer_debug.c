@@ -6,7 +6,7 @@
 /*   By: mavan-he <mavan-he@student.codam.nl>         +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2019/05/16 16:06:49 by mavan-he       #+#    #+#                */
-/*   Updated: 2019/07/22 11:31:01 by mavan-he      ########   odam.nl         */
+/*   Updated: 2019/07/22 13:27:09 by mavan-he      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -23,7 +23,7 @@ void	print_node(t_tokenlst *node)
 		ft_printf("%-16s", node->value);
 	else
 		ft_printf("%-16s", parser_return_token_str(node->type));
-	if (node->flags & T_FLAG_HAS_SPECIAL)
+	if (node->flags & T_FLAG_HASSPECIAL)
 		ft_putstr("<has_special>");
 	ft_putchar('\n');
 }
