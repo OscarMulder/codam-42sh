@@ -6,7 +6,7 @@
 /*   By: omulder <omulder@student.codam.nl>           +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2019/04/10 20:29:42 by jbrinksm       #+#    #+#                */
-/*   Updated: 2019/07/29 13:00:03 by mavan-he      ########   odam.nl         */
+/*   Updated: 2019/07/29 16:24:09 by tde-jong      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -520,6 +520,13 @@ char			*history_find_histfile(t_vshdata *vshdata);
 */
 
 int			error_return(int ret, int error, char *opt_str);
+
+/*
+**-----------------------------------signals------------------------------------
+*/
+
+void	signals_init(void);
+void	signals_handle(int signum);
 
 /*
 **----------------------------------debugging-----------------------------------
