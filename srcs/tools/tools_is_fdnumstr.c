@@ -1,12 +1,12 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        ::::::::            */
-/*   tools_is_posnumstr.c                               :+:    :+:            */
+/*   tools_is_fdnumstr.c                                :+:    :+:            */
 /*                                                     +:+                    */
 /*   By: jbrinksm <jbrinksm@student.codam.nl>         +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2019/07/21 20:18:16 by jbrinksm       #+#    #+#                */
-/*   Updated: 2019/07/21 21:18:15 by jbrinksm      ########   odam.nl         */
+/*   Updated: 2019/07/22 11:54:12 by jbrinksm      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,14 +16,14 @@ bool	tools_is_fdnumstr(char *str)
 {
 	int	i;
 
-	if (str == NULL || (*str < '0' || *str > '9'))
+	if (str == NULL || ft_isdigit(*str) == true)
 		return (false);
 	i = 0;
 	while (str[i] != '\0')
 	{
 		if (i > 6)
 			return (false);
-		if (str[i] < '0' || str[i] > '9')
+		if (ft_isdigit(str[i]) == true)
 			return (false);
 		i++;
 	}

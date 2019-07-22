@@ -6,7 +6,7 @@
 /*   By: jbrinksm <jbrinksm@student.codam.nl>         +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2019/07/21 15:14:08 by jbrinksm       #+#    #+#                */
-/*   Updated: 2019/07/22 09:30:10 by jbrinksm      ########   odam.nl         */
+/*   Updated: 2019/07/22 11:19:06 by jbrinksm      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,30 +14,14 @@
 #include <unistd.h>
 #include <fcntl.h>
 
-static int	return_error(int ret, int error, int *exit_code, char *opt_str)
-{
-	if (error == E_BADFD)
-		ft_putstr_fd("vsh: bad file descriptor\n", 2);
-	if (error == E_DUP)
-		ft_putstr_fd("vsh: failed to duplicate file descriptor\n", 2);
-	if (error == E_OPEN)
-		ft_putstr_fd("vsh: no such file or directory\n", 2);
-	if (error == E_AMBRED)
-		ft_eprintf("vsh: %s: bad redirect\n", opt_str);
-	if (error == E_CLOSE)
-		ft_putstr_fd("vsh: failed to close file descriptor\n", 2);
-	*exit_code = error;
-	return (ret);
-}
-
 static int	getvalidfd(int *right_side_fd, char *right_side,
 int *exit_code)
 {
 	if (tools_is_fdnumstr(right_side) == false)
-		return (return_error(FUNCT_ERROR, E_AMBRED, exit_code, right_side));
+		return (error_return(FUNCT_ERROR, E_BADRED, exit_code, right_side));
 	*right_side_fd = ft_atoi(right_side);
 	if (redir_is_open_fd(*right_side_fd) == false)
-		return (return_error(FUNCT_ERROR, E_BADFD, exit_code, NULL));
+		return (error_return(FUNCT_ERROR, E_BADFD, exit_code, NULL));
 	return (FUNCT_SUCCESS);
 }
 
@@ -67,9 +51,9 @@ int			redir_input(t_ast *node, int *exit_code)
 			return (FUNCT_ERROR);
 	}
 	if (right_side_fd == -1)
-		return (return_error(FUNCT_ERROR, E_OPEN, exit_code, NULL));
+		return (error_return(FUNCT_ERROR, E_OPEN, exit_code, NULL));
 	if (dup2(right_side_fd, left_side_fd) == -1)
-		return (return_error(FUNCT_ERROR, E_DUP, exit_code, NULL));
+		return (error_return(FUNCT_ERROR, E_DUP, exit_code, NULL));
 	close(right_side_fd);
 	return (FUNCT_SUCCESS);
 }
@@ -100,9 +84,9 @@ int			redir_output(t_ast *node, int *exit_code)
 			return (FUNCT_ERROR);
 	}
 	if (right_side_fd == -1)
-		return (return_error(FUNCT_ERROR, E_OPEN, exit_code, NULL));
+		return (error_return(FUNCT_ERROR, E_OPEN, exit_code, NULL));
 	if (dup2(right_side_fd, left_side_fd) == -1)
-		return (return_error(FUNCT_ERROR, E_DUP, exit_code, NULL));
+		return (error_return(FUNCT_ERROR, E_DUP, exit_code, NULL));
 	close(right_side_fd);
 	return (FUNCT_SUCCESS);
 }

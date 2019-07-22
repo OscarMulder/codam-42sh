@@ -6,7 +6,7 @@
 /*   By: jbrinksm <jbrinksm@student.codam.nl>         +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2019/07/22 09:18:19 by jbrinksm       #+#    #+#                */
-/*   Updated: 2019/07/22 09:51:24 by jbrinksm      ########   odam.nl         */
+/*   Updated: 2019/07/22 11:53:09 by jbrinksm      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,22 +14,6 @@
 #include <unistd.h>
 #include <fcntl.h>
 #include <sys/stat.h>
-
-static int	return_error(int ret, int error, int *exit_code, char *opt_str)
-{
-	if (error == E_BADFD)
-		ft_putstr_fd("vsh: bad file descriptor\n", 2);
-	if (error == E_DUP)
-		ft_putstr_fd("vsh: failed to duplicate file descriptor\n", 2);
-	if (error == E_OPEN)
-		ft_putstr_fd("vsh: no such file or directory\n", 2);
-	if (error == E_AMBRED)
-		ft_eprintf("vsh: %s: bad redirect\n", opt_str);
-	if (error == E_CLOSE)
-		ft_putstr_fd("vsh: failed to close file descriptor\n", 2);
-	*exit_code = EXIT_FAILURE;
-	return (ret);
-}
 
 /*
 **	Creates a pipe in which the heredoc can be written to
@@ -40,7 +24,7 @@ int			redir_create_heredoc_fd(char *right_side, int *exit_code)
 {
 	int		pipefds[2];
 
-	*exit_code = EXIT_FAILURE;
+	*exit_code = EXIT_FATAL;
 	if (pipe(pipefds) == -1)
 		return (FUNCT_ERROR);
 	if (write(pipefds[1], right_side, ft_strlen(right_side)) == -1)
@@ -74,7 +58,7 @@ char **right_side)
 int			redir_input_closefd(int left_side_fd, int *exit_code)
 {
 	if (close(left_side_fd) == -1)
-		return (return_error(FUNCT_ERROR, E_CLOSE, exit_code, NULL));
+		return (error_return(FUNCT_ERROR, E_CLOSE, exit_code, NULL));
 	return (FUNCT_SUCCESS);
 }
 

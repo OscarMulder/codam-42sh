@@ -6,7 +6,7 @@
 /*   By: omulder <omulder@student.codam.nl>           +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2019/04/10 20:29:42 by jbrinksm       #+#    #+#                */
-/*   Updated: 2019/07/22 09:55:32 by jbrinksm      ########   odam.nl         */
+/*   Updated: 2019/07/22 11:17:14 by jbrinksm      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -28,7 +28,7 @@
 # define E_OPEN 101
 # define E_BADFD 102
 # define E_CLOSE 103
-# define E_AMBRED 104
+# define E_BADRED 104
 # define CTRLD -1
 # define CR 0
 
@@ -414,6 +414,12 @@ void		redir_change_if_leftside(t_ast *node, int *left_side_fd,
 char **right_side);
 int			redir_create_heredoc_fd(char *right_side, int *exit_code);
 
+
+/*
+**--------------------------------error_handling--------------------------------
+*/
+
+int			error_return(int ret, int error, int *exit_code, char *opt_str);
 
 /*
 **----------------------------------debugging-----------------------------------
