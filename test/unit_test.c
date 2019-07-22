@@ -6,7 +6,7 @@
 /*   By: jbrinksm <jbrinksm@student.codam.nl>         +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2019/04/18 16:37:32 by omulder        #+#    #+#                */
-/*   Updated: 2019/07/20 19:32:02 by mavan-he      ########   odam.nl         */
+/*   Updated: 2019/07/22 15:41:31 by mavan-he      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -825,7 +825,7 @@ Test(builtin_export, basic_output_error_test, .init=redirect_all_stdout)
 	args[2] = NULL;
 	envlst = env_getlst();
 	builtin_export(args, envlst, &exit_code);
-	cr_expect(exit_code == EXIT_FAILURE);
+	cr_expect(exit_code == EXIT_WRONG_USE);
 	cr_expect_stdout_eq_str("vsh: export: 'key*=value': not a valid identifier\n");
 }
 
