@@ -6,7 +6,7 @@
 /*   By: omulder <omulder@student.codam.nl>           +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2019/05/29 17:52:22 by omulder        #+#    #+#                */
-/*   Updated: 2019/07/23 15:16:54 by jbrinksm      ########   odam.nl         */
+/*   Updated: 2019/07/23 16:09:45 by jbrinksm      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -66,7 +66,7 @@ int *exit_code)
 	t_ast	*probe;
 
 	probe = node;
-	while (probe != NULL)
+	// while (probe != NULL)  
 	{
 		if (tool_is_redirect_tk(node->type) == true)
 		{
@@ -119,9 +119,6 @@ int			exec_complete_command(t_ast *node, t_envlst *envlst, int *exit_code, t_pip
 	char	**command;
 	int		stdfds[3];
 
-	if (redir_save_stdfds(stdfds) == FUNCT_ERROR)
-		return (FUNCT_ERROR);
-	exec_quote_remove(node);
 	if (node->type == WORD)
 	{
 		if (node->sibling &&
@@ -138,9 +135,7 @@ int			exec_complete_command(t_ast *node, t_envlst *envlst, int *exit_code, t_pip
 		== FUNCT_ERROR)
 			return (FUNCT_ERROR);
 	}
-	if (redir_reset_stdfds(stdfds) == FUNCT_ERROR)
-		return (FUNCT_ERROR);
-	return (FUNCT_SUCCESS);
+	return (redir_reset_stdfds(stdfds));
 }
 
 /*
