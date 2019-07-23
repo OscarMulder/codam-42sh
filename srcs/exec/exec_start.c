@@ -6,7 +6,7 @@
 /*   By: omulder <omulder@student.codam.nl>           +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2019/05/29 17:52:22 by omulder        #+#    #+#                */
-/*   Updated: 2019/07/23 14:20:08 by jbrinksm      ########   odam.nl         */
+/*   Updated: 2019/07/23 15:25:24 by jbrinksm      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -70,13 +70,13 @@ int *exit_code)
 	{
 		if (tool_is_redirect_tk(node->type) == true)
 		{
-			if (redir(probe, exit_code) != FUNCT_SUCCESS)
+			if (redir(probe, exit_code) == FUNCT_ERROR)
 				return (FUNCT_ERROR);
 		}
 		else if (probe->type == ASSIGN)
 		{
 			if (builtin_assign(node->value, envlst, exit_code, env_type)
-			!= FUNCT_SUCCESS)
+			== FUNCT_ERROR)
 				return (FUNCT_ERROR);
 		}
 		probe = probe->child;
@@ -120,14 +120,14 @@ static int	exec_complete_command(t_ast *node, t_envlst *envlst, int *exit_code, 
 	int		stdfds[3];
 
 	(void)flags;
-	if (redir_save_stdfds(stdfds) != FUNCT_SUCCESS)
+	if (redir_save_stdfds(stdfds) == FUNCT_ERROR)
 		return (FUNCT_ERROR);
 	exec_quote_remove(node);
 	if (node->type == WORD)
 	{
 		if (node->sibling &&
 		exec_redirs_or_assigns(node->sibling, envlst, ENV_TEMP, exit_code)
-		!= FUNCT_SUCCESS)
+		== FUNCT_ERROR)
 			return (FUNCT_ERROR);
 		command = create_args(node);
 		if (command != NULL)
@@ -136,12 +136,10 @@ static int	exec_complete_command(t_ast *node, t_envlst *envlst, int *exit_code, 
 	else if (node->type == ASSIGN || tool_is_redirect_tk(node->type) == true)
 	{
 		if (exec_redirs_or_assigns(node, envlst, ENV_LOCAL, exit_code)
-		!= FUNCT_SUCCESS)
+		== FUNCT_ERROR)
 			return (FUNCT_ERROR);
 	}
-	if (redir_reset_stdfds(stdfds) != FUNCT_SUCCESS)
-		return (FUNCT_ERROR);
-	return (FUNCT_SUCCESS);
+	return (redir_reset_stdfds(stdfds));
 }
 
 /*
@@ -175,7 +173,7 @@ void		exec_start(t_ast *ast, t_envlst *envlst, int *exit_code, int flags)
 	else if (ast->type == WORD || tool_is_redirect_tk(ast->type) == true)
 	{
 		if (exec_complete_command(ast, envlst, exit_code, flags)
-		!= FUNCT_SUCCESS)
+		== FUNCT_ERROR)
 			return ;
 	}
 	else if (ast->sibling != NULL && (ast->sibling->type == WORD
