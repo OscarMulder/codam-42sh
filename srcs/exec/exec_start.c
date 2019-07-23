@@ -6,7 +6,7 @@
 /*   By: omulder <omulder@student.codam.nl>           +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2019/05/29 17:52:22 by omulder        #+#    #+#                */
-/*   Updated: 2019/07/20 16:23:40 by mavan-he      ########   odam.nl         */
+/*   Updated: 2019/07/23 11:29:15 by tde-jong      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -59,13 +59,12 @@ static char	**create_args(t_ast *ast)
 **	DOESNT WORK YET
 */
 
-static void exec_redir(t_ast *node, t_envlst *envlst, int *exit_code)
+static void exec_redir(t_ast *node, t_envlst *envlst)
 {
 	t_ast	*probe;
 	char	*left;
 	char	*right;
 
-	(void)exit_code;
 	(void)envlst;
 
 	probe = node->sibling;
@@ -86,7 +85,7 @@ static void exec_redir(t_ast *node, t_envlst *envlst, int *exit_code)
 **	complete_command
 */
 
-static void	exec_redirs_or_assigns(t_ast *node, t_envlst *envlst, int env_type, int *exit_code)
+static void	exec_redirs_or_assigns(t_ast *node, t_envlst *envlst, int env_type)
 {
 	t_ast	*probe;
 
@@ -94,9 +93,9 @@ static void	exec_redirs_or_assigns(t_ast *node, t_envlst *envlst, int env_type, 
 	while (probe != NULL)
 	{
 		if (probe->type == SGREAT)
-			exec_redir(probe, envlst, exit_code);
+			exec_redir(probe, envlst);
 		else if (probe->type == ASSIGN)
-			builtin_assign(probe->value, envlst, exit_code, env_type);
+			builtin_assign(probe->value, envlst, env_type);
 		probe = probe->child;
 	}
 }
@@ -106,7 +105,7 @@ static void	exec_redirs_or_assigns(t_ast *node, t_envlst *envlst, int env_type, 
 **	execution. Wildcard, quote removal, variables.
 */
 
-static void	exec_complete_command(t_ast *node, t_envlst *envlst, int *exit_code, int flags)
+static void	exec_complete_command(t_ast *node, t_envlst *envlst, int flags)
 {
 	char	**command;
 
@@ -120,17 +119,17 @@ static void	exec_complete_command(t_ast *node, t_envlst *envlst, int *exit_code,
 	if (node->type == WORD)
 	{
 		if (node->sibling)
-			exec_redirs_or_assigns(node->sibling, envlst, ENV_TEMP, exit_code);
+			exec_redirs_or_assigns(node->sibling, envlst, ENV_TEMP);
 		command = create_args(node);
 		/* add handling of flag = EXEC_PIPE */
 		/* add option for flag = EXEC_BG */
 		if (command != NULL)
-			exec_cmd(command, envlst, exit_code);
+			exec_cmd(command, envlst);
 	}
 
 	/* There is no cmd_word in complete_command */
 	else if (node->type == ASSIGN || node->type == SGREAT)
-		exec_redirs_or_assigns(node, envlst, ENV_LOCAL, exit_code);
+		exec_redirs_or_assigns(node, envlst, ENV_LOCAL);
 }
 
 /*
@@ -138,7 +137,7 @@ static void	exec_complete_command(t_ast *node, t_envlst *envlst, int *exit_code,
 **	Read PR.
 */
 
-void		exec_start(t_ast *ast, t_envlst *envlst, int *exit_code, int flags)
+void		exec_start(t_ast *ast, t_envlst *envlst, int flags)
 {
 	if (ast == NULL)
 		return ;
@@ -157,15 +156,15 @@ void		exec_start(t_ast *ast, t_envlst *envlst, int *exit_code, int flags)
 	/* Goes through the tree to find complete_commands first */
 	/* problem if there are no WORD's but only prefix or suffix */
 	if (ast->type != WORD && ast->type != ASSIGN && ast->type != SGREAT)
-		exec_start(ast->child, envlst, exit_code, flags);
+		exec_start(ast->child, envlst, flags);
 	
 	/* Runs after the above exec_start returns or isn't run */
-	if (ast->type == AND_IF && *exit_code != EXIT_SUCCESS)
+	if (ast->type == AND_IF && g_state->exit_code != EXIT_SUCCESS)
 		return ;
-	else if (ast->type == OR_IF && *exit_code == EXIT_SUCCESS)
+	else if (ast->type == OR_IF && g_state->exit_code == EXIT_SUCCESS)
 		return ;
 	else if (ast->type == WORD || ast->type == ASSIGN || ast->type == SGREAT)
-		exec_complete_command(ast, envlst, exit_code, flags);
+		exec_complete_command(ast, envlst, flags);
 	else if (ast->sibling != NULL)
-		exec_start(ast->sibling, envlst, exit_code, flags);
+		exec_start(ast->sibling, envlst, flags);
 }

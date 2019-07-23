@@ -6,7 +6,7 @@
 /*   By: mavan-he <mavan-he@student.codam.nl>         +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2019/05/03 17:50:50 by mavan-he       #+#    #+#                */
-/*   Updated: 2019/07/20 19:16:55 by mavan-he      ########   odam.nl         */
+/*   Updated: 2019/07/23 11:37:15 by tde-jong      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -33,15 +33,16 @@ static void	builtin_set_print(t_envlst *envlst)
 	}
 }
 
-void		builtin_set(char **args, t_envlst *envlst, int *exit_code)
+
+void		builtin_set(char **args, t_envlst *envlst)
 {
 	if (args[1] != NULL)
 	{
 		ft_putendl_fd("vsh: set: too many arguments", 2);
 		ft_putendl_fd("set: usage: set", 2);
-		*exit_code = FUNCT_FAILURE;
+		g_state->exit_code = EXIT_FAILURE;
 		return ;
 	}
 	builtin_set_print(envlst);
-	*exit_code = FUNCT_SUCCESS;
+	g_state->exit_code = EXIT_SUCCESS;
 }
