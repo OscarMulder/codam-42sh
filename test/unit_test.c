@@ -6,7 +6,7 @@
 /*   By: jbrinksm <jbrinksm@student.codam.nl>         +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2019/04/18 16:37:32 by omulder        #+#    #+#                */
-/*   Updated: 2019/07/20 19:32:02 by mavan-he      ########   odam.nl         */
+/*   Updated: 2019/07/23 14:23:51 by tde-jong      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -281,6 +281,26 @@ Test(env_getvalue, basic)
 	lst3.next = NULL;
 	cr_expect_str_eq(env_getvalue("PATH", envlst), "lala");
 	cr_expect(env_getvalue("NOEXIST", envlst) == NULL);
+}
+
+Test(env_getvalue, empty_var)
+{
+	t_envlst	*envlst;
+	t_envlst	lst1;
+	t_envlst	lst2;
+	t_envlst	lst3;
+
+	envlst = &lst1;
+	lst1.var = "LOL=didi";
+	lst2.var = "PAT=lolo";
+	lst3.var = "PATH=";
+	lst1.type = ENV_EXTERN;
+	lst2.type = ENV_EXTERN;
+	lst3.type = ENV_EXTERN;
+	lst1.next = &lst2;
+	lst2.next = &lst3;
+	lst3.next = NULL;
+	cr_expect(env_getvalue("PATH", envlst) == NULL);
 }
 
 /*
