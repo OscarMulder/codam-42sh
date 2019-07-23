@@ -6,13 +6,13 @@
 /*   By: omulder <omulder@student.codam.nl>           +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2019/04/10 20:29:42 by jbrinksm       #+#    #+#                */
-/*   Updated: 2019/07/22 11:17:14 by jbrinksm      ########   odam.nl         */
+/*   Updated: 2019/07/23 11:37:36 by jbrinksm      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
 #ifndef VSH_H
 # define VSH_H
-// # define DEBUG
+# define DEBUG
 
 /*
 **==================================defines=====================================
@@ -77,6 +77,10 @@
 # define EXEC_AND_IF (1 << 2)
 # define EXEC_OR_IF (1 << 3)
 # define EXEC_SEMICOL (1 << 4)
+
+# define STDIN_BAK stdfds[0]
+# define STDOUT_BAK stdfds[1]
+# define STDERR_BAK stdfds[2]
 
 /*
 **--------------------------------redirections----------------------------------
@@ -377,7 +381,7 @@ void			builtin_export(char **args, t_envlst *envlst, int *exit_code);
 void			builtin_export_var_to_type(char *varname, t_envlst *envlst, int *exit_code, int type);
 void			builtin_export_print(t_envlst *envlst, int flags);
 void			builtin_export_args(char **args, t_envlst *envlst, int *exit_code, int i);
-void			builtin_assign(char *arg, t_envlst *envlst, int *exit_code, int env_type);
+int				builtin_assign(char *arg, t_envlst *envlst, int *exit_code, int env_type);
 int				builtin_assign_addexist(t_envlst *envlst, char *arg, char *var, int env_type);
 int				builtin_assign_addnew(t_envlst *envlst, char *var, int env_type);
 void			builtin_set(char **args, t_envlst *envlst, int *exit_code);
