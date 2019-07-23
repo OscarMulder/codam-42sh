@@ -6,7 +6,7 @@
 /*   By: omulder <omulder@student.codam.nl>           +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2019/02/01 16:36:22 by omulder        #+#    #+#                */
-/*   Updated: 2019/07/23 14:52:30 by tde-jong      ########   odam.nl         */
+/*   Updated: 2019/07/23 15:21:22 by tde-jong      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,7 +19,7 @@ int		ft_printf(const char *format, ...)
 	t_fmt	fmt;
 
 	len = 0;
-	fmt.fd = STDIN_FILENO;
+	fmt.fd = STDOUT_FILENO;
 	va_start(ap, format);
 	while (*format)
 	{
