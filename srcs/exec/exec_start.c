@@ -6,7 +6,7 @@
 /*   By: omulder <omulder@student.codam.nl>           +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2019/05/29 17:52:22 by omulder        #+#    #+#                */
-/*   Updated: 2019/07/23 16:09:45 by jbrinksm      ########   odam.nl         */
+/*   Updated: 2019/07/23 16:25:59 by jbrinksm      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -119,6 +119,8 @@ int			exec_complete_command(t_ast *node, t_envlst *envlst, int *exit_code, t_pip
 	char	**command;
 	int		stdfds[3];
 
+	if (redir_save_stdfds(stdfds) == FUNCT_ERROR)
+		return (FUNCT_ERROR);
 	if (node->type == WORD)
 	{
 		if (node->sibling &&
