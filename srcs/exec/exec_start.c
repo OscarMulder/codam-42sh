@@ -6,7 +6,7 @@
 /*   By: omulder <omulder@student.codam.nl>           +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2019/05/29 17:52:22 by omulder        #+#    #+#                */
-/*   Updated: 2019/07/23 12:06:17 by jbrinksm      ########   odam.nl         */
+/*   Updated: 2019/07/23 14:20:08 by jbrinksm      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -168,7 +168,7 @@ void		exec_start(t_ast *ast, t_envlst *envlst, int *exit_code, int flags)
 		if (tool_is_redirect_tk(ast->type) == false)
 			exec_start(ast->child, envlst, exit_code, flags);
 	}
-	else if (ast->type == AND_IF && *exit_code != EXIT_SUCCESS)
+	if (ast->type == AND_IF && *exit_code != EXIT_SUCCESS)
 		return ;
 	else if (ast->type == OR_IF && *exit_code == EXIT_SUCCESS)
 		return ;
