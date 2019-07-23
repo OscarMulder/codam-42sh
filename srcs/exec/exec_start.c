@@ -6,7 +6,7 @@
 /*   By: omulder <omulder@student.codam.nl>           +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2019/05/29 17:52:22 by omulder        #+#    #+#                */
-/*   Updated: 2019/07/22 16:47:01 by jbrinksm      ########   odam.nl         */
+/*   Updated: 2019/07/23 12:19:31 by jbrinksm      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -119,28 +119,17 @@ int			exec_complete_command(t_ast *node, t_envlst *envlst, int *exit_code, t_pip
 {
 	char	**command;
 
-	/* Replace wildcards */
-	/* Replace variables */
-
-	/* There is atleast one cmd_word in complete_command */
 	exec_quote_remove(node);
 	if (node->type == WORD)
 	{
 		if (node->sibling)
 			exec_redirs_or_assigns(node->sibling, envlst, exit_code);
-
-		/* Remove useless quotes */
-		/* Remove useless escape chars */
-		
 		command = create_args(node);
-		/* add handling of flag = EXEC_PIPE */
-		/* add option for flag = EXEC_BG */
-		if (command != NULL)
-			exec_cmd(command, envlst, exit_code, pipes);
+		if (command == NULL)
+			return (FUNCT_ERROR);
+		exec_cmd(command, envlst, exit_code, pipes);
 	}
-
-	/* There is no cmd_word in complete_command */
-	else if (node->type == ASSIGN || node->type == SGREAT)
+	else if (node->type == ASSIGN || tool_is_redirect_tk(node->type) == true)
 		exec_redirs_or_assigns(node, envlst, exit_code);
 	return (FUNCT_SUCCESS);
 }
