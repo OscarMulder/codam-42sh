@@ -6,7 +6,7 @@
 /*   By: omulder <omulder@student.codam.nl>           +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2019/04/10 20:29:42 by jbrinksm       #+#    #+#                */
-/*   Updated: 2019/07/22 16:34:43 by jbrinksm      ########   odam.nl         */
+/*   Updated: 2019/07/23 15:10:26 by jbrinksm      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -62,7 +62,7 @@
 
 # define CURRENT_CHAR (scanner->str)[scanner->str_index]
 # define SCANNER_CHAR scanner.str[scanner.str_index]
-# define T_FLAG_HASDOLLAR (1 << 0)
+# define T_FLAG_HASSPECIAL (1 << 0)
 # define T_STATE_SQUOTE (1 << 1)
 # define T_STATE_DQUOTE (1 << 2)
 # define T_FLAG_HASEQUAL (1 << 3)
@@ -78,14 +78,27 @@
 # define EXEC_OR_IF (1 << 3)
 # define EXEC_SEMICOL (1 << 4)
 
+# define STDIN_BAK stdfds[0]
+# define STDOUT_BAK stdfds[1]
+# define STDERR_BAK stdfds[2]
+
+/*
+**--------------------------------redirections----------------------------------
+*/
+
+# define FD_UNINIT -1
+
 /*
 **---------------------------------environment----------------------------------
 */
 
-# define ENV_EXTERN 2
-# define ENV_LOCAL 1
-# define ENV_TEMP 0
-# define ENV_HEAD -1
+
+# define ENV_MASK 0xF8
+# define ENV_WHITESPACE (1 << 3)
+# define ENV_EXTERN (1 << 2)
+# define ENV_LOCAL (1 << 1)
+# define ENV_TEMP (1 << 0)
+# define ENV_HEAD 0
 
 /*
 **------------------------------------parser------------------------------------
@@ -275,7 +288,9 @@ t_envlst	*env_lstnew(char *var, unsigned char type);
 char		**env_lsttoarr(t_envlst *lst, unsigned char minimal_type);
 int			env_lstlen(t_envlst *lst, unsigned char minimal_type);
 void		env_lstdel(t_envlst **envlst);
-void   		 env_remove_tmp(t_envlst *env);
+void   		env_remove_tmp(t_envlst *env);
+void		env_sort(t_envlst *head);
+void		env_lstadd_to_sortlst(t_envlst *envlst, t_envlst *new);
 
 /*
 **----------------------------------terminal------------------------------------
@@ -395,7 +410,7 @@ void			builtin_export(char **args, t_envlst *envlst, int *exit_code);
 void			builtin_export_var_to_type(char *varname, t_envlst *envlst, int *exit_code, int type);
 void			builtin_export_print(t_envlst *envlst, int flags);
 void			builtin_export_args(char **args, t_envlst *envlst, int *exit_code, int i);
-void			builtin_assign(char *arg, t_envlst *envlst, int *exit_code, int env_type);
+int				builtin_assign(char *arg, t_envlst *envlst, int *exit_code, int env_type);
 int				builtin_assign_addexist(t_envlst *envlst, char *arg, char *var, int env_type);
 int				builtin_assign_addnew(t_envlst *envlst, char *var, int env_type);
 void			builtin_set(char **args, t_envlst *envlst, int *exit_code);
@@ -412,6 +427,9 @@ int				tools_update_quote_status(char *line, int cur_index,
 bool			tool_is_redirect_tk(t_tokens type);
 bool			tools_is_valid_identifier(char *str);
 bool			tools_is_builtin(char *exec_name);
+bool			tools_is_fdnumstr(char *str);
+bool			tool_has_special(char c);
+bool			tool_check_for_whitespace(char *str);
 
 /*
 **----------------------------------execution-----------------------------------
@@ -429,7 +447,6 @@ t_pipes			init_pipestruct(void);
 int				redir_pipe(t_ast *pipe_node);
 int				redir_run_pipesequence(t_ast *pipenode, t_envlst *envlst, int *exit_code, t_pipes pipes);
 int				redir_handle_pipe( t_pipes pipes, int *exit_code);
-void			exec_redirs_or_assigns(t_ast *node, t_envlst *envlst, int *exit_code);
 char			**create_args(t_ast *ast);
 
 /*
@@ -437,6 +454,26 @@ char			**create_args(t_ast *ast);
 */
 
 int				error_return(int ret, int error, int *exit_code, char *opt_str);
+
+/*
+**------------------------------------redir-------------------------------------
+*/
+
+int			redir(t_ast *node, int *exit_code);
+int			redir_output(t_ast *node, int *exit_code);
+int			redir_input(t_ast *node, int *exit_code);
+bool		redir_is_open_fd(int fd);
+int			redir_input_closefd(int left_side_fd, int *exit_code);
+void		redir_change_if_leftside(t_ast *node, int *left_side_fd,
+char **right_side);
+int			redir_create_heredoc_fd(char *right_side, int *exit_code);
+
+
+/*
+**--------------------------------error_handling--------------------------------
+*/
+
+int			error_return(int ret, int error, int *exit_code, char *opt_str);
 
 /*
 **----------------------------------debugging-----------------------------------

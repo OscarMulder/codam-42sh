@@ -6,13 +6,18 @@
 /*   By: jbrinksm <jbrinksm@student.codam.nl>         +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2019/06/05 09:09:49 by jbrinksm       #+#    #+#                */
-/*   Updated: 2019/07/19 12:30:21 by mavan-he      ########   odam.nl         */
+/*   Updated: 2019/07/23 11:19:05 by jbrinksm      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "vsh.h"
 
-int		builtin_assign_addexist(t_envlst *envlst, char *arg,
+/*
+**	Builtin assign adds or changes an evironment variable.
+**	Depending on the flag given to assign, the variable will be local or extern
+*/
+
+int			builtin_assign_addexist(t_envlst *envlst, char *arg,
 		char *var, int env_type)
 {
 	t_envlst	*probe;
@@ -35,7 +40,7 @@ int		builtin_assign_addexist(t_envlst *envlst, char *arg,
 	return (FUNCT_FAILURE);
 }
 
-int		builtin_assign_addnew(t_envlst *envlst, char *var, int env_type)
+int			builtin_assign_addnew(t_envlst *envlst, char *var, int env_type)
 {
 	t_envlst	*newitem;
 
@@ -43,29 +48,25 @@ int		builtin_assign_addnew(t_envlst *envlst, char *var, int env_type)
 	ft_strdel(&var);
 	if (newitem == NULL)
 		return (FUNCT_ERROR);
-	env_lstaddback(&envlst, newitem);
+	env_lstadd_to_sortlst(envlst, newitem);
 	return (FUNCT_SUCCESS);
 }
 
-/*
-**	NOT SURE IF CORRECT ASSUMPTIONS AS OF HOW IT IS SUPPOSED TO WORK:
-**	Changes the envlst contents based on arg.
-**	If a new lst item has to be made, the variable will be defaulted
-**	to ENV_LOCAL. If the variable already is ENV_EXTERN its value
-**	will be changed and it will remain ENV_EXTERN.
-*/
-
-void	builtin_assign(char *arg, t_envlst *envlst,
+int			builtin_assign(char *arg, t_envlst *envlst,
 	int *exit_code, int env_type)
 {
 	char		*var;
 
 	*exit_code = EXIT_FAILURE;
 	if (envlst == NULL || arg == NULL)
-		return ;
+		return (FUNCT_ERROR);
 	var = ft_strdup(arg);
 	if (var == NULL)
-		return ;
+		return (FUNCT_ERROR);
+	if (tool_check_for_whitespace(arg) == true)
+		env_type |= ENV_WHITESPACE;
+	else
+		env_type &= ~ENV_WHITESPACE;
 	*exit_code = EXIT_SUCCESS;
 	if (builtin_assign_addexist(envlst, arg, var, env_type) != FUNCT_SUCCESS)
 	{
@@ -73,6 +74,8 @@ void	builtin_assign(char *arg, t_envlst *envlst,
 		{
 			ft_printf("assign: failed to allocate enough memory\n");
 			*exit_code = EXIT_FAILURE;
+			return (FUNCT_ERROR);
 		}
 	}
+	return (FUNCT_SUCCESS);
 }

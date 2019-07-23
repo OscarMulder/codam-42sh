@@ -6,7 +6,7 @@
 /*   By: jbrinksm <jbrinksm@student.codam.nl>         +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2019/07/14 10:37:41 by jbrinksm       #+#    #+#                */
-/*   Updated: 2019/07/22 16:35:19 by jbrinksm      ########   odam.nl         */
+/*   Updated: 2019/07/23 15:18:09 by jbrinksm      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -21,7 +21,7 @@ int *exit_code, t_pipes pipes)
 	{
 		pipes.pipeside = PIPE_START;
 		if (exec_complete_command(pipenode->child, envlst, exit_code, pipes)
-		!= FUNCT_SUCCESS)
+		== FUNCT_ERROR)
 			return (FUNCT_ERROR);
 	}
 	close(pipes.currentpipe[1]);
@@ -29,7 +29,7 @@ int *exit_code, t_pipes pipes)
 	{
 		pipes.pipeside = PIPE_EXTEND;
 		if (exec_complete_command(pipenode->sibling, envlst, exit_code, pipes)
-		!= FUNCT_SUCCESS)
+		== FUNCT_ERROR)
 			return (FUNCT_ERROR);
 	}
 	close(pipes.currentpipe[0]);
@@ -125,7 +125,5 @@ int *exit_code, t_pipes pipes)
 		childpipes.parentpipe[1] = pipes.currentpipe[1];
 		redir_run_pipesequence(pipenode->child, envlst, exit_code, childpipes);
 	}
-	if (exec_pipe(pipenode, envlst, exit_code, pipes) != FUNCT_SUCCESS)
-		return (FUNCT_ERROR);
-	return (FUNCT_SUCCESS);
+	return (exec_pipe(pipenode, envlst, exit_code, pipes));
 }
