@@ -6,7 +6,7 @@
 /*   By: jbrinksm <jbrinksm@student.codam.nl>         +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2019/07/22 11:14:25 by jbrinksm       #+#    #+#                */
-/*   Updated: 2019/07/23 15:08:53 by jbrinksm      ########   odam.nl         */
+/*   Updated: 2019/07/23 16:23:24 by jbrinksm      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,7 +16,7 @@
 int	error_return(int ret, int error, int *exit_code, char *opt_str)
 {
 	if (error == E_BADFD)
-		ft_putstr_fd("vsh: bad file descriptor\n", STDERR_FILENO);
+		ft_eprintf("vsh: %s: bad file descriptor\n", opt_str);
 	else if (error == E_DUP)
 		ft_putstr_fd("vsh: failed to duplicate file descriptor\n",
 		STDERR_FILENO);

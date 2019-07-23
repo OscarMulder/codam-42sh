@@ -6,7 +6,7 @@
 /*   By: jbrinksm <jbrinksm@student.codam.nl>         +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2019/07/21 15:14:08 by jbrinksm       #+#    #+#                */
-/*   Updated: 2019/07/22 11:19:06 by jbrinksm      ########   odam.nl         */
+/*   Updated: 2019/07/23 16:13:43 by jbrinksm      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -21,7 +21,7 @@ int *exit_code)
 		return (error_return(FUNCT_ERROR, E_BADRED, exit_code, right_side));
 	*right_side_fd = ft_atoi(right_side);
 	if (redir_is_open_fd(*right_side_fd) == false)
-		return (error_return(FUNCT_ERROR, E_BADFD, exit_code, NULL));
+		return (error_return(FUNCT_ERROR, E_BADFD, exit_code, right_side));
 	return (FUNCT_SUCCESS);
 }
 
