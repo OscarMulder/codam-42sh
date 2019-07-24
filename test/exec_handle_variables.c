@@ -1,20 +1,23 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        ::::::::            */
-/*   tools_isidentifierchar.c                           :+:    :+:            */
+/*   exec_handle_variables.c                            :+:    :+:            */
 /*                                                     +:+                    */
 /*   By: jbrinksm <jbrinksm@student.codam.nl>         +#+                     */
 /*                                                   +#+                      */
-/*   Created: 2019/07/13 19:50:31 by jbrinksm       #+#    #+#                */
-/*   Updated: 2019/07/13 19:56:06 by jbrinksm      ########   odam.nl         */
+/*   Created: 2019/07/24 11:35:41 by jbrinksm       #+#    #+#                */
+/*   Updated: 2019/07/24 11:42:34 by jbrinksm      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "vsh.h"
+#include <criterion/criterion.h>
 
-bool	tools_isidentifierchar(char c)
+TestSuite(exec_handle_variables);
+
+Test(exec_handle_variables, basic)
 {
-	if (ft_isalnum(c) == true || c == '_')
-		return (true);
-	return (false);
+	t_envlst *envlst;
+
+	envlst = env_getlst();
 }
