@@ -90,10 +90,10 @@ static int	redir_save_stdfds(int *stdfds)
 	if (STDIN_BAK == -1)
 		return (FUNCT_ERROR);
 	STDOUT_BAK = dup(STDOUT_FILENO);
-	if (STDIN_BAK == -1)
+	if (STDOUT_BAK == -1)
 		return (FUNCT_ERROR);
 	STDERR_BAK = dup(STDERR_FILENO);
-	if (STDIN_BAK == -1)
+	if (STDERR_BAK == -1)
 		return (FUNCT_ERROR);
 	return (FUNCT_SUCCESS);
 }
