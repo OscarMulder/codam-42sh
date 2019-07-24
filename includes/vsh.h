@@ -6,7 +6,7 @@
 /*   By: omulder <omulder@student.codam.nl>           +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2019/04/10 20:29:42 by jbrinksm       #+#    #+#                */
-/*   Updated: 2019/07/23 15:10:26 by jbrinksm      ########   odam.nl         */
+/*   Updated: 2019/07/24 15:30:19 by jbrinksm      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -454,6 +454,26 @@ char			**create_args(t_ast *ast);
 */
 
 int				error_return(int ret, int error, int *exit_code, char *opt_str);
+
+/*
+**------------------------------------redir-------------------------------------
+*/
+
+int			redir(t_ast *node, int *exit_code);
+int			redir_output(t_ast *node, int *exit_code);
+int			redir_input(t_ast *node, int *exit_code);
+bool		redir_is_open_fd(int fd);
+int			redir_input_closefd(int left_side_fd, int *exit_code);
+void		redir_change_if_leftside(t_ast *node, int *left_side_fd,
+char **right_side);
+int			redir_create_heredoc_fd(char *right_side, int *exit_code);
+
+
+/*
+**--------------------------------error_handling--------------------------------
+*/
+
+int			error_return(int ret, int error, int *exit_code, char *opt_str);
 
 /*
 **------------------------------------redir-------------------------------------

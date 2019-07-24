@@ -6,7 +6,7 @@
 /*   By: jbrinksm <jbrinksm@student.codam.nl>         +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2019/07/21 15:14:08 by jbrinksm       #+#    #+#                */
-/*   Updated: 2019/07/23 16:13:43 by jbrinksm      ########   odam.nl         */
+/*   Updated: 2019/07/24 15:23:58 by jbrinksm      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -44,7 +44,7 @@ int			redir_input(t_ast *node, int *exit_code)
 	else if (node->type == DLESS)
 		right_side_fd = redir_create_heredoc_fd(right_side, exit_code);
 	else if (ft_strequ(right_side, "-") == true)
-		redir_input_closefd(left_side_fd, exit_code);
+		return (redir_input_closefd(left_side_fd, exit_code));
 	else
 	{
 		if (getvalidfd(&right_side_fd, right_side, exit_code) == FUNCT_ERROR)
@@ -77,7 +77,7 @@ int			redir_output(t_ast *node, int *exit_code)
 	else if (node->type == DGREAT)
 		right_side_fd = open(right_side, O_WRONLY | O_CREAT | O_APPEND);
 	else if (ft_strequ(right_side, "-") == true)
-		redir_input_closefd(left_side_fd, exit_code);
+		return (redir_input_closefd(left_side_fd, exit_code));
 	else
 	{
 		if (getvalidfd(&right_side_fd, right_side, exit_code) == FUNCT_ERROR)
