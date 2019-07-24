@@ -176,7 +176,8 @@ void		exec_start(t_ast *ast, t_envlst *envlst, int *exit_code, int flags)
 		return ;
 	else if (ast->type == OR_IF && *exit_code == EXIT_SUCCESS)
 		return ;
-	else if (ast->type == WORD || tool_is_redirect_tk(ast->type) == true)
+	else if (ast->type == WORD || ast->type == ASSIGN
+	|| tool_is_redirect_tk(ast->type) == true)
 	{
 		if (exec_complete_command(ast, envlst, exit_code, flags)
 		== FUNCT_ERROR)
