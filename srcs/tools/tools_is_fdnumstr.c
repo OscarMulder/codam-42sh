@@ -6,7 +6,7 @@
 /*   By: jbrinksm <jbrinksm@student.codam.nl>         +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2019/07/21 20:18:16 by jbrinksm       #+#    #+#                */
-/*   Updated: 2019/07/23 16:10:40 by jbrinksm      ########   odam.nl         */
+/*   Updated: 2019/07/24 11:43:21 by jbrinksm      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,7 +16,7 @@ bool	tools_is_fdnumstr(char *str)
 {
 	int	i;
 
-	if (str == NULL || ft_isdigit(*str) == false)
+	if (str == NULL || *str == '\0')
 		return (false);
 	i = 0;
 	while (str[i] != '\0')
