@@ -6,7 +6,7 @@
 /*   By: omulder <omulder@student.codam.nl>           +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2019/05/29 17:52:22 by omulder        #+#    #+#                */
-/*   Updated: 2019/07/23 15:25:24 by jbrinksm      ########   odam.nl         */
+/*   Updated: 2019/07/24 10:28:38 by jbrinksm      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -114,6 +114,13 @@ static int	redir_reset_stdfds(int *stdfds)
 **	execution.
 */
 
+static int	return_and_reset_fds(int retval, int *stdfds)
+{
+	if (redir_reset_stdfds(stdfds) == FUNCT_ERROR)
+		return (FUNCT_ERROR);
+	return (retval);
+}
+
 static int	exec_complete_command(t_ast *node, t_envlst *envlst, int *exit_code, int flags)
 {
 	char	**command;
@@ -128,7 +135,7 @@ static int	exec_complete_command(t_ast *node, t_envlst *envlst, int *exit_code, 
 		if (node->sibling &&
 		exec_redirs_or_assigns(node->sibling, envlst, ENV_TEMP, exit_code)
 		== FUNCT_ERROR)
-			return (FUNCT_ERROR);
+			return (return_and_reset_fds(FUNCT_ERROR, stdfds));
 		command = create_args(node);
 		if (command != NULL)
 			exec_cmd(command, envlst, exit_code);
@@ -137,9 +144,9 @@ static int	exec_complete_command(t_ast *node, t_envlst *envlst, int *exit_code, 
 	{
 		if (exec_redirs_or_assigns(node, envlst, ENV_LOCAL, exit_code)
 		== FUNCT_ERROR)
-			return (FUNCT_ERROR);
+			return (return_and_reset_fds(FUNCT_ERROR, stdfds));
 	}
-	return (redir_reset_stdfds(stdfds));
+	return (return_and_reset_fds(FUNCT_SUCCESS, stdfds));
 }
 
 /*
