@@ -6,11 +6,12 @@
 /*   By: mavan-he <mavan-he@student.codam.nl>         +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2019/05/03 17:50:50 by mavan-he       #+#    #+#                */
-/*   Updated: 2019/07/22 15:38:21 by mavan-he      ########   odam.nl         */
+/*   Updated: 2019/07/24 13:03:23 by mavan-he      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "vsh.h"
+#include <unistd.h>
 
 static void	builtin_set_print(t_envlst *envlst)
 {
@@ -37,8 +38,8 @@ void		builtin_set(char **args, t_envlst *envlst, int *exit_code)
 {
 	if (args[1] != NULL)
 	{
-		ft_putendl_fd("vsh: set: too many arguments", 2);
-		ft_putendl_fd("set: usage: set", 2);
+		ft_eprintf("vsh: set: too many arguments", STDERR_FILENO);
+		ft_eprintf("set: usage: set", STDERR_FILENO);
 		*exit_code = EXIT_WRONG_USE;
 		return ;
 	}
