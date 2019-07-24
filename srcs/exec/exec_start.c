@@ -169,11 +169,9 @@ void		exec_start(t_ast *ast, t_envlst *envlst, int *exit_code, int flags)
 		flags &= ~EXEC_OR_IF;
 	else if (ast->type == SEMICOL)
 		flags &= ~EXEC_SEMICOL;
-	if (ast->type != WORD && ast->type != ASSIGN)
-	{
-		if (tool_is_redirect_tk(ast->type) == false)
-			exec_start(ast->child, envlst, exit_code, flags);
-	}
+	if (ast->type != WORD && ast->type != ASSIGN &&
+	tool_is_redirect_tk(ast->type) == false)
+		exec_start(ast->child, envlst, exit_code, flags);
 	if (ast->type == AND_IF && *exit_code != EXIT_SUCCESS)
 		return ;
 	else if (ast->type == OR_IF && *exit_code == EXIT_SUCCESS)
