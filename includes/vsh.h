@@ -6,7 +6,7 @@
 /*   By: omulder <omulder@student.codam.nl>           +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2019/04/10 20:29:42 by jbrinksm       #+#    #+#                */
-/*   Updated: 2019/07/20 14:14:11 by jbrinksm      ########   odam.nl         */
+/*   Updated: 2019/07/22 13:26:52 by mavan-he      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -57,7 +57,7 @@
 
 # define CURRENT_CHAR (scanner->str)[scanner->str_index]
 # define SCANNER_CHAR scanner.str[scanner.str_index]
-# define T_FLAG_HASDOLLAR (1 << 0)
+# define T_FLAG_HASSPECIAL (1 << 0)
 # define T_STATE_SQUOTE (1 << 1)
 # define T_STATE_DQUOTE (1 << 2)
 # define T_FLAG_HASEQUAL (1 << 3)
@@ -77,10 +77,13 @@
 **---------------------------------environment----------------------------------
 */
 
-# define ENV_EXTERN 2
-# define ENV_LOCAL 1
-# define ENV_TEMP 0
-# define ENV_HEAD -1
+
+# define ENV_MASK 0xF8
+# define ENV_WHITESPACE (1 << 3)
+# define ENV_EXTERN (1 << 2)
+# define ENV_LOCAL (1 << 1)
+# define ENV_TEMP (1 << 0)
+# define ENV_HEAD 0
 
 /*
 **------------------------------------parser------------------------------------
@@ -241,7 +244,9 @@ t_envlst	*env_lstnew(char *var, unsigned char type);
 char		**env_lsttoarr(t_envlst *lst, unsigned char minimal_type);
 int			env_lstlen(t_envlst *lst, unsigned char minimal_type);
 void		env_lstdel(t_envlst **envlst);
-void   		 env_remove_tmp(t_envlst *env);
+void   		env_remove_tmp(t_envlst *env);
+void		env_sort(t_envlst *head);
+void		env_lstadd_to_sortlst(t_envlst *envlst, t_envlst *new);
 
 /*
 **----------------------------------terminal------------------------------------
@@ -378,6 +383,8 @@ int				tools_update_quote_status(char *line, int cur_index,
 bool			tool_is_redirect_tk(t_tokens type);
 bool			tools_isidentifierchar(char c);
 bool			tools_is_valid_identifier(char *str);
+bool			tool_has_special(char c);
+bool			tool_check_for_whitespace(char *str);
 
 /*
 **----------------------------------execution-----------------------------------

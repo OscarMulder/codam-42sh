@@ -1,36 +1,37 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        ::::::::            */
-/*   builtin_export_print.c                             :+:    :+:            */
+/*   env_lstadd_to_sortlst.c                            :+:    :+:            */
 /*                                                     +:+                    */
 /*   By: mavan-he <mavan-he@student.codam.nl>         +#+                     */
 /*                                                   +#+                      */
-/*   Created: 2019/07/19 12:13:35 by mavan-he       #+#    #+#                */
-/*   Updated: 2019/07/21 18:10:42 by mavan-he      ########   odam.nl         */
+/*   Created: 2019/07/20 18:49:15 by mavan-he       #+#    #+#                */
+/*   Updated: 2019/07/20 19:14:03 by mavan-he      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "vsh.h"
 
-void		builtin_export_print(t_envlst *envlst, int flags)
+static int	sort_by_value(t_envlst *env1, t_envlst *env2)
 {
-	t_envlst	*probe;
-	char		*value;
+	return (ft_strcmp(env1->var, env2->var) > 0);
+}
 
-	probe = envlst;
-	while (probe != NULL)
+void		env_lstadd_to_sortlst(t_envlst *envlst, t_envlst *new)
+{
+	while (envlst != NULL)
 	{
-		if (probe->type & ENV_EXTERN)
+		if (envlst->next == NULL)
 		{
-			if (flags & EXP_FLAG_LP)
-				ft_putstr("declare -x ");
-			value = ft_strchr(probe->var, '=');
-			if (value != NULL)
-				ft_printf("%.*s\"%s\"\n", value - probe->var + 1,
-				probe->var, value + 1);
-			else
-				ft_putendl(probe->var);
+			envlst->next = new;
+			break ;
 		}
-		probe = probe->next;
+		if (sort_by_value(envlst->next, new) == true)
+		{
+			new->next = envlst->next;
+			envlst->next = new;
+			break ;
+		}
+		envlst = envlst->next;
 	}
 }

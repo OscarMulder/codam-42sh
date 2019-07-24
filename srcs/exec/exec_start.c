@@ -6,7 +6,7 @@
 /*   By: omulder <omulder@student.codam.nl>           +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2019/05/29 17:52:22 by omulder        #+#    #+#                */
-/*   Updated: 2019/07/20 14:12:07 by jbrinksm      ########   odam.nl         */
+/*   Updated: 2019/07/20 16:23:40 by mavan-he      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -42,10 +42,6 @@ static char	**create_args(t_ast *ast)
 	probe = ast;
 	while (i < total_args)
 	{
-		#ifdef DEBUG
-		if (probe->type != WORD)
-			ft_putendl("Found non-WORD item in child-flow of WORD's (aka I messed something up -Jorn)");
-		#endif
 		args[i] = ft_strdup(probe->value);
 		if (args[i] == NULL)
 		{
@@ -57,9 +53,6 @@ static char	**create_args(t_ast *ast)
 	}
 	return (args);
 }
-
-
-
 
 /*
 **	This will edit the I/O table based on the redirect given as input.
@@ -168,6 +161,8 @@ void		exec_start(t_ast *ast, t_envlst *envlst, int *exit_code, int flags)
 	
 	/* Runs after the above exec_start returns or isn't run */
 	if (ast->type == AND_IF && *exit_code != EXIT_SUCCESS)
+		return ;
+	else if (ast->type == OR_IF && *exit_code == EXIT_SUCCESS)
 		return ;
 	else if (ast->type == WORD || ast->type == ASSIGN || ast->type == SGREAT)
 		exec_complete_command(ast, envlst, exit_code, flags);
