@@ -6,7 +6,7 @@
 /*   By: omulder <omulder@student.codam.nl>           +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2019/04/10 20:29:42 by jbrinksm       #+#    #+#                */
-/*   Updated: 2019/07/24 21:47:39 by mavan-he      ########   odam.nl         */
+/*   Updated: 2019/07/24 22:07:11 by mavan-he      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -36,6 +36,7 @@
 **=================================exit codes====================================
 */
 
+# define EXIT_WRONG_USE 2
 # define EXIT_NOTFOUND 127
 # define EXIT_FATAL 128
 
