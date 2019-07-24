@@ -6,7 +6,7 @@
 /*   By: omulder <omulder@student.codam.nl>           +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2019/05/29 16:59:41 by omulder        #+#    #+#                */
-/*   Updated: 2019/07/19 20:55:35 by mavan-he      ########   odam.nl         */
+/*   Updated: 2019/07/24 17:28:09 by mavan-he      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -26,7 +26,8 @@
 
 bool	exec_builtin(char **args, t_envlst *envlst, int *exit_code)
 {
-	(void)envlst;
+	static t_aliaslst *aliaslst;
+
 	if (ft_strequ(args[0], "echo"))
 		builtin_echo(args, exit_code);
 	else if (ft_strequ(args[0], "exit"))
@@ -37,6 +38,8 @@ bool	exec_builtin(char **args, t_envlst *envlst, int *exit_code)
 		builtin_set(args, envlst, exit_code);
 	else if (ft_strequ(args[0], "unset"))
 		builtin_unset(args, envlst, exit_code);
+	else if (ft_strequ(args[0], "alias"))
+		builtin_alias(args, &aliaslst);
 	else
 		return (false);
 	return (true);

@@ -6,7 +6,7 @@
 /*   By: mavan-he <mavan-he@student.codam.nl>         +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2019/07/24 13:36:44 by mavan-he       #+#    #+#                */
-/*   Updated: 2019/07/24 17:02:40 by mavan-he      ########   odam.nl         */
+/*   Updated: 2019/07/24 18:29:49 by mavan-he      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -21,22 +21,57 @@
 // Alias substitudes the first WORD in a simple command with it's value
 // If the first WORD contains a special shell character it is skipped
 
-static int	builtin_alias_args(char **args, int i, t_iets aliaslst)
+static int	builtin_alias_print(char *arg, t_aliaslst *aliaslst)
 {
-	
+	char	*str_equal;
+	int		arg_len;
+
+	arg_len = ft_strlen(arg);
+	while (aliaslst != NULL)
+	{
+		if (ft_strnequ(arg, aliaslst->var, arg_len) == true &&
+			(aliaslst->var[arg_len] == '='))
+		{
+			str_equal = ft_strchr(aliaslst->var, '=');
+			ft_printf("%.*s\'%s\'\n", str_equal - aliaslst->var + 1,
+			aliaslst->var, str_equal + 1);
+			return (FUNCT_SUCCESS);
+		}	
+		aliaslst = aliaslst->next;
+	}
+	ft_eprintf("vsh: alias: %s: not found\n", arg);
+	return (FUNCT_FAILURE);
 }
-static void	builtin_alias_print(t_iets **aliaslst)
+
+static int	builtin_alias_args(char **args, int i, t_aliaslst **aliaslst)
+{
+	int ret;
+
+	ret = FUNCT_SUCCESS;
+	while (args[i] != NULL)
+	{
+		if (ft_strchr(args[i], '=') != NULL)
+		{
+			if (builtin_alias_set(args[i], aliaslst) == FUNCT_ERROR)
+				ret = FUNCT_ERROR;
+		}
+		else if (builtin_alias_print(args[i], *aliaslst) == FUNCT_ERROR)
+			ret = FUNCT_ERROR;
+		i++;
+	}
+	return (ret);
+}
+
+static void	builtin_alias_printlst(t_aliaslst *aliaslst)
 {
 	char	*str_equal;
 
-	if (*aliaslst == NULL)
-		return ;
-	while (*aliaslst != NULL)
+	while (aliaslst != NULL)
 	{
 		str_equal = ft_strchr(aliaslst->var, '=');
 		ft_printf("%.*s\'%s\'\n", str_equal - aliaslst->var + 1,
 		aliaslst->var, str_equal + 1);
-		aliaslst++;
+		aliaslst = aliaslst->next;
 	}
 }
 
@@ -65,7 +100,7 @@ static int	builtin_alias_flag(char **args, int *flag, int *i)
 	return (FUNCT_SUCCESS);
 }
 
-void		builtin_alias(char **args, t_iets **aliaslst)
+void		builtin_alias(char **args, t_aliaslst **aliaslst)
 {
 	int		flag;
 	int		i;
@@ -77,8 +112,8 @@ void		builtin_alias(char **args, t_iets **aliaslst)
 		// set global error;
 		return ;
 	}
-	if (flag & ALIAS_FLAG_LP)
-		builtin_alias_print(aliaslst);
+	if (args[i] == NULL || flag & ALIAS_FLAG_LP)
+		builtin_alias_printlst(*aliaslst);
 	if (args[i] != NULL && builtin_alias_args(args, i, aliaslst) == FUNCT_ERROR)
 		;// set global error to EXIT_ERROR
 	else

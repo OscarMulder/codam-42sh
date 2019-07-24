@@ -6,7 +6,7 @@
 #    By: jbrinksm <jbrinksm@student.codam.nl>         +#+                      #
 #                                                    +#+                       #
 #    Created: 2019/04/10 20:30:07 by jbrinksm       #+#    #+#                 #
-#    Updated: 2019/07/22 11:18:20 by jbrinksm      ########   odam.nl          #
+#    Updated: 2019/07/24 17:52:08 by mavan-he      ########   odam.nl          #
 #                                                                              #
 # **************************************************************************** #
 
@@ -37,6 +37,7 @@ tools_is_char_escaped tool_is_redirect_tk tools_is_valid_identifier \
 tool_has_special tool_check_for_whitespace tools_is_fdnumstr \
 builtin_echo builtin_echo_set_flags builtin_exit builtin_assign \
 builtin_export builtin_export_print builtin_set builtin_unset \
+builtin_alias builtin_alias_set\
 lexer lexer_utils lexer_debug lexer_evaluator lexer_scanner \
 lexer_state_if_else lexer_state_single lexer_state_start lexer_state_strings \
 parser_start parser_debug parser_utils parser_command parser_error \

@@ -6,7 +6,7 @@
 /*   By: omulder <omulder@student.codam.nl>           +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2019/04/10 20:29:42 by jbrinksm       #+#    #+#                */
-/*   Updated: 2019/07/24 17:02:45 by mavan-he      ########   odam.nl         */
+/*   Updated: 2019/07/24 17:51:57 by mavan-he      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -245,6 +245,16 @@ typedef struct	s_ast
 }				t_ast;
 
 /*
+**------------------------------------alias-------------------------------------
+*/
+
+typedef struct	s_aliaslst
+{
+	char				*var;
+	struct s_aliaslst	*next;
+}				t_aliaslst;
+
+/*
 **---------------------------------environment----------------------------------
 */
 
@@ -393,6 +403,9 @@ int				builtin_assign_addexist(t_envlst *envlst, char *arg, char *var, int env_t
 int				builtin_assign_addnew(t_envlst *envlst, char *var, int env_type);
 void			builtin_set(char **args, t_envlst *envlst, int *exit_code);
 void			builtin_unset(char **args, t_envlst *envlst, int *exit_code);
+void			builtin_alias(char **args, t_aliaslst **aliaslst);
+int				builtin_alias_set(char *arg, t_aliaslst **aliaslst);
+
 
 /*
 **---------------------------------tools----------------------------------------
