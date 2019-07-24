@@ -137,8 +137,9 @@ static int	exec_complete_command(t_ast *node, t_envlst *envlst, int *exit_code, 
 		== FUNCT_ERROR)
 			return (return_and_reset_fds(FUNCT_ERROR, stdfds));
 		command = create_args(node);
-		if (command != NULL)
-			exec_cmd(command, envlst, exit_code);
+		if (command == NULL)
+			return (return_and_reset_fds(FUNCT_ERROR, stdfds));
+		exec_cmd(command, envlst, exit_code);
 	}
 	else if (node->type == ASSIGN || tool_is_redirect_tk(node->type) == true)
 	{
