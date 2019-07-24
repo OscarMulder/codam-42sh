@@ -6,7 +6,7 @@
 /*   By: jbrinksm <jbrinksm@student.codam.nl>         +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2019/07/22 09:18:19 by jbrinksm       #+#    #+#                */
-/*   Updated: 2019/07/22 11:53:09 by jbrinksm      ########   odam.nl         */
+/*   Updated: 2019/07/24 17:02:56 by jbrinksm      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -62,11 +62,20 @@ int			redir_input_closefd(int left_side_fd, int *exit_code)
 	return (FUNCT_SUCCESS);
 }
 
+#include <grp.h>
+#include <pwd.h>
+
 bool		redir_is_open_fd(int fd)
 {
 	struct stat buf;
+	struct group *gr;
+	struct passwd *pw;
 
 	if (fstat(fd, &buf) == -1)
 		return (false);
+	ft_putendl("test");
+	gr = getgrgid(buf.st_gid);
+	pw = getpwuid(buf.st_uid);
+	ft_printf("%s:%s\n", pw->pw_name, gr->gr_name);
 	return (true);
 }

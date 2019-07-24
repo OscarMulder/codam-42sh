@@ -6,7 +6,7 @@
 /*   By: omulder <omulder@student.codam.nl>           +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2019/05/29 17:52:22 by omulder        #+#    #+#                */
-/*   Updated: 2019/07/24 15:36:54 by jbrinksm      ########   odam.nl         */
+/*   Updated: 2019/07/24 17:28:53 by jbrinksm      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -100,12 +100,20 @@ static int	redir_save_stdfds(int *stdfds)
 
 static int	redir_reset_stdfds(int *stdfds)
 {
-	if (dup2(STDIN_BAK, STDIN_FILENO) == -1)
+	int ret;
+
+	ret = dup2(STDIN_BAK, STDIN_FILENO);
+	if (ret == -1)
 		return (FUNCT_ERROR);
-	if (dup2(STDOUT_BAK, STDOUT_FILENO) == -1)
+	close(STDIN_BAK);
+	ret = dup2(STDOUT_BAK, STDOUT_FILENO);
+	if (ret == -1)
 		return (FUNCT_ERROR);
-	if (dup2(STDERR_BAK, STDERR_FILENO) == -1)
+	close(STDOUT_BAK);
+	ret = dup2(STDERR_BAK, STDERR_FILENO);
+	if (ret == -1)
 		return (FUNCT_ERROR);
+	close(STDERR_BAK);
 	return (FUNCT_SUCCESS);
 }
 
