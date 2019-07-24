@@ -6,7 +6,7 @@
 /*   By: omulder <omulder@student.codam.nl>           +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2019/05/29 16:59:41 by omulder        #+#    #+#                */
-/*   Updated: 2019/07/24 17:28:09 by mavan-he      ########   odam.nl         */
+/*   Updated: 2019/07/24 21:48:24 by mavan-he      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -40,6 +40,8 @@ bool	exec_builtin(char **args, t_envlst *envlst, int *exit_code)
 		builtin_unset(args, envlst, exit_code);
 	else if (ft_strequ(args[0], "alias"))
 		builtin_alias(args, &aliaslst);
+	else if (ft_strequ(args[0], "unalias"))
+		builtin_unalias(args, &aliaslst);
 	else
 		return (false);
 	return (true);

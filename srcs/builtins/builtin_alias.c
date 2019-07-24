@@ -6,20 +6,28 @@
 /*   By: mavan-he <mavan-he@student.codam.nl>         +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2019/07/24 13:36:44 by mavan-he       #+#    #+#                */
-/*   Updated: 2019/07/24 18:29:49 by mavan-he      ########   odam.nl         */
+/*   Updated: 2019/07/24 22:05:07 by mavan-he      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "vsh.h"
 
-// alias [-p] [name[=value] ...]
-// 
-// The name cannot contain any special shell characters
-// When -p is set, alias prints all aliases, it also handles arguments
-// 
+// TO DO:
 
+// add escape sequence when value contains a single quote
 // Alias substitudes the first WORD in a simple command with it's value
 // If the first WORD contains a special shell character it is skipped
+// The first word of the expansion is checked again but only if it's not a duplicate
+// if there is a space or tab at the end, the second WORD is checked as well
+// reloading aliasses from shell start ?
+
+/*
+**	alias [-p] [name[=value] ...]
+**	
+**	The name cannot contain any special shell characters
+**	When -p is set, alias prints all aliases and still handles arguments
+*/ 
+
 
 static int	builtin_alias_print(char *arg, t_aliaslst *aliaslst)
 {
@@ -45,14 +53,24 @@ static int	builtin_alias_print(char *arg, t_aliaslst *aliaslst)
 
 static int	builtin_alias_args(char **args, int i, t_aliaslst **aliaslst)
 {
-	int ret;
+	int		ret;
+	char	*str_equal;
 
 	ret = FUNCT_SUCCESS;
 	while (args[i] != NULL)
 	{
-		if (ft_strchr(args[i], '=') != NULL)
+		str_equal = ft_strchr(args[i], '=');
+		if (str_equal != NULL)
 		{
-			if (builtin_alias_set(args[i], aliaslst) == FUNCT_ERROR)
+			if (tools_is_valid_identifier(args[i]) == false ||
+			(ft_strnequ(args[i], "alias", 5) && args[i][5] == '=') || 
+			(ft_strnequ(args[i], "unalias", 7) && args[i][7] == '='))
+			{
+				ft_eprintf("vsh: alias: `%.*s': invalid alias name\n",
+				str_equal - args[i], args[i]);
+				ret = FUNCT_ERROR;
+			}
+			else if (builtin_alias_set(args[i], aliaslst) == FUNCT_ERROR)
 				ret = FUNCT_ERROR;
 		}
 		else if (builtin_alias_print(args[i], *aliaslst) == FUNCT_ERROR)
@@ -117,5 +135,5 @@ void		builtin_alias(char **args, t_aliaslst **aliaslst)
 	if (args[i] != NULL && builtin_alias_args(args, i, aliaslst) == FUNCT_ERROR)
 		;// set global error to EXIT_ERROR
 	else
-		;// set global error to EXIT_ERROR
+		;// set global error to EXIT_SUCCESS
 }

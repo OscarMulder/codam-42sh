@@ -6,7 +6,7 @@
 /*   By: omulder <omulder@student.codam.nl>           +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2019/04/10 20:29:42 by jbrinksm       #+#    #+#                */
-/*   Updated: 2019/07/24 17:51:57 by mavan-he      ########   odam.nl         */
+/*   Updated: 2019/07/24 21:47:39 by mavan-he      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -405,7 +405,9 @@ void			builtin_set(char **args, t_envlst *envlst, int *exit_code);
 void			builtin_unset(char **args, t_envlst *envlst, int *exit_code);
 void			builtin_alias(char **args, t_aliaslst **aliaslst);
 int				builtin_alias_set(char *arg, t_aliaslst **aliaslst);
-
+void			builtin_alias_delnode(t_aliaslst **node);
+void			builtin_alias_lstdel(t_aliaslst **lst);
+void			builtin_unalias(char **args, t_aliaslst **aliaslst);
 
 /*
 **---------------------------------tools----------------------------------------
