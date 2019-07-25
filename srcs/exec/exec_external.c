@@ -35,7 +35,7 @@ static bool	exec_bin(char **args, char **vshenviron, t_pipes pipes)
 	return (true);
 }
 
-bool		exec_external(char **args, t_envlst *envlst, t_pipes pipes)
+bool			exec_external(char **args, t_vshdata *vshdata, t_pipes pipes)
 {
 	char	**vshenviron;
 	char	*binary;
@@ -43,13 +43,13 @@ bool		exec_external(char **args, t_envlst *envlst, t_pipes pipes)
 
 	if (args[0][0] != '/' && !ft_strnequ(args[0], "./", 2))
 	{
-		binary = exec_find_binary(args[0], envlst);
+		binary = exec_find_binary(args[0], vshdata);
 		if (binary == NULL)
 			return (false);
 		free(args[0]);
 		args[0] = binary;
 	}
-	vshenviron = env_lsttoarr(envlst, ENV_EXTERN);
+	vshenviron = env_lsttoarr(vshdata->envlst, ENV_EXTERN);
 	if (vshenviron == NULL)
 	{
 		ft_printf("vsh: failed to allocate enough memory!\n");

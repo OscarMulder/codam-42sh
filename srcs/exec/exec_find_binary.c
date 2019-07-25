@@ -37,14 +37,14 @@ static char		*check_dir(DIR *d, char *filename, char *path)
 	return (NULL);
 }
 
-char			*exec_find_binary(char *filename, t_envlst *envlst)
+char			*exec_find_binary(char *filename, t_vshdata *vshdata)
 {
 	DIR				*d;
 	char			**paths;
 	char			*ret;
 	size_t			i;
 
-	paths = get_paths(envlst);
+	paths = get_paths(vshdata->envlst);
 	if (paths == NULL)
 		return (NULL);
 	i = 0;

@@ -14,12 +14,12 @@
 #include <unistd.h>
 #include <sys/wait.h>
 
-static int	exec_pipe(t_ast *pipenode, t_envlst *envlst, t_pipes pipes)
+static int	exec_pipe(t_ast *pipenode, t_vshdata *vshdata, t_pipes pipes)
 {
 	if (pipenode->child != NULL && pipenode->child->type != PIPE)
 	{
 		pipes.pipeside = PIPE_START;
-		if (exec_complete_command(pipenode->child, envlst, pipes)
+		if (exec_complete_command(pipenode->child, vshdata, pipes)
 		== FUNCT_ERROR)
 			return (FUNCT_ERROR);
 	}
@@ -27,7 +27,7 @@ static int	exec_pipe(t_ast *pipenode, t_envlst *envlst, t_pipes pipes)
 	if (pipenode->sibling != NULL)
 	{
 		pipes.pipeside = PIPE_EXTEND;
-		if (exec_complete_command(pipenode->sibling, envlst, pipes)
+		if (exec_complete_command(pipenode->sibling, vshdata, pipes)
 		== FUNCT_ERROR)
 			return (FUNCT_ERROR);
 	}
@@ -107,7 +107,7 @@ int			redir_handle_pipe(t_pipes pipes)
 **	be siblings of pipenodes, and will thus be PIPE_EXTEND.
 */
 
-int			redir_run_pipesequence(t_ast *pipenode, t_envlst *envlst,
+int			redir_run_pipesequence(t_ast *pipenode, t_vshdata *vshdata,
 t_pipes pipes)
 {
 	t_pipes	childpipes;
@@ -122,7 +122,7 @@ t_pipes pipes)
 		childpipes = pipes;
 		childpipes.parentpipe[0] = pipes.currentpipe[0];
 		childpipes.parentpipe[1] = pipes.currentpipe[1];
-		redir_run_pipesequence(pipenode->child, envlst, childpipes);
+		redir_run_pipesequence(pipenode->child, vshdata, childpipes);
 	}
-	return (exec_pipe(pipenode, envlst, pipes));
+	return (exec_pipe(pipenode, vshdata, pipes));
 }
