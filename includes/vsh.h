@@ -6,7 +6,7 @@
 /*   By: omulder <omulder@student.codam.nl>           +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2019/04/10 20:29:42 by jbrinksm       #+#    #+#                */
-/*   Updated: 2019/07/23 11:34:22 by tde-jong      ########   odam.nl         */
+/*   Updated: 2019/07/25 12:59:22 by jbrinksm      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -24,6 +24,11 @@
 # define PROG_FAILURE 1
 # define PROG_SUCCESS 0
 # define E_ALLOC 420
+# define E_DUP 100
+# define E_OPEN 101
+# define E_BADFD 102
+# define E_CLOSE 103
+# define E_BADRED 104
 # define CTRLD -1
 # define CR 0
 
@@ -31,6 +36,7 @@
 **=================================exit codes====================================
 */
 
+# define EXIT_WRONG_USE 2
 # define EXIT_NOTFOUND 127
 # define EXIT_FATAL 128
 
@@ -72,6 +78,16 @@
 # define EXEC_AND_IF (1 << 2)
 # define EXEC_OR_IF (1 << 3)
 # define EXEC_SEMICOL (1 << 4)
+
+# define STDIN_BAK stdfds[0]
+# define STDOUT_BAK stdfds[1]
+# define STDERR_BAK stdfds[2]
+
+/*
+**--------------------------------redirections----------------------------------
+*/
+
+# define FD_UNINIT -1
 
 /*
 **---------------------------------environment----------------------------------
@@ -373,7 +389,7 @@ void			builtin_export(char **args, t_envlst *envlst);
 void			builtin_export_var_to_type(char *varname, t_envlst *envlst, int type);
 void			builtin_export_print(t_envlst *envlst, int flags);
 void			builtin_export_args(char **args, t_envlst *envlst, int i);
-void			builtin_assign(char *arg, t_envlst *envlst, int env_type);
+int				builtin_assign(char *arg, t_envlst *envlst, int env_type);
 int				builtin_assign_addexist(t_envlst *envlst, char *arg, char *var, int env_type);
 int				builtin_assign_addnew(t_envlst *envlst, char *var, int env_type);
 void			builtin_set(char **args, t_envlst *envlst);
@@ -389,6 +405,7 @@ int				tools_update_quote_status(char *line, int cur_index,
 					char *quote);
 bool			tool_is_redirect_tk(t_tokens type);
 bool			tools_is_valid_identifier(char *str);
+bool			tools_is_fdnumstr(char *str);
 bool			tool_has_special(char c);
 bool			tool_check_for_whitespace(char *str);
 
@@ -402,6 +419,26 @@ bool	exec_builtin(char **args, t_envlst *envlst);
 bool	exec_external(char **args, t_envlst *envlst);
 char	*exec_find_binary(char *filename, t_envlst *envlst);
 void	exec_quote_remove(t_ast *node);
+
+/*
+**------------------------------------redir-------------------------------------
+*/
+
+int			redir(t_ast *node);
+int			redir_output(t_ast *node);
+int			redir_input(t_ast *node);
+bool		redir_is_open_fd(int fd);
+int			redir_input_closefd(int left_side_fd);
+void		redir_change_if_leftside(t_ast *node, int *left_side_fd,
+char **right_side);
+int			redir_create_heredoc_fd(char *right_side);
+
+
+/*
+**--------------------------------error_handling--------------------------------
+*/
+
+int			error_return(int ret, int error, char *opt_str);
 
 /*
 **----------------------------------debugging-----------------------------------

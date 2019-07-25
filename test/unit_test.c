@@ -6,7 +6,7 @@
 /*   By: jbrinksm <jbrinksm@student.codam.nl>         +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2019/04/18 16:37:32 by omulder        #+#    #+#                */
-/*   Updated: 2019/07/23 12:13:28 by tde-jong      ########   odam.nl         */
+/*   Updated: 2019/07/25 12:49:08 by jbrinksm      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -230,6 +230,7 @@ Test(builtin_echo, basic, .init=redirect_all_stdout)
 	char	**args;
 
 	g_state = (t_state*)ft_memalloc(sizeof(t_state));
+	g_state->exit_code = 0;
 
 	args = ft_strsplit("echo|-nEe|\\\\test\\a\\t\\v\\r\\n\\b\\f\\E", '|');
 	g_state->exit_code = INT_MIN;
@@ -237,18 +238,21 @@ Test(builtin_echo, basic, .init=redirect_all_stdout)
 	cr_expect(g_state->exit_code == 0);
 	ft_strarrdel(&args);
 
+	g_state->exit_code = 0;
 	args = ft_strsplit("echo|-Eea|\n", '|');
 	g_state->exit_code = INT_MIN;
 	builtin_echo(args);
 	cr_expect(g_state->exit_code == 0);
 	ft_strarrdel(&args);
 
+	g_state->exit_code = 0;
 	args = ft_strsplit("echo|-nEe", '|');
 	g_state->exit_code = INT_MIN;
 	builtin_echo(args);
 	cr_expect(g_state->exit_code == 0);
 	ft_strarrdel(&args);
 
+	g_state->exit_code = 0;
 	args = ft_strsplit("echo|-E", '|');
 	g_state->exit_code = INT_MIN;
 	builtin_echo(args);
@@ -491,6 +495,7 @@ Test(command_exec, basic, .init=redirect_all_stdout)
 	t_envlst	*envlst;
 
 	g_state = (t_state*)ft_memalloc(sizeof(t_state));
+	g_state->exit_code = 0;
 
 	str = ft_strdup("ls\n");
 	lst = NULL;
@@ -576,6 +581,7 @@ Test(exec_echo, basic, .init=redirect_all_stdout)
 	t_envlst	*envlst;
 
 	g_state = (t_state*)ft_memalloc(sizeof(t_state));
+	g_state->exit_code = 0;
 
 	str = ft_strdup("echo hoi\n");
 	lst = NULL;
@@ -597,6 +603,7 @@ Test(exec_echo, basic2, .init=redirect_all_stdout)
 	t_envlst	*envlst;
 
 	g_state = (t_state*)ft_memalloc(sizeof(t_state));
+	g_state->exit_code = 0;
 
 	str = ft_strdup("echo \"Hi, this is a string\"\n");
 	lst = NULL;
@@ -625,6 +632,7 @@ Test(exec_cmd, basic, .init=redirect_all_stdout)
 	t_envlst	*envlst;
 
 	g_state = (t_state*)ft_memalloc(sizeof(t_state));
+	g_state->exit_code = 0;
 
 	str = ft_strdup("/bin/pwd\n");
 	cwd = getcwd(NULL, 0);
@@ -651,6 +659,7 @@ Test(exec_cmd, basic2, .init=redirect_all_stdout)
 	t_envlst	*envlst;
 
 	g_state = (t_state*)ft_memalloc(sizeof(t_state));
+	g_state->exit_code = 0;
 
 	str = ft_strdup("/bin/echo hoi\n");
 	lst = NULL;
@@ -742,6 +751,7 @@ Test(exec_find_bin, execution, .init=redirect_all_stdout)
 	t_envlst	*envlst;
 
 	g_state = (t_state*)ft_memalloc(sizeof(t_state));
+	g_state->exit_code = 0;
 
 	envlst = env_getlst();
 	str = ft_strdup("ls vsh\n");
@@ -763,6 +773,7 @@ Test(exec_find_bin, execnonexistent, .init=redirect_all_stdout)
 	t_envlst	*envlst;
 
 	g_state = (t_state*)ft_memalloc(sizeof(t_state));
+	g_state->exit_code = 0;
 
 	envlst = env_getlst();
 	str = ft_strdup("idontexist\n");
@@ -784,6 +795,7 @@ Test(builtin_export, basic_test)
 	char		*args[3];
 
 	g_state = (t_state*)ft_memalloc(sizeof(t_state));
+	g_state->exit_code = 0;
 
 	args[0] = "export";
 	args[1] = "key=value";
@@ -804,12 +816,12 @@ Test(builtin_export, basic_test_n_option)
 	char		*args[4];
 
 	g_state = (t_state*)ft_memalloc(sizeof(t_state));
+	g_state->exit_code = 0;
 
 	args[0] = "export";
 	args[1] = "key=value";
 	args[2] = NULL;
 	envlst = env_getlst();
-	g_state->exit_code = 0;
 	builtin_export(args, envlst);
 	args[0] = "export";
 	args[1] = "-n";
@@ -831,13 +843,28 @@ Test(builtin_export, basic_output_error_test, .init=redirect_all_stdout)
 
 	g_state = (t_state*)ft_memalloc(sizeof(t_state));
 
+	g_state->exit_code = 0;
 	args[0] = "export";
 	args[1] = "key*=value";
 	args[2] = NULL;
 	envlst = env_getlst();
 	builtin_export(args, envlst);
-	cr_expect(g_state->exit_code == EXIT_FAILURE);
+	cr_expect(g_state->exit_code == EXIT_WRONG_USE);
 	cr_expect_stdout_eq_str("vsh: export: 'key*=value': not a valid identifier\n");
+}
+
+Test(builtin_export, basic_output_error_test2, .init=redirect_all_stdout)
+{
+	t_envlst    *envlst;
+	char		*args[3];
+
+	g_state->exit_code = 0;
+	args[0] = "export";
+	args[1] = "-h";
+	args[2] = NULL;
+	envlst = env_getlst();
+	builtin_export(args, envlst);
+	cr_expect(g_state->exit_code == EXIT_WRONG_USE);
 }
 
 TestSuite(env_sort);

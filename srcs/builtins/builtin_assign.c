@@ -6,7 +6,7 @@
 /*   By: jbrinksm <jbrinksm@student.codam.nl>         +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2019/06/05 09:09:49 by jbrinksm       #+#    #+#                */
-/*   Updated: 2019/07/23 11:35:11 by tde-jong      ########   odam.nl         */
+/*   Updated: 2019/07/25 12:54:29 by jbrinksm      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -52,16 +52,16 @@ int			builtin_assign_addnew(t_envlst *envlst, char *var, int env_type)
 	return (FUNCT_SUCCESS);
 }
 
-void		builtin_assign(char *arg, t_envlst *envlst, int env_type)
+int		builtin_assign(char *arg, t_envlst *envlst, int env_type)
 {
 	char		*var;
 
 	g_state->exit_code = EXIT_FAILURE;
 	if (envlst == NULL || arg == NULL)
-		return ;
+		return (FUNCT_ERROR);
 	var = ft_strdup(arg);
 	if (var == NULL)
-		return ;
+		return (FUNCT_ERROR);
 	if (tool_check_for_whitespace(arg) == true)
 		env_type |= ENV_WHITESPACE;
 	else
@@ -73,6 +73,8 @@ void		builtin_assign(char *arg, t_envlst *envlst, int env_type)
 		{
 			ft_printf("assign: failed to allocate enough memory\n");
 			g_state->exit_code = EXIT_FAILURE;
+			return (FUNCT_ERROR);
 		}
 	}
+	return (FUNCT_SUCCESS);
 }
