@@ -82,7 +82,7 @@ static int	add_newline(char **line, int *len_max)
 	else
 	{
 		*len_max += 1;
-		tmp = ft_strnew(*len_max + 1);
+		tmp = ft_strnew(*len_max);
 		if (tmp == NULL)
 			return (FUNCT_FAILURE);
 		ft_strcpy(tmp, *line);
