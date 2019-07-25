@@ -6,7 +6,7 @@
 /*   By: omulder <omulder@student.codam.nl>           +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2019/04/10 20:29:42 by jbrinksm       #+#    #+#                */
-/*   Updated: 2019/07/25 17:08:01 by mavan-he      ########   odam.nl         */
+/*   Updated: 2019/07/25 17:44:17 by mavan-he      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -182,12 +182,23 @@ typedef struct	s_envlst
 }				t_envlst;
 
 /*
+**------------------------------------alias-------------------------------------
+*/
+
+typedef struct	s_aliaslst
+{
+	char				*var;
+	struct s_aliaslst	*next;
+}				t_aliaslst;
+
+/*
 **-----------------------------------vsh_data-----------------------------------
 */
 
 typedef struct	s_vshdata
 {
 	t_envlst 	*envlst;
+	t_aliaslst	*aliaslst;
 }				t_vshdata;
 
 /*
@@ -276,15 +287,6 @@ typedef struct	s_ast
 	struct s_ast	*sibling;
 }				t_ast;
 
-/*
-**------------------------------------alias-------------------------------------
-*/
-
-typedef struct	s_aliaslst
-{
-	char				*var;
-	struct s_aliaslst	*next;
-}				t_aliaslst;
 
 char			*env_getvalue(char *var_key, t_envlst *envlst);
 char			**env_free_and_return_null(char ***vshenviron);
@@ -389,6 +391,13 @@ void			lexer_state_word_esc(t_scanner *scanner);
 void			lexer_state_lessand(t_scanner *scanner);
 void			lexer_state_greatand(t_scanner *scanner);
 void			lexer_state_ionum(t_scanner *scanner);
+
+/*
+**----------------------------------alias---------------------------------------
+*/
+
+int				alias_expansion(t_vshdata *vhsdata, t_tokenlst **tokenlst);
+
 
 /*
 **----------------------------------parser--------------------------------------

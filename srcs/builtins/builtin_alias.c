@@ -6,20 +6,11 @@
 /*   By: mavan-he <mavan-he@student.codam.nl>         +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2019/07/24 13:36:44 by mavan-he       #+#    #+#                */
-/*   Updated: 2019/07/25 16:22:42 by mavan-he      ########   odam.nl         */
+/*   Updated: 2019/07/25 17:49:24 by mavan-he      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "vsh.h"
-
-// TO DO:
-
-// add escape sequence when value contains a single quote
-// Alias substitudes the first WORD in a simple command with it's value
-// If the first WORD contains a special shell character it is skipped
-// The first word of the expansion is checked again but only if it's not a duplicate
-// if there is a space or tab at the end, the second WORD is checked as well
-// reloading aliasses from shell start ?
 
 /*
 **	alias [-p] [name[=value] ...]
