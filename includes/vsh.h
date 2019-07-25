@@ -6,7 +6,7 @@
 /*   By: omulder <omulder@student.codam.nl>           +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2019/04/10 20:29:42 by jbrinksm       #+#    #+#                */
-/*   Updated: 2019/07/25 13:33:24 by jbrinksm      ########   odam.nl         */
+/*   Updated: 2019/07/25 15:34:50 by mavan-he      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -155,6 +155,12 @@
 /*
 **=================================typedefs====================================
 */
+
+typedef struct	s_vshdata
+{
+	t_envlst 	*envlist;
+}				t_vshdata;
+
 
 typedef struct	s_term
 {
