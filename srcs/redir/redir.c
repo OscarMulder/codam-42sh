@@ -6,7 +6,7 @@
 /*   By: jbrinksm <jbrinksm@student.codam.nl>         +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2019/07/21 15:14:08 by jbrinksm       #+#    #+#                */
-/*   Updated: 2019/07/24 17:32:08 by jbrinksm      ########   odam.nl         */
+/*   Updated: 2019/07/25 11:03:44 by jbrinksm      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -54,7 +54,6 @@ int			redir_input(t_ast *node, int *exit_code)
 		return (error_return(FUNCT_ERROR, E_OPEN, exit_code, NULL));
 	if (dup2(right_side_fd, left_side_fd) == -1)
 		return (error_return(FUNCT_ERROR, E_DUP, exit_code, NULL));
-	close(right_side_fd); // THIS DOESNT GET CLOSED ON ERROR
 	return (FUNCT_SUCCESS);
 }
 
@@ -87,7 +86,6 @@ int			redir_output(t_ast *node, int *exit_code)
 		return (error_return(FUNCT_ERROR, E_OPEN, exit_code, NULL));
 	if (dup2(right_side_fd, left_side_fd) == -1)
 		return (error_return(FUNCT_ERROR, E_DUP, exit_code, NULL));
-	close(right_side_fd); // THIS DOESNT GET CLOSED ON ERROR
 	return (FUNCT_SUCCESS);
 }
 

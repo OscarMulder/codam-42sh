@@ -6,7 +6,7 @@
 /*   By: omulder <omulder@student.codam.nl>           +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2019/04/18 16:44:50 by omulder        #+#    #+#                */
-/*   Updated: 2019/07/23 15:08:04 by jbrinksm      ########   odam.nl         */
+/*   Updated: 2019/07/25 10:33:59 by jbrinksm      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -34,6 +34,7 @@ int		shell_start(t_envlst *envlst)
 	line = NULL;
 	token_lst = NULL;
 	ast = NULL;
+	pipes = init_pipestruct();
 	while (status != CTRLD)
 	{
 		shell_display_prompt();
@@ -65,7 +66,6 @@ int		shell_start(t_envlst *envlst)
 		print_tree(ast);
 		#endif
 
-		pipes = init_pipestruct();
 		exec_start(ast, envlst, &exit_code, pipes);
 		parser_astdel(&ast);
 	}
