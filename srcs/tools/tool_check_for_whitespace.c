@@ -1,26 +1,24 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        ::::::::            */
-/*   term_free_struct.c                                 :+:    :+:            */
+/*   tool_check_for_whitespace.c                        :+:    :+:            */
 /*                                                     +:+                    */
-/*   By: jbrinksm <jbrinksm@student.codam.nl>         +#+                     */
+/*   By: mavan-he <mavan-he@student.codam.nl>         +#+                     */
 /*                                                   +#+                      */
-/*   Created: 2019/04/18 18:18:53 by jbrinksm       #+#    #+#                */
-/*   Updated: 2019/07/23 14:39:13 by tde-jong      ########   odam.nl         */
+/*   Created: 2019/07/21 17:54:17 by mavan-he       #+#    #+#                */
+/*   Updated: 2019/07/21 17:54:54 by mavan-he      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "vsh.h"
 
-void	term_free_struct(t_term **term_p)
+bool	tool_check_for_whitespace(char *str)
 {
-	if (term_p != NULL && *term_p != NULL)
+	while (*str != '\0')
 	{
-		if ((*term_p)->old_termios_p)
-			free((*term_p)->old_termios_p);
-		if ((*term_p)->termios_p)
-			free((*term_p)->termios_p);
-		free(*term_p);
-		*term_p = NULL;
+		if (ft_isspace(*str) == true)
+			return (true);
+		str++;
 	}
+	return (false);
 }

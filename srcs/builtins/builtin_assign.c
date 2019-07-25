@@ -6,25 +6,32 @@
 /*   By: jbrinksm <jbrinksm@student.codam.nl>         +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2019/06/05 09:09:49 by jbrinksm       #+#    #+#                */
-/*   Updated: 2019/06/13 15:37:48 by jbrinksm      ########   odam.nl         */
+/*   Updated: 2019/07/25 12:54:29 by jbrinksm      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "vsh.h"
 
-int		builtin_assign_addexist(t_envlst *envlst, char *arg, char *var)
+/*
+**	Builtin assign adds or changes an evironment variable.
+**	Depending on the flag given to assign, the variable will be local or extern
+*/
+
+int			builtin_assign_addexist(t_envlst *envlst, char *arg,
+		char *var, int env_type)
 {
 	t_envlst	*probe;
 	int			varlen;
 
 	probe = envlst;
 	varlen = ft_strclen(arg, '=');
-	while (probe->next != NULL)
+	while (probe != NULL)
 	{
 		if (ft_strnequ(arg, probe->var, varlen) == true &&
 		probe->var[varlen] == '=')
 		{
 			ft_strdel(&probe->var);
+			probe->type = env_type;
 			probe->var = var;
 			return (FUNCT_SUCCESS);
 		}
@@ -33,43 +40,41 @@ int		builtin_assign_addexist(t_envlst *envlst, char *arg, char *var)
 	return (FUNCT_FAILURE);
 }
 
-int		builtin_assign_addnew(t_envlst *envlst, char *var)
+int			builtin_assign_addnew(t_envlst *envlst, char *var, int env_type)
 {
 	t_envlst	*newitem;
 
-	newitem = env_lstnew(var, ENV_LOCAL);
+	newitem = env_lstnew(var, env_type);
 	ft_strdel(&var);
 	if (newitem == NULL)
 		return (FUNCT_ERROR);
-	env_lstaddback(&envlst, newitem);
+	env_lstadd_to_sortlst(envlst, newitem);
 	return (FUNCT_SUCCESS);
 }
 
-/*
-**	NOT SURE IF CORRECT ASSUMPTIONS AS OF HOW IT IS SUPPOSED TO WORK:
-**	Changes the envlst contents based on arg.
-**	If a new lst item has to be made, the variable will be defaulted
-**	to ENV_LOCAL. If the variable already is ENV_EXTERN it's value
-**	will be changed and it will remain ENV_EXTERN.
-*/
-
-void	builtin_assign(char *arg, t_envlst *envlst, int *exit_code)
+int		builtin_assign(char *arg, t_envlst *envlst, int env_type)
 {
 	char		*var;
 
-	*exit_code = EXIT_FAILURE;
+	g_state->exit_code = EXIT_FAILURE;
 	if (envlst == NULL || arg == NULL)
-		return ;
+		return (FUNCT_ERROR);
 	var = ft_strdup(arg);
 	if (var == NULL)
-		return ;
-	*exit_code = EXIT_SUCCESS;
-	if (builtin_assign_addexist(envlst, arg, var) != FUNCT_SUCCESS)
+		return (FUNCT_ERROR);
+	if (tool_check_for_whitespace(arg) == true)
+		env_type |= ENV_WHITESPACE;
+	else
+		env_type &= ~ENV_WHITESPACE;
+	g_state->exit_code = EXIT_SUCCESS;
+	if (builtin_assign_addexist(envlst, arg, var, env_type) != FUNCT_SUCCESS)
 	{
-		if (builtin_assign_addnew(envlst, var) != FUNCT_SUCCESS)
+		if (builtin_assign_addnew(envlst, var, env_type) != FUNCT_SUCCESS)
 		{
 			ft_printf("assign: failed to allocate enough memory\n");
-			*exit_code = EXIT_FAILURE;
+			g_state->exit_code = EXIT_FAILURE;
+			return (FUNCT_ERROR);
 		}
 	}
+	return (FUNCT_SUCCESS);
 }

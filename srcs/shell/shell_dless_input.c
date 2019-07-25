@@ -6,11 +6,12 @@
 /*   By: jbrinksm <jbrinksm@student.codam.nl>         +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2019/06/02 13:23:16 by jbrinksm       #+#    #+#                */
-/*   Updated: 2019/07/19 10:56:47 by tde-jong      ########   odam.nl         */
+/*   Updated: 2019/07/25 13:30:28 by jbrinksm      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "vsh.h"
+#include <unistd.h>
 
 int		shell_dless_read_till_stop(char **heredoc, char *stop)
 {
@@ -23,7 +24,7 @@ int		shell_dless_read_till_stop(char **heredoc, char *stop)
 	while (done == false)
 	{
 		ft_putstr("> ");
-		if (input_read(&temp, &status) != FUNCT_SUCCESS)
+		if (input_read(&temp, &status) == FUNCT_ERROR)
 			return (FUNCT_ERROR);
 		done = ft_strequ(temp, stop);
 		ft_putstr("\n");
@@ -76,8 +77,8 @@ int		shell_dless_input(t_tokenlst *token_lst)
 			if (stop == NULL || shell_dless_set_tk_val(probe, &heredoc, stop)
 			== FUNCT_ERROR)
 			{
-				ft_printf("vsh: failed to allocate enough memory for "
-				"heredoc\n");
+				ft_eprintf("vsh: failed to allocate enough memory for "
+					"heredoc\n");
 				return (FUNCT_ERROR);
 			}
 			ft_strdel(&heredoc);

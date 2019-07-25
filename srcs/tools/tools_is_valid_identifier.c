@@ -1,29 +1,29 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        ::::::::            */
-/*   term_reset_attributes.c                            :+:    :+:            */
+/*   tools_is_valid_identifier.c                        :+:    :+:            */
 /*                                                     +:+                    */
 /*   By: jbrinksm <jbrinksm@student.codam.nl>         +#+                     */
 /*                                                   +#+                      */
-/*   Created: 2019/04/18 18:19:47 by jbrinksm       #+#    #+#                */
-/*   Updated: 2019/07/23 14:38:01 by tde-jong      ########   odam.nl         */
+/*   Created: 2019/06/18 16:31:00 by jbrinksm       #+#    #+#                */
+/*   Updated: 2019/07/08 15:07:54 by jbrinksm      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "vsh.h"
-#include <termios.h>
-#include <unistd.h>
 
-/*
-**	We will need to implement errno return values for this function.
-*/
-
-int		term_reset(t_term *term_p)
+bool	tools_is_valid_identifier(char *str)
 {
-	int	ret;
+	int i;
 
-	ret = tcsetattr(STDIN_FILENO, TCSANOW, term_p->old_termios_p);
-	if (ret == -1)
-		return (FUNCT_FAILURE);
-	return (FUNCT_SUCCESS);
+	if (str == NULL || *str == '\0' || *str == '=')
+		return (false);
+	i = 0;
+	while (str[i] != '\0' && str[i] != '=')
+	{
+		if (ft_isalnum(str[i]) == false && str[i] != '_')
+			return (false);
+		i++;
+	}
+	return (true);
 }
