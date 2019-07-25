@@ -6,7 +6,7 @@
 /*   By: mavan-he <mavan-he@student.codam.nl>         +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2019/07/24 13:36:44 by mavan-he       #+#    #+#                */
-/*   Updated: 2019/07/25 15:42:15 by mavan-he      ########   odam.nl         */
+/*   Updated: 2019/07/25 16:22:42 by mavan-he      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -73,7 +73,7 @@ static int	builtin_alias_args(char **args, int i, t_aliaslst **aliaslst)
 			else if (builtin_alias_set(args[i], aliaslst) == FUNCT_ERROR)
 				ret = FUNCT_ERROR;
 		}
-		else if (builtin_alias_print(args[i], *aliaslst) == FUNCT_ERROR)
+		else if (builtin_alias_print(args[i], *aliaslst) == FUNCT_FAILURE)
 			ret = FUNCT_ERROR;
 		i++;
 	}
