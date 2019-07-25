@@ -6,7 +6,7 @@
 /*   By: jbrinksm <jbrinksm@student.codam.nl>         +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2019/04/18 16:37:32 by omulder        #+#    #+#                */
-/*   Updated: 2019/07/25 12:49:08 by jbrinksm      ########   odam.nl         */
+/*   Updated: 2019/07/25 13:07:07 by jbrinksm      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -858,6 +858,8 @@ Test(builtin_export, basic_output_error_test2, .init=redirect_all_stdout)
 	t_envlst    *envlst;
 	char		*args[3];
 
+	g_state = (t_state*)ft_memalloc(sizeof(t_state));
+	
 	g_state->exit_code = 0;
 	args[0] = "export";
 	args[1] = "-h";
