@@ -6,7 +6,7 @@
 /*   By: omulder <omulder@student.codam.nl>           +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2019/04/10 20:29:42 by jbrinksm       #+#    #+#                */
-/*   Updated: 2019/07/24 15:30:19 by jbrinksm      ########   odam.nl         */
+/*   Updated: 2019/07/25 13:33:24 by jbrinksm      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -36,6 +36,7 @@
 **=================================exit codes===================================
 */
 
+# define EXIT_WRONG_USE 2
 # define EXIT_NOTFOUND 127
 # define EXIT_FATAL 128
 
@@ -168,6 +169,13 @@ typedef struct	s_term
 	struct termios	*old_termios_p;
 	struct termios	*termios_p;
 }				t_term;
+
+typedef struct	s_state
+{
+	int exit_code;
+}				t_state;
+
+t_state *g_state;
 
 /*
 **----------------------------------lexer--------------------------------------
@@ -308,7 +316,7 @@ void			term_free_struct(t_term **term_p);
 **-----------------------------------input--------------------------------------
 */
 
-int				input_read(char **line);
+int				input_read(char **line, int *status);
 int				input_is_word_start(char *str, int i1, int i2);
 void			input_clear_char_at(char **line, unsigned index);
 int				input_parse_escape(char c, int *input_state);
@@ -338,7 +346,7 @@ void			shell_display_prompt(void);
 int				shell_dless_read_till_stop(char **heredoc, char *stop);
 int				shell_dless_set_tk_val(t_tokenlst *probe, char **heredoc, char *stop);
 int				shell_dless_input(t_tokenlst *token_lst);
-int				shell_quote_checker(char **line);
+int				shell_quote_checker(char **line, int *status);
 char			shell_quote_checker_find_quote(char *line);
 int				shell_start(t_envlst *envlst);
 
@@ -403,18 +411,18 @@ bool			parser_cmd_suffix(t_tokenlst **token_lst, t_ast **cmd,
 **----------------------------------builtins------------------------------------
 */
 
-void			builtin_exit(char **args, int *exit_code);
-void			builtin_echo(char **args, int *exit_code);
+void			builtin_exit(char **args);
+void			builtin_echo(char **args);
 char			builtin_echo_set_flags(char **args, int *arg_i);
-void			builtin_export(char **args, t_envlst *envlst, int *exit_code);
-void			builtin_export_var_to_type(char *varname, t_envlst *envlst, int *exit_code, int type);
+void			builtin_export(char **args, t_envlst *envlst);
+void			builtin_export_var_to_type(char *varname, t_envlst *envlst, int type);
 void			builtin_export_print(t_envlst *envlst, int flags);
-void			builtin_export_args(char **args, t_envlst *envlst, int *exit_code, int i);
-int				builtin_assign(char *arg, t_envlst *envlst, int *exit_code, int env_type);
+void			builtin_export_args(char **args, t_envlst *envlst, int i);
+int				builtin_assign(char *arg, t_envlst *envlst, int env_type);
 int				builtin_assign_addexist(t_envlst *envlst, char *arg, char *var, int env_type);
 int				builtin_assign_addnew(t_envlst *envlst, char *var, int env_type);
-void			builtin_set(char **args, t_envlst *envlst, int *exit_code);
-void			builtin_unset(char **args, t_envlst *envlst, int *exit_code);
+void			builtin_set(char **args, t_envlst *envlst);
+void			builtin_unset(char **args, t_envlst *envlst);
 
 /*
 **---------------------------------tools----------------------------------------
@@ -435,65 +443,40 @@ bool			tool_check_for_whitespace(char *str);
 **----------------------------------execution-----------------------------------
 */
 
-int				exec_start(t_ast *ast, t_envlst *envlst, int *exit_code, t_pipes pipes);
-void			exec_cmd(char **args, t_envlst *envlst, int *exit_code, t_pipes pipes);
-int				exec_complete_command(t_ast *node, t_envlst *envlst, int *exit_code, t_pipes pipes);
-bool			exec_builtin(char **args, t_envlst *envlst, int *exit_code, t_pipes pipes);
-bool			exec_external(char **args, t_envlst *envlst, int *exit_code, t_pipes pipes);
+int				exec_start(t_ast *ast, t_envlst *envlst, t_pipes pipes);
+void			exec_cmd(char **args, t_envlst *envlst, t_pipes pipes);
+int				exec_complete_command(t_ast *node, t_envlst *envlst, t_pipes pipes);
+bool			exec_builtin(char **args, t_envlst *envlst, t_pipes pipes);
+bool			exec_external(char **args, t_envlst *envlst, t_pipes pipes);
 char			*exec_find_binary(char *filename, t_envlst *envlst);
 void			exec_quote_remove(t_ast *node);
 
+
 t_pipes			init_pipestruct(void);
 int				redir_pipe(t_ast *pipe_node);
-int				redir_run_pipesequence(t_ast *pipenode, t_envlst *envlst, int *exit_code, t_pipes pipes);
-int				redir_handle_pipe( t_pipes pipes, int *exit_code);
+int				redir_run_pipesequence(t_ast *pipenode, t_envlst *envlst, t_pipes pipes);
+int				redir_handle_pipe(t_pipes pipes);
 char			**create_args(t_ast *ast);
 
 /*
-**--------------------------------error_handling--------------------------------
-*/
-
-int				error_return(int ret, int error, int *exit_code, char *opt_str);
-
-/*
 **------------------------------------redir-------------------------------------
 */
 
-int			redir(t_ast *node, int *exit_code);
-int			redir_output(t_ast *node, int *exit_code);
-int			redir_input(t_ast *node, int *exit_code);
-bool		redir_is_open_fd(int fd);
-int			redir_input_closefd(int left_side_fd, int *exit_code);
-void		redir_change_if_leftside(t_ast *node, int *left_side_fd,
+int				redir(t_ast *node);
+int				redir_output(t_ast *node);
+int				redir_input(t_ast *node);
+bool			redir_is_open_fd(int fd);
+int				redir_input_closefd(int left_side_fd);
+void			redir_change_if_leftside(t_ast *node, int *left_side_fd,
 char **right_side);
-int			redir_create_heredoc_fd(char *right_side, int *exit_code);
+int				redir_create_heredoc_fd(char *right_side);
 
 
 /*
 **--------------------------------error_handling--------------------------------
 */
 
-int			error_return(int ret, int error, int *exit_code, char *opt_str);
-
-/*
-**------------------------------------redir-------------------------------------
-*/
-
-int			redir(t_ast *node, int *exit_code);
-int			redir_output(t_ast *node, int *exit_code);
-int			redir_input(t_ast *node, int *exit_code);
-bool		redir_is_open_fd(int fd);
-int			redir_input_closefd(int left_side_fd, int *exit_code);
-void		redir_change_if_leftside(t_ast *node, int *left_side_fd,
-char **right_side);
-int			redir_create_heredoc_fd(char *right_side, int *exit_code);
-
-
-/*
-**--------------------------------error_handling--------------------------------
-*/
-
-int			error_return(int ret, int error, int *exit_code, char *opt_str);
+int			error_return(int ret, int error, char *opt_str);
 
 /*
 **----------------------------------debugging-----------------------------------

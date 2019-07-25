@@ -6,7 +6,7 @@
 /*   By: omulder <omulder@student.codam.nl>           +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2019/04/18 16:44:50 by omulder        #+#    #+#                */
-/*   Updated: 2019/07/25 10:33:59 by jbrinksm      ########   odam.nl         */
+/*   Updated: 2019/07/25 13:32:21 by jbrinksm      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -23,13 +23,12 @@ void	lexer_tokenlstiter(t_tokenlst *lst, void (*f)(t_tokenlst *elem))
 int		shell_start(t_envlst *envlst)
 {
 	int			status;
-	int			exit_code;
 	char		*line;
 	t_tokenlst	*token_lst;
 	t_ast		*ast;
 	t_pipes		pipes;
 
-	exit_code = EXIT_SUCCESS;
+	g_state->exit_code = EXIT_SUCCESS;
 	status = 1;
 	line = NULL;
 	token_lst = NULL;
@@ -38,8 +37,9 @@ int		shell_start(t_envlst *envlst)
 	while (status != CTRLD)
 	{
 		shell_display_prompt();
-		status = input_read(&line);
-		while (shell_quote_checker(&line) != FUNCT_SUCCESS)
+		if (input_read(&line, &status) == FUNCT_ERROR)
+			continue;
+		while (shell_quote_checker(&line, &status) == FUNCT_ERROR)
 			continue ;
 		ft_putchar('\n');
 		history_line_to_array(line);
@@ -65,8 +65,7 @@ int		shell_start(t_envlst *envlst)
 		ft_putstr("\n\n\nTREE:\n\n");
 		print_tree(ast);
 		#endif
-
-		exec_start(ast, envlst, &exit_code, pipes);
+		exec_start(ast, envlst, pipes);
 		parser_astdel(&ast);
 	}
 	return (FUNCT_SUCCESS);

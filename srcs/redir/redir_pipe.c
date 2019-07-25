@@ -14,13 +14,12 @@
 #include <unistd.h>
 #include <sys/wait.h>
 
-static int	exec_pipe(t_ast *pipenode, t_envlst *envlst,
-int *exit_code, t_pipes pipes)
+static int	exec_pipe(t_ast *pipenode, t_envlst *envlst, t_pipes pipes)
 {
 	if (pipenode->child != NULL && pipenode->child->type != PIPE)
 	{
 		pipes.pipeside = PIPE_START;
-		if (exec_complete_command(pipenode->child, envlst, exit_code, pipes)
+		if (exec_complete_command(pipenode->child, envlst, pipes)
 		== FUNCT_ERROR)
 			return (FUNCT_ERROR);
 	}
@@ -28,7 +27,7 @@ int *exit_code, t_pipes pipes)
 	if (pipenode->sibling != NULL)
 	{
 		pipes.pipeside = PIPE_EXTEND;
-		if (exec_complete_command(pipenode->sibling, envlst, exit_code, pipes)
+		if (exec_complete_command(pipenode->sibling, envlst, pipes)
 		== FUNCT_ERROR)
 			return (FUNCT_ERROR);
 	}
@@ -70,7 +69,7 @@ t_pipes		init_pipestruct(void)
 **	previous pipe, and the output will be to STDOUT.
 */
 
-int			redir_handle_pipe(t_pipes pipes, int *exit_code)
+int			redir_handle_pipe(t_pipes pipes)
 {
 	dup2(pipes.fds.stdin, STDIN_FILENO);
 	if (pipes.currentpipe[0] != PIPE_UNINIT
@@ -79,19 +78,19 @@ int			redir_handle_pipe(t_pipes pipes, int *exit_code)
 		if (pipes.pipeside == PIPE_START)
 		{
 			if (dup2(pipes.currentpipe[1], STDOUT_FILENO) == -1)
-				error_return(FUNCT_ERROR, E_DUP, exit_code, NULL);
+				error_return(FUNCT_ERROR, E_DUP, NULL);
 			close(pipes.currentpipe[1]);
 		}
 		else if (pipes.pipeside == PIPE_EXTEND)
 		{
 			if (dup2(pipes.currentpipe[0], STDIN_FILENO) == -1)
-				error_return(FUNCT_ERROR, E_DUP, exit_code, NULL);
+				error_return(FUNCT_ERROR, E_DUP, NULL);
 			close(pipes.currentpipe[0]);
 			if (pipes.parentpipe[0] != PIPE_UNINIT
 			&& pipes.parentpipe[1] != PIPE_UNINIT)
 			{
 				if (dup2(pipes.parentpipe[1], STDOUT_FILENO) == -1)
-					error_return(FUNCT_ERROR, E_DUP, exit_code, NULL);
+					error_return(FUNCT_ERROR, E_DUP, NULL);
 				close(pipes.parentpipe[1]);
 			}
 		}
@@ -109,7 +108,7 @@ int			redir_handle_pipe(t_pipes pipes, int *exit_code)
 */
 
 int			redir_run_pipesequence(t_ast *pipenode, t_envlst *envlst,
-int *exit_code, t_pipes pipes)
+t_pipes pipes)
 {
 	t_pipes	childpipes;
 
@@ -123,7 +122,7 @@ int *exit_code, t_pipes pipes)
 		childpipes = pipes;
 		childpipes.parentpipe[0] = pipes.currentpipe[0];
 		childpipes.parentpipe[1] = pipes.currentpipe[1];
-		redir_run_pipesequence(pipenode->child, envlst, exit_code, childpipes);
+		redir_run_pipesequence(pipenode->child, envlst, childpipes);
 	}
-	return (exec_pipe(pipenode, envlst, exit_code, pipes));
+	return (exec_pipe(pipenode, envlst, pipes));
 }

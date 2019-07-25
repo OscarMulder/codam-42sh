@@ -6,7 +6,7 @@
 /*   By: tde-jong <tde-jong@student.codam.nl>         +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2019/05/31 10:47:19 by tde-jong       #+#    #+#                */
-/*   Updated: 2019/07/20 21:37:14 by jbrinksm      ########   odam.nl         */
+/*   Updated: 2019/07/23 11:27:49 by tde-jong      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,7 +14,7 @@
 #include "unistd.h"
 #include <sys/wait.h>
 
-static bool	exec_bin(char **args, char **vshenviron, int *exit_code, t_pipes pipes)
+static bool	exec_bin(char **args, char **vshenviron, t_pipes pipes)
 {
 	pid_t	pid;
 	int		status;
@@ -24,18 +24,18 @@ static bool	exec_bin(char **args, char **vshenviron, int *exit_code, t_pipes pip
 		return (false);
 	if (pid == 0)
 	{
-		redir_handle_pipe(pipes, exit_code);
+		redir_handle_pipe(pipes);
 		execve(args[0], args, vshenviron);
 	}
 	waitpid(pid, &status, WUNTRACED);
 	if (WIFEXITED(status))
-		*exit_code = WEXITSTATUS(status);
+		g_state->exit_code = WEXITSTATUS(status);
 	else if (WIFSIGNALED(status))
-		*exit_code = EXIT_FATAL + WTERMSIG(status);
+		g_state->exit_code = EXIT_FATAL + WTERMSIG(status);
 	return (true);
 }
 
-bool		exec_external(char **args, t_envlst *envlst, int *exit_code, t_pipes pipes)
+bool		exec_external(char **args, t_envlst *envlst, t_pipes pipes)
 {
 	char	**vshenviron;
 	char	*binary;
@@ -53,10 +53,10 @@ bool		exec_external(char **args, t_envlst *envlst, int *exit_code, t_pipes pipes
 	if (vshenviron == NULL)
 	{
 		ft_printf("vsh: failed to allocate enough memory!\n");
-		*exit_code = EXIT_FAILURE;
+		g_state->exit_code = EXIT_FAILURE;
 		return (false);
 	}
-	ret = exec_bin(args, vshenviron, exit_code, pipes);
+	ret = exec_bin(args, vshenviron, pipes);
 	free(vshenviron);
 	return (ret);
 }
