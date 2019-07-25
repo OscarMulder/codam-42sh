@@ -35,9 +35,9 @@ int		shell_start(t_envlst *envlst)
 	while (status != CTRLD)
 	{
 		shell_display_prompt();
-		if (input_read(&line, &status) != FUNCT_SUCCESS)
+		if (input_read(&line, &status) == FUNCT_ERROR)
 			continue;
-		while (shell_quote_checker(&line, &status) != FUNCT_SUCCESS)
+		while (shell_quote_checker(&line, &status) == FUNCT_ERROR)
 			continue ;
 		ft_putchar('\n');
 		history_line_to_array(line);

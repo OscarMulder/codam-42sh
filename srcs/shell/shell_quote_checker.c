@@ -56,7 +56,7 @@ int		shell_quote_checker(char **line, int *status)
 			ft_printf("\nquote> ");
 		else if (quote == '"')
 			ft_printf("\ndquote> ");
-		if (input_read(&extra_line, status) != FUNCT_SUCCESS)
+		if (input_read(&extra_line, status) == FUNCT_ERROR)
 			return (FUNCT_ERROR);
 		*line = ft_joinstrcstr_free_all(*line, '\n', extra_line);
 		if (*line == NULL)

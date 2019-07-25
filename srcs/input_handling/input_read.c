@@ -55,8 +55,8 @@ int		input_read(char **line, int *status)
 		local_status |= input_parse_backspace(c, &index, line);
 		local_status |= input_parse_ctrl_d(c, &index, line);
 		local_status |= input_parse_ctrl_k(c, &index, line);
-		if (local_status == 0 && input_parse_char(c, &index, line, &len_max) == FUNCT_FAILURE)
-			return (FUNCT_FAILURE);
+		if (local_status == 0 && input_parse_char(c, &index, line, &len_max) == FUNCT_ERROR)
+			return (FUNCT_ERROR);
 		if (c == '\n')
 			break ;
 	}
