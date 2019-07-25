@@ -6,13 +6,13 @@
 /*   By: mavan-he <mavan-he@student.codam.nl>         +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2019/07/24 17:30:55 by mavan-he       #+#    #+#                */
-/*   Updated: 2019/07/24 18:27:27 by mavan-he      ########   odam.nl         */
+/*   Updated: 2019/07/25 15:44:48 by mavan-he      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "vsh.h"
 
-static int	sort_by_name(t_aliaslst *env1, t_aliaslst *env2)
+static int			sort_by_name(t_aliaslst *env1, t_aliaslst *env2)
 {
 	return (ft_strcmp(env1->var, env2->var) > 0);
 }
@@ -78,7 +78,7 @@ int					builtin_alias_set(char *arg, t_aliaslst **aliaslst)
 			ft_strdel(&probe->var);
 			probe->var = ft_strdup(arg);
 			return (probe->var != NULL ? FUNCT_SUCCESS : FUNCT_ERROR);
-		}	
+		}
 		probe = probe->next;
 	}
 	new = builtin_alias_new(arg);

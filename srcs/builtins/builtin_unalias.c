@@ -6,7 +6,7 @@
 /*   By: mavan-he <mavan-he@student.codam.nl>         +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2019/07/24 14:41:55 by mavan-he       #+#    #+#                */
-/*   Updated: 2019/07/24 21:59:25 by mavan-he      ########   odam.nl         */
+/*   Updated: 2019/07/25 15:44:12 by mavan-he      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -22,7 +22,7 @@ static int	builtin_unalias_find_and_del(char *arg,
 	if (ft_strnequ(arg, (*aliaslst)->var, arg_len) == true &&
 		((*aliaslst)->var[arg_len] == '='))
 	{
-		*aliaslst = (*aliaslst)->next; 
+		*aliaslst = (*aliaslst)->next;
 		builtin_alias_delnode(&probe);
 		return (FUNCT_SUCCESS);
 	}
@@ -44,7 +44,7 @@ static int	builtin_unalias_find_and_del(char *arg,
 static void	builtin_unalias_args(char **args, int i, t_aliaslst **aliaslst)
 {
 	int		arg_len;
-	
+
 	while (args[i] != NULL)
 	{
 		arg_len = ft_strlen(args[i]);
@@ -52,7 +52,7 @@ static void	builtin_unalias_args(char **args, int i, t_aliaslst **aliaslst)
 			arg_len, aliaslst) == FUNCT_FAILURE)
 		{
 			ft_eprintf("vsh: unalias: %s: not found\n", args[i]);
-			// set global to error
+			g_state->exit_code = EXIT_FAILURE;
 		}
 		i++;
 	}
@@ -83,14 +83,14 @@ static int	builtin_unalias_flag(char **args, int *flag, int *i)
 	return (FUNCT_SUCCESS);
 }
 
-void	builtin_unalias(char **args, t_aliaslst **aliaslst)
+void		builtin_unalias(char **args, t_aliaslst **aliaslst)
 {
 	int		flag;
 	int		i;
 
 	i = 1;
 	flag = 0;
-		// set global error;
+	g_state->exit_code = EXIT_FAILURE;
 	if (args[1] == NULL)
 	{
 		ft_eprintf("unalias: usage: unalias [-a] name [name ...]\n");
@@ -98,9 +98,9 @@ void	builtin_unalias(char **args, t_aliaslst **aliaslst)
 	}
 	if (builtin_unalias_flag(args, &flag, &i) == FUNCT_FAILURE)
 		return ;
-		// set global success;
+	g_state->exit_code = EXIT_SUCCESS;
 	if (flag & UNALIAS_FLAG_LA)
 		builtin_alias_lstdel(aliaslst);
-	else 
+	else
 		builtin_unalias_args(args, i, aliaslst);
 }

@@ -6,7 +6,7 @@
 /*   By: mavan-he <mavan-he@student.codam.nl>         +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2019/07/24 13:36:44 by mavan-he       #+#    #+#                */
-/*   Updated: 2019/07/24 22:05:07 by mavan-he      ########   odam.nl         */
+/*   Updated: 2019/07/25 15:42:15 by mavan-he      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -44,7 +44,7 @@ static int	builtin_alias_print(char *arg, t_aliaslst *aliaslst)
 			ft_printf("%.*s\'%s\'\n", str_equal - aliaslst->var + 1,
 			aliaslst->var, str_equal + 1);
 			return (FUNCT_SUCCESS);
-		}	
+		}
 		aliaslst = aliaslst->next;
 	}
 	ft_eprintf("vsh: alias: %s: not found\n", arg);
@@ -63,7 +63,7 @@ static int	builtin_alias_args(char **args, int i, t_aliaslst **aliaslst)
 		if (str_equal != NULL)
 		{
 			if (tools_is_valid_identifier(args[i]) == false ||
-			(ft_strnequ(args[i], "alias", 5) && args[i][5] == '=') || 
+			(ft_strnequ(args[i], "alias", 5) && args[i][5] == '=') ||
 			(ft_strnequ(args[i], "unalias", 7) && args[i][7] == '='))
 			{
 				ft_eprintf("vsh: alias: `%.*s': invalid alias name\n",
@@ -127,13 +127,13 @@ void		builtin_alias(char **args, t_aliaslst **aliaslst)
 	flag = 0;
 	if (builtin_alias_flag(args, &flag, &i) == FUNCT_FAILURE)
 	{
-		// set global error;
+		g_state->exit_code = EXIT_WRONG_USE;
 		return ;
 	}
 	if (args[i] == NULL || flag & ALIAS_FLAG_LP)
 		builtin_alias_printlst(*aliaslst);
 	if (args[i] != NULL && builtin_alias_args(args, i, aliaslst) == FUNCT_ERROR)
-		;// set global error to EXIT_ERROR
+		g_state->exit_code = EXIT_FAILURE;
 	else
-		;// set global error to EXIT_SUCCESS
+		g_state->exit_code = EXIT_SUCCESS;
 }
