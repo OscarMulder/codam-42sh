@@ -6,7 +6,7 @@
 /*   By: omulder <omulder@student.codam.nl>           +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2019/04/18 16:44:50 by omulder        #+#    #+#                */
-/*   Updated: 2019/07/26 16:18:54 by omulder       ########   odam.nl         */
+/*   Updated: 2019/07/26 17:23:36 by omulder       ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -62,6 +62,7 @@ int		shell_start(t_vshdata *vshdata)
 		#ifdef DEBUG
 		ft_putstr("\n\n\nTREE:\n\n");
 		print_tree(ast);
+		history_print(vshdata->history);
 		#endif
 		exec_start(ast, vshdata, 0);
 		parser_astdel(&ast);

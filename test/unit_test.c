@@ -6,7 +6,7 @@
 /*   By: jbrinksm <jbrinksm@student.codam.nl>         +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2019/04/18 16:37:32 by omulder        #+#    #+#                */
-/*   Updated: 2019/07/26 16:14:58 by omulder       ########   odam.nl         */
+/*   Updated: 2019/07/26 17:15:43 by omulder       ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -22,7 +22,6 @@
 #include <limits.h>
 #include <unistd.h>
 #include <fcntl.h>
-#include "vsh_history.h"
 
 void redirect_all_stdout(void)
 {

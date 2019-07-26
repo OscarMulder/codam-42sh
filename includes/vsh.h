@@ -6,7 +6,7 @@
 /*   By: omulder <omulder@student.codam.nl>           +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2019/04/10 20:29:42 by jbrinksm       #+#    #+#                */
-/*   Updated: 2019/07/26 16:18:37 by omulder       ########   odam.nl         */
+/*   Updated: 2019/07/26 17:16:14 by omulder       ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -121,11 +121,18 @@
 # define INPUT_BACKSPACE	127
 
 /*
+**----------------------------------history-------------------------------------
+*/
+
+# define HISTORY_MAX	500
+# define ARROW_UP	    1
+# define ARROW_DOWN	    2
+
+/*
 **===============================personal headers===============================
 */
 
 # include "libft.h"
-# include "vsh_history.h"
 
 /*
 **==================================headers=====================================
@@ -173,6 +180,16 @@ typedef struct	s_envlst
 	unsigned char	type;
 	struct s_envlst	*next;
 }				t_envlst;
+
+/*
+**-----------------------------------history------------------------------------
+*/
+
+typedef struct  s_history
+{
+    int     number;
+    char    *str;
+}               t_history;
 
 /*
 **-----------------------------------vsh_data-----------------------------------
@@ -308,6 +325,7 @@ typedef struct	s_inputdata
 	int			input_state;
 	int			hist_index;
 	unsigned	index;
+	t_history	**history;
 }				t_inputdata;
 
 int				input_read(t_vshdata *vshdata, char **line, int *status);
@@ -322,8 +340,8 @@ int				input_parse_next(t_inputdata *data, char **line);
 int				input_parse_prev(t_inputdata *data, char **line);
 int				input_parse_delete(t_inputdata *data, char **line);
 int				input_parse_ctrl_d(t_inputdata *data, char **line);
-int				input_parse_ctrl_up(t_inputdata *data, t_history **history, char **line);
-int				input_parse_ctrl_down(t_inputdata *data, t_history **history, char **line);
+int				input_parse_ctrl_up(t_inputdata *data, char **line);
+int				input_parse_ctrl_down(t_inputdata *data, char **line);
 int				input_parse_ctrl_k(t_inputdata *data, char **line);
 
 /*
@@ -450,6 +468,16 @@ void		redir_change_if_leftside(t_ast *node, int *left_side_fd,
 char **right_side);
 int			redir_create_heredoc_fd(char *right_side);
 
+/*
+**------------------------------------history-----------------------------------
+*/
+
+int		        history_to_file(t_history **history);
+int		        history_get_file_content(t_history ***history);
+int		        history_line_to_array(t_history **history, char *line);
+void	        history_print(t_history **history);
+void		    history_change_line(t_inputdata *data, char **line, char arrow);
+void	        history_find_start(t_history **history, int *number, int *start);
 
 /*
 **--------------------------------error_handling--------------------------------

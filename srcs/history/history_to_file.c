@@ -6,12 +6,11 @@
 /*   By: mavan-he <mavan-he@student.codam.nl>         +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2019/05/29 15:25:10 by mavan-he       #+#    #+#                */
-/*   Updated: 2019/07/16 17:02:18 by omulder       ########   odam.nl         */
+/*   Updated: 2019/07/26 17:13:43 by omulder       ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "vsh.h"
-#include "vsh_history.h"
 #include "libft.h"
 #include <fcntl.h>
 #include <unistd.h>
