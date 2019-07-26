@@ -1,31 +1,37 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        ::::::::            */
-/*   parser_astdel.c                                    :+:    :+:            */
+/*   env_lstadd_to_sortlst.c                            :+:    :+:            */
 /*                                                     +:+                    */
 /*   By: mavan-he <mavan-he@student.codam.nl>         +#+                     */
 /*                                                   +#+                      */
-/*   Created: 2019/05/26 12:21:49 by mavan-he       #+#    #+#                */
-/*   Updated: 2019/07/16 14:47:15 by mavan-he      ########   odam.nl         */
+/*   Created: 2019/07/20 18:49:15 by mavan-he       #+#    #+#                */
+/*   Updated: 2019/07/20 19:14:03 by mavan-he      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "vsh.h"
 
-bool	parser_return_del(t_ast **ast)
+static int	sort_by_value(t_envlst *env1, t_envlst *env2)
 {
-	parser_astdel(ast);
-	return (false);
+	return (ft_strcmp(env1->var, env2->var) > 0);
 }
 
-void	parser_astdel(t_ast **ast)
+void		env_lstadd_to_sortlst(t_envlst *envlst, t_envlst *new)
 {
-	if (ast == NULL || *ast == NULL)
-		return ;
-	if ((*ast)->child != NULL)
-		parser_astdel(&(*ast)->child);
-	if ((*ast)->sibling != NULL)
-		parser_astdel(&(*ast)->sibling);
-	ft_strdel(&(*ast)->value);
-	ft_memdel((void**)ast);
+	while (envlst != NULL)
+	{
+		if (envlst->next == NULL)
+		{
+			envlst->next = new;
+			break ;
+		}
+		if (sort_by_value(envlst->next, new) == true)
+		{
+			new->next = envlst->next;
+			envlst->next = new;
+			break ;
+		}
+		envlst = envlst->next;
+	}
 }

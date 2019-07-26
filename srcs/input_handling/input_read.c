@@ -6,7 +6,7 @@
 /*   By: jbrinksm <jbrinksm@student.codam.nl>         +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2019/04/17 14:03:16 by jbrinksm       #+#    #+#                */
-/*   Updated: 2019/07/15 17:06:13 by omulder       ########   odam.nl         */
+/*   Updated: 2019/07/26 15:21:24 by omulder       ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -25,47 +25,41 @@ void		input_clear_char_at(char **line, unsigned index)
 	}
 }
 
-t_inputdata	*init_inputdata(void)
+int		input_read(char **line, int *status)
 {
-	t_inputdata	*new;
+	char		c;
+	unsigned	index;
+	int			local_status;
+	int			input_state;
+	int			len_max;
 
-	new = (t_inputdata*)ft_memalloc(sizeof(t_inputdata));
-	new->c = 0;
-	new->index = 0;
-	new->input_state = 0;
-	new->hist_index = 0;
-	return (new);
-}
-
-int			input_read(char **line, t_history **history)
-{
-	t_inputdata	*data;
-	int			status;
-	int			maxstrlen;
-
-	data = init_inputdata();
-	*line = ft_strnew(64);
-	maxstrlen = 64;
-	while (read(STDIN_FILENO, &data->c, 1) > 0)
+	index = 0;
+	input_state = 0;
+	len_max = 64;
+	*line = ft_strnew(len_max);
+	if (*line == NULL)
+		return (FUNCT_ERROR);
+	while (read(STDIN_FILENO, &c, 1) > 0)
 	{
-		status = 0;
-		status |= input_parse_escape(data);
-		status |= input_parse_home(data);
-		status |= input_parse_end(data, line);
-		status |= input_parse_prev(data, line);
-		status |= input_parse_next(data, line);
-		status |= input_parse_delete(data, line);
-		status |= input_parse_ctrl_up(data, history, line);
-		status |= input_parse_ctrl_down(data, history, line);
-		if (status == 0)
-			data->input_state = 0;
-		status |= input_parse_backspace(data, line);
-		status |= input_parse_ctrl_d(data, line);
-		status |= input_parse_ctrl_k(data, line);
-		if (status == 0 && input_parse_char(data, line, &maxstrlen) == FUNCT_FAILURE)
-			return (FUNCT_FAILURE);
-		if (data->c == '\n')
+		local_status = 0;
+		local_status |= input_parse_escape(c, &input_state);
+		local_status |= input_parse_home(c, &input_state, &index);
+		local_status |= input_parse_end(c, &input_state, &index, line);
+		local_status |= input_parse_prev(c, &input_state, &index, line);
+		local_status |= input_parse_next(c, &input_state, &index, line);
+		local_status |= input_parse_delete(c, &input_state, &index, line);
+		local_status |= input_parse_ctrl_up(c, &input_state, &index, line);
+		local_status |= input_parse_ctrl_down(c, &input_state, &index, line);
+		if (local_status == 0)
+			input_state = 0;
+		local_status |= input_parse_backspace(c, &index, line);
+		local_status |= input_parse_ctrl_d(c, &index, line);
+		local_status |= input_parse_ctrl_k(c, &index, line);
+		if (local_status == 0 && input_parse_char(c, &index, line, &len_max) == FUNCT_ERROR)
+			return (FUNCT_ERROR);
+		if (c == '\n')
 			break ;
 	}
-	return (status);
+	*status = local_status;
+	return (FUNCT_SUCCESS);
 }

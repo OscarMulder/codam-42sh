@@ -1,31 +1,24 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        ::::::::            */
-/*   parser_astdel.c                                    :+:    :+:            */
+/*   tool_check_for_whitespace.c                        :+:    :+:            */
 /*                                                     +:+                    */
 /*   By: mavan-he <mavan-he@student.codam.nl>         +#+                     */
 /*                                                   +#+                      */
-/*   Created: 2019/05/26 12:21:49 by mavan-he       #+#    #+#                */
-/*   Updated: 2019/07/16 14:47:15 by mavan-he      ########   odam.nl         */
+/*   Created: 2019/07/21 17:54:17 by mavan-he       #+#    #+#                */
+/*   Updated: 2019/07/21 17:54:54 by mavan-he      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "vsh.h"
 
-bool	parser_return_del(t_ast **ast)
+bool	tool_check_for_whitespace(char *str)
 {
-	parser_astdel(ast);
+	while (*str != '\0')
+	{
+		if (ft_isspace(*str) == true)
+			return (true);
+		str++;
+	}
 	return (false);
-}
-
-void	parser_astdel(t_ast **ast)
-{
-	if (ast == NULL || *ast == NULL)
-		return ;
-	if ((*ast)->child != NULL)
-		parser_astdel(&(*ast)->child);
-	if ((*ast)->sibling != NULL)
-		parser_astdel(&(*ast)->sibling);
-	ft_strdel(&(*ast)->value);
-	ft_memdel((void**)ast);
 }

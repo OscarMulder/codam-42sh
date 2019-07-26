@@ -6,7 +6,7 @@
 /*   By: omulder <omulder@student.codam.nl>           +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2019/04/18 16:44:50 by omulder        #+#    #+#                */
-/*   Updated: 2019/07/16 16:59:07 by omulder       ########   odam.nl         */
+/*   Updated: 2019/07/26 15:22:54 by omulder       ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -20,16 +20,15 @@ void	lexer_tokenlstiter(t_tokenlst *lst, void (*f)(t_tokenlst *elem))
 	lexer_tokenlstiter(lst->next, f);
 }
 
-int		shell_start(t_envlst *envlst)
+int		shell_start(t_vshdata *vshdata)
 {
 	int			status;
-	int			exit_code;
 	char		*line;
 	t_tokenlst	*token_lst;
 	t_ast		*ast;
 	t_history	**history;
 
-	exit_code = EXIT_SUCCESS;
+	g_state->exit_code = EXIT_SUCCESS;
 	status = 1;
 	line = NULL;
 	token_lst = NULL;
@@ -38,17 +37,18 @@ int		shell_start(t_envlst *envlst)
 	while (status != CTRLD)
 	{
 		shell_display_prompt();
-		status = input_read(&line, history);
-		history_line_to_array(history, line);
-		while (shell_quote_checker(&line, history) != FUNCT_SUCCESS)
+		if (input_read(&line, &status) == FUNCT_ERROR)
+			continue;
+		while (shell_quote_checker(&line, &status) == FUNCT_ERROR)
 			continue ;
 		ft_putchar('\n');
+		history_line_to_array(line);
 		#ifdef DEBUG
 		ft_printf("\n>>>> LINE <<<<\n%s\n\n>>>> TOKEN_LST <<<<\n", line);
 		#endif
 		if (lexer(&line, &token_lst) != FUNCT_SUCCESS)
 			continue ;
-		if (shell_dless_input(token_lst, history) != FUNCT_SUCCESS)
+		if (shell_dless_input(token_lst) != FUNCT_SUCCESS)
 			continue ;
 		if ((token_lst->next)->type == NEWLINE)
 		{
@@ -62,11 +62,10 @@ int		shell_start(t_envlst *envlst)
 		if (parser_start(&token_lst, &ast) != FUNCT_SUCCESS)
 			continue ;
 		#ifdef DEBUG
+		ft_putstr("\n\n\nTREE:\n\n");
 		print_tree(ast);
 		#endif
-		exec_start(ast, envlst, &exit_code, 0);
-		history_print(history);
-		history_to_file(history);
+		exec_start(ast, vshdata, 0);
 		parser_astdel(&ast);
 	}
 	return (FUNCT_SUCCESS);

@@ -6,7 +6,7 @@
 /*   By: omulder <omulder@student.codam.nl>           +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2019/04/10 20:29:42 by jbrinksm       #+#    #+#                */
-/*   Updated: 2019/07/15 17:01:41 by omulder       ########   odam.nl         */
+/*   Updated: 2019/07/26 15:23:50 by omulder       ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -24,6 +24,11 @@
 # define PROG_FAILURE 1
 # define PROG_SUCCESS 0
 # define E_ALLOC 420
+# define E_DUP 100
+# define E_OPEN 101
+# define E_BADFD 102
+# define E_CLOSE 103
+# define E_BADRED 104
 # define CTRLD -1
 # define CR 0
 
@@ -31,6 +36,7 @@
 **=================================exit codes====================================
 */
 
+# define EXIT_WRONG_USE 2
 # define EXIT_NOTFOUND 127
 # define EXIT_FATAL 128
 
@@ -45,12 +51,19 @@
 # define ESC				27
 
 /*
+**-----------------------------------export-------------------------------------
+*/
+
+# define EXP_FLAG_LN	(1 << 0)
+# define EXP_FLAG_LP	(1 << 1)
+
+/*
 **------------------------------------lexer-------------------------------------
 */
 
 # define CURRENT_CHAR (scanner->str)[scanner->str_index]
 # define SCANNER_CHAR scanner.str[scanner.str_index]
-# define T_FLAG_HASDOLLAR (1 << 0)
+# define T_FLAG_HASSPECIAL (1 << 0)
 # define T_STATE_SQUOTE (1 << 1)
 # define T_STATE_DQUOTE (1 << 2)
 # define T_FLAG_HASEQUAL (1 << 3)
@@ -66,13 +79,27 @@
 # define EXEC_OR_IF (1 << 3)
 # define EXEC_SEMICOL (1 << 4)
 
+# define STDIN_BAK stdfds[0]
+# define STDOUT_BAK stdfds[1]
+# define STDERR_BAK stdfds[2]
+
+/*
+**--------------------------------redirections----------------------------------
+*/
+
+# define FD_UNINIT -1
+
 /*
 **---------------------------------environment----------------------------------
 */
 
-# define ENV_EXTERN 2
-# define ENV_LOCAL 1
-# define ENV_TEMP 0
+
+# define ENV_MASK 0xF8
+# define ENV_WHITESPACE (1 << 3)
+# define ENV_EXTERN (1 << 2)
+# define ENV_LOCAL (1 << 1)
+# define ENV_TEMP (1 << 0)
+# define ENV_HEAD 0
 
 /*
 **------------------------------------parser------------------------------------
@@ -127,6 +154,37 @@
 
 /*
 **=================================typedefs====================================
+*/
+
+typedef struct	s_state
+{
+	int exit_code;
+}				t_state;
+
+t_state *g_state;
+
+/*
+**---------------------------------environment----------------------------------
+*/
+
+typedef struct	s_envlst
+{
+	char			*var;
+	unsigned char	type;
+	struct s_envlst	*next;
+}				t_envlst;
+
+/*
+**-----------------------------------vsh_data-----------------------------------
+*/
+
+typedef struct	s_vshdata
+{
+	t_envlst 	*envlst;
+}				t_vshdata;
+
+/*
+**-----------------------------------term---------------------------------------
 */
 
 typedef struct	s_term
@@ -211,16 +269,6 @@ typedef struct	s_ast
 	struct s_ast	*sibling;
 }				t_ast;
 
-/*
-**---------------------------------environment----------------------------------
-*/
-
-typedef struct	s_envlst
-{
-	char			*var;
-	unsigned char	type;
-	struct s_envlst	*next;
-}				t_envlst;
 
 char			*env_getvalue(char *var_key, t_envlst *envlst);
 char			**env_free_and_return_null(char ***vshenviron);
@@ -233,6 +281,9 @@ t_envlst	*env_lstnew(char *var, unsigned char type);
 char		**env_lsttoarr(t_envlst *lst, unsigned char minimal_type);
 int			env_lstlen(t_envlst *lst, unsigned char minimal_type);
 void		env_lstdel(t_envlst **envlst);
+void   		env_remove_tmp(t_envlst *env);
+void		env_sort(t_envlst *head);
+void		env_lstadd_to_sortlst(t_envlst *envlst, t_envlst *new);
 
 /*
 **----------------------------------terminal------------------------------------
@@ -250,40 +301,39 @@ void			term_free_struct(t_term **term_p);
 **-----------------------------------input--------------------------------------
 */
 
-typedef struct	s_inputdata
-{
-	char		c;
-	int			input_state;
-	int			hist_index;
-	unsigned	index;
-}				t_inputdata;
-
-int				input_read(char **line, t_history **history);
+int				input_read(char **line, int *status);
 int				input_is_word_start(char *str, int i1, int i2);
 void			input_clear_char_at(char **line, unsigned index);
-int				input_parse_escape(t_inputdata *data);
-int				input_parse_char(t_inputdata *data, char **line, int *len_max);
-int				input_parse_home(t_inputdata *data);
-int				input_parse_backspace(t_inputdata *data, char **line);
-int				input_parse_end(t_inputdata *data, char **line);
-int				input_parse_next(t_inputdata *data, char **line);
-int				input_parse_prev(t_inputdata *data, char **line);
-int				input_parse_delete(t_inputdata *data, char **line);
-int				input_parse_ctrl_d(t_inputdata *data, char **line);
-int				input_parse_ctrl_up(t_inputdata *data, t_history **history, char **line);
-int				input_parse_ctrl_down(t_inputdata *data, t_history **history, char **line);
-int				input_parse_ctrl_k(t_inputdata *data, char **line);
+int				input_parse_escape(char c, int *input_state);
+int				input_parse_char(char c, unsigned *index, char **line, int *len_max);
+int				input_parse_home(char c, int *input_state, unsigned *index);
+int				input_parse_backspace(char c, unsigned *index, char **line);
+int				input_parse_end(char c, int *input_state, unsigned *index,
+					char **line);
+int				input_parse_next(char c, int *input_state, unsigned *index,
+					char **line);
+int				input_parse_prev(char c, int *input_state, unsigned *index,
+					char **line);
+int				input_parse_delete(char c, int *input_state, unsigned *index,
+					char **line);
+int				input_parse_ctrl_d(char c, unsigned *index, char **line);
+int				input_parse_ctrl_k(char c, unsigned *index, char **line);
+int				input_parse_ctrl_up(char c, int *input_state, unsigned *index,
+					char **line);
+int				input_parse_ctrl_down(char c, int *input_state, unsigned *index,
+					char **line);
+
 /*
 **----------------------------------shell---------------------------------------
 */
 
 void			shell_display_prompt(void);
-int				shell_dless_read_till_stop(char **heredoc, char *stop, t_history **history);
-int				shell_dless_set_tk_val(t_tokenlst *probe, char **heredoc, char *stop, t_history **history);
-int				shell_dless_input(t_tokenlst *token_lst, t_history **history);
-int				shell_quote_checker(char **line, t_history **history);
+int				shell_dless_read_till_stop(char **heredoc, char *stop);
+int				shell_dless_set_tk_val(t_tokenlst *probe, char **heredoc, char *stop);
+int				shell_dless_input(t_tokenlst *token_lst);
+int				shell_quote_checker(char **line, int *status);
 char			shell_quote_checker_find_quote(char *line);
-int				shell_start(t_envlst *envlst);
+int				shell_start(t_vshdata *vshdata);
 
 /*
 **----------------------------------lexer---------------------------------------
@@ -335,17 +385,29 @@ t_ast			*parser_new_node(t_tokenlst *token);
 bool			parser_command(t_tokenlst **token_lst, t_ast **ast);
 char			*parser_return_token_str(t_tokens type);
 void			parser_astdel(t_ast **ast);
+bool			parser_return_del(t_ast **ast);
+bool			parser_io_redirect(t_tokenlst **token_lst, t_ast **ast);
+bool			parser_cmd_param(t_tokenlst **token_lst, t_ast **cmd,
+				t_ast **last_cmd_arg, t_ast **last_prefix);
+bool			parser_cmd_suffix(t_tokenlst **token_lst, t_ast **cmd,
+				t_ast **last_cmd_arg, t_ast **last_prefix);
 
 /*
 **----------------------------------builtins------------------------------------
 */
 
-void			builtin_exit(char **args, int *exit_code);
-void			builtin_echo(char **args, int *exit_code);
+void			builtin_exit(char **args);
+void			builtin_echo(char **args);
 char			builtin_echo_set_flags(char **args, int *arg_i);
-void			builtin_assign(char *arg, t_envlst *envlst, int *exit_code);
-int				builtin_assign_addexist(t_envlst *envlst, char *arg, char *var);
-int				builtin_assign_addnew(t_envlst *envlst, char *var);
+void			builtin_export(char **args, t_envlst *envlst);
+void			builtin_export_var_to_type(char *varname, t_envlst *envlst, int type);
+void			builtin_export_print(t_envlst *envlst, int flags);
+void			builtin_export_args(char **args, t_envlst *envlst, int i);
+int				builtin_assign(char *arg, t_envlst *envlst, int env_type);
+int				builtin_assign_addexist(t_envlst *envlst, char *arg, char *var, int env_type);
+int				builtin_assign_addnew(t_envlst *envlst, char *var, int env_type);
+void			builtin_set(char **args, t_envlst *envlst);
+void			builtin_unset(char **args, t_envlst *envlst);
 
 /*
 **---------------------------------tools----------------------------------------
@@ -356,17 +418,41 @@ bool			tools_is_char_escaped(char *line, int i);
 int				tools_update_quote_status(char *line, int cur_index,
 					char *quote);
 bool			tool_is_redirect_tk(t_tokens type);
+bool			tools_is_valid_identifier(char *str);
+bool			tools_is_fdnumstr(char *str);
+bool			tool_has_special(char c);
+bool			tool_check_for_whitespace(char *str);
 
 /*
 **----------------------------------execution-----------------------------------
 */
 
-void	exec_start(t_ast *ast, t_envlst *envlst, int *exit_code, int flags);
-void	exec_cmd(char **args, t_envlst *envlst, int *exit_code);
-bool	exec_builtin(char **args, t_envlst *envlst, int *exit_code);
-bool	exec_external(char **args, t_envlst *envlst, int *exit_code);
+void	exec_start(t_ast *ast, t_vshdata *vshdata, int flags);
+void	exec_cmd(char **args, t_vshdata *vshdata);
+bool	exec_builtin(char **args, t_vshdata *vshdata);
+bool	exec_external(char **args, t_envlst *envlst);
 char	*exec_find_binary(char *filename, t_envlst *envlst);
 void	exec_quote_remove(t_ast *node);
+
+/*
+**------------------------------------redir-------------------------------------
+*/
+
+int			redir(t_ast *node);
+int			redir_output(t_ast *node);
+int			redir_input(t_ast *node);
+bool		redir_is_open_fd(int fd);
+int			redir_input_closefd(int left_side_fd);
+void		redir_change_if_leftside(t_ast *node, int *left_side_fd,
+char **right_side);
+int			redir_create_heredoc_fd(char *right_side);
+
+
+/*
+**--------------------------------error_handling--------------------------------
+*/
+
+int			error_return(int ret, int error, char *opt_str);
 
 /*
 **----------------------------------debugging-----------------------------------

@@ -18,5 +18,5 @@ test_coverage
 .vscode/
 *.dSYM/
 
-# MacOS X
+# MacOS
 .DS_Store

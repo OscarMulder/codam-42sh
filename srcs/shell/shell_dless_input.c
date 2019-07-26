@@ -6,25 +6,28 @@
 /*   By: jbrinksm <jbrinksm@student.codam.nl>         +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2019/06/02 13:23:16 by jbrinksm       #+#    #+#                */
-/*   Updated: 2019/07/15 16:54:17 by omulder       ########   odam.nl         */
+/*   Updated: 2019/07/26 15:22:37 by omulder       ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "vsh.h"
+#include <unistd.h>
 
 int		shell_dless_read_till_stop(char **heredoc, char *stop, t_history **history)
 {
 	char	*temp;
 	int		done;
+	int		status;
 
 	temp = NULL;
 	done = false;
 	while (done == false)
 	{
-		input_read(&temp, history);
-		if (temp == NULL)
+		ft_putstr("> ");
+		if (input_read(&temp, &status) == FUNCT_ERROR)
 			return (FUNCT_ERROR);
 		done = ft_strequ(temp, stop);
+		ft_putstr("\n");
 		if (done == true)
 			continue ;
 		if (*heredoc == NULL)
@@ -36,8 +39,6 @@ int		shell_dless_read_till_stop(char **heredoc, char *stop, t_history **history)
 			return (FUNCT_ERROR);
 	}
 	ft_strdel(&temp);
-	if (*heredoc == NULL)
-		return (FUNCT_FAILURE);
 	return (FUNCT_SUCCESS);
 }
 
@@ -48,22 +49,18 @@ int		shell_dless_set_tk_val(t_tokenlst *probe, char **heredoc, char *stop, t_his
 	ft_strdel(&(probe->value));
 	ret = shell_dless_read_till_stop(heredoc, stop, history);
 	if (ret == FUNCT_SUCCESS)
-		probe->value = ft_strdup(*heredoc);
-	else if (ret == FUNCT_FAILURE)
-		probe->value = ft_strnew(0);
+	{
+		if (*heredoc != NULL)
+			probe->value = ft_strdup(*heredoc);
+		else
+			probe->value = ft_strnew(0);
+	}
 	if (probe->value == NULL)
 		return (FUNCT_ERROR);
 	return (FUNCT_SUCCESS);
 }
 
-/*
-**	Right now this function will not include any '\n'
-**	in between the lines read. This should be fine since I'm
-**	pretty sure our input_read is supposed to read those '\n's
-**	whenever you press return.
-*/
-
-int		shell_dless_input(t_tokenlst *token_lst, t_history **history)
+int		shell_dless_input(t_tokenlst *token_lst)
 {
 	char		*heredoc;
 	t_tokenlst	*probe;
@@ -76,12 +73,12 @@ int		shell_dless_input(t_tokenlst *token_lst, t_history **history)
 		if (probe->type == DLESS)
 		{
 			probe = probe->next;
-			stop = ft_strdup(probe->value);
-			if (stop == NULL || shell_dless_set_tk_val(probe, &heredoc, stop, history)
+			stop = ft_strjoin(probe->value, "\n");
+			if (stop == NULL || shell_dless_set_tk_val(probe, &heredoc, stop)
 			== FUNCT_ERROR)
 			{
-				ft_printf("vsh: failed to allocate enough memory for "
-				"heredoc\n");
+				ft_eprintf("vsh: failed to allocate enough memory for "
+					"heredoc\n");
 				return (FUNCT_ERROR);
 			}
 			ft_strdel(&heredoc);
