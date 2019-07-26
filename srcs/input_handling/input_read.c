@@ -6,7 +6,7 @@
 /*   By: jbrinksm <jbrinksm@student.codam.nl>         +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2019/04/17 14:03:16 by jbrinksm       #+#    #+#                */
-/*   Updated: 2019/07/26 15:21:24 by omulder       ########   odam.nl         */
+/*   Updated: 2019/07/26 15:40:55 by omulder       ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -25,7 +25,7 @@ void		input_clear_char_at(char **line, unsigned index)
 	}
 }
 
-int		input_read(char **line, int *status)
+int		input_read(t_vshdata *vshdata, char **line, int *status)
 {
 	char		c;
 	unsigned	index;

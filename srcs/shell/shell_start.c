@@ -6,7 +6,7 @@
 /*   By: omulder <omulder@student.codam.nl>           +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2019/04/18 16:44:50 by omulder        #+#    #+#                */
-/*   Updated: 2019/07/26 15:22:54 by omulder       ########   odam.nl         */
+/*   Updated: 2019/07/26 15:40:31 by omulder       ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -26,23 +26,21 @@ int		shell_start(t_vshdata *vshdata)
 	char		*line;
 	t_tokenlst	*token_lst;
 	t_ast		*ast;
-	t_history	**history;
 
 	g_state->exit_code = EXIT_SUCCESS;
 	status = 1;
 	line = NULL;
 	token_lst = NULL;
 	ast = NULL;
-	history_get_file_content(&history);
 	while (status != CTRLD)
 	{
 		shell_display_prompt();
-		if (input_read(&line, &status) == FUNCT_ERROR)
+		if (input_read(vshdata, &line, &status) == FUNCT_ERROR)
 			continue;
 		while (shell_quote_checker(&line, &status) == FUNCT_ERROR)
 			continue ;
 		ft_putchar('\n');
-		history_line_to_array(line);
+		history_line_to_array(vshdata->history, line);
 		#ifdef DEBUG
 		ft_printf("\n>>>> LINE <<<<\n%s\n\n>>>> TOKEN_LST <<<<\n", line);
 		#endif

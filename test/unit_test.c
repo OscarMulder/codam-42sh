@@ -6,7 +6,7 @@
 /*   By: jbrinksm <jbrinksm@student.codam.nl>         +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2019/04/18 16:37:32 by omulder        #+#    #+#                */
-/*   Updated: 2019/07/26 15:24:21 by omulder       ########   odam.nl         */
+/*   Updated: 2019/07/26 15:33:21 by omulder       ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -199,8 +199,9 @@ TestSuite(shell_quote_checker);
 
 Test(shell_quote_checker, basic)
 {
-	char	*line;
-	int		status;
+	char		*line;
+	int			status;
+	t_history	**history;
 
 	history_get_file_content(&history);
 	line = strdup("lala");

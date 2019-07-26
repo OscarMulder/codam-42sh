@@ -6,7 +6,7 @@
 /*   By: jbrinksm <jbrinksm@student.codam.nl>         +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2019/04/10 20:29:49 by jbrinksm       #+#    #+#                */
-/*   Updated: 2019/07/26 15:20:17 by omulder       ########   odam.nl         */
+/*   Updated: 2019/07/26 15:39:16 by omulder       ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -30,7 +30,7 @@ int		main(int argc, char **argv)
 	if (vshdata.envlst == NULL)
 		return (EXIT_FAILURE);
 	term_p = term_prepare(vshdata.envlst);
-	history_get_file_content();
+	history_get_file_content(&(vshdata.history));
 	/* if !term_p, history or envlst failed: send appropriate error message/log */
 	if (term_p == NULL)
 		return (EXIT_FAILURE);

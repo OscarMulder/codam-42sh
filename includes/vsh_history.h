@@ -6,13 +6,13 @@
 /*   By: mavan-he <mavan-he@student.codam.nl>         +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2019/05/30 17:42:22 by mavan-he       #+#    #+#                */
-/*   Updated: 2019/07/16 16:42:53 by omulder       ########   odam.nl         */
+/*   Updated: 2019/07/26 15:32:32 by omulder       ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
 #ifndef VSH_HISTORY_H
 # define VSH_HISTORY_H
-# define HISTFILE "~/.vsh_history"
+# define HISTFILE "/Users/omulder/.vsh_history" // woops
 
 // int	history_i;
 // int	history_cur;
@@ -37,4 +37,5 @@ int		        history_line_to_array(t_history **history, char *line);
 void	        history_print(t_history **history);
 void		    history_change_line(t_history **history, char **line, unsigned *index, char arrow);
 void	        history_find_start(t_history **history, int *number, int *start);
+
 #endif

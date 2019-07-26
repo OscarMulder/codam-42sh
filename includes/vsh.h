@@ -6,7 +6,7 @@
 /*   By: omulder <omulder@student.codam.nl>           +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2019/04/10 20:29:42 by jbrinksm       #+#    #+#                */
-/*   Updated: 2019/07/26 15:23:50 by omulder       ########   odam.nl         */
+/*   Updated: 2019/07/26 15:41:14 by omulder       ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -181,6 +181,7 @@ typedef struct	s_envlst
 typedef struct	s_vshdata
 {
 	t_envlst 	*envlst;
+	t_history	**history;
 }				t_vshdata;
 
 /*
@@ -301,7 +302,7 @@ void			term_free_struct(t_term **term_p);
 **-----------------------------------input--------------------------------------
 */
 
-int				input_read(char **line, int *status);
+int				input_read(t_vshdata *vshdata, char **line, int *status);
 int				input_is_word_start(char *str, int i1, int i2);
 void			input_clear_char_at(char **line, unsigned index);
 int				input_parse_escape(char c, int *input_state);
