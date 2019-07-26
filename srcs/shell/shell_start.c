@@ -6,7 +6,7 @@
 /*   By: omulder <omulder@student.codam.nl>           +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2019/04/18 16:44:50 by omulder        #+#    #+#                */
-/*   Updated: 2019/07/26 15:40:31 by omulder       ########   odam.nl         */
+/*   Updated: 2019/07/26 16:18:54 by omulder       ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -37,7 +37,7 @@ int		shell_start(t_vshdata *vshdata)
 		shell_display_prompt();
 		if (input_read(vshdata, &line, &status) == FUNCT_ERROR)
 			continue;
-		while (shell_quote_checker(&line, &status) == FUNCT_ERROR)
+		while (shell_quote_checker(vshdata, &line, &status) == FUNCT_ERROR)
 			continue ;
 		ft_putchar('\n');
 		history_line_to_array(vshdata->history, line);
@@ -46,7 +46,7 @@ int		shell_start(t_vshdata *vshdata)
 		#endif
 		if (lexer(&line, &token_lst) != FUNCT_SUCCESS)
 			continue ;
-		if (shell_dless_input(token_lst) != FUNCT_SUCCESS)
+		if (shell_dless_input(vshdata, token_lst) != FUNCT_SUCCESS)
 			continue ;
 		if ((token_lst->next)->type == NEWLINE)
 		{

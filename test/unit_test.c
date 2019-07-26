@@ -6,7 +6,7 @@
 /*   By: jbrinksm <jbrinksm@student.codam.nl>         +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2019/04/18 16:37:32 by omulder        #+#    #+#                */
-/*   Updated: 2019/07/26 15:33:21 by omulder       ########   odam.nl         */
+/*   Updated: 2019/07/26 16:14:58 by omulder       ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -201,23 +201,23 @@ Test(shell_quote_checker, basic)
 {
 	char		*line;
 	int			status;
-	t_history	**history;
+	t_vshdata	vshdata;
 
-	history_get_file_content(&history);
+	history_get_file_content(&(vshdata.history));
 	line = strdup("lala");
-	shell_quote_checker(&line, &status);
+	shell_quote_checker(&vshdata, &line, &status);
 	cr_expect_str_eq(line, "lala");
 	ft_strdel(&line);
 	line = strdup("lala''");
-	shell_quote_checker(&line, &status);
+	shell_quote_checker(&vshdata, &line, &status);
 	cr_expect_str_eq(line, "lala''");
 	ft_strdel(&line);
 	line = strdup("lala\"\"");
-	shell_quote_checker(&line, &status);
+	shell_quote_checker(&vshdata, &line, &status);
 	cr_expect_str_eq(line, "lala\"\"");
 	ft_strdel(&line);
 	line = strdup("lala'\"'");
-	shell_quote_checker(&line, &status);
+	shell_quote_checker(&vshdata, &line, &status);
 	cr_expect_str_eq(line, "lala'\"'");
 	ft_strdel(&line);
 }

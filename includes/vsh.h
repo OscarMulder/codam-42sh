@@ -6,7 +6,7 @@
 /*   By: omulder <omulder@student.codam.nl>           +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2019/04/10 20:29:42 by jbrinksm       #+#    #+#                */
-/*   Updated: 2019/07/26 15:41:14 by omulder       ########   odam.nl         */
+/*   Updated: 2019/07/26 16:18:37 by omulder       ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -302,37 +302,39 @@ void			term_free_struct(t_term **term_p);
 **-----------------------------------input--------------------------------------
 */
 
+typedef struct	s_inputdata
+{
+	char		c;
+	int			input_state;
+	int			hist_index;
+	unsigned	index;
+}				t_inputdata;
+
 int				input_read(t_vshdata *vshdata, char **line, int *status);
 int				input_is_word_start(char *str, int i1, int i2);
 void			input_clear_char_at(char **line, unsigned index);
-int				input_parse_escape(char c, int *input_state);
-int				input_parse_char(char c, unsigned *index, char **line, int *len_max);
-int				input_parse_home(char c, int *input_state, unsigned *index);
-int				input_parse_backspace(char c, unsigned *index, char **line);
-int				input_parse_end(char c, int *input_state, unsigned *index,
-					char **line);
-int				input_parse_next(char c, int *input_state, unsigned *index,
-					char **line);
-int				input_parse_prev(char c, int *input_state, unsigned *index,
-					char **line);
-int				input_parse_delete(char c, int *input_state, unsigned *index,
-					char **line);
-int				input_parse_ctrl_d(char c, unsigned *index, char **line);
-int				input_parse_ctrl_k(char c, unsigned *index, char **line);
-int				input_parse_ctrl_up(char c, int *input_state, unsigned *index,
-					char **line);
-int				input_parse_ctrl_down(char c, int *input_state, unsigned *index,
-					char **line);
+int				input_parse_escape(t_inputdata *data);
+int				input_parse_char(t_inputdata *data, char **line, int *len_max);
+int				input_parse_home(t_inputdata *data);
+int				input_parse_backspace(t_inputdata *data, char **line);
+int				input_parse_end(t_inputdata *data, char **line);
+int				input_parse_next(t_inputdata *data, char **line);
+int				input_parse_prev(t_inputdata *data, char **line);
+int				input_parse_delete(t_inputdata *data, char **line);
+int				input_parse_ctrl_d(t_inputdata *data, char **line);
+int				input_parse_ctrl_up(t_inputdata *data, t_history **history, char **line);
+int				input_parse_ctrl_down(t_inputdata *data, t_history **history, char **line);
+int				input_parse_ctrl_k(t_inputdata *data, char **line);
 
 /*
 **----------------------------------shell---------------------------------------
 */
 
 void			shell_display_prompt(void);
-int				shell_dless_read_till_stop(char **heredoc, char *stop);
-int				shell_dless_set_tk_val(t_tokenlst *probe, char **heredoc, char *stop);
-int				shell_dless_input(t_tokenlst *token_lst);
-int				shell_quote_checker(char **line, int *status);
+int				shell_dless_read_till_stop(char **heredoc, char *stop, t_vshdata *vshdata);
+int				shell_dless_set_tk_val(t_tokenlst *probe, char **heredoc, char *stop, t_vshdata *vshdata);
+int				shell_dless_input(t_vshdata *vshdata, t_tokenlst *token_lst);
+int				shell_quote_checker(t_vshdata *vshdata, char **line, int *status);
 char			shell_quote_checker_find_quote(char *line);
 int				shell_start(t_vshdata *vshdata);
 
