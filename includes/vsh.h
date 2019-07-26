@@ -6,7 +6,7 @@
 /*   By: omulder <omulder@student.codam.nl>           +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2019/04/10 20:29:42 by jbrinksm       #+#    #+#                */
-/*   Updated: 2019/07/25 17:44:17 by mavan-he      ########   odam.nl         */
+/*   Updated: 2019/07/26 21:05:49 by mavan-he      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -61,7 +61,7 @@
 **-----------------------------------alias--------------------------------------
 */
 
-# define ALIAS_FLAG_LP	(1 << 0)
+# define ALIAS_FLAG_LP		(1 << 0)
 # define UNALIAS_FLAG_LA	(2 << 0)
 
 /*
@@ -397,6 +397,7 @@ void			lexer_state_ionum(t_scanner *scanner);
 */
 
 int				alias_expansion(t_vshdata *vhsdata, t_tokenlst **tokenlst);
+int				alias_replace(t_vshdata *vshdata, t_tokenlst *probe, char *alias);
 
 
 /*
