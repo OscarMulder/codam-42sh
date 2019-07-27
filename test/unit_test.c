@@ -515,88 +515,88 @@ Test(command_exec, basic, .init=redirect_all_stdout)
 /*
 **------------------------------------------------------------------------------
 */
-// TestSuite(history_check);
+TestSuite(history_check);
 
-// Test(history_check, history_to_file)
-// {
-// 	int		fd;
-// 	char	buf[22];
-// 	int 	ret;
-// 	t_vshdata	vshdata;
-// 	int			i;
+Test(history_check, history_to_file)
+{
+	int		fd;
+	char	buf[22];
+	int 	ret;
+	t_vshdata	vshdata;
+	int			i;
 
-// 	i = 0;
-// 	vshdata.history_file = ft_strdup("/tmp/.vsh_history");
-// 	vshdata.history = (t_history **)ft_memalloc(sizeof(t_history *) * HISTORY_MAX);
-// 	while (i < HISTORY_MAX)
-// 	{
-// 		vshdata.history[i] = (t_history*)ft_memalloc(sizeof(t_history));
-// 		i++;
-// 	}
-// 	history_line_to_array(vshdata.history, "check1\n");
-// 	history_line_to_array(vshdata.history, "check2\n");
-// 	history_line_to_array(vshdata.history, "check3\n");
-// 	cr_expect(history_to_file(&vshdata) == FUNCT_SUCCESS);
-// 	fd = open(vshdata.history_file, O_RDONLY);
-// 	// ft_printf("%s\n", strerror(errno));
-// 	cr_expect(fd > 0);
-// 	ft_bzero(buf, 22);
-// 	ret = read(fd, buf, 22);
-// 	// ft_printf("%d - %s\n", ret , buf);
-// 	cr_expect(ret == 21);
-// 	cr_expect(ft_strcmp(buf, "check1\ncheck2\ncheck3\n") == 0);
-// 	remove(vshdata.history_file);
-// }
+	i = 0;
+	vshdata.history_file = ft_strdup("/tmp/.vsh_history1");
+	vshdata.history = (t_history **)ft_memalloc(sizeof(t_history *) * HISTORY_MAX);
+	while (i < HISTORY_MAX - 1)
+	{
+		vshdata.history[i] = (t_history*)ft_memalloc(sizeof(t_history));
+		i++;
+	}
+	vshdata.history[i] = NULL;
+	history_line_to_array(vshdata.history, "check1\n");
+	history_line_to_array(vshdata.history, "check2\n");
+	history_line_to_array(vshdata.history, "check3\n");
+	cr_expect(history_to_file(&vshdata) == FUNCT_SUCCESS);
+	fd = open(vshdata.history_file, O_RDONLY);
+	cr_expect(fd > 0);
+	ft_bzero(buf, 22);
+	ret = read(fd, buf, 22);
+	cr_expect(ret == 21);
+	cr_expect(ft_strcmp(buf, "check1\ncheck2\ncheck3\n") == 0);
+	remove(vshdata.history_file);
+}
 
-// Test(history_check, get_file_content)
-// {
-// 	t_vshdata	vshdata;
-// 	int			i;
+Test(history_check, get_file_content)
+{
+	t_vshdata	vshdata;
+	int			i;
 
-// 	i = 0;
-// 	vshdata.history_file = ft_strdup("/tmp/.vsh_history");
-// 	vshdata.history = (t_history **)ft_memalloc(sizeof(t_history *) * HISTORY_MAX);
-// 	while (i < HISTORY_MAX)
-// 	{
-// 		vshdata.history[i] = (t_history*)ft_memalloc(sizeof(t_history));
-// 		i++;
-// 	}
-// 	history_line_to_array(vshdata.history, "check1\n");
-// 	history_line_to_array(vshdata.history, "check2\n");
-// 	history_line_to_array(vshdata.history, "check3\n");
-// 	history_to_file(&vshdata);
-// 	cr_expect(history_get_file_content(&vshdata) == FUNCT_SUCCESS);
-// 	cr_expect_str_eq(vshdata.history[0]->str, "check1");
-// 	cr_expect_str_eq(vshdata.history[1]->str, "check2");
-// 	cr_expect_str_eq(vshdata.history[2]->str, "check3");
-// 	cr_expect(vshdata.history[3]->str == NULL);
-// 	remove(vshdata.history_file);
-// } 
+	i = 0;
+	vshdata.history_file = ft_strdup("/tmp/.vsh_history2");
+	vshdata.history = (t_history **)ft_memalloc(sizeof(t_history *) * HISTORY_MAX);
+	while (i < HISTORY_MAX)
+	{
+		vshdata.history[i] = (t_history*)ft_memalloc(sizeof(t_history));
+		i++;
+	}
+	history_line_to_array(vshdata.history, "check1\n");
+	history_line_to_array(vshdata.history, "check2\n");
+	history_line_to_array(vshdata.history, "check3\n");
+	history_to_file(&vshdata);
+	cr_expect(history_get_file_content(&vshdata) == FUNCT_SUCCESS);
+	cr_expect_str_eq(vshdata.history[0]->str, "check1");
+	cr_expect_str_eq(vshdata.history[1]->str, "check2");
+	cr_expect_str_eq(vshdata.history[2]->str, "check3");
+	cr_expect(vshdata.history[3]->str == NULL);
+	remove(vshdata.history_file);
+} 
 
-// TestSuite(history_output);
+TestSuite(history_output);
 
-// Test(history_check, history_print, .init=redirect_all_stdout)
-// {
-// 	t_vshdata	vshdata;
-// 	int			i;
+Test(history_check, print_history, .init=redirect_all_stdout)
+{
+	t_vshdata	vshdata;
+	int			i;
 
-// 	i = 0;
-// 	vshdata.history_file = ft_strdup("/tmp/.vsh_history");
-// 	vshdata.history = (t_history **)ft_memalloc(sizeof(t_history *) * HISTORY_MAX);
-// 	while (i < HISTORY_MAX)
-// 	{
-// 		vshdata.history[i] = (t_history*)ft_memalloc(sizeof(t_history));
-// 		i++;
-// 	}
-// 	history_line_to_array(vshdata.history, "check1\n");
-// 	history_line_to_array(vshdata.history, "check2\n");
-// 	history_line_to_array(vshdata.history, "check3\n");
-// 	history_to_file(&vshdata);
-// 	cr_expect(history_get_file_content(&vshdata) == FUNCT_SUCCESS);
-// 	history_print(vshdata.history);
-// 	cr_expect_stdout_eq_str("    1  check1\n    2  check2\n    3  check3\n");
-// 	remove(vshdata.history_file);
-// }
+	i = 0;
+	vshdata.history_file = ft_strdup("/tmp/.vsh_history3");
+	vshdata.history = (t_history **)ft_memalloc(sizeof(t_history *) * HISTORY_MAX);
+	while (i < HISTORY_MAX)
+	{
+		vshdata.history[i] = (t_history*)ft_memalloc(sizeof(t_history));
+		i++;
+	}
+	history_line_to_array(vshdata.history, "check1\n");
+	history_line_to_array(vshdata.history, "check2\n");
+	history_line_to_array(vshdata.history, "check3\n");
+	history_to_file(&vshdata);
+	cr_expect(history_get_file_content(&vshdata) == FUNCT_SUCCESS);
+	fflush(NULL);
+	history_print(vshdata.history);
+	cr_expect_stdout_eq_str("    1  check1\n    2  check2\n    3  check3\n");
+	remove(vshdata.history_file);
+}
 
 /*
 **------------------------------------------------------------------------------
