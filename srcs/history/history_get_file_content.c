@@ -6,7 +6,7 @@
 /*   By: mavan-he <mavan-he@student.codam.nl>         +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2019/05/30 13:49:22 by mavan-he       #+#    #+#                */
-/*   Updated: 2019/07/27 12:51:23 by omulder       ########   odam.nl         */
+/*   Updated: 2019/07/27 16:19:40 by omulder       ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -38,10 +38,13 @@ int		history_get_file_content(t_vshdata *vshdata)
 	{
 		line = NULL;
 		ret = ft_get_next_line(fd, &line);
+		if (ret == -1)
+			return (FUNCT_ERROR);
 		vshdata->history[i] = (t_history*)ft_memalloc(sizeof(t_history)); //malloccheck
 		vshdata->history[i]->number = i + 1;
 		vshdata->history[i]->str = line;
 		i++;
+
 	}
 	while (i < HISTORY_MAX)
 	{
