@@ -6,7 +6,7 @@
 /*   By: jbrinksm <jbrinksm@student.codam.nl>         +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2019/04/18 16:37:32 by omulder        #+#    #+#                */
-/*   Updated: 2019/07/27 13:37:33 by omulder       ########   odam.nl         */
+/*   Updated: 2019/07/27 14:48:45 by omulder       ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -523,19 +523,26 @@ Test(history_check, history_to_file)
 	char	buf[22];
 	int 	ret;
 	t_vshdata	vshdata;
+	int			i;
 
-	vshdata.history_file = "/tmp/.vsh_history";
-	history_get_file_content(&vshdata);
+	i = 0;
+	vshdata.history_file = ft_strdup("/tmp/.vsh_history");
+	vshdata.history = (t_history **)ft_memalloc(sizeof(t_history *) * HISTORY_MAX);
+	while (i < HISTORY_MAX)
+	{
+		vshdata.history[i] = (t_history*)ft_memalloc(sizeof(t_history));
+		i++;
+	}
 	history_line_to_array(vshdata.history, "check1\n");
 	history_line_to_array(vshdata.history, "check2\n");
 	history_line_to_array(vshdata.history, "check3\n");
 	cr_expect(history_to_file(&vshdata) == FUNCT_SUCCESS);
 	fd = open(vshdata.history_file, O_RDONLY);
-	ft_printf("%s\n", strerror(errno));
+	// ft_printf("%s\n", strerror(errno));
 	cr_expect(fd > 0);
 	ft_bzero(buf, 22);
 	ret = read(fd, buf, 22);
-	ft_printf("%d - %s\n", ret , buf);
+	// ft_printf("%d - %s\n", ret , buf);
 	cr_expect(ret == 21);
 	cr_expect(ft_strcmp(buf, "check1\ncheck2\ncheck3\n") == 0);
 	remove(vshdata.history_file);
@@ -544,17 +551,24 @@ Test(history_check, history_to_file)
 Test(history_check, get_file_content)
 {
 	t_vshdata	vshdata;
+	int			i;
 
-	vshdata.history_file = "/tmp/.vsh_history";
-	history_get_file_content(&vshdata);
+	i = 0;
+	vshdata.history_file = ft_strdup("/tmp/.vsh_history");
+	vshdata.history = (t_history **)ft_memalloc(sizeof(t_history *) * HISTORY_MAX);
+	while (i < HISTORY_MAX)
+	{
+		vshdata.history[i] = (t_history*)ft_memalloc(sizeof(t_history));
+		i++;
+	}
 	history_line_to_array(vshdata.history, "check1\n");
 	history_line_to_array(vshdata.history, "check2\n");
 	history_line_to_array(vshdata.history, "check3\n");
 	history_to_file(&vshdata);
 	cr_expect(history_get_file_content(&vshdata) == FUNCT_SUCCESS);
-	cr_expect_str_eq("check1", vshdata.history[0]->str);
-	cr_expect_str_eq("check2", vshdata.history[1]->str);
-	cr_expect_str_eq("check3", vshdata.history[2]->str);
+	cr_expect_str_eq(vshdata.history[0]->str, "check1");
+	cr_expect_str_eq(vshdata.history[1]->str, "check2");
+	cr_expect_str_eq(vshdata.history[2]->str, "check3");
 	cr_expect(vshdata.history[3]->str == NULL);
 	remove(vshdata.history_file);
 } 
@@ -564,9 +578,16 @@ TestSuite(history_output);
 Test(history_check, history_print, .init=redirect_all_stdout)
 {
 	t_vshdata	vshdata;
+	int			i;
 
-	vshdata.history_file = "/tmp/.vsh_history";
-	history_get_file_content(&vshdata);
+	i = 0;
+	vshdata.history_file = ft_strdup("/tmp/.vsh_history");
+	vshdata.history = (t_history **)ft_memalloc(sizeof(t_history *) * HISTORY_MAX);
+	while (i < HISTORY_MAX)
+	{
+		vshdata.history[i] = (t_history*)ft_memalloc(sizeof(t_history));
+		i++;
+	}
 	history_line_to_array(vshdata.history, "check1\n");
 	history_line_to_array(vshdata.history, "check2\n");
 	history_line_to_array(vshdata.history, "check3\n");
