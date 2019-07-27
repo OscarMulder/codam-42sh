@@ -6,7 +6,7 @@
 /*   By: mavan-he <mavan-he@student.codam.nl>         +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2019/05/30 18:55:25 by mavan-he       #+#    #+#                */
-/*   Updated: 2019/07/26 17:13:34 by omulder       ########   odam.nl         */
+/*   Updated: 2019/07/27 13:12:06 by omulder       ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -57,7 +57,6 @@ int		history_line_to_array(t_history **history, char *line)
 	i = start;
 	if (history[i]->str != NULL)
 		ft_strdel(&history[i]->str);
-	ft_printf("history i: %i\n", i);
 	history[i]->number = number + 1;
 	history[i]->str = ft_strsub(line, 0, ft_strlen(line) - 1);
 	if (history[i]->str == NULL)

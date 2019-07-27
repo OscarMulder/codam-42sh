@@ -6,7 +6,7 @@
 /*   By: mavan-he <mavan-he@student.codam.nl>         +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2019/05/30 13:49:22 by mavan-he       #+#    #+#                */
-/*   Updated: 2019/07/26 17:13:30 by omulder       ########   odam.nl         */
+/*   Updated: 2019/07/27 12:51:23 by omulder       ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,17 +19,17 @@
 ** Get the content out of the history file
 */
 
-int		history_get_file_content(t_history ***history)
+int		history_get_file_content(t_vshdata *vshdata)
 {
 	int		fd;
 	int		ret;
 	int		i;
 	char	*line;
 
-	*history = (t_history **)ft_memalloc(sizeof(t_history *) * HISTORY_MAX);
-	if (*history == NULL)
+	vshdata->history = (t_history **)ft_memalloc(sizeof(t_history *) * HISTORY_MAX);
+	if (vshdata->history == NULL || vshdata->history_file == NULL)
 		return (FUNCT_ERROR);
-	fd = open("/users/omulder/.vsh_history", O_RDWR | O_CREAT, S_IRUSR | S_IWUSR);
+	fd = open(vshdata->history_file, O_RDWR | O_CREAT, S_IRUSR | S_IWUSR);
 	if (fd == -1)
 		return (FUNCT_ERROR);
 	ret = 1;
@@ -38,14 +38,14 @@ int		history_get_file_content(t_history ***history)
 	{
 		line = NULL;
 		ret = ft_get_next_line(fd, &line);
-		(*history)[i] = (t_history*)ft_memalloc(sizeof(t_history)); //malloccheck
-		(*history)[i]->number = i + 1;
-		(*history)[i]->str = line;
+		vshdata->history[i] = (t_history*)ft_memalloc(sizeof(t_history)); //malloccheck
+		vshdata->history[i]->number = i + 1;
+		vshdata->history[i]->str = line;
 		i++;
 	}
 	while (i < HISTORY_MAX)
 	{
-		(*history)[i] = (t_history*)ft_memalloc(sizeof(t_history)); //malloccheck
+		vshdata->history[i] = (t_history*)ft_memalloc(sizeof(t_history)); //malloccheck
 		i++;
 	}
 	close(fd);

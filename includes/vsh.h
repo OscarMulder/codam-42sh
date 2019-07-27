@@ -6,7 +6,7 @@
 /*   By: omulder <omulder@student.codam.nl>           +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2019/04/10 20:29:42 by jbrinksm       #+#    #+#                */
-/*   Updated: 2019/07/26 17:16:14 by omulder       ########   odam.nl         */
+/*   Updated: 2019/07/27 13:06:03 by omulder       ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -127,6 +127,7 @@
 # define HISTORY_MAX	500
 # define ARROW_UP	    1
 # define ARROW_DOWN	    2
+# define HISTFILENAME	".vsh_history"
 
 /*
 **===============================personal headers===============================
@@ -199,6 +200,7 @@ typedef struct	s_vshdata
 {
 	t_envlst 	*envlst;
 	t_history	**history;
+	char		*history_file;
 }				t_vshdata;
 
 /*
@@ -472,12 +474,13 @@ int			redir_create_heredoc_fd(char *right_side);
 **------------------------------------history-----------------------------------
 */
 
-int		        history_to_file(t_history **history);
-int		        history_get_file_content(t_history ***history);
+int				history_to_file(t_vshdata *vshdata);
+int				history_get_file_content(t_vshdata *vshdata);
 int		        history_line_to_array(t_history **history, char *line);
 void	        history_print(t_history **history);
 void		    history_change_line(t_inputdata *data, char **line, char arrow);
 void	        history_find_start(t_history **history, int *number, int *start);
+char			*history_find_histfile(t_vshdata *vshdata);
 
 /*
 **--------------------------------error_handling--------------------------------

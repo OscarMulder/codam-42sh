@@ -6,7 +6,7 @@
 /*   By: jbrinksm <jbrinksm@student.codam.nl>         +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2019/04/18 16:37:32 by omulder        #+#    #+#                */
-/*   Updated: 2019/07/26 17:15:43 by omulder       ########   odam.nl         */
+/*   Updated: 2019/07/27 13:37:33 by omulder       ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -22,6 +22,7 @@
 #include <limits.h>
 #include <unistd.h>
 #include <fcntl.h>
+#include <errno.h>
 
 void redirect_all_stdout(void)
 {
@@ -202,7 +203,8 @@ Test(shell_quote_checker, basic)
 	int			status;
 	t_vshdata	vshdata;
 
-	history_get_file_content(&(vshdata.history));
+	vshdata.history_file = "/tmp/.vsh_history";
+	history_get_file_content(&vshdata);
 	line = strdup("lala");
 	shell_quote_checker(&vshdata, &line, &status);
 	cr_expect_str_eq(line, "lala");
@@ -513,62 +515,68 @@ Test(command_exec, basic, .init=redirect_all_stdout)
 /*
 **------------------------------------------------------------------------------
 */
-/* TestSuite(history_check);
+TestSuite(history_check);
 
 Test(history_check, history_to_file)
 {
 	int		fd;
-	char	*array[4];
 	char	buf[22];
 	int 	ret;
+	t_vshdata	vshdata;
 
-	ft_bzero(buf, 22);
-	array[0] = "check1";
-	array[1] = "check2";
-	array[2] = "check3";
-	array[3] = NULL;
-	history = array;
-	cr_expect(history_to_file() == FUNCT_SUCCESS);
-	fd = open("/tmp/.vsh_history", O_RDONLY);
+	vshdata.history_file = "/tmp/.vsh_history";
+	history_get_file_content(&vshdata);
+	history_line_to_array(vshdata.history, "check1\n");
+	history_line_to_array(vshdata.history, "check2\n");
+	history_line_to_array(vshdata.history, "check3\n");
+	cr_expect(history_to_file(&vshdata) == FUNCT_SUCCESS);
+	fd = open(vshdata.history_file, O_RDONLY);
+	ft_printf("%s\n", strerror(errno));
 	cr_expect(fd > 0);
+	ft_bzero(buf, 22);
 	ret = read(fd, buf, 22);
+	ft_printf("%d - %s\n", ret , buf);
 	cr_expect(ret == 21);
 	cr_expect(ft_strcmp(buf, "check1\ncheck2\ncheck3\n") == 0);
+	remove(vshdata.history_file);
 }
 
 Test(history_check, get_file_content)
 {
-	char	*array[4];
+	t_vshdata	vshdata;
 
-	array[0] = ft_strdup("check1");
-	array[1] = ft_strdup("check2");
-	array[2] = ft_strdup("check3");
-	array[3] = NULL;
-	history = array;
-	cr_expect(history_to_file() == FUNCT_SUCCESS);
-	cr_expect(history_get_file_content() == FUNCT_SUCCESS);
-	cr_expect_str_eq("check1", history[0]);
-	cr_expect_str_eq("check2", history[1]);
-	cr_expect_str_eq("check3", history[2]);
-	cr_expect(history[3] == NULL);
+	vshdata.history_file = "/tmp/.vsh_history";
+	history_get_file_content(&vshdata);
+	history_line_to_array(vshdata.history, "check1\n");
+	history_line_to_array(vshdata.history, "check2\n");
+	history_line_to_array(vshdata.history, "check3\n");
+	history_to_file(&vshdata);
+	cr_expect(history_get_file_content(&vshdata) == FUNCT_SUCCESS);
+	cr_expect_str_eq("check1", vshdata.history[0]->str);
+	cr_expect_str_eq("check2", vshdata.history[1]->str);
+	cr_expect_str_eq("check3", vshdata.history[2]->str);
+	cr_expect(vshdata.history[3]->str == NULL);
+	remove(vshdata.history_file);
 } 
 
 TestSuite(history_output);
 
 Test(history_check, history_print, .init=redirect_all_stdout)
 {
-	char	*array[4];
+	t_vshdata	vshdata;
 
-	history = array;
-	array[0] = ft_strdup("check1");
-	array[1] = ft_strdup("check2");
-	array[2] = ft_strdup("check3");
-	array[3] = NULL;
-	cr_expect(history_to_file() == FUNCT_SUCCESS);
-	cr_expect(history_get_file_content() == FUNCT_SUCCESS);
-	history_print();
-	cr_expect_stdout_eq_str("    0  check1\n    1  check2\n    2  check3\n");
-} */
+	vshdata.history_file = "/tmp/.vsh_history";
+	history_get_file_content(&vshdata);
+	history_line_to_array(vshdata.history, "check1\n");
+	history_line_to_array(vshdata.history, "check2\n");
+	history_line_to_array(vshdata.history, "check3\n");
+	history_to_file(&vshdata);
+	cr_expect(history_get_file_content(&vshdata) == FUNCT_SUCCESS);
+	history_print(vshdata.history);
+	cr_expect_stdout_eq_str("    1  check1\n    2  check2\n    3  check3\n");
+	remove(vshdata.history_file);
+}
+
 /*
 **------------------------------------------------------------------------------
 */
