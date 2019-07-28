@@ -6,7 +6,7 @@
 /*   By: mavan-he <mavan-he@student.codam.nl>         +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2019/07/25 17:24:39 by mavan-he       #+#    #+#                */
-/*   Updated: 2019/07/27 18:48:31 by mavan-he      ########   odam.nl         */
+/*   Updated: 2019/07/28 12:59:05 by mavan-he      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -26,17 +26,17 @@ static bool	alias_space_check(char *alias)
 	return (c == '\t' || c == ' ');
 }
 
-static char	*alias_find_value(char *key, t_aliaslst *aliaslst, char **expanded_aliases)
+static char	*alias_find_value(char *key, t_aliaslst *aliaslst, char **expanded)
 {
 	int		key_len;
 	int		i;
 
-	if (expanded_aliases != NULL)
+	if (expanded != NULL)
 	{
 		i = 0;
-		while (expanded_aliases[i] != NULL)
+		while (expanded[i] != NULL)
 		{
-			if (ft_strequ(expanded_aliases[i], key) == true)
+			if (ft_strequ(expanded[i], key) == true)
 				return (NULL);
 			i++;
 		}
@@ -53,17 +53,17 @@ static char	*alias_find_value(char *key, t_aliaslst *aliaslst, char **expanded_a
 }
 
 int			alias_expansion_checker(t_vshdata *vshdata, t_tokenlst *probe,
-			char **expanded_aliases)
+			char **expanded)
 {
 	t_tokenlst	*new_probe;
 	char		*alias;
 
-	alias = alias_find_value(probe->next->value, vshdata->aliaslst, expanded_aliases);
+	alias = alias_find_value(probe->next->value, vshdata->aliaslst, expanded);
 	if (alias != NULL)
 	{
 		if (alias_space_check(alias) == true)
 		{
-			if (alias_expansion(vshdata, &probe->next, expanded_aliases) == FUNCT_ERROR)
+			if (alias_expansion(vshdata, &probe->next, expanded) == FUNCT_ERROR)
 				return (FUNCT_ERROR);
 		}
 		else
@@ -72,32 +72,31 @@ int			alias_expansion_checker(t_vshdata *vshdata, t_tokenlst *probe,
 			while (new_probe->next->type != END &&
 				is_cmd_seperator(new_probe->next->type) == false)
 				new_probe = new_probe->next;
-			if (alias_expansion(vshdata, &new_probe, expanded_aliases) == FUNCT_ERROR)
+			if (alias_expansion(vshdata, &new_probe, expanded) == FUNCT_ERROR)
 				return (FUNCT_ERROR);
 		}
-		if (alias_replace(vshdata, probe, alias, expanded_aliases) == FUNCT_ERROR)
+		if (alias_replace(vshdata, probe, alias, expanded) == FUNCT_ERROR)
 			return (FUNCT_ERROR);
 		return (FUNCT_SUCCESS);
 	}
-	else
-		return (FUNCT_FAILURE);
+	return (FUNCT_FAILURE);
 }
 
 int			alias_expansion(t_vshdata *vshdata, t_tokenlst **tokenlst,
-			char **expanded_aliases)
+			char **expanded)
 {
 	t_tokenlst	*probe;
 	int			ret;
-	
+
 	probe = *tokenlst;
 	while (probe->type != END && probe->next->type != END)
 	{
 		if (probe->next->type == WORD &&
 			(probe->flags & T_FLAG_HASSPECIAL) == false)
 		{
-			ret = alias_expansion_checker(vshdata, probe, expanded_aliases);
+			ret = alias_expansion_checker(vshdata, probe, expanded);
 			if (ret == FUNCT_ERROR)
-				return (FUNCT_ERROR); // del tokenlst
+				return (alias_error(tokenlst, expanded));
 			if (ret == FUNCT_SUCCESS)
 				return (FUNCT_SUCCESS);
 		}

@@ -6,7 +6,7 @@
 /*   By: omulder <omulder@student.codam.nl>           +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2019/04/18 16:44:50 by omulder        #+#    #+#                */
-/*   Updated: 2019/07/27 17:16:36 by mavan-he      ########   odam.nl         */
+/*   Updated: 2019/07/28 12:33:00 by mavan-he      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -46,7 +46,7 @@ int		shell_start(t_vshdata *vshdata)
 		#endif
 		if (lexer(&line, &token_lst) != FUNCT_SUCCESS)
 			continue ;
-		if (shell_dless_input(token_lst) != FUNCT_SUCCESS)
+		if (shell_dless_input(&token_lst) != FUNCT_SUCCESS)
 			continue ;
 		if (alias_expansion(vshdata, &token_lst, NULL) != FUNCT_SUCCESS)
 			continue ;

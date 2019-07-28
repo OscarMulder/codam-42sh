@@ -6,13 +6,13 @@
 /*   By: mavan-he <mavan-he@student.codam.nl>         +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2019/07/26 20:29:50 by mavan-he       #+#    #+#                */
-/*   Updated: 2019/07/27 18:39:33 by mavan-he      ########   odam.nl         */
+/*   Updated: 2019/07/28 13:11:32 by mavan-he      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "vsh.h"
 
-static void	alias_set(t_tokenlst *probe, t_tokenlst *new_tokenlst)
+static void	alias_combine_tokenlsts(t_tokenlst *probe, t_tokenlst *new_tokenlst)
 {
 	t_tokenlst *start_end;
 
@@ -28,58 +28,77 @@ static void	alias_set(t_tokenlst *probe, t_tokenlst *new_tokenlst)
 	probe->next = new_tokenlst;
 }
 
-char		**alias_add_expanded(char **expanded_aliases, char *alias, char *alias_equal)
+int			alias_error(t_tokenlst **tokenlst, char **expanded)
 {
-	char		**new_expanded_aliases;
+	if (expanded != NULL)
+		ft_strarrdel(&expanded);
+	lexer_tokenlstdel(tokenlst);
+	return (FUNCT_ERROR);
+}
+
+void		alias_malloc_expanded(char **expanded, char ***new_expanded, int *i)
+{
+	*i = 0;
+	if (expanded == NULL)
+		*new_expanded = (char **)ft_memalloc(sizeof(char *) * 2);
+	else
+	{
+		while (expanded[*i] != NULL)
+			i++;
+		*new_expanded = (char **)ft_memalloc(sizeof(char *) * (*i + 2));
+	}
+}
+
+char		**alias_add_expanded(char **expanded, char *alias,
+			char *alias_equal)
+{
+	char		**new_expanded;
 	char		*alias_key;
 	int			i;
 	int			new_i;
 
-	i = 0;
-	if (expanded_aliases == NULL)
-		new_expanded_aliases = (char **)ft_memalloc(sizeof(char *) * 2);
-	else
-	{
-		while (expanded_aliases[i] != NULL)
-			i++;
-		new_expanded_aliases = (char **)ft_memalloc(sizeof(char *) * (i + 2));
-	}
+	alias_malloc_expanded(expanded, &new_expanded, &i);
 	alias_key = ft_strndup(alias, alias_equal - alias);
-	if (new_expanded_aliases == NULL || alias_key == NULL)
+	if (new_expanded == NULL || alias_key == NULL)
 		return (NULL);
 	new_i = 0;
 	while (new_i < i)
 	{
-		new_expanded_aliases[new_i] = ft_strdup(expanded_aliases[new_i]);
+		new_expanded[new_i] = ft_strdup(expanded[new_i]);
+		if (new_expanded[new_i] == NULL)
+		{
+			ft_strarrdel(&new_expanded);
+			return (NULL);
+		}
 		new_i++;
-		// malloc check
 	}
-	new_expanded_aliases[new_i] = alias_key;
-	return (new_expanded_aliases);
+	new_expanded[new_i] = alias_key;
+	return (new_expanded);
 }
 
-int			alias_replace(t_vshdata *vshdata, t_tokenlst *probe, char *alias, char **expanded_aliases)
+int			alias_replace(t_vshdata *vshdata, t_tokenlst *probe, char *alias,
+			char **expanded)
 {
 	char		*new_line;
 	char		*alias_equal;
-	char		**new_expanded_aliases;
+	char		**new_expanded;
 	t_tokenlst	*new_tokenlst;
-	int			status; // WHY
-	
+	int			status; // This may or may not need to get fixed
+
 	status = 1;
 	alias_equal = ft_strchr(alias, '=');
 	new_line = ft_strdup(alias_equal + 1);
 	new_tokenlst = NULL;
 	if (new_line == NULL || shell_quote_checker(&new_line, &status)
 		== FUNCT_ERROR || lexer(&new_line, &new_tokenlst) != FUNCT_SUCCESS ||
-		shell_dless_input(new_tokenlst) != FUNCT_SUCCESS)
+		shell_dless_input(&new_tokenlst) != FUNCT_SUCCESS)
 		return (FUNCT_ERROR);
-	new_expanded_aliases = alias_add_expanded(expanded_aliases, alias, alias_equal);
-	if (new_expanded_aliases == NULL)
+	new_expanded = alias_add_expanded(expanded, alias, alias_equal);
+	if (new_expanded == NULL)
 		return (FUNCT_ERROR);
-	if (alias_expansion(vshdata, &new_tokenlst, new_expanded_aliases) == FUNCT_ERROR)
-		return (FUNCT_ERROR);
-	ft_strarrdel(&new_expanded_aliases);
-	alias_set(probe, new_tokenlst);
+	if (alias_expansion(vshdata, &new_tokenlst, new_expanded) == FUNCT_ERROR)
+		return (alias_error(&new_tokenlst, new_expanded));
+	ft_strarrdel(&new_expanded);
+	alias_combine_tokenlsts(probe, new_tokenlst);
 	return (FUNCT_SUCCESS);
 }
