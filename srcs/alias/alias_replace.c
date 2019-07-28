@@ -6,7 +6,7 @@
 /*   By: mavan-he <mavan-he@student.codam.nl>         +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2019/07/26 20:29:50 by mavan-he       #+#    #+#                */
-/*   Updated: 2019/07/28 13:11:32 by mavan-he      ########   odam.nl         */
+/*   Updated: 2019/07/28 15:49:57 by mavan-he      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -44,7 +44,7 @@ void		alias_malloc_expanded(char **expanded, char ***new_expanded, int *i)
 	else
 	{
 		while (expanded[*i] != NULL)
-			i++;
+			(*i)++;
 		*new_expanded = (char **)ft_memalloc(sizeof(char *) * (*i + 2));
 	}
 }
