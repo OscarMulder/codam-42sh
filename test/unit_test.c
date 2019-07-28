@@ -6,7 +6,7 @@
 /*   By: jbrinksm <jbrinksm@student.codam.nl>         +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2019/04/18 16:37:32 by omulder        #+#    #+#                */
-/*   Updated: 2019/07/25 17:08:39 by mavan-he      ########   odam.nl         */
+/*   Updated: 2019/07/28 13:39:14 by mavan-he      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -978,4 +978,29 @@ Test(builtin_unalias, basic_error_test, .init=redirect_all_stdout)
 	builtin_unalias(args, &aliaslst);
 	cr_assert(aliaslst != NULL);
 	cr_expect(g_state->exit_code == EXIT_FAILURE);
+}
+
+TestSuite(alias);
+
+Test(alias, basic_test)
+{
+	char		*line;
+	t_vshdata	vshdata;
+	t_tokenlst	*token_lst;
+	t_ast		*ast;
+
+	line = ft_strdup("alias echo='echo hoi ; echo dit ' ; alias hoi=ditte ; alias dit=dat\n");
+	vshdata.aliaslst = NULL;
+	vshdata.envlst = env_getlst();
+	g_state = (t_state*)ft_memalloc(sizeof(t_state));
+	g_state->exit_code = 0;
+	cr_expect(lexer(&line, &token_lst) == FUNCT_SUCCESS);
+	cr_expect(parser_start(&token_lst, &ast) == FUNCT_SUCCESS);
+	exec_start(ast, &vshdata, 0);
+	cr_expect_str_eq(vshdata.aliaslst->var, "dit=dat");
+	line = ft_strdup("echo\n");
+	cr_expect(lexer(&line, &token_lst) == FUNCT_SUCCESS);
+	cr_expect(alias_expansion(&vshdata, &token_lst, NULL) == FUNCT_SUCCESS);
+	cr_expect_str_eq(token_lst->next->next->value, "hoi");
+	cr_expect_str_eq(token_lst->next->next->next->next->value, "echo");
 }
