@@ -6,7 +6,7 @@
 /*   By: jbrinksm <jbrinksm@student.codam.nl>         +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2019/05/31 07:47:19 by jbrinksm       #+#    #+#                */
-/*   Updated: 2019/07/26 16:11:55 by omulder       ########   odam.nl         */
+/*   Updated: 2019/07/28 17:14:14 by omulder       ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -57,7 +57,10 @@ int		shell_quote_checker(t_vshdata *vshdata, char **line, int *status)
 		else if (quote == '"')
 			ft_printf("\ndquote> ");
 		if (input_read(vshdata, &extra_line, status) == FUNCT_ERROR)
+		{
+			ft_strdel(line);
 			return (FUNCT_ERROR);
+		}
 		*line = ft_joinstrcstr_free_all(*line, '\n', extra_line);
 		if (*line == NULL)
 		{

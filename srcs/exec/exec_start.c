@@ -183,8 +183,6 @@ void		exec_start(t_ast *ast, t_vshdata *vshdata, int flags)
 		== FUNCT_ERROR)
 			return ;
 	}
-	else if (ast->sibling != NULL && (ast->sibling->type == WORD
-	|| ast->sibling->type == ASSIGN
-	|| tool_is_redirect_tk(ast->sibling->type) == true))
+	else if (ast->sibling != NULL)
 		exec_start(ast->sibling, vshdata, flags);
 }

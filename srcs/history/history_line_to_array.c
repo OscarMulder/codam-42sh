@@ -6,7 +6,7 @@
 /*   By: mavan-he <mavan-he@student.codam.nl>         +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2019/05/30 18:55:25 by mavan-he       #+#    #+#                */
-/*   Updated: 2019/07/28 15:43:59 by omulder       ########   odam.nl         */
+/*   Updated: 2019/07/28 15:48:29 by omulder       ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,14 +17,12 @@
 ** Add one line to the history array
 */
 
-void	history_find_start(t_history **history, int *number, int *start)
+static void	history_find_start(t_history **history, int *number, int *start)
 {
 	int i;
 	int	smallest;
 
 	i = 0;
-	*start = 0;
-	*number = -1;
 	smallest = HISTORY_MAX + 1;
 	while (i < HISTORY_MAX && history[i]->str != NULL)
 		i++;
@@ -47,7 +45,7 @@ void	history_find_start(t_history **history, int *number, int *start)
 	}
 }
 
-int		history_line_to_array(t_history **history, char *line)
+int			history_line_to_array(t_history **history, char *line)
 {
 	int start;
 	int number;
@@ -55,6 +53,8 @@ int		history_line_to_array(t_history **history, char *line)
 
 	if (ft_strlen(line) <= 1)
 		return (true);
+	number = -1;
+	start = 0;
 	history_find_start(history, &number, &start);
 	i = start;
 	if (history[i]->str != NULL)

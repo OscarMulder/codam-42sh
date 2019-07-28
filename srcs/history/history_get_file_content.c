@@ -6,7 +6,7 @@
 /*   By: mavan-he <mavan-he@student.codam.nl>         +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2019/05/30 13:49:22 by mavan-he       #+#    #+#                */
-/*   Updated: 2019/07/27 16:57:02 by omulder       ########   odam.nl         */
+/*   Updated: 2019/07/28 15:47:49 by omulder       ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -48,7 +48,7 @@ static int		allocate_leftover_history(t_vshdata *vshdata, int i)
 	return (FUNCT_SUCCESS);
 }
 
-int		history_get_file_content(t_vshdata *vshdata)
+int				history_get_file_content(t_vshdata *vshdata)
 {
 	int		fd;
 	int		ret;
