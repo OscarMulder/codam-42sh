@@ -6,7 +6,7 @@
 /*   By: jbrinksm <jbrinksm@student.codam.nl>         +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2019/07/21 15:14:08 by jbrinksm       #+#    #+#                */
-/*   Updated: 2019/07/28 13:43:37 by jbrinksm      ########   odam.nl         */
+/*   Updated: 2019/07/28 14:32:26 by jbrinksm      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -53,6 +53,8 @@ int			redir_input(t_ast *node)
 		return (error_return(FUNCT_ERROR, E_OPEN, NULL));
 	if (dup2(right_side_fd, left_side_fd) == -1)
 		return (error_return(FUNCT_ERROR, E_DUP, NULL));
+	if (node->type == SLESS || node->type == DLESS)
+		close(right_side_fd);
 	return (FUNCT_SUCCESS);
 }
 
@@ -85,6 +87,8 @@ int			redir_output(t_ast *node)
 		return (error_return(FUNCT_ERROR, E_OPEN, NULL));
 	if (dup2(right_side_fd, left_side_fd) == -1)
 		return (error_return(FUNCT_ERROR, E_DUP, NULL));
+	if (node->type == SGREAT || node->type == DGREAT)
+		close(right_side_fd);
 	return (FUNCT_SUCCESS);
 }
 
