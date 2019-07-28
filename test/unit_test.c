@@ -6,7 +6,7 @@
 /*   By: jbrinksm <jbrinksm@student.codam.nl>         +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2019/04/18 16:37:32 by omulder        #+#    #+#                */
-/*   Updated: 2019/07/28 16:24:17 by mavan-he      ########   odam.nl         */
+/*   Updated: 2019/07/28 16:44:59 by mavan-he      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -995,6 +995,7 @@ Test(alias, basic_test)
 	cr_assert(vshdata.envlst != NULL);
 	g_state = (t_state*)ft_memalloc(sizeof(t_state));
 	g_state->exit_code = 0;
+	token_lst = NULL;
 	cr_expect(lexer(&line, &token_lst) == FUNCT_SUCCESS);
 	cr_assert(token_lst != NULL);
 	cr_expect(parser_start(&token_lst, &ast) == FUNCT_SUCCESS);
