@@ -6,7 +6,7 @@
 /*   By: omulder <omulder@student.codam.nl>           +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2019/05/30 18:55:25 by mavan-he       #+#    #+#                */
-/*   Updated: 2019/07/28 18:25:06 by omulder       ########   odam.nl         */
+/*   Updated: 2019/07/28 18:46:05 by omulder       ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -46,13 +46,13 @@ static void	history_find_start(t_history **history, int *number, int *start)
 	}
 }
 
-int			history_line_to_array(t_history **history, char *line)
+int			history_line_to_array(t_history **history, char **line)
 {
 	int start;
 	int number;
 	int i;
 
-	if (ft_strlen(line) <= 1)
+	if (ft_strlen(*line) <= 1)
 		return (FUNCT_SUCCESS);
 	number = -1;
 	start = 0;
@@ -61,10 +61,10 @@ int			history_line_to_array(t_history **history, char *line)
 	if (history[i]->str != NULL)
 		ft_strdel(&history[i]->str);
 	history[i]->number = number + 1;
-	history[i]->str = ft_strsub(line, 0, ft_strlen(line) - 1);
+	history[i]->str = ft_strsub(*line, 0, ft_strlen(*line) - 1);
 	if (history[i]->str == NULL)
 	{
-		ft_strdel(*line);
+		ft_strdel(line);
 		ft_eprintf("vsh: history: Error allocating memory\n");
 		return (FUNCT_ERROR);
 	}

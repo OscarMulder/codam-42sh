@@ -6,7 +6,7 @@
 /*   By: omulder <omulder@student.codam.nl>           +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2019/04/18 16:37:32 by omulder        #+#    #+#                */
-/*   Updated: 2019/07/28 18:20:15 by omulder       ########   odam.nl         */
+/*   Updated: 2019/07/28 18:44:20 by omulder       ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -524,6 +524,9 @@ Test(history_check, history_to_file)
 	int 	ret;
 	t_vshdata	vshdata;
 	int			i;
+	char		*str1 = ft_strdup("check1\n");
+	char		*str2 = ft_strdup("check2\n");
+	char		*str3 = ft_strdup("check3\n");
 
 	i = 0;
 	vshdata.history_file = ft_strdup("/tmp/.vsh_history1");
@@ -534,9 +537,9 @@ Test(history_check, history_to_file)
 		i++;
 	}
 	vshdata.history[i] = NULL;
-	history_line_to_array(vshdata.history, "check1\n");
-	history_line_to_array(vshdata.history, "check2\n");
-	history_line_to_array(vshdata.history, "check3\n");
+	history_line_to_array(vshdata.history, &str1);
+	history_line_to_array(vshdata.history, &str2);
+	history_line_to_array(vshdata.history, &str3);
 	cr_expect(history_to_file(&vshdata) == FUNCT_SUCCESS);
 	fd = open(vshdata.history_file, O_RDONLY);
 	cr_expect(fd > 0);
@@ -551,6 +554,9 @@ Test(history_check, get_file_content)
 {
 	t_vshdata	vshdata;
 	int			i;
+	char		*str1 = ft_strdup("check1\n");
+	char		*str2 = ft_strdup("check2\n");
+	char		*str3 = ft_strdup("check3\n");
 
 	i = 0;
 	vshdata.history_file = ft_strdup("/tmp/.vsh_history2");
@@ -560,9 +566,9 @@ Test(history_check, get_file_content)
 		vshdata.history[i] = (t_history*)ft_memalloc(sizeof(t_history));
 		i++;
 	}
-	history_line_to_array(vshdata.history, "check1\n");
-	history_line_to_array(vshdata.history, "check2\n");
-	history_line_to_array(vshdata.history, "check3\n");
+	history_line_to_array(vshdata.history, &str1);
+	history_line_to_array(vshdata.history, &str2);
+	history_line_to_array(vshdata.history, &str3);
 	history_to_file(&vshdata);
 	cr_expect(history_get_file_content(&vshdata) == FUNCT_SUCCESS);
 	cr_expect_str_eq(vshdata.history[0]->str, "check1");
@@ -576,6 +582,7 @@ Test(history_overfivehundred, basic)
 {
 	t_vshdata	vshdata;
 	int			i;
+	char		*str = ft_strdup("echo codam\n");
 
 	i = 0;
 	vshdata.history_file = ft_strdup("/tmp/.vsh_history4");
@@ -588,7 +595,7 @@ Test(history_overfivehundred, basic)
 	i = 0;
 	while (i < 510)
 	{
-		history_line_to_array(vshdata.history, "echo codam\n");
+		history_line_to_array(vshdata.history, &str);
 		i++;
 	}
 	cr_expect_str_eq(vshdata.history[0]->str, "echo codam");
@@ -605,6 +612,9 @@ Test(history_check, print_history, .init=redirect_all_stdout)
 {
 	t_vshdata	vshdata;
 	int			i;
+	char		*str1 = ft_strdup("check1\n");
+	char		*str2 = ft_strdup("check2\n");
+	char		*str3 = ft_strdup("check3\n");
 
 	i = 0;
 	vshdata.history_file = ft_strdup("/tmp/.vsh_history3");
@@ -614,9 +624,9 @@ Test(history_check, print_history, .init=redirect_all_stdout)
 		vshdata.history[i] = (t_history*)ft_memalloc(sizeof(t_history));
 		i++;
 	}
-	history_line_to_array(vshdata.history, "check1\n");
-	history_line_to_array(vshdata.history, "check2\n");
-	history_line_to_array(vshdata.history, "check3\n");
+	history_line_to_array(vshdata.history, &str1);
+	history_line_to_array(vshdata.history, &str2);
+	history_line_to_array(vshdata.history, &str3);
 	history_to_file(&vshdata);
 	cr_expect(history_get_file_content(&vshdata) == FUNCT_SUCCESS);
 	fflush(NULL);
