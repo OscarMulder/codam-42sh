@@ -6,13 +6,15 @@
 /*   By: omulder <omulder@student.codam.nl>           +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2019/04/10 20:29:42 by jbrinksm       #+#    #+#                */
-/*   Updated: 2019/07/25 15:58:35 by mavan-he      ########   odam.nl         */
+/*   Updated: 2019/07/28 13:43:32 by jbrinksm      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
 #ifndef VSH_H
 # define VSH_H
 // # define DEBUG
+# include <sys/stat.h>
+# include <fcntl.h>
 
 /*
 **==================================defines=====================================
@@ -87,7 +89,11 @@
 **--------------------------------redirections----------------------------------
 */
 
-# define FD_UNINIT -1
+# define FD_UNINIT				-(0x0001)
+# define REG_PERM				S_IRUSR | S_IWUSR | S_IRGRP | S_IROTH
+# define SGREAT_OPEN_FLAGS		O_WRONLY | O_CREAT | O_TRUNC
+# define DGREAT_OPEN_FLAGS		O_WRONLY | O_CREAT | O_APPEND
+
 
 /*
 **---------------------------------environment----------------------------------

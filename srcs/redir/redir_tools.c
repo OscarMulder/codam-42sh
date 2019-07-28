@@ -6,7 +6,7 @@
 /*   By: jbrinksm <jbrinksm@student.codam.nl>         +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2019/07/22 09:18:19 by jbrinksm       #+#    #+#                */
-/*   Updated: 2019/07/25 12:58:52 by jbrinksm      ########   odam.nl         */
+/*   Updated: 2019/07/28 13:46:08 by jbrinksm      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,6 +14,11 @@
 #include <unistd.h>
 #include <fcntl.h>
 #include <sys/stat.h>
+
+#ifdef DEBUG
+#include <grp.h>
+#include <pwd.h>
+#endif
 
 /*
 **	Creates a pipe in which the heredoc can be written to
@@ -62,20 +67,21 @@ int			redir_input_closefd(int left_side_fd)
 	return (FUNCT_SUCCESS);
 }
 
-#include <grp.h>
-#include <pwd.h>
-
 bool		redir_is_open_fd(int fd)
 {
-	struct stat buf;
-	struct group *gr;
-	struct passwd *pw;
+	struct stat	buf;
 
 	if (fstat(fd, &buf) == -1)
 		return (false);
+
+	#ifdef DEBUG
+	struct group	*gr;
+	struct passwd	*pw;
 	ft_putendl("test");
 	gr = getgrgid(buf.st_gid);
 	pw = getpwuid(buf.st_uid);
-	ft_printf("%s:%s\n", pw->pw_name, gr->gr_name);
+	ft_printf("FILE: owner: %s, group: %s\n", pw->pw_name, gr->gr_name);
+	#endif
+
 	return (true);
 }
