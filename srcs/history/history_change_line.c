@@ -6,7 +6,7 @@
 /*   By: mavan-he <mavan-he@student.codam.nl>         +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2019/06/02 14:28:54 by mavan-he       #+#    #+#                */
-/*   Updated: 2019/07/28 15:36:39 by omulder       ########   odam.nl         */
+/*   Updated: 2019/07/28 15:47:31 by omulder       ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -48,12 +48,14 @@ void		malloc_and_copy(t_inputdata *data, char **line, char *str)
 void		history_change_line(t_inputdata *data, char **line, char arrow)
 {
 	history_clear_line(&(data->index), ft_strlen(*line));
-	if (arrow == ARROW_UP && (data->hist_index - 1) >= 0 && data->history[(data->hist_index - 1)]->str != NULL)
+	if (arrow == ARROW_UP && (data->hist_index - 1) >= 0 &&
+		data->history[(data->hist_index - 1)]->str != NULL)
 	{
 		data->hist_index -= 1;
 		malloc_and_copy(data, line, data->history[data->hist_index]->str);
 	}
-	else if (arrow == ARROW_DOWN && (data->hist_index + 1) <= HISTORY_MAX && data->history[(data->hist_index + 1)]->str != NULL)
+	else if (arrow == ARROW_DOWN && (data->hist_index + 1) <= HISTORY_MAX &&
+		data->history[(data->hist_index + 1)]->str != NULL)
 	{
 		data->hist_index += 1;
 		malloc_and_copy(data, line, data->history[data->hist_index]->str);

@@ -6,7 +6,7 @@
 /*   By: omulder <omulder@student.codam.nl>           +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2019/04/10 20:29:42 by jbrinksm       #+#    #+#                */
-/*   Updated: 2019/07/28 15:20:18 by omulder       ########   odam.nl         */
+/*   Updated: 2019/07/28 15:49:36 by omulder       ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -480,7 +480,6 @@ int				history_get_file_content(t_vshdata *vshdata);
 int		        history_line_to_array(t_history **history, char *line);
 void	        history_print(t_history **history);
 void		    history_change_line(t_inputdata *data, char **line, char arrow);
-void	        history_find_start(t_history **history, int *number, int *start);
 char			*history_find_histfile(t_vshdata *vshdata);
 
 /*
