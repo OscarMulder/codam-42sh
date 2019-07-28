@@ -6,7 +6,7 @@
 /*   By: mavan-he <mavan-he@student.codam.nl>         +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2019/05/30 18:55:25 by mavan-he       #+#    #+#                */
-/*   Updated: 2019/07/27 13:12:06 by omulder       ########   odam.nl         */
+/*   Updated: 2019/07/28 15:43:59 by omulder       ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -53,6 +53,8 @@ int		history_line_to_array(t_history **history, char *line)
 	int number;
 	int i;
 
+	if (ft_strlen(line) <= 1)
+		return (true);
 	history_find_start(history, &number, &start);
 	i = start;
 	if (history[i]->str != NULL)
