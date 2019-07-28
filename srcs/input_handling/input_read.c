@@ -6,7 +6,7 @@
 /*   By: jbrinksm <jbrinksm@student.codam.nl>         +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2019/04/17 14:03:16 by jbrinksm       #+#    #+#                */
-/*   Updated: 2019/07/26 17:29:47 by omulder       ########   odam.nl         */
+/*   Updated: 2019/07/28 15:21:38 by omulder       ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -56,6 +56,7 @@ t_inputdata	*init_inputdata(t_vshdata *vshdata)
 	new->input_state = 0;
 	new->hist_index = find_start(vshdata->history);
 	new->history = vshdata->history;
+	new->len_max = 64;
 	return (new);
 }
 
@@ -63,11 +64,9 @@ int			input_read(t_vshdata *vshdata, char **line, int *status)
 {
 	t_inputdata	*data;
 	int			local_status;
-	int			len_max;
 
 	data = init_inputdata(vshdata);
-	len_max = 64;
-	*line = ft_strnew(len_max);
+	*line = ft_strnew(data->len_max);
 	if (*line == NULL)
 		return (FUNCT_ERROR);
 	while (read(STDIN_FILENO, &data->c, 1) > 0)
@@ -86,7 +85,7 @@ int			input_read(t_vshdata *vshdata, char **line, int *status)
 		local_status |= input_parse_backspace(data, line);
 		local_status |= input_parse_ctrl_d(data, line);
 		local_status |= input_parse_ctrl_k(data, line);
-		if (local_status == 0 && input_parse_char(data, line, &len_max) == FUNCT_ERROR)
+		if (local_status == 0 && input_parse_char(data, line) == FUNCT_ERROR)
 			return (FUNCT_ERROR);
 		if (data->c == '\n')
 			break ;

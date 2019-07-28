@@ -6,7 +6,7 @@
 /*   By: rkuijper <rkuijper@student.codam.nl>         +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2019/05/16 13:33:54 by rkuijper       #+#    #+#                */
-/*   Updated: 2019/07/26 16:03:57 by omulder       ########   odam.nl         */
+/*   Updated: 2019/07/28 15:21:16 by omulder       ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -93,13 +93,13 @@ static int	add_newline(char **line, int *len_max)
 	return (FUNCT_SUCCESS);
 }
 
-int			input_parse_char(t_inputdata *data, char **line, int *len_max)
+int			input_parse_char(t_inputdata *data, char **line)
 {
 	unsigned len;
 
 	if (ft_isprint(data->c))
 	{
-		if (add_char_at(line, data->index, data->c, len_max) == FUNCT_ERROR)
+		if (add_char_at(line, data->index, data->c, &(data->len_max)) == FUNCT_ERROR)
 			return (FUNCT_ERROR);
 		len = ft_strlen(*line + data->index);
 		ft_printf("%s", *line + data->index);
@@ -109,12 +109,12 @@ int			input_parse_char(t_inputdata *data, char **line, int *len_max)
 	}
 	else if (data->c == '\n')
 	{
-		if (add_newline(line, len_max) == FUNCT_FAILURE)
+		if (add_newline(line, &(data->len_max)) == FUNCT_FAILURE)
 			return (FUNCT_FAILURE);
 	}
 	else if (data->c == '\n')
 	{
-		if (add_newline(line, len_max) == FUNCT_ERROR)
+		if (add_newline(line, &(data->len_max)) == FUNCT_ERROR)
 			return (FUNCT_ERROR);
 	}
 	return (FUNCT_SUCCESS);
