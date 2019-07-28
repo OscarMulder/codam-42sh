@@ -3,10 +3,10 @@
 /*                                                        ::::::::            */
 /*   unit_test.c                                        :+:    :+:            */
 /*                                                     +:+                    */
-/*   By: jbrinksm <jbrinksm@student.codam.nl>         +#+                     */
+/*   By: omulder <omulder@student.codam.nl>           +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2019/04/18 16:37:32 by omulder        #+#    #+#                */
-/*   Updated: 2019/07/28 17:16:07 by omulder       ########   odam.nl         */
+/*   Updated: 2019/07/28 18:20:15 by omulder       ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -571,6 +571,33 @@ Test(history_check, get_file_content)
 	cr_expect(vshdata.history[3]->str == NULL);
 	remove(vshdata.history_file);
 } 
+
+Test(history_overfivehundred, basic)
+{
+	t_vshdata	vshdata;
+	int			i;
+
+	i = 0;
+	vshdata.history_file = ft_strdup("/tmp/.vsh_history4");
+	vshdata.history = (t_history **)ft_memalloc(sizeof(t_history *) * HISTORY_MAX);
+	while (i < HISTORY_MAX)
+	{
+		vshdata.history[i] = (t_history*)ft_memalloc(sizeof(t_history));
+		i++;
+	}
+	i = 0;
+	while (i < 510)
+	{
+		history_line_to_array(vshdata.history, "echo codam\n");
+		i++;
+	}
+	cr_expect_str_eq(vshdata.history[0]->str, "echo codam");
+	cr_expect_str_eq(vshdata.history[499]->str, "echo codam");
+	cr_expect(vshdata.history[0]->number == 501);
+	cr_expect(vshdata.history[9]->number == 510);
+	remove(vshdata.history_file);
+} 
+
 
 TestSuite(history_output);
 

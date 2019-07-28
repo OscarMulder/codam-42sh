@@ -3,10 +3,10 @@
 /*                                                        ::::::::            */
 /*   history_to_file.c                                  :+:    :+:            */
 /*                                                     +:+                    */
-/*   By: mavan-he <mavan-he@student.codam.nl>         +#+                     */
+/*   By: omulder <omulder@student.codam.nl>           +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2019/05/29 15:25:10 by mavan-he       #+#    #+#                */
-/*   Updated: 2019/07/27 13:02:04 by omulder       ########   odam.nl         */
+/*   Updated: 2019/07/28 18:16:45 by omulder       ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -33,7 +33,7 @@ int		history_to_file(t_vshdata *vshdata)
 		return (FUNCT_ERROR);
 	}
 	i = 0;
-	while (vshdata->history[i]->str != NULL)
+	while (i < HISTORY_MAX && vshdata->history[i]->str != NULL)
 	{
 		ft_dprintf(fd, "%s%c", vshdata->history[i]->str, '\n');
 		i++;

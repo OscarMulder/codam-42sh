@@ -6,7 +6,7 @@
 /*   By: jbrinksm <jbrinksm@student.codam.nl>         +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2019/04/17 14:03:16 by jbrinksm       #+#    #+#                */
-/*   Updated: 2019/07/28 15:39:56 by omulder       ########   odam.nl         */
+/*   Updated: 2019/07/28 17:38:43 by omulder       ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -51,6 +51,8 @@ t_inputdata	*init_inputdata(t_vshdata *vshdata)
 	t_inputdata	*new;
 
 	new = (t_inputdata*)ft_memalloc(sizeof(t_inputdata));
+	if (new == NULL)
+		return (NULL);
 	new->c = 0;
 	new->index = 0;
 	new->input_state = 0;
@@ -66,6 +68,8 @@ int			input_read(t_vshdata *vshdata, char **line, int *status)
 	int			local_status;
 
 	data = init_inputdata(vshdata);
+	if (data == NULL)
+		return (FUNCT_ERROR);
 	*line = ft_strnew(data->len_max);
 	if (*line == NULL)
 		return (FUNCT_ERROR);

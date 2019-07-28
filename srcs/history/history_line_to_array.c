@@ -3,10 +3,10 @@
 /*                                                        ::::::::            */
 /*   history_line_to_array.c                            :+:    :+:            */
 /*                                                     +:+                    */
-/*   By: mavan-he <mavan-he@student.codam.nl>         +#+                     */
+/*   By: omulder <omulder@student.codam.nl>           +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2019/05/30 18:55:25 by mavan-he       #+#    #+#                */
-/*   Updated: 2019/07/28 15:48:29 by omulder       ########   odam.nl         */
+/*   Updated: 2019/07/28 18:25:06 by omulder       ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -23,7 +23,7 @@ static void	history_find_start(t_history **history, int *number, int *start)
 	int	smallest;
 
 	i = 0;
-	smallest = HISTORY_MAX + 1;
+	smallest = history[i]->number;
 	while (i < HISTORY_MAX && history[i]->str != NULL)
 		i++;
 	if (i != HISTORY_MAX)
@@ -32,11 +32,12 @@ static void	history_find_start(t_history **history, int *number, int *start)
 		*number = i;
 		return ;
 	}
-	while (i < HISTORY_MAX && history[i] != NULL)
+	i = 0;
+	while (i < HISTORY_MAX)
 	{
-		if (history[i]->number < smallest)
+		if (history[i]->number <= smallest)
 		{
-			*start = i + 1;
+			*start = i;
 			smallest = history[i]->number;
 		}
 		if (history[i]->number > *number)
@@ -52,7 +53,7 @@ int			history_line_to_array(t_history **history, char *line)
 	int i;
 
 	if (ft_strlen(line) <= 1)
-		return (true);
+		return (FUNCT_SUCCESS);
 	number = -1;
 	start = 0;
 	history_find_start(history, &number, &start);
@@ -62,6 +63,10 @@ int			history_line_to_array(t_history **history, char *line)
 	history[i]->number = number + 1;
 	history[i]->str = ft_strsub(line, 0, ft_strlen(line) - 1);
 	if (history[i]->str == NULL)
-		return (false);
-	return (true);
+	{
+		ft_strdel(*line);
+		ft_eprintf("vsh: history: Error allocating memory\n");
+		return (FUNCT_ERROR);
+	}
+	return (FUNCT_SUCCESS);
 }
