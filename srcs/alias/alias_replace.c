@@ -6,7 +6,7 @@
 /*   By: mavan-he <mavan-he@student.codam.nl>         +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2019/07/26 20:29:50 by mavan-he       #+#    #+#                */
-/*   Updated: 2019/07/28 15:49:57 by mavan-he      ########   odam.nl         */
+/*   Updated: 2019/07/28 16:31:27 by mavan-he      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -36,17 +36,19 @@ int			alias_error(t_tokenlst **tokenlst, char **expanded)
 	return (FUNCT_ERROR);
 }
 
-void		alias_malloc_expanded(char **expanded, char ***new_expanded, int *i)
+static char	**alias_malloc_expanded(char **expanded, int *i)
 {
-	*i = 0;
+	char		**new_expanded;
+
 	if (expanded == NULL)
-		*new_expanded = (char **)ft_memalloc(sizeof(char *) * 2);
+		new_expanded = (char **)ft_memalloc(sizeof(char *) * 2);
 	else
 	{
 		while (expanded[*i] != NULL)
 			(*i)++;
-		*new_expanded = (char **)ft_memalloc(sizeof(char *) * (*i + 2));
+		new_expanded = (char **)ft_memalloc(sizeof(char *) * (*i + 2));
 	}
+	return (new_expanded);
 }
 
 char		**alias_add_expanded(char **expanded, char *alias,
@@ -57,7 +59,8 @@ char		**alias_add_expanded(char **expanded, char *alias,
 	int			i;
 	int			new_i;
 
-	alias_malloc_expanded(expanded, &new_expanded, &i);
+	i = 0;
+	new_expanded = alias_malloc_expanded(expanded, &i);
 	alias_key = ft_strndup(alias, alias_equal - alias);
 	if (new_expanded == NULL || alias_key == NULL)
 		return (NULL);
