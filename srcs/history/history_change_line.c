@@ -6,7 +6,7 @@
 /*   By: mavan-he <mavan-he@student.codam.nl>         +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2019/06/02 14:28:54 by mavan-he       #+#    #+#                */
-/*   Updated: 2019/07/26 17:34:46 by omulder       ########   odam.nl         */
+/*   Updated: 2019/07/28 14:49:01 by omulder       ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -30,7 +30,7 @@ static void	history_clear_line(unsigned *index, unsigned linelen)
 void		history_change_line(t_inputdata *data, char **line, char arrow)
 {
 	history_clear_line(&(data->index), ft_strlen(*line));
-	if (arrow == ARROW_UP && (data->hist_index - 1) >= 0 && data->history[(data->hist_index - 1)] != NULL)
+	if (arrow == ARROW_UP && (data->hist_index - 1) >= 0 && data->history[(data->hist_index - 1)]->str != NULL)
 	{
 		data->hist_index -= 1;
 		*line = ft_strdup(data->history[data->hist_index]->str);
