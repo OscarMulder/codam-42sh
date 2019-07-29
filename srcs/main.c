@@ -6,7 +6,7 @@
 /*   By: jbrinksm <jbrinksm@student.codam.nl>         +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2019/04/10 20:29:49 by jbrinksm       #+#    #+#                */
-/*   Updated: 2019/07/29 12:51:59 by mavan-he      ########   odam.nl         */
+/*   Updated: 2019/07/29 15:25:16 by mavan-he      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -24,6 +24,7 @@ int		main(int argc, char **argv)
 	(void)argv;
 	(void)argc;
 	g_state = (t_state*)ft_memalloc(sizeof(t_state));
+	g_state->exit_code = EXIT_SUCCESS;
 	if (shell_init_vshdata(&vshdata) == FUNCT_ERROR)
 		return (EXIT_FAILURE);
 	term_p = term_prepare(vshdata.envlst);

@@ -6,7 +6,7 @@
 /*   By: omulder <omulder@student.codam.nl>           +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2019/04/10 20:29:42 by jbrinksm       #+#    #+#                */
-/*   Updated: 2019/07/29 12:52:29 by mavan-he      ########   odam.nl         */
+/*   Updated: 2019/07/29 15:29:38 by mavan-he      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -64,6 +64,7 @@
 # define ALIAS_FLAG_LP		(1 << 0)
 # define UNALIAS_FLAG_LA	(2 << 0)
 # define ALIASFILENAME		".vsh_alias"
+# define ALIAS_MAX	500
 
 /*
 **------------------------------------lexer-------------------------------------
@@ -427,6 +428,7 @@ void			lexer_state_ionum(t_scanner *scanner);
 int				alias_expansion(t_vshdata *vhsdata, t_tokenlst **tokenlst, char **expanded_aliases);
 int				alias_replace(t_vshdata *vshdata, t_tokenlst *probe, char *alias, char **expanded_aliases);
 int				alias_error(t_tokenlst **tokenlst, char **expanded);
+int				alias_read_file(t_vshdata *vshdata);
 
 
 /*
