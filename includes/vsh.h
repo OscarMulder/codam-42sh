@@ -6,7 +6,7 @@
 /*   By: omulder <omulder@student.codam.nl>           +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2019/04/10 20:29:42 by jbrinksm       #+#    #+#                */
-/*   Updated: 2019/07/29 16:25:18 by tde-jong      ########   odam.nl         */
+/*   Updated: 2019/07/29 16:30:25 by tde-jong      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -174,7 +174,6 @@
 typedef struct	s_state
 {
 	int				exit_code;
-	pid_t			job_pid;
 	struct termios	*termios_p;
 }				t_state;
 

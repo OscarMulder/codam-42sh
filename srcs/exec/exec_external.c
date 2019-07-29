@@ -6,7 +6,7 @@
 /*   By: tde-jong <tde-jong@student.codam.nl>         +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2019/05/31 10:47:19 by tde-jong       #+#    #+#                */
-/*   Updated: 2019/07/29 16:19:37 by tde-jong      ########   odam.nl         */
+/*   Updated: 2019/07/29 16:30:43 by tde-jong      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -41,16 +41,13 @@ static bool	exec_bin(char **args, char **vshenviron)
 	pid = fork();
 	if (pid < 0)
 		return (false);
-	if (pid > 0)
-		g_state->job_pid = pid;
-	else
+	if (pid == 0)
 		execve(args[0], args, vshenviron);
 	waitpid(pid, &status, WUNTRACED);
 	if (WIFEXITED(status))
 		g_state->exit_code = WEXITSTATUS(status);
 	else if (WIFSIGNALED(status))
 		g_state->exit_code = EXIT_FATAL + WTERMSIG(status);
-	g_state->job_pid = 0;
 	term_flags_destroy();
 	return (true);
 }
