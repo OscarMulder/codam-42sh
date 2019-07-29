@@ -6,7 +6,7 @@
 /*   By: omulder <omulder@student.codam.nl>           +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2019/04/10 20:29:42 by jbrinksm       #+#    #+#                */
-/*   Updated: 2019/07/29 16:24:09 by tde-jong      ########   odam.nl         */
+/*   Updated: 2019/07/29 16:24:38 by tde-jong      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -526,7 +526,7 @@ int			error_return(int ret, int error, char *opt_str);
 */
 
 void	signals_init(void);
-void	signals_handle(int signum);
+void	signals_handle_ctrl_c(int signum);
 
 /*
 **----------------------------------debugging-----------------------------------
