@@ -6,7 +6,7 @@
 /*   By: omulder <omulder@student.codam.nl>           +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2019/04/10 20:29:42 by jbrinksm       #+#    #+#                */
-/*   Updated: 2019/07/29 16:24:38 by tde-jong      ########   odam.nl         */
+/*   Updated: 2019/07/29 16:24:48 by tde-jong      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -173,7 +173,8 @@
 
 typedef struct	s_state
 {
-	int exit_code;
+	int		exit_code;
+	pid_t	job_pid;
 }				t_state;
 
 t_state *g_state;
