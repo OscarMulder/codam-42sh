@@ -6,7 +6,7 @@
 /*   By: omulder <omulder@student.codam.nl>           +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2019/04/10 20:29:42 by jbrinksm       #+#    #+#                */
-/*   Updated: 2019/07/29 16:24:48 by tde-jong      ########   odam.nl         */
+/*   Updated: 2019/07/29 16:24:59 by tde-jong      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -173,8 +173,9 @@
 
 typedef struct	s_state
 {
-	int		exit_code;
-	pid_t	job_pid;
+	int				exit_code;
+	pid_t			job_pid;
+	struct termios	*termios_p;
 }				t_state;
 
 t_state *g_state;
@@ -361,6 +362,7 @@ int				input_parse_end(t_inputdata *data, char **line);
 int				input_parse_next(t_inputdata *data, char **line);
 int				input_parse_prev(t_inputdata *data, char **line);
 int				input_parse_delete(t_inputdata *data, char **line);
+int				input_parse_ctrl_c(t_inputdata *data, char **line);
 int				input_parse_ctrl_d(t_inputdata *data, char **line);
 int				input_parse_ctrl_up(t_inputdata *data, char **line);
 int				input_parse_ctrl_down(t_inputdata *data, char **line);
@@ -527,6 +529,7 @@ int			error_return(int ret, int error, char *opt_str);
 */
 
 void	signals_init(void);
+void	signals_destroy(void);
 void	signals_handle_ctrl_c(int signum);
 
 /*

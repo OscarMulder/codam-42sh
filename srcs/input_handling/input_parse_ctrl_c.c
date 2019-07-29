@@ -1,19 +1,25 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        ::::::::            */
-/*   signals_init.c                                     :+:    :+:            */
+/*   input_parse_ctrl_c.c                               :+:    :+:            */
 /*                                                     +:+                    */
 /*   By: tde-jong <tde-jong@student.codam.nl>         +#+                     */
 /*                                                   +#+                      */
-/*   Created: 2019/07/22 13:01:13 by tde-jong       #+#    #+#                */
-/*   Updated: 2019/07/29 13:25:25 by tde-jong      ########   odam.nl         */
+/*   Created: 2019/07/29 13:54:20 by tde-jong       #+#    #+#                */
+/*   Updated: 2019/07/29 15:05:52 by tde-jong      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "vsh.h"
-#include <signal.h>
 
-void	signals_init(void)
+int	input_parse_ctrl_c(t_inputdata *data, char **line)
 {
-	signal(SIGINT, signals_handle_ctrl_c);
+	(void)data;
+	(void)line;
+	if (data->c == '\3')
+	{
+		ft_putchar('\n');
+		return (FUNCT_SUCCESS);
+	}
+	return (FUNCT_FAILURE);
 }

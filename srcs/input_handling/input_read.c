@@ -6,7 +6,7 @@
 /*   By: jbrinksm <jbrinksm@student.codam.nl>         +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2019/04/17 14:03:16 by jbrinksm       #+#    #+#                */
-/*   Updated: 2019/07/28 17:38:43 by omulder       ########   odam.nl         */
+/*   Updated: 2019/07/29 15:04:40 by tde-jong      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -87,6 +87,8 @@ int			input_read(t_vshdata *vshdata, char **line, int *status)
 		if (local_status == 0)
 			data->input_state = 0;
 		local_status |= input_parse_backspace(data, line);
+		if (input_parse_ctrl_c(data, line) == FUNCT_SUCCESS)
+			return (FUNCT_ERROR); // Not an error, just shows you a new prompt line
 		local_status |= input_parse_ctrl_d(data, line);
 		local_status |= input_parse_ctrl_k(data, line);
 		if (local_status == 0 && input_parse_char(data, line) == FUNCT_ERROR)
