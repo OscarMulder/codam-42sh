@@ -104,7 +104,7 @@
 
 
 # define ENV_MASK 0xF8
-# define ENV_WHITESPACE (1 << 3)
+# define ENV_SPECIAL (1 << 3)
 # define ENV_EXTERN (1 << 2)
 # define ENV_LOCAL (1 << 1)
 # define ENV_TEMP (1 << 0)
@@ -482,7 +482,8 @@ int				tools_update_quote_status(char *line, int cur_index,
 bool			tool_is_redirect_tk(t_tokens type);
 bool			tools_is_valid_identifier(char *str);
 bool			tools_is_fdnumstr(char *str);
-bool			tool_has_special(char c);
+bool			tool_is_special(char c);
+bool			tool_check_for_special(char *str);
 bool			tool_check_for_whitespace(char *str);
 
 /*
