@@ -6,7 +6,7 @@
 /*   By: omulder <omulder@student.codam.nl>           +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2019/04/18 16:37:32 by omulder        #+#    #+#                */
-/*   Updated: 2019/07/28 18:44:20 by omulder       ########   odam.nl         */
+/*   Updated: 2019/07/29 16:18:46 by mavan-he      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -1077,4 +1077,27 @@ Test(alias, basic_test)
 	cr_assert(token_lst != NULL);
 	cr_expect_str_eq(token_lst->next->next->value, "hoi");
 	cr_expect_str_eq(token_lst->next->next->next->next->value, "echo");
+}
+
+TestSuite(alias_file);
+
+Test(alias_file, basic_file_test)
+{
+	t_vshdata vshdata;
+	char	*homedir;
+	int		fd;
+
+	g_state = (t_state*)ft_memalloc(sizeof(t_state));
+	g_state->exit_code = 0;
+	vshdata.envlst = env_getlst();
+	homedir = env_getvalue("HOME", vshdata.envlst);
+	cr_assert(homedir != NULL);
+	vshdata.alias_file = ft_strjoinfree_s2(homedir, ft_strjoin("/", ".vsh_testalias"));
+	fd = open(vshdata.alias_file, O_RDWR | O_CREAT, S_IRUSR | S_IWUSR);
+	cr_assert(fd != -1);
+	write(fd, "test=alias\n", 11);
+	close(fd);
+	alias_read_file(&vshdata);
+	cr_expect_str_eq(vshdata.aliaslst->var, "test=alias");
+	remove(vshdata.alias_file);
 }
