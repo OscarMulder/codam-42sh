@@ -3,10 +3,10 @@
 /*                                                        ::::::::            */
 /*   builtin_export_print.c                             :+:    :+:            */
 /*                                                     +:+                    */
-/*   By: mavan-he <mavan-he@student.codam.nl>         +#+                     */
+/*   By: omulder <omulder@student.codam.nl>           +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2019/07/19 12:13:35 by mavan-he       #+#    #+#                */
-/*   Updated: 2019/07/29 11:22:31 by mavan-he      ########   odam.nl         */
+/*   Updated: 2019/07/29 14:47:00 by omulder       ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -38,22 +38,17 @@ static void	builtin_export_escape_print(char *var)
 	}
 	else
 		ft_putendl(var);
-
 }
 
 void		builtin_export_print(t_envlst *envlst, int flags)
 {
-	t_envlst	*probe;
-
-	probe = envlst;
-	while (probe != NULL)
+	if (envlst == NULL)
+		return ;
+	if (envlst->type & ENV_EXTERN)
 	{
-		if (probe->type & ENV_EXTERN)
-		{
-			if (flags & EXP_FLAG_LP)
-				ft_putstr("declare -x ");
-			builtin_export_escape_print(probe->var);
-		}
-		probe = probe->next;
+		if (flags & EXP_FLAG_LP)
+			ft_putstr("declare -x ");
+		builtin_export_escape_print(envlst->var);
 	}
+	builtin_export_print(envlst->next, flags);
 }
