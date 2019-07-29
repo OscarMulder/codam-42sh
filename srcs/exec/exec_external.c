@@ -6,20 +6,38 @@
 /*   By: tde-jong <tde-jong@student.codam.nl>         +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2019/05/31 10:47:19 by tde-jong       #+#    #+#                */
-/*   Updated: 2019/07/29 14:02:52 by tde-jong      ########   odam.nl         */
+/*   Updated: 2019/07/29 16:19:37 by tde-jong      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "vsh.h"
 #include "unistd.h"
 #include <sys/wait.h>
+#include <termios.h>
+
+static int	term_flags_init(void)
+{
+	g_state->termios_p->c_lflag |= ICANON;
+	g_state->termios_p->c_lflag |= ECHO;
+	g_state->termios_p->c_lflag |= ISIG;
+	return (tcsetattr(STDIN_FILENO, TCSANOW, g_state->termios_p));
+}
+
+static int	term_flags_destroy(void)
+{
+	g_state->termios_p->c_lflag &= ~ICANON;
+	g_state->termios_p->c_lflag &= ~ECHO;
+	g_state->termios_p->c_lflag &= ~ISIG;
+	return (tcsetattr(STDIN_FILENO, TCSANOW, g_state->termios_p));
+}
 
 static bool	exec_bin(char **args, char **vshenviron)
 {
 	pid_t	pid;
 	int		status;
 
-	signals_init();
+	if (term_flags_init() == -1)
+		return (false);
 	pid = fork();
 	if (pid < 0)
 		return (false);
@@ -33,7 +51,7 @@ static bool	exec_bin(char **args, char **vshenviron)
 	else if (WIFSIGNALED(status))
 		g_state->exit_code = EXIT_FATAL + WTERMSIG(status);
 	g_state->job_pid = 0;
-	signals_destroy();
+	term_flags_destroy();
 	return (true);
 }
 
