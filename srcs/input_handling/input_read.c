@@ -3,10 +3,10 @@
 /*                                                        ::::::::            */
 /*   input_read.c                                       :+:    :+:            */
 /*                                                     +:+                    */
-/*   By: jbrinksm <jbrinksm@student.codam.nl>         +#+                     */
+/*   By: omulder <omulder@student.codam.nl>           +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2019/04/17 14:03:16 by jbrinksm       #+#    #+#                */
-/*   Updated: 2019/07/29 15:04:40 by tde-jong      ########   odam.nl         */
+/*   Updated: 2019/07/29 17:26:40 by omulder       ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -87,7 +87,7 @@ int			input_read(t_vshdata *vshdata, char **line, int *status)
 		if (local_status == 0)
 			data->input_state = 0;
 		local_status |= input_parse_backspace(data, line);
-		if (input_parse_ctrl_c(data, line) == FUNCT_SUCCESS)
+		if (input_parse_ctrl_c(data) == FUNCT_SUCCESS)
 			return (FUNCT_ERROR); // Not an error, just shows you a new prompt line
 		local_status |= input_parse_ctrl_d(data, line);
 		local_status |= input_parse_ctrl_k(data, line);
