@@ -6,7 +6,7 @@
 /*   By: omulder <omulder@student.codam.nl>           +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2019/04/10 20:29:42 by jbrinksm       #+#    #+#                */
-/*   Updated: 2019/07/29 11:47:16 by mavan-he      ########   odam.nl         */
+/*   Updated: 2019/07/29 13:00:03 by mavan-he      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -478,6 +478,7 @@ bool			tools_is_valid_identifier(char *str);
 bool			tools_is_fdnumstr(char *str);
 bool			tool_is_special(char c);
 bool			tool_check_for_special(char *str);
+bool			tool_check_for_whitespace(char *str);
 
 /*
 **----------------------------------execution-----------------------------------

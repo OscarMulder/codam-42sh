@@ -6,7 +6,7 @@
 /*   By: mavan-he <mavan-he@student.codam.nl>         +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2019/05/03 17:50:50 by mavan-he       #+#    #+#                */
-/*   Updated: 2019/07/29 11:42:06 by mavan-he      ########   odam.nl         */
+/*   Updated: 2019/07/29 13:02:13 by mavan-he      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -44,7 +44,8 @@ static void	builtin_set_print(t_envlst *envlst)
 	{
 		if (envlst->type & ENV_EXTERN || envlst->type & ENV_LOCAL)
 		{
-			if (envlst->type & ENV_SPECIAL)
+			if (envlst->type & ENV_SPECIAL ||
+				tool_check_for_whitespace(envlst->var) == true)
 				builtin_print_with_special(envlst->var);
 			else
 				ft_putendl(envlst->var);
