@@ -6,7 +6,7 @@
 #    By: jbrinksm <jbrinksm@student.codam.nl>         +#+                      #
 #                                                    +#+                       #
 #    Created: 2019/04/10 20:30:07 by jbrinksm       #+#    #+#                 #
-#    Updated: 2019/07/29 16:25:08 by tde-jong      ########   odam.nl          #
+#    Updated: 2019/07/29 16:25:40 by tde-jong      ########   odam.nl          #
 #                                                                              #
 # **************************************************************************** #
 
@@ -50,7 +50,6 @@ history_change_line history_find_histfile \
 exec_builtin exec_cmd exec_external exec_start exec_find_binary \
 exec_quote_remove \
 redir redir_tools \
-signals signals_handle \
 print_errors
 TESTS = unit_test builtin_assign_test
 OBJECTS := $(SRCS:%=%.o)
