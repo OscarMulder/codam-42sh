@@ -6,7 +6,7 @@
 /*   By: jbrinksm <jbrinksm@student.codam.nl>         +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2019/04/10 20:29:49 by jbrinksm       #+#    #+#                */
-/*   Updated: 2019/07/25 15:56:59 by mavan-he      ########   odam.nl         */
+/*   Updated: 2019/07/28 17:12:33 by omulder       ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -26,11 +26,13 @@ int		main(int argc, char **argv)
 	g_state = (t_state*)ft_memalloc(sizeof(t_state));
 	if (g_state == NULL)
 		return (EXIT_FAILURE);
+	vshdata.aliaslst = NULL;
 	vshdata.envlst = env_getlst();
 	if (vshdata.envlst == NULL)
 		return (EXIT_FAILURE);
 	term_p = term_prepare(vshdata.envlst);
-	history_get_file_content();
+	vshdata.history_file = history_find_histfile(&vshdata);
+	history_get_file_content(&vshdata);
 	/* if !term_p, history or envlst failed: send appropriate error message/log */
 	if (term_p == NULL)
 		return (EXIT_FAILURE);

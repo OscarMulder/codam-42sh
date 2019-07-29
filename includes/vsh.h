@@ -6,13 +6,13 @@
 /*   By: omulder <omulder@student.codam.nl>           +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2019/04/10 20:29:42 by jbrinksm       #+#    #+#                */
-/*   Updated: 2019/07/28 13:43:32 by jbrinksm      ########   odam.nl         */
+/*   Updated: 2019/07/28 18:32:15 by omulder       ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
 #ifndef VSH_H
 # define VSH_H
-// # define DEBUG
+# define DEBUG
 # include <sys/stat.h>
 # include <fcntl.h>
 
@@ -58,6 +58,13 @@
 
 # define EXP_FLAG_LN	(1 << 0)
 # define EXP_FLAG_LP	(1 << 1)
+
+/*
+**-----------------------------------alias--------------------------------------
+*/
+
+# define ALIAS_FLAG_LP		(1 << 0)
+# define UNALIAS_FLAG_LA	(2 << 0)
 
 /*
 **------------------------------------lexer-------------------------------------
@@ -130,16 +137,24 @@
 **=================================pipe defines=================================
 */
 
-# define PIPE_UNINIT -42
-# define PIPE_START 0
-# define PIPE_EXTEND 1
+# define PIPE_UNINIT	-42
+# define PIPE_START		0
+# define PIPE_EXTEND	1
+
+/*
+**----------------------------------history-------------------------------------
+*/
+
+# define HISTORY_MAX	500
+# define ARROW_UP	    1
+# define ARROW_DOWN	    2
+# define HISTFILENAME	".vsh_history"
 
 /*
 **===============================personal headers===============================
 */
 
 # include "libft.h"
-# include "vsh_history.h"
 
 /*
 **==================================headers=====================================
@@ -189,12 +204,35 @@ typedef struct	s_envlst
 }				t_envlst;
 
 /*
+**-----------------------------------history------------------------------------
+*/
+
+typedef struct	s_history
+{
+	int		number;
+	char	*str;
+}				t_history;
+
+/*
+**------------------------------------alias-------------------------------------
+*/
+
+typedef struct	s_aliaslst
+{
+	char				*var;
+	struct s_aliaslst	*next;
+}				t_aliaslst;
+
+/*
 **-----------------------------------vsh_data-----------------------------------
 */
 
 typedef struct	s_vshdata
 {
-	t_envlst 	*envlst;
+	t_envlst	*envlst;
+	t_history	**history;
+	char		*history_file;
+	t_aliaslst	*aliaslst;
 }				t_vshdata;
 
 /*
@@ -336,37 +374,41 @@ void			term_free_struct(t_term **term_p);
 **-----------------------------------input--------------------------------------
 */
 
-int				input_read(char **line, int *status);
+typedef struct	s_inputdata
+{
+	char		c;
+	int			input_state;
+	int			hist_index;
+	unsigned	index;
+	int			len_max;
+	t_history	**history;
+}				t_inputdata;
+
+int				input_read(t_vshdata *vshdata, char **line, int *status);
 int				input_is_word_start(char *str, int i1, int i2);
 void			input_clear_char_at(char **line, unsigned index);
-int				input_parse_escape(char c, int *input_state);
-int				input_parse_char(char c, unsigned *index, char **line, int *len_max);
-int				input_parse_home(char c, int *input_state, unsigned *index);
-int				input_parse_backspace(char c, unsigned *index, char **line);
-int				input_parse_end(char c, int *input_state, unsigned *index,
-					char **line);
-int				input_parse_next(char c, int *input_state, unsigned *index,
-					char **line);
-int				input_parse_prev(char c, int *input_state, unsigned *index,
-					char **line);
-int				input_parse_delete(char c, int *input_state, unsigned *index,
-					char **line);
-int				input_parse_ctrl_d(char c, unsigned *index, char **line);
-int				input_parse_ctrl_k(char c, unsigned *index, char **line);
-int				input_parse_ctrl_up(char c, int *input_state, unsigned *index,
-					char **line);
-int				input_parse_ctrl_down(char c, int *input_state, unsigned *index,
-					char **line);
+int				input_parse_escape(t_inputdata *data);
+int				input_parse_char(t_inputdata *data, char **line);
+int				input_parse_home(t_inputdata *data);
+int				input_parse_backspace(t_inputdata *data, char **line);
+int				input_parse_end(t_inputdata *data, char **line);
+int				input_parse_next(t_inputdata *data, char **line);
+int				input_parse_prev(t_inputdata *data, char **line);
+int				input_parse_delete(t_inputdata *data, char **line);
+int				input_parse_ctrl_d(t_inputdata *data, char **line);
+int				input_parse_ctrl_up(t_inputdata *data, char **line);
+int				input_parse_ctrl_down(t_inputdata *data, char **line);
+int				input_parse_ctrl_k(t_inputdata *data, char **line);
 
 /*
 **----------------------------------shell---------------------------------------
 */
 
 void			shell_display_prompt(void);
-int				shell_dless_read_till_stop(char **heredoc, char *stop);
-int				shell_dless_set_tk_val(t_tokenlst *probe, char **heredoc, char *stop);
-int				shell_dless_input(t_tokenlst *token_lst);
-int				shell_quote_checker(char **line, int *status);
+int				shell_dless_read_till_stop(char **heredoc, char *stop, t_vshdata *vshdata);
+int				shell_dless_set_tk_val(t_tokenlst *probe, char **heredoc, char *stop, t_vshdata *vshdata);
+int				shell_dless_input(t_vshdata *vshdata, t_tokenlst **token_lst);
+int				shell_quote_checker(t_vshdata *vshdata, char **line, int *status);
 char			shell_quote_checker_find_quote(char *line);
 int				shell_start(t_vshdata *vshdata);
 
@@ -410,6 +452,15 @@ void			lexer_state_greatand(t_scanner *scanner);
 void			lexer_state_ionum(t_scanner *scanner);
 
 /*
+**----------------------------------alias---------------------------------------
+*/
+
+int				alias_expansion(t_vshdata *vhsdata, t_tokenlst **tokenlst, char **expanded_aliases);
+int				alias_replace(t_vshdata *vshdata, t_tokenlst *probe, char *alias, char **expanded_aliases);
+int				alias_error(t_tokenlst **tokenlst, char **expanded);
+
+
+/*
 **----------------------------------parser--------------------------------------
 */
 int				parser_start(t_tokenlst **token_lst, t_ast **ast);
@@ -431,7 +482,7 @@ bool			parser_cmd_suffix(t_tokenlst **token_lst, t_ast **cmd,
 **----------------------------------builtins------------------------------------
 */
 
-void			builtin_exit(char **args);
+void			builtin_exit(char **args, t_vshdata *vshdata);
 void			builtin_echo(char **args);
 char			builtin_echo_set_flags(char **args, int *arg_i);
 void			builtin_export(char **args, t_envlst *envlst);
@@ -443,6 +494,11 @@ int				builtin_assign_addexist(t_envlst *envlst, char *arg, char *var, int env_t
 int				builtin_assign_addnew(t_envlst *envlst, char *var, int env_type);
 void			builtin_set(char **args, t_envlst *envlst);
 void			builtin_unset(char **args, t_envlst *envlst);
+void			builtin_alias(char **args, t_aliaslst **aliaslst);
+int				builtin_alias_set(char *arg, t_aliaslst **aliaslst);
+void			builtin_alias_delnode(t_aliaslst **node);
+void			builtin_alias_lstdel(t_aliaslst **lst);
+void			builtin_unalias(char **args, t_aliaslst **aliaslst);
 
 /*
 **---------------------------------tools----------------------------------------
@@ -491,6 +547,16 @@ void			redir_change_if_leftside(t_ast *node, int *left_side_fd,
 char **right_side);
 int				redir_create_heredoc_fd(char *right_side);
 
+/*
+**------------------------------------history-----------------------------------
+*/
+
+int				history_to_file(t_vshdata *vshdata);
+int				history_get_file_content(t_vshdata *vshdata);
+int				history_line_to_array(t_history **history, char **line);
+void	        history_print(t_history **history);
+int				history_change_line(t_inputdata *data, char **line, char arrow);
+char			*history_find_histfile(t_vshdata *vshdata);
 
 /*
 **--------------------------------error_handling--------------------------------

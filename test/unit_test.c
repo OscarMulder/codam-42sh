@@ -3,10 +3,10 @@
 /*                                                        ::::::::            */
 /*   unit_test.c                                        :+:    :+:            */
 /*                                                     +:+                    */
-/*   By: jbrinksm <jbrinksm@student.codam.nl>         +#+                     */
+/*   By: omulder <omulder@student.codam.nl>           +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2019/04/18 16:37:32 by omulder        #+#    #+#                */
-/*   Updated: 2019/07/25 16:08:03 by mavan-he      ########   odam.nl         */
+/*   Updated: 2019/07/28 18:44:20 by omulder       ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -22,7 +22,7 @@
 #include <limits.h>
 #include <unistd.h>
 #include <fcntl.h>
-#include "vsh_history.h"
+#include <errno.h>
 
 void redirect_all_stdout(void)
 {
@@ -199,23 +199,26 @@ TestSuite(shell_quote_checker);
 
 Test(shell_quote_checker, basic)
 {
-	char	*line;
-	int		status;
+	char		*line;
+	int			status;
+	t_vshdata	vshdata;
 
+	vshdata.history_file = "/tmp/.vsh_history";
+	history_get_file_content(&vshdata);
 	line = strdup("lala");
-	shell_quote_checker(&line, &status);
+	shell_quote_checker(&vshdata, &line, &status);
 	cr_expect_str_eq(line, "lala");
 	ft_strdel(&line);
 	line = strdup("lala''");
-	shell_quote_checker(&line, &status);
+	shell_quote_checker(&vshdata, &line, &status);
 	cr_expect_str_eq(line, "lala''");
 	ft_strdel(&line);
 	line = strdup("lala\"\"");
-	shell_quote_checker(&line, &status);
+	shell_quote_checker(&vshdata, &line, &status);
 	cr_expect_str_eq(line, "lala\"\"");
 	ft_strdel(&line);
 	line = strdup("lala'\"'");
-	shell_quote_checker(&line, &status);
+	shell_quote_checker(&vshdata, &line, &status);
 	cr_expect_str_eq(line, "lala'\"'");
 	ft_strdel(&line);
 }
@@ -513,62 +516,126 @@ Test(command_exec, basic, .init=redirect_all_stdout)
 /*
 **------------------------------------------------------------------------------
 */
-/* TestSuite(history_check);
+TestSuite(history_check);
 
 Test(history_check, history_to_file)
 {
 	int		fd;
-	char	*array[4];
 	char	buf[22];
 	int 	ret;
+	t_vshdata	vshdata;
+	int			i;
+	char		*str1 = ft_strdup("check1\n");
+	char		*str2 = ft_strdup("check2\n");
+	char		*str3 = ft_strdup("check3\n");
 
-	ft_bzero(buf, 22);
-	array[0] = "check1";
-	array[1] = "check2";
-	array[2] = "check3";
-	array[3] = NULL;
-	history = array;
-	cr_expect(history_to_file() == FUNCT_SUCCESS);
-	fd = open("/tmp/.vsh_history", O_RDONLY);
+	i = 0;
+	vshdata.history_file = ft_strdup("/tmp/.vsh_history1");
+	vshdata.history = (t_history **)ft_memalloc(sizeof(t_history *) * HISTORY_MAX);
+	while (i < HISTORY_MAX - 1)
+	{
+		vshdata.history[i] = (t_history*)ft_memalloc(sizeof(t_history));
+		i++;
+	}
+	vshdata.history[i] = NULL;
+	history_line_to_array(vshdata.history, &str1);
+	history_line_to_array(vshdata.history, &str2);
+	history_line_to_array(vshdata.history, &str3);
+	cr_expect(history_to_file(&vshdata) == FUNCT_SUCCESS);
+	fd = open(vshdata.history_file, O_RDONLY);
 	cr_expect(fd > 0);
+	ft_bzero(buf, 22);
 	ret = read(fd, buf, 22);
 	cr_expect(ret == 21);
 	cr_expect(ft_strcmp(buf, "check1\ncheck2\ncheck3\n") == 0);
+	remove(vshdata.history_file);
 }
 
 Test(history_check, get_file_content)
 {
-	char	*array[4];
+	t_vshdata	vshdata;
+	int			i;
+	char		*str1 = ft_strdup("check1\n");
+	char		*str2 = ft_strdup("check2\n");
+	char		*str3 = ft_strdup("check3\n");
 
-	array[0] = ft_strdup("check1");
-	array[1] = ft_strdup("check2");
-	array[2] = ft_strdup("check3");
-	array[3] = NULL;
-	history = array;
-	cr_expect(history_to_file() == FUNCT_SUCCESS);
-	cr_expect(history_get_file_content() == FUNCT_SUCCESS);
-	cr_expect_str_eq("check1", history[0]);
-	cr_expect_str_eq("check2", history[1]);
-	cr_expect_str_eq("check3", history[2]);
-	cr_expect(history[3] == NULL);
+	i = 0;
+	vshdata.history_file = ft_strdup("/tmp/.vsh_history2");
+	vshdata.history = (t_history **)ft_memalloc(sizeof(t_history *) * HISTORY_MAX);
+	while (i < HISTORY_MAX)
+	{
+		vshdata.history[i] = (t_history*)ft_memalloc(sizeof(t_history));
+		i++;
+	}
+	history_line_to_array(vshdata.history, &str1);
+	history_line_to_array(vshdata.history, &str2);
+	history_line_to_array(vshdata.history, &str3);
+	history_to_file(&vshdata);
+	cr_expect(history_get_file_content(&vshdata) == FUNCT_SUCCESS);
+	cr_expect_str_eq(vshdata.history[0]->str, "check1");
+	cr_expect_str_eq(vshdata.history[1]->str, "check2");
+	cr_expect_str_eq(vshdata.history[2]->str, "check3");
+	cr_expect(vshdata.history[3]->str == NULL);
+	remove(vshdata.history_file);
 } 
+
+Test(history_overfivehundred, basic)
+{
+	t_vshdata	vshdata;
+	int			i;
+	char		*str = ft_strdup("echo codam\n");
+
+	i = 0;
+	vshdata.history_file = ft_strdup("/tmp/.vsh_history4");
+	vshdata.history = (t_history **)ft_memalloc(sizeof(t_history *) * HISTORY_MAX);
+	while (i < HISTORY_MAX)
+	{
+		vshdata.history[i] = (t_history*)ft_memalloc(sizeof(t_history));
+		i++;
+	}
+	i = 0;
+	while (i < 510)
+	{
+		history_line_to_array(vshdata.history, &str);
+		i++;
+	}
+	cr_expect_str_eq(vshdata.history[0]->str, "echo codam");
+	cr_expect_str_eq(vshdata.history[499]->str, "echo codam");
+	cr_expect(vshdata.history[0]->number == 501);
+	cr_expect(vshdata.history[9]->number == 510);
+	remove(vshdata.history_file);
+} 
+
 
 TestSuite(history_output);
 
-Test(history_check, history_print, .init=redirect_all_stdout)
+Test(history_check, print_history, .init=redirect_all_stdout)
 {
-	char	*array[4];
+	t_vshdata	vshdata;
+	int			i;
+	char		*str1 = ft_strdup("check1\n");
+	char		*str2 = ft_strdup("check2\n");
+	char		*str3 = ft_strdup("check3\n");
 
-	history = array;
-	array[0] = ft_strdup("check1");
-	array[1] = ft_strdup("check2");
-	array[2] = ft_strdup("check3");
-	array[3] = NULL;
-	cr_expect(history_to_file() == FUNCT_SUCCESS);
-	cr_expect(history_get_file_content() == FUNCT_SUCCESS);
-	history_print();
-	cr_expect_stdout_eq_str("    0  check1\n    1  check2\n    2  check3\n");
-} */
+	i = 0;
+	vshdata.history_file = ft_strdup("/tmp/.vsh_history3");
+	vshdata.history = (t_history **)ft_memalloc(sizeof(t_history *) * HISTORY_MAX);
+	while (i < HISTORY_MAX)
+	{
+		vshdata.history[i] = (t_history*)ft_memalloc(sizeof(t_history));
+		i++;
+	}
+	history_line_to_array(vshdata.history, &str1);
+	history_line_to_array(vshdata.history, &str2);
+	history_line_to_array(vshdata.history, &str3);
+	history_to_file(&vshdata);
+	cr_expect(history_get_file_content(&vshdata) == FUNCT_SUCCESS);
+	fflush(NULL);
+	history_print(vshdata.history);
+	cr_expect_stdout_eq_str("    1  check1\n    2  check2\n    3  check3\n");
+	remove(vshdata.history_file);
+}
+
 /*
 **------------------------------------------------------------------------------
 */
@@ -692,13 +759,14 @@ Test(exec_find_bin, basic)
 {
 	char 		*str;
 	char		*bin;
-	t_envlst	lst;
+	t_vshdata	vshdata;
 
-	lst.var = "PATH=./";
-	lst.type = ENV_EXTERN;
-	lst.next = NULL;
+	vshdata.envlst = (t_envlst*)ft_memalloc(sizeof(t_envlst));
+	vshdata.envlst->var = "PATH=./";
+	vshdata.envlst->type = ENV_EXTERN;
+	vshdata.envlst->next = NULL;
 	str = ft_strdup("vsh");
-	bin = exec_find_binary(str, &lst);
+	bin = exec_find_binary(str, &vshdata);
 	cr_expect_str_eq(bin, ".//vsh");
 	ft_strdel(&bin);
 	ft_strdel(&str);
@@ -710,12 +778,12 @@ Test(exec_find_bin, basic2)
 	char		*bin;
 	t_vshdata	vshdata;
 
-	vshdata.envlst = env_getlst();
-	lst.var = "PATH=/bin:./";
-	lst.type = ENV_EXTERN;
-	lst.next = NULL;
+	vshdata.envlst = (t_envlst*)ft_memalloc(sizeof(t_envlst));
+	vshdata.envlst->var = "PATH=/bin:./";
+	vshdata.envlst->type = ENV_EXTERN;
+	vshdata.envlst->next = NULL;
 	str = ft_strdup("ls");
-	bin = exec_find_binary(str, &lst);
+	bin = exec_find_binary(str, &vshdata);
 	cr_expect_str_eq(bin, "/bin/ls");
 	ft_strdel(&bin);
 	ft_strdel(&str);
@@ -725,13 +793,12 @@ Test(exec_find_bin, advanced)
 {
 	char 		*str;
 	char		*bin;
-	t_envlst	lst;
 	t_vshdata	vshdata;
 
-	vshdata.envlst = env_getlst();
-	lst.var = "PATH=/Users/travis/.rvm/gems/ruby-2.4.2/bin:/Users/travis/.rvm/gems/ruby-2.4.2@global/bin:/Users/travis/.rvm/rubies/ruby-2.4.2/bin:/Users/travis/.rvm/bin:/Users/travis/bin:/Users/travis/.local/bin:/Users/travis/.nvm/versions/node/v6.11.4/bin:/bin:/usr/local/bin:/usr/bin:/usr/sbin:/sbin:/opt/X11/bin";
-	lst.type = ENV_EXTERN;
-	lst.next = NULL;
+	vshdata.envlst = (t_envlst*)ft_memalloc(sizeof(t_envlst));
+	vshdata.envlst->var = "PATH=/Users/travis/.rvm/gems/ruby-2.4.2/bin:/Users/travis/.rvm/gems/ruby-2.4.2@global/bin:/Users/travis/.rvm/rubies/ruby-2.4.2/bin:/Users/travis/.rvm/bin:/Users/travis/bin:/Users/travis/.local/bin:/Users/travis/.nvm/versions/node/v6.11.4/bin:/bin:/usr/local/bin:/usr/bin:/usr/sbin:/sbin:/opt/X11/bin";
+	vshdata.envlst->type = ENV_EXTERN;
+	vshdata.envlst->next = NULL;
 	str = ft_strdup("ls");
 	bin = exec_find_binary(str, &vshdata);
 	cr_expect_str_eq(bin, "/bin/ls");
@@ -743,13 +810,14 @@ Test(exec_find_bin, nopath)
 {
 	char 		*str;
 	char		*bin;
-	t_envlst	lst;
+	t_vshdata	vshdata;
 
-	lst.var = "PATH=";
-	lst.type = ENV_EXTERN;
-	lst.next = NULL;
+	vshdata.envlst = (t_envlst*)ft_memalloc(sizeof(t_envlst));
+	vshdata.envlst->var = "PATH=";
+	vshdata.envlst->type = ENV_EXTERN;
+	vshdata.envlst->next = NULL;
 	str = ft_strdup("ls");
-	bin = exec_find_binary(str, &lst);
+	bin = exec_find_binary(str, &vshdata);
 	cr_expect(bin == NULL);
 	ft_strdel(&bin);
 	ft_strdel(&str);
@@ -866,7 +934,7 @@ Test(builtin_export, basic_output_error_test, .init=redirect_all_stdout)
 	envlst = env_getlst();
 	builtin_export(args, envlst);
 	cr_expect(g_state->exit_code == EXIT_WRONG_USE);
-	cr_expect_stdout_eq_str("vsh: export: 'key*=value': not a valid identifier\n");
+	cr_expect_stderr_eq_str("vsh: export: 'key*=value': not a valid identifier\n");
 }
 
 Test(builtin_export, basic_output_error_test2, .init=redirect_all_stdout)
@@ -898,4 +966,133 @@ Test(env_sort, basic_test)
 	cr_assert(envlst != NULL);
 	cr_expect_str_eq(envlst->next->var, "abc");
 	cr_expect_str_eq(envlst->next->next->var, "def");
+}
+
+
+TestSuite(builtin_alias);
+
+Test(builtin_alias, basic_test)
+{
+	t_aliaslst *aliaslst;
+	char		*args[3];
+
+	g_state = (t_state*)ft_memalloc(sizeof(t_state));
+	g_state->exit_code = 0;
+	aliaslst = NULL;
+	args[0] = "alias";
+	args[1] = "dit=dat";
+	args[2] = NULL;
+	builtin_alias(args, &aliaslst);
+	cr_assert(aliaslst != NULL);
+	cr_expect_str_eq(aliaslst->var, "dit=dat");
+	cr_expect(g_state->exit_code == EXIT_SUCCESS);
+}
+
+Test(builtin_alias, basic_error_test, .init=redirect_all_stdout)
+{
+	t_aliaslst *aliaslst;
+	char		*args[3];
+
+	g_state = (t_state*)ft_memalloc(sizeof(t_state));
+	g_state->exit_code = 0;
+	aliaslst = NULL;
+	args[0] = "alias";
+	args[1] = "dit";
+	args[2] = NULL;
+	builtin_alias(args, &aliaslst);
+	cr_assert(aliaslst == NULL);
+	cr_expect_stderr_eq_str("vsh: alias: dit: not found\n");
+	cr_expect(g_state->exit_code == EXIT_FAILURE);
+}
+
+Test(builtin_alias, basic_error_test2, .init=redirect_all_stdout)
+{
+	t_aliaslst *aliaslst;
+	char		*args[3];
+
+	g_state = (t_state*)ft_memalloc(sizeof(t_state));
+	g_state->exit_code = 0;
+	aliaslst = NULL;
+	args[0] = "alias";
+	args[1] = "-n";
+	args[2] = NULL;
+	builtin_alias(args, &aliaslst);
+	cr_assert(aliaslst == NULL);
+	cr_expect(g_state->exit_code == EXIT_WRONG_USE);
+}
+
+Test(builtin_unalias, basic_test)
+{
+	t_aliaslst *aliaslst;
+	char		*args[3];
+
+	g_state = (t_state*)ft_memalloc(sizeof(t_state));
+	g_state->exit_code = 0;
+	aliaslst = NULL;
+	args[0] = "alias";
+	args[1] = "dit=dat";
+	args[2] = NULL;
+	builtin_alias(args, &aliaslst);
+	cr_assert(aliaslst != NULL);
+	args[0] = "unalias";
+	args[1] = "dit";
+	args[2] = NULL;
+	builtin_unalias(args, &aliaslst);
+	cr_assert(aliaslst == NULL);
+	cr_expect(g_state->exit_code == EXIT_SUCCESS);
+}
+
+Test(builtin_unalias, basic_error_test, .init=redirect_all_stdout)
+{
+	t_aliaslst *aliaslst;
+	char		*args[3];
+
+	g_state = (t_state*)ft_memalloc(sizeof(t_state));
+	g_state->exit_code = 0;
+	aliaslst = NULL;
+	args[0] = "alias";
+	args[1] = "dit=dat";
+	args[2] = NULL;
+	builtin_alias(args, &aliaslst);
+	cr_assert(aliaslst != NULL);
+	args[0] = "unalias";
+	args[1] = "dat";
+	args[2] = NULL;
+	builtin_unalias(args, &aliaslst);
+	cr_assert(aliaslst != NULL);
+	cr_expect(g_state->exit_code == EXIT_FAILURE);
+}
+
+TestSuite(alias);
+
+Test(alias, basic_test)
+{
+	char		*line;
+	t_vshdata	vshdata;
+	t_tokenlst	*token_lst;
+	t_ast		*ast;
+	t_pipes		pipes;
+
+	line = ft_strdup("alias echo='echo hoi ; echo dit ' ; alias hoi=ditte ; alias dit=dat\n");
+	vshdata.aliaslst = NULL;
+	vshdata.envlst = env_getlst();
+	cr_assert(vshdata.envlst != NULL);
+	g_state = (t_state*)ft_memalloc(sizeof(t_state));
+	g_state->exit_code = 0;
+	token_lst = NULL;
+	pipes = init_pipestruct();
+	cr_expect(lexer(&line, &token_lst) == FUNCT_SUCCESS);
+	cr_assert(token_lst != NULL);
+	cr_expect(parser_start(&token_lst, &ast) == FUNCT_SUCCESS);
+	cr_assert(ast != NULL);
+	exec_start(ast, &vshdata, pipes);
+	cr_expect_str_eq(vshdata.aliaslst->var, "dit=dat");
+	line = ft_strdup("echo\n");
+	cr_assert(line != NULL);
+	cr_expect(lexer(&line, &token_lst) == FUNCT_SUCCESS);
+	cr_assert(token_lst != NULL);
+	cr_expect(alias_expansion(&vshdata, &token_lst, NULL) == FUNCT_SUCCESS);
+	cr_assert(token_lst != NULL);
+	cr_expect_str_eq(token_lst->next->next->value, "hoi");
+	cr_expect_str_eq(token_lst->next->next->next->next->value, "echo");
 }
