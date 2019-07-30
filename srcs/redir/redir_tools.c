@@ -6,14 +6,11 @@
 /*   By: jbrinksm <jbrinksm@student.codam.nl>         +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2019/07/22 09:18:19 by jbrinksm       #+#    #+#                */
-/*   Updated: 2019/07/28 13:46:08 by jbrinksm      ########   odam.nl         */
+/*   Updated: 2019/07/30 16:44:21 by jbrinksm      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "vsh.h"
-#include <unistd.h>
-#include <fcntl.h>
-#include <sys/stat.h>
 
 /*
 **	Creates a pipe in which the heredoc can be written to

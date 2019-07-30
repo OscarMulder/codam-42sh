@@ -6,7 +6,7 @@
 /*   By: omulder <omulder@student.codam.nl>           +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2019/04/10 20:29:42 by jbrinksm       #+#    #+#                */
-/*   Updated: 2019/07/30 16:36:49 by jbrinksm      ########   odam.nl         */
+/*   Updated: 2019/07/30 16:42:31 by jbrinksm      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -95,7 +95,7 @@
 **--------------------------------redirections----------------------------------
 */
 
-# define FD_UNINIT				-(0x0001)
+# define FD_UNINIT				-1
 # define REG_PERM				S_IRUSR | S_IWUSR | S_IRGRP | S_IROTH
 # define SGREAT_OPEN_FLAGS		O_WRONLY | O_CREAT | O_TRUNC
 # define DGREAT_OPEN_FLAGS		O_WRONLY | O_CREAT | O_APPEND
