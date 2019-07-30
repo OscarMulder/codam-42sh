@@ -1,24 +1,23 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        ::::::::            */
-/*   tool_check_for_whitespace.c                        :+:    :+:            */
+/*   input_parse_ctrl_c.c                               :+:    :+:            */
 /*                                                     +:+                    */
-/*   By: mavan-he <mavan-he@student.codam.nl>         +#+                     */
+/*   By: omulder <omulder@student.codam.nl>           +#+                     */
 /*                                                   +#+                      */
-/*   Created: 2019/07/29 12:58:34 by mavan-he       #+#    #+#                */
-/*   Updated: 2019/07/29 13:00:54 by mavan-he      ########   odam.nl         */
+/*   Created: 2019/07/29 13:54:20 by tde-jong       #+#    #+#                */
+/*   Updated: 2019/07/29 17:26:09 by omulder       ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "vsh.h"
 
-bool	tool_check_for_whitespace(char *str)
+int	input_parse_ctrl_c(t_inputdata *data)
 {
-	while (*str != '\0')
+	if (data->c == '\3')
 	{
-		if (ft_isspace(*str) == true)
-			return (true);
-		str++;
+		ft_putchar('\n');
+		return (FUNCT_SUCCESS);
 	}
-	return (false);
+	return (FUNCT_FAILURE);
 }

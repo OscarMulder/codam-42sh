@@ -84,36 +84,19 @@ static int	exec_redirs_or_assigns(t_ast *node, t_vshdata *vshdata,
 	return (FUNCT_SUCCESS);
 }
 
-static int	redir_save_stdfds(int *stdfds)
-{
-	STDIN_BAK = dup(STDIN_FILENO);
-	if (STDIN_BAK == -1)
-		return (FUNCT_ERROR);
-	STDOUT_BAK = dup(STDOUT_FILENO);
-	if (STDOUT_BAK == -1)
-		return (FUNCT_ERROR);
-	STDERR_BAK = dup(STDERR_FILENO);
-	if (STDERR_BAK == -1)
-		return (FUNCT_ERROR);
-	return (FUNCT_SUCCESS);
-}
-
-static int	redir_reset_stdfds(int *stdfds)
+static int	redir_reset_stdfds(t_vshdata *vshdata)
 {
 	int ret;
 
-	ret = dup2(STDIN_BAK, STDIN_FILENO);
+	ret = dup2(vshdata->stdfds[STDIN_FILENO], STDIN_FILENO);
 	if (ret == -1)
 		return (FUNCT_ERROR);
-	close(STDIN_BAK);
-	ret = dup2(STDOUT_BAK, STDOUT_FILENO);
+	ret = dup2(vshdata->stdfds[STDOUT_FILENO], STDOUT_FILENO);
 	if (ret == -1)
 		return (FUNCT_ERROR);
-	close(STDOUT_BAK);
-	ret = dup2(STDERR_BAK, STDERR_FILENO);
+	ret = dup2(vshdata->stdfds[STDERR_FILENO], STDERR_FILENO);
 	if (ret == -1)
 		return (FUNCT_ERROR);
-	close(STDERR_BAK);
 	return (FUNCT_SUCCESS);
 }
 
@@ -122,39 +105,39 @@ static int	redir_reset_stdfds(int *stdfds)
 **	execution.
 */
 
-static int	return_and_reset_fds(int retval, int *stdfds)
+static int	return_and_reset_fds(int retval, t_vshdata *vshdata)
 {
-	if (redir_reset_stdfds(stdfds) == FUNCT_ERROR)
+	if (redir_reset_stdfds(vshdata) == FUNCT_ERROR)
 		return (FUNCT_ERROR);
 	return (retval);
 }
 
-int			exec_complete_command(t_ast *node, t_vshdata *vshdata, t_pipes pipes)
+int			exec_complete_command(t_ast *node, t_vshdata *vshdata,
+				t_pipes pipes)
 {
 	char	**command;
-	int		stdfds[3];
 
-	if (redir_save_stdfds(stdfds) == FUNCT_ERROR)
-		return (FUNCT_ERROR);
 	exec_quote_remove(node);
 	if (node->type == WORD)
 	{
+		redir_handle_pipe(pipes);
 		if (node->sibling &&
 		exec_redirs_or_assigns(node->sibling, vshdata, ENV_TEMP)
 		== FUNCT_ERROR)
-			return (return_and_reset_fds(FUNCT_ERROR, stdfds));
+			return (return_and_reset_fds(FUNCT_ERROR, vshdata));
 		command = create_args(node);
 		if (command == NULL)
-			return (return_and_reset_fds(FUNCT_ERROR, stdfds));
-		exec_cmd(command, vshdata, pipes);
+			return (return_and_reset_fds(FUNCT_ERROR, vshdata));
+		exec_cmd(command, vshdata);
 	}
 	else if (node->type == ASSIGN || tool_is_redirect_tk(node->type) == true)
 	{
+		redir_handle_pipe(pipes);
 		if (exec_redirs_or_assigns(node, vshdata, ENV_LOCAL)
 		== FUNCT_ERROR)
-			return (return_and_reset_fds(FUNCT_ERROR, stdfds));
+			return (return_and_reset_fds(FUNCT_ERROR, vshdata));
 	}
-	return (return_and_reset_fds(FUNCT_SUCCESS, stdfds));
+	return (return_and_reset_fds(FUNCT_SUCCESS, vshdata));
 }
 
 /*

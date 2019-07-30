@@ -13,10 +13,8 @@
 #include "vsh.h"
 #include <unistd.h>
 
-bool	exec_builtin(char **args, t_vshdata *vshdata, t_pipes pipes)
+bool	exec_builtin(char **args, t_vshdata *vshdata)
 {
-	if (tools_is_builtin(args[0]) == true)
-		redir_handle_pipe(pipes);
 	if (ft_strequ(args[0], "echo"))
 		builtin_echo(args);
 	else if (ft_strequ(args[0], "exit"))
@@ -35,8 +33,5 @@ bool	exec_builtin(char **args, t_vshdata *vshdata, t_pipes pipes)
 		builtin_unalias(args, &vshdata->aliaslst);
 	else
 		return (false);
-	dup2(pipes.fds.stdout, STDOUT_FILENO);
-	dup2(pipes.fds.stdout, STDERR_FILENO);
-	dup2(pipes.fds.stdin, STDIN_FILENO);
 	return (true);
 }

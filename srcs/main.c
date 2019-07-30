@@ -12,6 +12,20 @@
 
 #include "vsh.h"
 
+static int	redir_save_stdfds(t_vshdata *vshdata)
+{
+	vshdata->stdfds[STDIN_FILENO] = dup(STDIN_FILENO);
+	if (vshdata->stdfds[STDIN_FILENO] == -1)
+		return (FUNCT_ERROR);
+	vshdata->stdfds[STDOUT_FILENO] = dup(STDOUT_FILENO);
+	if (vshdata->stdfds[STDOUT_FILENO] == -1)
+		return (FUNCT_ERROR);
+	vshdata->stdfds[STDERR_FILENO] = dup(STDERR_FILENO);
+	if (vshdata->stdfds[STDERR_FILENO] == -1)
+		return (FUNCT_ERROR);
+	return (FUNCT_SUCCESS);
+}
+
 /*
 **	ft_printf alloc error handling
 */
@@ -35,6 +49,8 @@ int		main(int argc, char **argv)
 	history_get_file_content(&vshdata);
 	/* if !term_p, history or envlst failed: send appropriate error message/log */
 	if (term_p == NULL)
+		return (EXIT_FAILURE);
+	if (redir_save_stdfds(&vshdata) == FUNCT_ERROR)
 		return (EXIT_FAILURE);
 	shell_start(&vshdata);
 	if (term_reset(term_p) == FUNCT_FAILURE)

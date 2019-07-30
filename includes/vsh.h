@@ -6,13 +6,13 @@
 /*   By: omulder <omulder@student.codam.nl>           +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2019/04/10 20:29:42 by jbrinksm       #+#    #+#                */
-/*   Updated: 2019/07/28 18:32:15 by omulder       ########   odam.nl         */
+/*   Updated: 2019/07/29 19:39:29 by tde-jong      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
 #ifndef VSH_H
 # define VSH_H
-# define DEBUG
+// # define DEBUG
 # include <sys/stat.h>
 # include <fcntl.h>
 
@@ -25,6 +25,7 @@
 # define FUNCT_ERROR -1
 # define PROG_FAILURE 1
 # define PROG_SUCCESS 0
+# define NEW_PROMPT -1
 # define E_ALLOC 420
 # define E_DUP 100
 # define E_OPEN 101
@@ -88,10 +89,6 @@
 # define EXEC_OR_IF (1 << 3)
 # define EXEC_SEMICOL (1 << 4)
 
-# define STDIN_BAK stdfds[0]
-# define STDOUT_BAK stdfds[1]
-# define STDERR_BAK stdfds[2]
-
 /*
 **--------------------------------redirections----------------------------------
 */
@@ -108,7 +105,7 @@
 
 
 # define ENV_MASK 0xF8
-# define ENV_WHITESPACE (1 << 3)
+# define ENV_SPECIAL (1 << 3)
 # define ENV_EXTERN (1 << 2)
 # define ENV_LOCAL (1 << 1)
 # define ENV_TEMP (1 << 0)
@@ -187,7 +184,8 @@
 
 typedef struct	s_state
 {
-	int exit_code;
+	int				exit_code;
+	struct termios	*termios_p;
 }				t_state;
 
 t_state *g_state;
@@ -233,6 +231,7 @@ typedef struct	s_vshdata
 	t_history	**history;
 	char		*history_file;
 	t_aliaslst	*aliaslst;
+	int			stdfds[3];
 }				t_vshdata;
 
 /*
@@ -325,16 +324,8 @@ typedef struct	s_ast
 **----------------------------------pipes---------------------------------------
 */
 
-typedef struct	s_stdfds
-{
-	int	stdin;
-	int	stdout;
-	int	stderr;	
-}				t_stdfds;
-
 typedef struct	s_pipes
 {
-	t_stdfds	fds;
 	int			pipeside;
 	int			parentpipe[2];
 	int			currentpipe[2];
@@ -395,6 +386,7 @@ int				input_parse_end(t_inputdata *data, char **line);
 int				input_parse_next(t_inputdata *data, char **line);
 int				input_parse_prev(t_inputdata *data, char **line);
 int				input_parse_delete(t_inputdata *data, char **line);
+int				input_parse_ctrl_c(t_inputdata *data);
 int				input_parse_ctrl_d(t_inputdata *data, char **line);
 int				input_parse_ctrl_up(t_inputdata *data, char **line);
 int				input_parse_ctrl_down(t_inputdata *data, char **line);
@@ -512,7 +504,8 @@ bool			tool_is_redirect_tk(t_tokens type);
 bool			tools_is_valid_identifier(char *str);
 bool			tools_is_builtin(char *exec_name);
 bool			tools_is_fdnumstr(char *str);
-bool			tool_has_special(char c);
+bool			tool_is_special(char c);
+bool			tool_check_for_special(char *str);
 bool			tool_check_for_whitespace(char *str);
 
 /*
@@ -520,19 +513,23 @@ bool			tool_check_for_whitespace(char *str);
 */
 
 int				exec_start(t_ast *ast, t_vshdata *vshdata, t_pipes pipes);
-void			exec_cmd(char **args, t_vshdata *vshdata, t_pipes pipes);
-int				exec_complete_command(t_ast *node, t_vshdata *vshdata, t_pipes pipes);
-bool			exec_builtin(char **args, t_vshdata *vshdata, t_pipes pipes);
-bool			exec_external(char **args, t_vshdata *vshdata, t_pipes pipes);
+void			exec_cmd(char **args, t_vshdata *vshdata);
+int				exec_complete_command(t_ast *node, t_vshdata *vshdata,
+					t_pipes pipes);
+bool			exec_builtin(char **args, t_vshdata *vshdata);
+bool			exec_external(char **args, t_vshdata *vshdata);
 char			*exec_find_binary(char *filename, t_vshdata *vshdata);
 void			exec_quote_remove(t_ast *node);
 
 
 t_pipes			init_pipestruct(void);
 int				redir_pipe(t_ast *pipe_node);
-int				redir_run_pipesequence(t_ast *pipenode, t_vshdata *vshdata, t_pipes pipes);
+int				redir_run_pipesequence(t_ast *pipenode, t_vshdata *vshdata,
+					t_pipes pipes);
 int				redir_handle_pipe(t_pipes pipes);
 char			**create_args(t_ast *ast);
+
+void			signal_print_newline(int signum);
 
 /*
 **------------------------------------redir-------------------------------------
@@ -544,7 +541,7 @@ int				redir_input(t_ast *node);
 bool			redir_is_open_fd(int fd);
 int				redir_input_closefd(int left_side_fd);
 void			redir_change_if_leftside(t_ast *node, int *left_side_fd,
-char **right_side);
+					char **right_side);
 int				redir_create_heredoc_fd(char *right_side);
 
 /*
@@ -562,7 +559,7 @@ char			*history_find_histfile(t_vshdata *vshdata);
 **--------------------------------error_handling--------------------------------
 */
 
-int			error_return(int ret, int error, char *opt_str);
+int				error_return(int ret, int error, char *opt_str);
 
 /*
 **----------------------------------debugging-----------------------------------

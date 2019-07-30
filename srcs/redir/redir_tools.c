@@ -15,11 +15,6 @@
 #include <fcntl.h>
 #include <sys/stat.h>
 
-#ifdef DEBUG
-#include <grp.h>
-#include <pwd.h>
-#endif
-
 /*
 **	Creates a pipe in which the heredoc can be written to
 **	and returns its READ fd.
@@ -73,15 +68,5 @@ bool		redir_is_open_fd(int fd)
 
 	if (fstat(fd, &buf) == -1)
 		return (false);
-
-	#ifdef DEBUG
-	struct group	*gr;
-	struct passwd	*pw;
-	ft_putendl("test");
-	gr = getgrgid(buf.st_gid);
-	pw = getpwuid(buf.st_uid);
-	ft_printf("FILE: owner: %s, group: %s\n", pw->pw_name, gr->gr_name);
-	#endif
-
 	return (true);
 }

@@ -39,9 +39,6 @@ t_pipes		init_pipestruct(void)
 {
 	t_pipes	pipes;
 
-	pipes.fds.stdin = dup(STDIN_FILENO);
-	pipes.fds.stdout = dup(STDOUT_FILENO);
-	pipes.fds.stderr = dup(STDERR_FILENO);
 	pipes.pipeside = PIPE_UNINIT;
 	pipes.parentpipe[0] = PIPE_UNINIT;
 	pipes.parentpipe[1] = PIPE_UNINIT;
@@ -71,7 +68,6 @@ t_pipes		init_pipestruct(void)
 
 int			redir_handle_pipe(t_pipes pipes)
 {
-	dup2(pipes.fds.stdin, STDIN_FILENO);
 	if (pipes.currentpipe[0] != PIPE_UNINIT
 	&& pipes.currentpipe[1] != PIPE_UNINIT)
 	{
