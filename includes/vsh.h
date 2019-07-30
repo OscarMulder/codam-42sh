@@ -6,7 +6,7 @@
 /*   By: omulder <omulder@student.codam.nl>           +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2019/04/10 20:29:42 by jbrinksm       #+#    #+#                */
-/*   Updated: 2019/07/30 16:42:31 by jbrinksm      ########   odam.nl         */
+/*   Updated: 2019/07/30 17:50:31 by jbrinksm      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -422,7 +422,7 @@ void			lexer_tokenlstiter(t_tokenlst *token_lst,
 bool			lexer_is_shellspec(char c);
 
 int				lexer(char **line, t_tokenlst **token_lst);
-int				lexer_error(t_tokenlst **token_lst, char **line);
+int				lexer_error(char **line);
 void			lexer_evaluator(t_tokenlst *token_lst);
 int				lexer_scanner(char *line, t_tokenlst *token_lst);
 
@@ -454,7 +454,7 @@ void			lexer_state_ionum(t_scanner *scanner);
 
 int				alias_expansion(t_vshdata *vhsdata, t_tokenlst **tokenlst, char **expanded_aliases);
 int				alias_replace(t_vshdata *vshdata, t_tokenlst *probe, char *alias, char **expanded_aliases);
-int				alias_error(t_tokenlst **tokenlst, char **expanded);
+int				alias_error(char **expanded);
 int				alias_read_file(t_vshdata *vshdata);
 
 
