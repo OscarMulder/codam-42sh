@@ -6,7 +6,7 @@
 /*   By: mavan-he <mavan-he@student.codam.nl>         +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2019/07/29 13:27:43 by mavan-he       #+#    #+#                */
-/*   Updated: 2019/07/30 10:27:10 by mavan-he      ########   odam.nl         */
+/*   Updated: 2019/07/30 10:54:47 by mavan-he      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,7 +14,7 @@
 #include <unistd.h>
 #include <fcntl.h>
 
-static int		get_line_in_alias(int fd, t_vshdata *vshdata)
+static int	get_line_in_alias(int fd, t_vshdata *vshdata)
 {
 	int			ret;
 	char		*line;
@@ -36,7 +36,7 @@ static int		get_line_in_alias(int fd, t_vshdata *vshdata)
 	return (ret);
 }
 
-int		alias_read_file(t_vshdata *vshdata)
+int			alias_read_file(t_vshdata *vshdata)
 {
 	int		fd;
 	int		ret;
