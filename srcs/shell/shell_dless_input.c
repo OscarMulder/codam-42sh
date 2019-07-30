@@ -6,7 +6,7 @@
 /*   By: jbrinksm <jbrinksm@student.codam.nl>         +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2019/06/02 13:23:16 by jbrinksm       #+#    #+#                */
-/*   Updated: 2019/07/30 15:28:52 by jbrinksm      ########   odam.nl         */
+/*   Updated: 2019/07/30 15:31:21 by jbrinksm      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -84,7 +84,7 @@ static bool	is_valid_heredoc_delim(t_tokenlst *token)
 static int	return_alloc_error(int ret)
 {
 	ft_eprintf("vsh: failed to allocate memory for heredoc\n");
-	return (FUNCT_ERROR);
+	return (ret);
 }
 
 int			shell_dless_input(t_vshdata *vshdata, t_tokenlst **token_lst)
@@ -106,8 +106,8 @@ int			shell_dless_input(t_vshdata *vshdata, t_tokenlst **token_lst)
 			if (heredoc_delim == NULL || shell_dless_set_tk_val(probe, &heredoc,
 			heredoc_delim, vshdata) == FUNCT_ERROR)
 				return_alloc_error(FUNCT_ERROR);
-			ft_strdel(heredoc);
-			ft_strdel(heredoc_delim);
+			ft_strdel(&heredoc);
+			ft_strdel(&heredoc_delim);
 		}
 		probe = probe->next;
 	}
