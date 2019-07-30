@@ -6,14 +6,15 @@
 /*   By: jbrinksm <jbrinksm@student.codam.nl>         +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2019/06/02 13:23:16 by jbrinksm       #+#    #+#                */
-/*   Updated: 2019/07/30 13:22:50 by jbrinksm      ########   odam.nl         */
+/*   Updated: 2019/07/30 14:57:33 by jbrinksm      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "vsh.h"
 #include <unistd.h>
 
-int		shell_dless_read_till_stop(char **heredoc, char *stop, t_vshdata *vshdata)
+int		shell_dless_read_till_stop(char **heredoc, char *stop,
+			t_vshdata *vshdata)
 {
 	char	*temp;
 	int		done;
@@ -42,7 +43,8 @@ int		shell_dless_read_till_stop(char **heredoc, char *stop, t_vshdata *vshdata)
 	return (FUNCT_SUCCESS);
 }
 
-int		shell_dless_set_tk_val(t_tokenlst *probe, char **heredoc, char *stop, t_vshdata *vshdata)
+int		shell_dless_set_tk_val(t_tokenlst *probe, char **heredoc,
+			char *stop, t_vshdata *vshdata)
 {
 	int	ret;
 
@@ -60,7 +62,7 @@ int		shell_dless_set_tk_val(t_tokenlst *probe, char **heredoc, char *stop, t_vsh
 	return (FUNCT_SUCCESS);
 }
 
-static bool	is_valid_stoptoken(t_tokenlst *token)
+static bool	is_valid_heredoc_delim(t_tokenlst *token)
 {
 	g_state->exit_code = EXIT_FAILURE;
 	if (token->type != WORD && token->type != ASSIGN)
@@ -79,6 +81,12 @@ static bool	is_valid_stoptoken(t_tokenlst *token)
 	return (true);
 }
 
+static void	free_temp_strings(char **heredoc, char **stop)
+{
+	ft_strdel(heredoc);
+	ft_strdel(stop);
+}
+
 int		shell_dless_input(t_vshdata *vshdata, t_tokenlst **token_lst)
 {
 	char		*heredoc;
@@ -92,7 +100,7 @@ int		shell_dless_input(t_vshdata *vshdata, t_tokenlst **token_lst)
 		if (probe->type == DLESS)
 		{
 			probe = probe->next;
-			if (is_valid_stoptoken(probe) == false)
+			if (is_valid_heredoc_delim(probe) == false)
 				return (FUNCT_ERROR);
 			stop = ft_strjoin(probe->value, "\n");
 			if (stop == NULL || shell_dless_set_tk_val(probe, &heredoc,
@@ -101,8 +109,7 @@ int		shell_dless_input(t_vshdata *vshdata, t_tokenlst **token_lst)
 				ft_eprintf("vsh: failed to allocate memory for heredoc\n");
 				return (FUNCT_ERROR);
 			}
-			ft_strdel(&heredoc);
-			ft_strdel(&stop);
+			free_temp_strings(&heredoc, &stop);
 		}
 		probe = probe->next;
 	}
