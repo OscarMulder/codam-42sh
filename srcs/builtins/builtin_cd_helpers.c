@@ -6,7 +6,7 @@
 /*   By: omulder <omulder@student.codam.nl>           +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2019/07/30 16:46:21 by omulder        #+#    #+#                */
-/*   Updated: 2019/07/30 17:09:18 by omulder       ########   odam.nl         */
+/*   Updated: 2019/07/30 17:27:58 by omulder       ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -41,16 +41,16 @@ static void		this_does_some(char *path, char buf[MAXPATHLEN], int *i, int *j)
 		if (buf[*j - 1] != '/')
 		{
 			buf[*j] = '/';
-			*j++;
+			(*j)++;
 		}
 		while (path[*i] && path[*i] != '/')
 		{
 			buf[*j] = path[*i];
-			*j++;
-			*i++;
+			(*j)++;
+			(*i)++;
 		}
 	}
-	*i++;
+	(*i)++;
 }
 
 char			*cd_get_correct_path(char *old_path, char *path)
