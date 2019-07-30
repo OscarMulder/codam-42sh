@@ -6,7 +6,7 @@
 /*   By: mavan-he <mavan-he@student.codam.nl>         +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2019/07/26 20:29:50 by mavan-he       #+#    #+#                */
-/*   Updated: 2019/07/30 13:34:19 by jbrinksm      ########   odam.nl         */
+/*   Updated: 2019/07/30 15:33:17 by jbrinksm      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -24,6 +24,7 @@ static void	alias_combine_tokenlsts(t_tokenlst *probe, t_tokenlst *new_tokenlst)
 		start_end = start_end->next;
 	ft_memdel((void**)&start_end->next);
 	start_end->next = probe->next->next;
+	ft_strdel(&probe->next->value);
 	ft_memdel((void**)&probe->next);
 	probe->next = new_tokenlst;
 }
