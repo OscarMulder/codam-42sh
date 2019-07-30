@@ -6,7 +6,7 @@
 /*   By: jbrinksm <jbrinksm@student.codam.nl>         +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2019/04/11 20:16:38 by jbrinksm       #+#    #+#                */
-/*   Updated: 2019/07/30 17:02:07 by jbrinksm      ########   odam.nl         */
+/*   Updated: 2019/07/30 17:24:54 by jbrinksm      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,38 +14,37 @@
 #include <unistd.h>
 #include <limits.h>
 
-#define S_INDEX strsplit_indxs[0]
-#define ARRAY_Y strsplit_indxs[1]
-#define ARRAY_X strsplit_indxs[2]
+#define STR 0
+#define Y 1
+#define X 2
 
-
-static void	make_word(const char *s, char c, char **array, int *strsplit_indxs)
+static void	make_word(const char *s, char c, char **array, int *index)
 {
-	if (S_INDEX == 0 && s[S_INDEX] == c)
+	if (index[STR] == 0 && s[index[STR]] == c)
 	{
-		array[ARRAY_Y][ARRAY_X] = c;
-		array[ARRAY_Y][ARRAY_X + 1] = '\0';
+		array[index[Y]][index[X]] = c;
+		array[index[Y]][index[X] + 1] = '\0';
 	}
 	else
 	{
-		while (s[S_INDEX] == c)
-			S_INDEX++;
-		if (S_INDEX == 1 && s[0] == c)
-			array[ARRAY_Y][ARRAY_X] = c;
-		if (S_INDEX == 1 && s[0] == c)
-			ARRAY_X++;
-		while (s[S_INDEX] != c && s[S_INDEX] != '\0')
+		while (s[index[STR]] == c)
+			index[STR]++;
+		if (index[STR] == 1 && s[0] == c)
+			array[index[Y]][index[X]] = c;
+		if (index[STR] == 1 && s[0] == c)
+			index[X]++;
+		while (s[index[STR]] != c && s[index[STR]] != '\0')
 		{
-			array[ARRAY_Y][ARRAY_X] = s[S_INDEX];
-			ARRAY_X++;
-			S_INDEX++;
+			array[index[Y]][index[X]] = s[index[STR]];
+			index[X]++;
+			index[STR]++;
 		}
-		array[ARRAY_Y][ARRAY_X] = '\0';
+		array[index[Y]][index[X]] = '\0';
 	}
-	ARRAY_Y++;
-	S_INDEX++;
-	ARRAY_X = 0;
-	array[ARRAY_Y] = NULL;
+	index[Y]++;
+	index[STR]++;
+	index[X] = 0;
+	array[index[Y]] = NULL;
 }
 
 static int		ft_wordlength(const char *str, char delimiter)
@@ -84,27 +83,27 @@ static int		ft_countwords(const char *str, char delimiter)
 	return (word_count);
 }
 
-static char		**ft_getdirarraynoslash(const char *s, char c)
+static char		**ft_getdirarraynoslash(const char *str, char c)
 {
-	int		strsplit_indxs[3];
+	int		index[3];
 	char	**array;
 	int		words;
 	int		word_length;
 
-	if (!s)
+	if (!str)
 		return (NULL);
-	words = ft_countwords(s, c);
-	S_INDEX = 0;
-	ARRAY_Y = 0;
-	ARRAY_X = 0;
+	words = ft_countwords(str, c);
+	index[STR] = 0;
+	index[Y] = 0;
+	index[X] = 0;
 	array = (char**)malloc(sizeof(char*) * (words + 2));
 	if (array == NULL)
 		return (NULL);
-	while (s[S_INDEX] != '\0')
+	while (str[index[STR]] != '\0')
 	{
-		word_length = ft_wordlength(&s[S_INDEX], c);
-		array[ARRAY_Y] = ft_strnew(word_length + 1);
-		make_word(s, c, array, strsplit_indxs);
+		word_length = ft_wordlength(&str[index[STR]], c);
+		array[index[Y]] = ft_strnew(word_length + 1);
+		make_word(str, c, array, index);
 	}
 	return (array);
 }
