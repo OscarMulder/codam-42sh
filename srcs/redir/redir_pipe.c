@@ -6,7 +6,7 @@
 /*   By: jbrinksm <jbrinksm@student.codam.nl>         +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2019/07/14 10:37:41 by jbrinksm       #+#    #+#                */
-/*   Updated: 2019/07/23 15:18:09 by jbrinksm      ########   odam.nl         */
+/*   Updated: 2019/07/30 10:51:57 by jbrinksm      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -35,7 +35,7 @@ static int	exec_pipe(t_ast *pipenode, t_vshdata *vshdata, t_pipes pipes)
 	return (FUNCT_SUCCESS);
 }
 
-t_pipes		init_pipestruct(void)
+t_pipes		redir_init_pipestruct(void)
 {
 	t_pipes	pipes;
 

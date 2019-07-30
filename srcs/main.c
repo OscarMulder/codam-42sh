@@ -6,25 +6,11 @@
 /*   By: jbrinksm <jbrinksm@student.codam.nl>         +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2019/04/10 20:29:49 by jbrinksm       #+#    #+#                */
-/*   Updated: 2019/07/28 17:12:33 by omulder       ########   odam.nl         */
+/*   Updated: 2019/07/30 10:46:38 by jbrinksm      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "vsh.h"
-
-static int	redir_save_stdfds(t_vshdata *vshdata)
-{
-	vshdata->stdfds[STDIN_FILENO] = dup(STDIN_FILENO);
-	if (vshdata->stdfds[STDIN_FILENO] == -1)
-		return (FUNCT_ERROR);
-	vshdata->stdfds[STDOUT_FILENO] = dup(STDOUT_FILENO);
-	if (vshdata->stdfds[STDOUT_FILENO] == -1)
-		return (FUNCT_ERROR);
-	vshdata->stdfds[STDERR_FILENO] = dup(STDERR_FILENO);
-	if (vshdata->stdfds[STDERR_FILENO] == -1)
-		return (FUNCT_ERROR);
-	return (FUNCT_SUCCESS);
-}
 
 /*
 **	ft_printf alloc error handling

@@ -6,7 +6,7 @@
 /*   By: omulder <omulder@student.codam.nl>           +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2019/05/29 17:52:22 by omulder        #+#    #+#                */
-/*   Updated: 2019/07/26 22:43:08 by mavan-he      ########   odam.nl         */
+/*   Updated: 2019/07/30 10:49:50 by jbrinksm      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -28,7 +28,7 @@ static size_t	count_args(t_ast *ast)
 	return (i);
 }
 
-char		**create_args(t_ast *ast)
+static char		**create_args(t_ast *ast)
 {
 	char	**args;
 	t_ast	*probe;
@@ -84,33 +84,10 @@ static int	exec_redirs_or_assigns(t_ast *node, t_vshdata *vshdata,
 	return (FUNCT_SUCCESS);
 }
 
-static int	redir_reset_stdfds(t_vshdata *vshdata)
-{
-	int ret;
-
-	ret = dup2(vshdata->stdfds[STDIN_FILENO], STDIN_FILENO);
-	if (ret == -1)
-		return (FUNCT_ERROR);
-	ret = dup2(vshdata->stdfds[STDOUT_FILENO], STDOUT_FILENO);
-	if (ret == -1)
-		return (FUNCT_ERROR);
-	ret = dup2(vshdata->stdfds[STDERR_FILENO], STDERR_FILENO);
-	if (ret == -1)
-		return (FUNCT_ERROR);
-	return (FUNCT_SUCCESS);
-}
-
 /*
 **	This function has to prepare the complete_command before
 **	execution.
 */
-
-static int	return_and_reset_fds(int retval, t_vshdata *vshdata)
-{
-	if (redir_reset_stdfds(vshdata) == FUNCT_ERROR)
-		return (FUNCT_ERROR);
-	return (retval);
-}
 
 int			exec_complete_command(t_ast *node, t_vshdata *vshdata,
 				t_pipes pipes)

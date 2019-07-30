@@ -6,7 +6,7 @@
 /*   By: omulder <omulder@student.codam.nl>           +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2019/04/18 16:37:32 by omulder        #+#    #+#                */
-/*   Updated: 2019/07/29 17:08:01 by tde-jong      ########   odam.nl         */
+/*   Updated: 2019/07/30 10:52:18 by jbrinksm      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -623,7 +623,7 @@ Test(exec_echo, basic, .init=redirect_all_stdout)
 	t_pipes		pipes;
 	t_vshdata	vshdata;
 
-	pipes = init_pipestruct();
+	pipes = redir_init_pipestruct();
 	g_state = (t_state*)ft_memalloc(sizeof(t_state));
 	g_state->exit_code = 0;
 
@@ -647,7 +647,7 @@ Test(exec_echo, basic2, .init=redirect_all_stdout)
 	t_pipes		pipes;
 	t_vshdata	vshdata;
 
-	pipes = init_pipestruct();
+	pipes = redir_init_pipestruct();
 	g_state = (t_state*)ft_memalloc(sizeof(t_state));
 	g_state->exit_code = 0;
 
@@ -745,7 +745,7 @@ Test(exec_find_bin, execnonexistent, .init=redirect_all_stdout)
 	t_vshdata	vshdata;
 	t_pipes		pipes;
 
-	pipes = init_pipestruct();
+	pipes = redir_init_pipestruct();
 	g_state = (t_state*)ft_memalloc(sizeof(t_state));
 	g_state->exit_code = 0;
 
@@ -970,7 +970,7 @@ Test(alias, basic_test)
 	g_state = (t_state*)ft_memalloc(sizeof(t_state));
 	g_state->exit_code = 0;
 	token_lst = NULL;
-	pipes = init_pipestruct();
+	pipes = redir_init_pipestruct();
 	cr_expect(lexer(&line, &token_lst) == FUNCT_SUCCESS);
 	cr_assert(token_lst != NULL);
 	cr_expect(parser_start(&token_lst, &ast) == FUNCT_SUCCESS);

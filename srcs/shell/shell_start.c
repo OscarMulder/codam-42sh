@@ -6,7 +6,7 @@
 /*   By: omulder <omulder@student.codam.nl>           +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2019/04/18 16:44:50 by omulder        #+#    #+#                */
-/*   Updated: 2019/07/29 14:03:05 by tde-jong      ########   odam.nl         */
+/*   Updated: 2019/07/30 10:51:29 by jbrinksm      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -33,7 +33,7 @@ int		shell_start(t_vshdata *vshdata)
 	line = NULL;
 	token_lst = NULL;
 	ast = NULL;
-	pipes = init_pipestruct();
+	pipes = redir_init_pipestruct();
 	while (status != CTRLD)
 	{
 		shell_display_prompt();

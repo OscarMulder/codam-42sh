@@ -6,7 +6,7 @@
 /*   By: omulder <omulder@student.codam.nl>           +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2019/04/10 20:29:42 by jbrinksm       #+#    #+#                */
-/*   Updated: 2019/07/29 19:39:29 by tde-jong      ########   odam.nl         */
+/*   Updated: 2019/07/30 10:54:54 by jbrinksm      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -521,14 +521,6 @@ bool			exec_external(char **args, t_vshdata *vshdata);
 char			*exec_find_binary(char *filename, t_vshdata *vshdata);
 void			exec_quote_remove(t_ast *node);
 
-
-t_pipes			init_pipestruct(void);
-int				redir_pipe(t_ast *pipe_node);
-int				redir_run_pipesequence(t_ast *pipenode, t_vshdata *vshdata,
-					t_pipes pipes);
-int				redir_handle_pipe(t_pipes pipes);
-char			**create_args(t_ast *ast);
-
 void			signal_print_newline(int signum);
 
 /*
@@ -543,6 +535,17 @@ int				redir_input_closefd(int left_side_fd);
 void			redir_change_if_leftside(t_ast *node, int *left_side_fd,
 					char **right_side);
 int				redir_create_heredoc_fd(char *right_side);
+
+t_pipes			redir_init_pipestruct(void);
+int				redir_pipe(t_ast *pipe_node);
+int				redir_run_pipesequence(t_ast *pipenode, t_vshdata *vshdata,
+					t_pipes pipes);
+int				redir_handle_pipe(t_pipes pipes);
+
+int				redir_save_stdfds(t_vshdata *vshdata);
+int				return_and_reset_fds(int retval, t_vshdata *vshdata);
+int				redir_reset_stdfds(t_vshdata *vshdata);
+int				redir_close_saved_stdfds(t_vshdata *vshdata);
 
 /*
 **------------------------------------history-----------------------------------
