@@ -6,7 +6,7 @@
 /*   By: mavan-he <mavan-he@student.codam.nl>         +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2019/07/26 20:29:50 by mavan-he       #+#    #+#                */
-/*   Updated: 2019/07/28 17:17:12 by omulder       ########   odam.nl         */
+/*   Updated: 2019/07/30 13:34:19 by jbrinksm      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -28,11 +28,10 @@ static void	alias_combine_tokenlsts(t_tokenlst *probe, t_tokenlst *new_tokenlst)
 	probe->next = new_tokenlst;
 }
 
-int			alias_error(t_tokenlst **tokenlst, char **expanded)
+int			alias_error(char **expanded)
 {
 	if (expanded != NULL)
 		ft_strarrdel(&expanded);
-	lexer_tokenlstdel(tokenlst);
 	return (FUNCT_ERROR);
 }
 
@@ -100,7 +99,7 @@ int			alias_replace(t_vshdata *vshdata, t_tokenlst *probe, char *alias,
 	if (new_expanded == NULL)
 		return (FUNCT_ERROR);
 	if (alias_expansion(vshdata, &new_tokenlst, new_expanded) == FUNCT_ERROR)
-		return (alias_error(&new_tokenlst, new_expanded));
+		return (alias_error(new_expanded));
 	ft_strarrdel(&new_expanded);
 	alias_combine_tokenlsts(probe, new_tokenlst);
 	return (FUNCT_SUCCESS);
