@@ -6,7 +6,7 @@
 /*   By: jbrinksm <jbrinksm@student.codam.nl>         +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2019/06/02 13:23:16 by jbrinksm       #+#    #+#                */
-/*   Updated: 2019/07/30 15:13:13 by jbrinksm      ########   odam.nl         */
+/*   Updated: 2019/07/30 15:28:52 by jbrinksm      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -79,12 +79,6 @@ static bool	is_valid_heredoc_delim(t_tokenlst *token)
 	}
 	g_state->exit_code = EXIT_SUCCESS;
 	return (true);
-}
-
-static void	free_temp_strings(char **heredoc, char **heredoc_delim)
-{
-	ft_strdel(heredoc);
-	ft_strdel(heredoc_delim);
 }
 
 static int	return_alloc_error(int ret)
