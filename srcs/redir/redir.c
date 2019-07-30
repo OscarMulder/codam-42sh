@@ -6,7 +6,7 @@
 /*   By: jbrinksm <jbrinksm@student.codam.nl>         +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2019/07/21 15:14:08 by jbrinksm       #+#    #+#                */
-/*   Updated: 2019/07/28 14:32:26 by jbrinksm      ########   odam.nl         */
+/*   Updated: 2019/07/30 11:00:01 by jbrinksm      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -44,11 +44,8 @@ int			redir_input(t_ast *node)
 		right_side_fd = redir_create_heredoc_fd(right_side);
 	else if (ft_strequ(right_side, "-") == true)
 		return (redir_input_closefd(left_side_fd));
-	else
-	{
-		if (getvalidfd(&right_side_fd, right_side) == FUNCT_ERROR)
-			return (FUNCT_ERROR);
-	}
+	else if (getvalidfd(&right_side_fd, right_side) == FUNCT_ERROR)
+		return (FUNCT_ERROR);
 	if (right_side_fd == -1)
 		return (error_return(FUNCT_ERROR, E_OPEN, NULL));
 	if (dup2(right_side_fd, left_side_fd) == -1)
@@ -78,11 +75,8 @@ int			redir_output(t_ast *node)
 		right_side_fd = open(right_side, DGREAT_OPEN_FLAGS, REG_PERM);
 	else if (ft_strequ(right_side, "-") == true)
 		return (redir_input_closefd(left_side_fd));
-	else
-	{
-		if (getvalidfd(&right_side_fd, right_side) == FUNCT_ERROR)
-			return (FUNCT_ERROR);
-	}
+	else if (getvalidfd(&right_side_fd, right_side) == FUNCT_ERROR)
+		return (FUNCT_ERROR);
 	if (right_side_fd == -1)
 		return (error_return(FUNCT_ERROR, E_OPEN, NULL));
 	if (dup2(right_side_fd, left_side_fd) == -1)

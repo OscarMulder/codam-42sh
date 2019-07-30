@@ -6,7 +6,7 @@
 /*   By: omulder <omulder@student.codam.nl>           +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2019/05/29 17:52:22 by omulder        #+#    #+#                */
-/*   Updated: 2019/07/30 10:49:50 by jbrinksm      ########   odam.nl         */
+/*   Updated: 2019/07/30 11:04:38 by jbrinksm      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -60,7 +60,7 @@ static char		**create_args(t_ast *ast)
 **	complete_command
 */
 
-static int	exec_redirs_or_assigns(t_ast *node, t_vshdata *vshdata,
+static int		exec_redirs_or_assigns(t_ast *node, t_vshdata *vshdata,
 	int env_type)
 {
 	t_ast	*probe;
@@ -89,7 +89,7 @@ static int	exec_redirs_or_assigns(t_ast *node, t_vshdata *vshdata,
 **	execution.
 */
 
-int			exec_complete_command(t_ast *node, t_vshdata *vshdata,
+int				exec_complete_command(t_ast *node, t_vshdata *vshdata,
 				t_pipes pipes)
 {
 	char	**command;
@@ -122,7 +122,7 @@ int			exec_complete_command(t_ast *node, t_vshdata *vshdata,
 **	Read PR.
 */
 
-int			exec_start(t_ast *ast, t_vshdata *vshdata, t_pipes pipes)
+int				exec_start(t_ast *ast, t_vshdata *vshdata, t_pipes pipes)
 {
 	if (ast == NULL)
 		return (FUNCT_ERROR);

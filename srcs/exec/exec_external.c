@@ -6,7 +6,7 @@
 /*   By: tde-jong <tde-jong@student.codam.nl>         +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2019/05/31 10:47:19 by tde-jong       #+#    #+#                */
-/*   Updated: 2019/07/29 19:31:26 by tde-jong      ########   odam.nl         */
+/*   Updated: 2019/07/30 11:03:35 by jbrinksm      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,7 +16,7 @@
 #include <termios.h>
 #include <signal.h>
 
-static void	term_flags_init(void)
+static void		term_flags_init(void)
 {
 	g_state->termios_p->c_lflag |= ICANON;
 	g_state->termios_p->c_lflag |= ECHO;
@@ -24,7 +24,7 @@ static void	term_flags_init(void)
 	tcsetattr(STDIN_FILENO, TCSANOW, g_state->termios_p);
 }
 
-static void	term_flags_destroy(void)
+static void		term_flags_destroy(void)
 {
 	g_state->termios_p->c_lflag &= ~ICANON;
 	g_state->termios_p->c_lflag &= ~ECHO;
@@ -32,13 +32,13 @@ static void	term_flags_destroy(void)
 	tcsetattr(STDIN_FILENO, TCSANOW, g_state->termios_p);
 }
 
-void	signal_print_newline(int signum)
+void			signal_print_newline(int signum)
 {
 	(void)signum;
 	ft_putchar('\n');
 }
 
-static bool	exec_bin(char **args, char **vshenviron)
+static bool		exec_bin(char **args, char **vshenviron)
 {
 	pid_t	pid;
 	int		status;
