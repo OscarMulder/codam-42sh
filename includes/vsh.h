@@ -6,7 +6,7 @@
 /*   By: omulder <omulder@student.codam.nl>           +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2019/04/10 20:29:42 by jbrinksm       #+#    #+#                */
-/*   Updated: 2019/07/30 10:54:54 by jbrinksm      ########   odam.nl         */
+/*   Updated: 2019/07/30 16:36:49 by jbrinksm      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -66,6 +66,8 @@
 
 # define ALIAS_FLAG_LP		(1 << 0)
 # define UNALIAS_FLAG_LA	(2 << 0)
+# define ALIASFILENAME		".vsh_alias"
+# define ALIAS_MAX	500
 
 /*
 **------------------------------------lexer-------------------------------------
@@ -229,9 +231,10 @@ typedef struct	s_vshdata
 {
 	t_envlst	*envlst;
 	t_history	**history;
-	char		*history_file;
 	t_aliaslst	*aliaslst;
 	int			stdfds[3];
+	char		*history_file;
+	char		*alias_file;
 }				t_vshdata;
 
 /*
@@ -402,7 +405,9 @@ int				shell_dless_set_tk_val(t_tokenlst *probe, char **heredoc, char *stop, t_v
 int				shell_dless_input(t_vshdata *vshdata, t_tokenlst **token_lst);
 int				shell_quote_checker(t_vshdata *vshdata, char **line, int *status);
 char			shell_quote_checker_find_quote(char *line);
+int				shell_init_files(t_vshdata *vshdata);
 int				shell_start(t_vshdata *vshdata);
+int				shell_init_vshdata(t_vshdata *vshdata);
 
 /*
 **----------------------------------lexer---------------------------------------
@@ -450,6 +455,7 @@ void			lexer_state_ionum(t_scanner *scanner);
 int				alias_expansion(t_vshdata *vhsdata, t_tokenlst **tokenlst, char **expanded_aliases);
 int				alias_replace(t_vshdata *vshdata, t_tokenlst *probe, char *alias, char **expanded_aliases);
 int				alias_error(t_tokenlst **tokenlst, char **expanded);
+int				alias_read_file(t_vshdata *vshdata);
 
 
 /*
@@ -556,7 +562,6 @@ int				history_get_file_content(t_vshdata *vshdata);
 int				history_line_to_array(t_history **history, char **line);
 void	        history_print(t_history **history);
 int				history_change_line(t_inputdata *data, char **line, char arrow);
-char			*history_find_histfile(t_vshdata *vshdata);
 
 /*
 **--------------------------------error_handling--------------------------------

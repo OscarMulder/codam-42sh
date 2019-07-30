@@ -6,7 +6,7 @@
 /*   By: omulder <omulder@student.codam.nl>           +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2019/04/18 16:44:50 by omulder        #+#    #+#                */
-/*   Updated: 2019/07/30 10:51:29 by jbrinksm      ########   odam.nl         */
+/*   Updated: 2019/07/30 16:36:26 by jbrinksm      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -28,7 +28,6 @@ int		shell_start(t_vshdata *vshdata)
 	t_ast		*ast;
 	t_pipes		pipes;
 
-	g_state->exit_code = EXIT_SUCCESS;
 	status = 1;
 	line = NULL;
 	token_lst = NULL;

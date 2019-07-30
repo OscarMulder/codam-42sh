@@ -6,14 +6,14 @@
 #    By: jbrinksm <jbrinksm@student.codam.nl>         +#+                      #
 #                                                    +#+                       #
 #    Created: 2019/04/10 20:30:07 by jbrinksm       #+#    #+#                 #
-#    Updated: 2019/07/30 10:50:41 by jbrinksm      ########   odam.nl          #
+#    Updated: 2019/07/30 16:36:06 by jbrinksm      ########   odam.nl          #
 #                                                                              #
 # **************************************************************************** #
 
 NAME = vsh
 CC = gcc
 FLAGS = -Wall -Werror -Wextra -Wunreachable-code
-COVERAGE = -coverage
+COVERAGE =
 INCLUDES = -I./libft/ -I./includes
 LIBFT = ./libft/libft.a
 LIB = -L./libft/ -lft -ltermcap
@@ -25,6 +25,7 @@ VPATH = ./test ./libft ./srcs ./srcs/builtins ./srcs/input_handling \
 ./test/environment_handling ./srcs/lexer ./srcs/parser ./srcs/history \
 ./srcs/exec ./srcs/redir ./srcs/error_handling ./srcs/exec ./includes
 SRCS = shell_start shell_prompt shell_quote_checker shell_dless_input \
+shell_init_files shell_init_vshdata \
 input_read input_parse_char input_parse_escape input_parse_home \
 input_parse_end input_parse_prev input_parse_next input_parse_backspace \
 input_parse_delete input_parse_ctrl_c input_parse_ctrl_d input_parse_ctrl_k \
@@ -44,9 +45,9 @@ lexer lexer_utils lexer_debug lexer_evaluator lexer_scanner \
 lexer_state_if_else lexer_state_single lexer_state_start lexer_state_strings \
 parser_start parser_debug parser_utils parser_command parser_error \
 parser_astdel \
-alias_expansion alias_replace \
+alias_expansion alias_replace alias_read_file \
 history_to_file history_get_file_content history_line_to_array history_print \
-history_change_line history_find_histfile \
+history_change_line \
 exec_builtin exec_cmd exec_external exec_start exec_find_binary \
 exec_quote_remove \
 redir_pipe redir redir_tools redir_tools2 \
@@ -94,8 +95,8 @@ $(TESTOBJECTS): $(TESTS)
 	@$(CC) $(FLAGS) $^ $(INCLUDES) $(CRITERIONINCLUDES) -c
 
 build_test: $(TESTOBJECTS) $(OBJECTS)
-	@make re
-	@make $(TESTOBJECTS)
+	@make re COVERAGE=$(COVERAGE)
+	@make $(TESTOBJECTS) COVERAGE=$(COVERAGE)
 	@$(CC) $(FLAGS) $^ $(COVERAGE) $(INCLUDES) $(CRITERION) $(LIB) -o vsh_tests
 
 test: build_test
@@ -104,6 +105,7 @@ test: build_test
 test_valgrind: build_test
 	@valgrind --tool=memcheck --leak-check=full ./vsh_tests
 
+test_coverage: COVERAGE = -coverage
 test_coverage: test
 	@gcov $(SRCS)
 
