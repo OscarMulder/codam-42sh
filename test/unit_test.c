@@ -6,7 +6,7 @@
 /*   By: omulder <omulder@student.codam.nl>           +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2019/04/18 16:37:32 by omulder        #+#    #+#                */
-/*   Updated: 2019/07/29 16:18:46 by mavan-he      ########   odam.nl         */
+/*   Updated: 2019/07/30 10:30:27 by mavan-he      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -881,7 +881,7 @@ Test(builtin_alias, basic_error_test, .init=redirect_all_stdout)
 	builtin_alias(args, &aliaslst);
 	cr_assert(aliaslst == NULL);
 	cr_expect_stderr_eq_str("vsh: alias: dit: not found\n");
-	cr_expect(g_state->exit_code == EXIT_FAILURE);
+	cr_expect(g_state->exit_code == EXIT_WRONG_USE);
 }
 
 Test(builtin_alias, basic_error_test2, .init=redirect_all_stdout)
