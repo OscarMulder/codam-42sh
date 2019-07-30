@@ -6,7 +6,7 @@
 /*   By: omulder <omulder@student.codam.nl>           +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2019/04/18 16:37:32 by omulder        #+#    #+#                */
-/*   Updated: 2019/07/30 10:30:27 by mavan-he      ########   odam.nl         */
+/*   Updated: 2019/07/30 10:52:36 by mavan-he      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -985,9 +985,12 @@ Test(alias_file, basic_file_test)
 	g_state = (t_state*)ft_memalloc(sizeof(t_state));
 	g_state->exit_code = 0;
 	vshdata.envlst = env_getlst();
+	vshdata.aliaslst = NULL;
+	cr_assert(vshdata.envlst != NULL);
 	homedir = env_getvalue("HOME", vshdata.envlst);
 	cr_assert(homedir != NULL);
-	vshdata.alias_file = ft_strjoinfree_s2(homedir, ft_strjoin("/", ".vsh_testalias"));
+	vshdata.alias_file = ft_strjoin(homedir, "/.vsh_testalias");
+	cr_assert(vshdata.alias_file != NULL);
 	fd = open(vshdata.alias_file, O_RDWR | O_CREAT, S_IRUSR | S_IWUSR);
 	cr_assert(fd != -1);
 	write(fd, "test=alias\n", 11);
