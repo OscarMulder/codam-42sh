@@ -6,14 +6,14 @@
 /*   By: jbrinksm <jbrinksm@student.codam.nl>         +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2019/06/02 13:23:16 by jbrinksm       #+#    #+#                */
-/*   Updated: 2019/07/30 14:57:33 by jbrinksm      ########   odam.nl         */
+/*   Updated: 2019/07/30 15:13:13 by jbrinksm      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "vsh.h"
 #include <unistd.h>
 
-int		shell_dless_read_till_stop(char **heredoc, char *stop,
+int			shell_dless_read_till_stop(char **heredoc, char *heredoc_delim,
 			t_vshdata *vshdata)
 {
 	char	*temp;
@@ -27,7 +27,7 @@ int		shell_dless_read_till_stop(char **heredoc, char *stop,
 		ft_putstr("> ");
 		if (input_read(vshdata, &temp, &status) == FUNCT_ERROR)
 			return (FUNCT_ERROR);
-		done = ft_strequ(temp, stop);
+		done = ft_strequ(temp, heredoc_delim);
 		ft_putstr("\n");
 		if (done == true)
 			continue ;
@@ -43,13 +43,13 @@ int		shell_dless_read_till_stop(char **heredoc, char *stop,
 	return (FUNCT_SUCCESS);
 }
 
-int		shell_dless_set_tk_val(t_tokenlst *probe, char **heredoc,
-			char *stop, t_vshdata *vshdata)
+int			shell_dless_set_tk_val(t_tokenlst *probe, char **heredoc,
+			char *heredoc_delim, t_vshdata *vshdata)
 {
 	int	ret;
 
 	ft_strdel(&(probe->value));
-	ret = shell_dless_read_till_stop(heredoc, stop, vshdata);
+	ret = shell_dless_read_till_stop(heredoc, heredoc_delim, vshdata);
 	if (ret == FUNCT_SUCCESS)
 	{
 		if (*heredoc != NULL)
@@ -81,17 +81,23 @@ static bool	is_valid_heredoc_delim(t_tokenlst *token)
 	return (true);
 }
 
-static void	free_temp_strings(char **heredoc, char **stop)
+static void	free_temp_strings(char **heredoc, char **heredoc_delim)
 {
 	ft_strdel(heredoc);
-	ft_strdel(stop);
+	ft_strdel(heredoc_delim);
 }
 
-int		shell_dless_input(t_vshdata *vshdata, t_tokenlst **token_lst)
+static int	return_alloc_error(int ret)
+{
+	ft_eprintf("vsh: failed to allocate memory for heredoc\n");
+	return (FUNCT_ERROR);
+}
+
+int			shell_dless_input(t_vshdata *vshdata, t_tokenlst **token_lst)
 {
 	char		*heredoc;
 	t_tokenlst	*probe;
-	char		*stop;
+	char		*heredoc_delim;
 
 	probe = *token_lst;
 	heredoc = NULL;
@@ -102,14 +108,12 @@ int		shell_dless_input(t_vshdata *vshdata, t_tokenlst **token_lst)
 			probe = probe->next;
 			if (is_valid_heredoc_delim(probe) == false)
 				return (FUNCT_ERROR);
-			stop = ft_strjoin(probe->value, "\n");
-			if (stop == NULL || shell_dless_set_tk_val(probe, &heredoc,
-			stop, vshdata) == FUNCT_ERROR)
-			{
-				ft_eprintf("vsh: failed to allocate memory for heredoc\n");
-				return (FUNCT_ERROR);
-			}
-			free_temp_strings(&heredoc, &stop);
+			heredoc_delim = ft_strjoin(probe->value, "\n");
+			if (heredoc_delim == NULL || shell_dless_set_tk_val(probe, &heredoc,
+			heredoc_delim, vshdata) == FUNCT_ERROR)
+				return_alloc_error(FUNCT_ERROR);
+			ft_strdel(heredoc);
+			ft_strdel(heredoc_delim);
 		}
 		probe = probe->next;
 	}
