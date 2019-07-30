@@ -6,14 +6,14 @@
 #    By: jbrinksm <jbrinksm@student.codam.nl>         +#+                      #
 #                                                    +#+                       #
 #    Created: 2019/04/10 20:30:07 by jbrinksm       #+#    #+#                 #
-#    Updated: 2019/07/29 16:29:50 by tde-jong      ########   odam.nl          #
+#    Updated: 2019/07/30 11:19:15 by tde-jong      ########   odam.nl          #
 #                                                                              #
 # **************************************************************************** #
 
 NAME = vsh
 CC = gcc
 FLAGS = -Wall -Werror -Wextra -Wunreachable-code
-COVERAGE = -coverage
+COVERAGE =
 INCLUDES = -I./libft/ -I./includes
 LIBFT = ./libft/libft.a
 LIB = -L./libft/ -lft -ltermcap
@@ -93,8 +93,8 @@ $(TESTOBJECTS): $(TESTS)
 	@$(CC) $(FLAGS) $^ $(INCLUDES) $(CRITERIONINCLUDES) -c
 
 build_test: $(TESTOBJECTS) $(OBJECTS)
-	@make re
-	@make $(TESTOBJECTS)
+	@make re COVERAGE=$(COVERAGE)
+	@make $(TESTOBJECTS) COVERAGE=$(COVERAGE)
 	@$(CC) $(FLAGS) $^ $(COVERAGE) $(INCLUDES) $(CRITERION) $(LIB) -o vsh_tests
 
 test: build_test
@@ -103,6 +103,7 @@ test: build_test
 test_valgrind: build_test
 	@valgrind --tool=memcheck --leak-check=full ./vsh_tests
 
+test_coverage: COVERAGE = -coverage
 test_coverage: test
 	@gcov $(SRCS)
 
