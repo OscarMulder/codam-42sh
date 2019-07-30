@@ -6,7 +6,7 @@
 /*   By: omulder <omulder@student.codam.nl>           +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2019/04/10 20:29:42 by jbrinksm       #+#    #+#                */
-/*   Updated: 2019/07/30 17:34:23 by jbrinksm      ########   odam.nl         */
+/*   Updated: 2019/07/30 18:24:10 by jbrinksm      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -384,7 +384,7 @@ char			shell_quote_checker_find_quote(char *line);
 int				shell_init_files(t_vshdata *vshdata);
 int				shell_start(t_vshdata *vshdata);
 int				shell_init_vshdata(t_vshdata *vshdata);
-char			*shell_getcurrentdir(void);
+char			*shell_getcurrentdir(char *cwd);
 
 /*
 **----------------------------------lexer---------------------------------------
