@@ -6,7 +6,7 @@
 /*   By: omulder <omulder@student.codam.nl>           +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2019/04/10 20:29:42 by jbrinksm       #+#    #+#                */
-/*   Updated: 2019/07/29 15:29:38 by mavan-he      ########   odam.nl         */
+/*   Updated: 2019/07/30 16:25:04 by omulder       ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -66,6 +66,13 @@
 # define UNALIAS_FLAG_LA	(2 << 0)
 # define ALIASFILENAME		".vsh_alias"
 # define ALIAS_MAX	500
+
+/*
+**-----------------------------------builtin------------------------------------
+*/
+
+# define BUILTIN_CD_LU		(1 << 0)
+# define BUILTIN_CD_PU		(2 << 0)
 
 /*
 **------------------------------------lexer-------------------------------------
@@ -327,6 +334,7 @@ void		env_lstdel(t_envlst **envlst);
 void   		env_remove_tmp(t_envlst *env);
 void		env_sort(t_envlst *head);
 void		env_lstadd_to_sortlst(t_envlst *envlst, t_envlst *new);
+int			env_add_extern_value(t_envlst *envlst, char *name, char *value);
 
 /*
 **----------------------------------terminal------------------------------------
@@ -473,6 +481,7 @@ int				builtin_alias_set(char *arg, t_aliaslst **aliaslst);
 void			builtin_alias_delnode(t_aliaslst **node);
 void			builtin_alias_lstdel(t_aliaslst **lst);
 void			builtin_unalias(char **args, t_aliaslst **aliaslst);
+int				builtin_cd(char **args, t_envlst *envlst);
 
 /*
 **---------------------------------tools----------------------------------------

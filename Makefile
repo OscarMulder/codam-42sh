@@ -3,10 +3,10 @@
 #                                                         ::::::::             #
 #    Makefile                                           :+:    :+:             #
 #                                                      +:+                     #
-#    By: jbrinksm <jbrinksm@student.codam.nl>         +#+                      #
+#    By: omulder <omulder@student.codam.nl>           +#+                      #
 #                                                    +#+                       #
 #    Created: 2019/04/10 20:30:07 by jbrinksm       #+#    #+#                 #
-#    Updated: 2019/07/30 11:19:15 by tde-jong      ########   odam.nl          #
+#    Updated: 2019/07/30 16:26:30 by omulder       ########   odam.nl          #
 #                                                                              #
 # **************************************************************************** #
 
@@ -33,13 +33,14 @@ input_parse_ctrl_up input_parse_ctrl_down input_is_word_start \
 term_prepare term_is_valid term_init_struct term_get_attributes \
 term_set_attributes term_reset_attributes term_free_struct \
 env_getvalue env_getlst env_lsttoarr env_lstnew env_lstaddback env_lstdel \
-env_remove_tmp env_sort env_lstadd_to_sortlst \
+env_remove_tmp env_sort env_lstadd_to_sortlst env_addvalue \
 tools_is_char_escaped tool_is_redirect_tk tools_is_valid_identifier \
 tool_is_special tool_check_for_special tools_is_fdnumstr \
 tool_check_for_whitespace \
 builtin_echo builtin_echo_set_flags builtin_exit builtin_assign \
 builtin_export builtin_export_print builtin_set builtin_unset \
 builtin_alias builtin_alias_set builtin_alias_lstdel builtin_unalias \
+builtin_cd \
 lexer lexer_utils lexer_debug lexer_evaluator lexer_scanner \
 lexer_state_if_else lexer_state_single lexer_state_start lexer_state_strings \
 parser_start parser_debug parser_utils parser_command parser_error \

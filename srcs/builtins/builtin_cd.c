@@ -6,7 +6,7 @@
 /*   By: omulder <omulder@student.codam.nl>           +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2019/07/30 12:41:21 by omulder        #+#    #+#                */
-/*   Updated: 2019/07/30 12:41:28 by omulder       ########   odam.nl         */
+/*   Updated: 2019/07/30 16:23:46 by omulder       ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -100,30 +100,30 @@ static char		*cd_get_correct_path(char *old_path, char *path)
 	return (ft_strsub(buf, 0, j));
 }
 
-static void		cd_post_process_var(char *old_path, char *path, char ***env, char cd_flag)
+static void		cd_post_process_var(char *old_path, char *path, t_envlst *envlst, char cd_flag)
 {
 	char *correct_path;
 
 	correct_path = cd_get_correct_path(old_path, path);
-	env_var_add_value("OLDPWD", old_path, env);
-	if (cd_flag == CD_OPT_PU)
+	env_add_extern_value(envlst, "OLDPWD", old_path);
+	if (cd_flag == BUILTIN_CD_PU)
 	{
 		free(correct_path);
 		correct_path = getcwd(NULL, 0);
-		env_var_add_value("PWD", correct_path, env);
+		env_add_extern_value(envlst, "PWD", correct_path);
 	}
 	else
-		env_var_add_value("PWD", correct_path, env);
+		env_add_extern_value(envlst, "PWD", correct_path);
 	free(correct_path);
 }
 
-static int		cd_change_dir(char *path, char ***env, char cd_flag, int print)
+static int		cd_change_dir(char *path, t_envlst *envlst, char cd_flag, int print)
 {
 	char		*pwd;
 	char		*old_path;
 	
-	pwd = env_var_get_value("PWD", *env);
-	if (cd_flag == CD_OPT_LU && pwd)
+	pwd = env_getvalue("PWD", envlst);
+	if (cd_flag == BUILTIN_CD_LU && pwd)
 		old_path = ft_strdup(pwd);
 	else
 		old_path = getcwd(NULL, 0);
@@ -133,70 +133,71 @@ static int		cd_change_dir(char *path, char ***env, char cd_flag, int print)
 		return (cd_change_dir_error(path));
 	if (print)
 		ft_putendl(path);
-	cd_post_process_var(old_path, path, env, cd_flag);
+	cd_post_process_var(old_path, path, envlst, cd_flag);
 	free(old_path);
 	return (FUNCT_SUCCESS);
 }
 
-static int	cd_parse_flags(char ***args, char *cd_flag)
+static int	cd_parse_flags(char **args, char *cd_flag)
 {
 	int i;
+	int j;
 
-	while ((*args)[0] != NULL && (*args)[0][0] == '-')
+	j = 1;
+	while (args[j] != NULL && args[j][0] == '-')
 	{
-		if ((*args)[0][1] == '\0' || ft_strequ((*args)[0], "--"))
+		if (args[j][1] == '\0' || ft_strequ(args[j], "--"))
 			return (FUNCT_SUCCESS);
 		i = 1;
-		while ((*args)[0][i] != 0)
+		while (args[j][i] != 0)
 		{
-			if ((*args)[0][i] == 'P')
-				(*cd_flag) = CD_OPT_PU;
-			else if ((*args)[0][i] == 'L')
-				(*cd_flag) = CD_OPT_LU;
+			if (args[j][i] == 'P')
+				(*cd_flag) = BUILTIN_CD_PU;
+			else if (args[j][i] == 'L')
+				(*cd_flag) = BUILTIN_CD_LU;
 			else
 			{
-				ft_dprintf(2, "minishell: cd: -%c: invalid option\n\
-				cd: usage: cd [-L|-P] [dir]\n", (*args)[0][i]);
+				ft_dprintf(2, "vsh: cd: -%c: invalid option\n\
+				cd: usage: cd [-L|-P] [dir]\n", args[j][i]);
 				return (FUNCT_ERROR);
 			}
 			i++;
 		}
-		(*args)++;
+		j++;
 	}
 	return (FUNCT_SUCCESS);
 }
 
-static int	cd_parse_dash(char *path, char ***env, char cd_flag, char *var)
+static int	cd_parse_dash(char *path, t_envlst *envlst, char cd_flag, char *var)
 {
 	if (path == NULL)
 	{
-		ft_dprintf(2, "42sh: cd: %s: not set\n", var);
+		ft_dprintf(2, "vsh: cd: %s: not set\n", var);
 		return (FUNCT_ERROR);
 	}
 	if (ft_strequ(var, "HOME"))
-		return (cd_change_dir(path, env, cd_flag, 0));
+		return (cd_change_dir(path, envlst, cd_flag, 0));
 	else
-		return (cd_change_dir(path, env, cd_flag, 1));
+		return (cd_change_dir(path, envlst, cd_flag, 1));
 }
 
-int			builtin_cd(char **args, char ***env)
+int			builtin_cd(char **args, t_envlst *envlst)
 {
 	char	cd_flag;
 	char	*path;
 
-	args++;
-	cd_flag = CD_OPT_LU;
-	if (cd_parse_flags(&args, &cd_flag) == 0)
+	cd_flag = BUILTIN_CD_LU;
+	if (cd_parse_flags(args, &cd_flag) == 0)
 		return (FUNCT_ERROR);
-	if (args[0] == NULL || ft_strequ(args[0], "--"))
+	if (args[1] == NULL || ft_strequ(args[1], "--"))
 	{
-		path = env_var_get_value("HOME", *env);
-		return (cd_parse_dash(path, env, cd_flag, "HOME"));
+		path = env_getvalue("HOME", envlst);
+		return (cd_parse_dash(path, envlst, cd_flag, "HOME"));
 	}
-	if (args[0][0] == '-' && args[0][1] == '\0')
+	if (args[1][0] == '-' && args[1][1] == '\0')
 	{
-		path = env_var_get_value("OLDPWD", *env);
-		return (cd_parse_dash(path, env, cd_flag, "OLDPWD"));
+		path = env_getvalue("OLDPWD", envlst);
+		return (cd_parse_dash(path, envlst, cd_flag, "OLDPWD"));
 	}
-	return (cd_change_dir(args[0], env, cd_flag, 0));
+	return (cd_change_dir(args[1], envlst, cd_flag, 0));
 }
