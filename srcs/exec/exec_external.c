@@ -18,7 +18,7 @@
 
 static void		term_flags_init(void)
 {
-	g_state->termios_p->c_lflag |= ~(ECHO | ICANON | ISIG);
+	g_state->termios_p->c_lflag |= (ECHO | ICANON | ISIG);
 	tcsetattr(STDIN_FILENO, TCSANOW, g_state->termios_p);
 }
 
