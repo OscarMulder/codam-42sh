@@ -6,7 +6,7 @@
 /*   By: omulder <omulder@student.codam.nl>           +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2019/04/10 20:29:42 by jbrinksm       #+#    #+#                */
-/*   Updated: 2019/07/30 18:25:50 by jbrinksm      ########   odam.nl         */
+/*   Updated: 2019/07/31 11:24:10 by jbrinksm      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -40,6 +40,15 @@
 # define EXIT_WRONG_USE 2
 # define EXIT_NOTFOUND 127
 # define EXIT_FATAL 128
+
+/*
+**================================shell colors==================================
+*/
+
+# define RESET		"\033[0m"
+# define RED		"\033[1;31m"
+# define YEL		"\033[1;33m"
+# define BLU		"\033[1;36m"
 
 /*
 **------------------------------------echo--------------------------------------
