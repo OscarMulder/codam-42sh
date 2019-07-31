@@ -6,7 +6,7 @@
 /*   By: omulder <omulder@student.codam.nl>           +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2019/05/16 13:37:33 by rkuijper       #+#    #+#                */
-/*   Updated: 2019/07/31 13:08:24 by omulder       ########   odam.nl         */
+/*   Updated: 2019/07/31 13:33:14 by omulder       ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -20,7 +20,7 @@
 
 int	input_parse_home(t_inputdata *data)
 {
-	if (data->input_state == INPUT_BRACE && data->c == 'H') || data->c == '\1')
+	if ((data->input_state == INPUT_BRACE && data->c == 'H') || data->c == '\1')
 	{
 		if (data->index > 0)
 			ft_printf("\e[%dD", data->index);
