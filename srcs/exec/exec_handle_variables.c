@@ -6,7 +6,7 @@
 /*   By: jbrinksm <jbrinksm@student.codam.nl>         +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2019/07/07 20:54:47 by jbrinksm       #+#    #+#                */
-/*   Updated: 2019/07/31 12:35:33 by mavan-he      ########   odam.nl         */
+/*   Updated: 2019/07/31 14:29:24 by mavan-he      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -43,7 +43,7 @@ static int	scan_value(char **value, t_envlst *envlst)
 	quote = '\0';
 	while ((*value)[i] != '\0')
 	{
-		if ((*value)[i] == '\\' && quote != '\'') // backslash kan nooit aan het einde staan?
+		if ((*value)[i] == '\\' && quote != '\'')
 			i += 2;
 		else if ((*value)[i] == '\'' || (*value)[i] == '\"')
 			update_quote_status((*value)[i], &i, &quote);
@@ -66,7 +66,7 @@ int		exec_handle_variables(t_ast *node, t_envlst *envlst)
 		return (FUNCT_ERROR);
 	if (exec_handle_variables(node->child, envlst) == FUNCT_ERROR)
 		return (FUNCT_ERROR);
-	if (node->type == WORD || node->type == ASSIGN)
+	if ((node->type == WORD || node->type == ASSIGN) && node->flags & T_FLAG_HASSPECIAL)
 	{
 		if (scan_value(&node->value, envlst) == FUNCT_ERROR)
 			return (FUNCT_ERROR);
