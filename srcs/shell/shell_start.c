@@ -6,7 +6,7 @@
 /*   By: omulder <omulder@student.codam.nl>           +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2019/04/18 16:44:50 by omulder        #+#    #+#                */
-/*   Updated: 2019/07/30 17:50:06 by jbrinksm      ########   odam.nl         */
+/*   Updated: 2019/07/31 12:59:18 by jbrinksm      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,6 +18,56 @@ void	lexer_tokenlstiter(t_tokenlst *lst, void (*f)(t_tokenlst *elem))
 		return ;
 	f(lst);
 	lexer_tokenlstiter(lst->next, f);
+}
+
+static bool	is_last_char_escaped_newline(char *line)
+{
+	int i;
+
+	i = 0;
+	while (line[i] != '\0')
+		i++;
+	if (i == 0)
+		return (false);
+	i--;
+	if (line[i] == '\n' && tools_is_char_escaped(line, i) == true)
+		return (true);
+	return (false);
+}
+
+static int	escaped_newlines(t_vshdata *vshdata, char **line, int *status)
+{
+	int		ret;
+	char	*extra_line;
+
+	ret = is_last_char_escaped_newline(*line);
+	if (ret == false)
+		return (FUNCT_FAILURE);
+	while (ret != false)
+	{
+		ft_putstr("\nnewline> ");
+		input_read(vshdata, &extra_line, status);
+		*line = ft_strjoinfree_all(*line, extra_line);
+		ret = is_last_char_escaped_newline(*line);
+	}
+	return (FUNCT_SUCCESS);
+}
+
+static int	handle_quotes_and_escapes(t_vshdata *vshdata, char **line, int *status)
+{
+	int ret;
+
+	ret = FUNCT_SUCCESS;
+	while (ret == FUNCT_SUCCESS)
+	{
+		ret = shell_quote_checker(vshdata, line, status);
+		if (ret == FUNCT_ERROR)
+			return (FUNCT_ERROR);
+		ret = escaped_newlines(vshdata, line, status);
+		if (ret == FUNCT_ERROR)
+			return (FUNCT_ERROR);
+	}
+	return (FUNCT_SUCCESS);
 }
 
 int		shell_start(t_vshdata *vshdata)
@@ -40,7 +90,7 @@ int		shell_start(t_vshdata *vshdata)
 		shell_display_prompt();
 		if (input_read(vshdata, &line, &status) == FUNCT_ERROR)
 			continue;
-		if (shell_quote_checker(vshdata, &line, &status) == FUNCT_ERROR)
+		if (handle_quotes_and_escapes(vshdata, &line, &status) == FUNCT_ERROR)
 			continue ;
 		ft_putchar('\n');
 		if (history_line_to_array(vshdata->history, &line) == FUNCT_ERROR)
