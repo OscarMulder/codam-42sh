@@ -6,7 +6,7 @@
 /*   By: omulder <omulder@student.codam.nl>           +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2019/05/16 13:44:53 by rkuijper       #+#    #+#                */
-/*   Updated: 2019/07/31 13:22:33 by omulder       ########   odam.nl         */
+/*   Updated: 2019/07/31 16:12:01 by omulder       ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -23,7 +23,7 @@ int	input_parse_delete(t_inputdata *data, char **line)
 			ft_printf("\e[%dD", ft_strlen(*line + data->index) + 1);
 		}
 		else
-			ft_putchar(7);
+			ft_putchar('\a');
 		data->input_state = INPUT_NONE;
 		return (FUNCT_SUCCESS);
 	}
