@@ -6,7 +6,7 @@
 /*   By: jbrinksm <jbrinksm@student.codam.nl>         +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2019/07/07 20:54:47 by jbrinksm       #+#    #+#                */
-/*   Updated: 2019/07/31 14:29:24 by mavan-he      ########   odam.nl         */
+/*   Updated: 2019/07/31 14:44:04 by mavan-he      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -66,7 +66,8 @@ int		exec_handle_variables(t_ast *node, t_envlst *envlst)
 		return (FUNCT_ERROR);
 	if (exec_handle_variables(node->child, envlst) == FUNCT_ERROR)
 		return (FUNCT_ERROR);
-	if ((node->type == WORD || node->type == ASSIGN) && node->flags & T_FLAG_HASSPECIAL)
+	if ((node->type == WORD || node->type == ASSIGN) &&
+		node->flags & T_FLAG_HASSPECIAL)
 	{
 		if (scan_value(&node->value, envlst) == FUNCT_ERROR)
 			return (FUNCT_ERROR);
