@@ -12,7 +12,7 @@
 
 #ifndef VSH_H
 # define VSH_H
-// # define DEBUG
+# define DEBUG
 # include <sys/stat.h>
 # include <fcntl.h>
 
