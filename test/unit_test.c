@@ -6,7 +6,7 @@
 /*   By: omulder <omulder@student.codam.nl>           +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2019/04/18 16:37:32 by omulder        #+#    #+#                */
-/*   Updated: 2019/07/30 17:49:44 by jbrinksm      ########   odam.nl         */
+/*   Updated: 2019/07/31 18:03:18 by mavan-he      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -971,7 +971,7 @@ Test(alias, basic_test)
 	cr_assert(token_lst != NULL);
 	cr_expect(parser_start(&token_lst, &ast) == FUNCT_SUCCESS);
 	cr_assert(ast != NULL);
-	exec_start(ast, &vshdata, pipes);
+	cr_expect(exec_start(ast, &vshdata, pipes) == FUNCT_SUCCESS);
 	cr_expect_str_eq(vshdata.aliaslst->var, "dit=dat");
 	line = ft_strdup("echo\n");
 	cr_assert(line != NULL);

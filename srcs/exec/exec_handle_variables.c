@@ -6,7 +6,7 @@
 /*   By: jbrinksm <jbrinksm@student.codam.nl>         +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2019/07/07 20:54:47 by jbrinksm       #+#    #+#                */
-/*   Updated: 2019/07/31 14:44:04 by mavan-he      ########   odam.nl         */
+/*   Updated: 2019/07/31 17:53:41 by mavan-he      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -23,16 +23,14 @@
 **	faulty param replacement).
 */
 
-
 static void	update_quote_status(char c, int *i, char *quote)
 {
 	if (*quote == '\0')
-			*quote = c;
+		*quote = c;
 	else if (c == *quote)
-			*quote = '\0';
+		*quote = '\0';
 	(*i)++;
 }
-
 
 static int	scan_value(char **value, t_envlst *envlst)
 {
@@ -58,7 +56,7 @@ static int	scan_value(char **value, t_envlst *envlst)
 	return (FUNCT_SUCCESS);
 }
 
-int		exec_handle_variables(t_ast *node, t_envlst *envlst)
+int			exec_handle_variables(t_ast *node, t_envlst *envlst)
 {
 	if (node == NULL)
 		return (FUNCT_FAILURE);

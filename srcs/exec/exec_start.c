@@ -6,7 +6,7 @@
 /*   By: omulder <omulder@student.codam.nl>           +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2019/05/29 17:52:22 by omulder        #+#    #+#                */
-/*   Updated: 2019/07/31 12:57:08 by mavan-he      ########   odam.nl         */
+/*   Updated: 2019/07/31 18:13:39 by mavan-he      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -94,7 +94,8 @@ int				exec_complete_command(t_ast *node, t_vshdata *vshdata,
 	char	**command;
 
 	if (exec_handle_variables(node, vshdata->envlst) == FUNCT_ERROR)
-		return (FUNCT_ERROR);
+		return (g_state->exit_code == EXIT_WRONG_USE ?
+		FUNCT_ERROR : error_return(FUNCT_ERROR, E_ALLOC, NULL));
 	exec_quote_remove(node);
 	if (node->type == WORD)
 	{
@@ -129,11 +130,9 @@ int				exec_start(t_ast *ast, t_vshdata *vshdata, t_pipes pipes)
 		return (FUNCT_ERROR);
 	if (ast->type == PIPE)
 		return (redir_run_pipesequence(ast, vshdata, pipes));
-	if (ast->type != WORD && ast->type != ASSIGN)
-	{
-		if (tool_is_redirect_tk(ast->type) == false)
-			exec_start(ast->child, vshdata, pipes);
-	}
+	if (ast->type != WORD && ast->type != ASSIGN &&
+		exec_start(ast->child, vshdata, pipes) == FUNCT_ERROR)
+		return (FUNCT_ERROR);
 	if (ast->type == AND_IF && g_state->exit_code != EXIT_SUCCESS)
 		return (FUNCT_ERROR);
 	else if (ast->type == OR_IF && g_state->exit_code == EXIT_SUCCESS)

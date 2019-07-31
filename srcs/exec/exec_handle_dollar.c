@@ -6,7 +6,7 @@
 /*   By: jbrinksm <jbrinksm@student.codam.nl>         +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2019/07/14 01:05:00 by jbrinksm       #+#    #+#                */
-/*   Updated: 2019/07/31 15:45:53 by mavan-he      ########   odam.nl         */
+/*   Updated: 2019/07/31 17:51:26 by mavan-he      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,21 +17,22 @@
 **	replace it with the value of the parameter.
 */
 
-static int	repl_regular_var(char **value, char *val, int start, int len)
+static int	repl_regular_var(char **value, char *replace_str,
+			int start, int len)
 {
 	char	*new;
 	int		val_len;
 
-	if (val != NULL)
-		val_len = ft_strlen(val);
+	if (replace_str != NULL)
+		val_len = ft_strlen(replace_str);
 	else
 		val_len = 0;
 	new = ft_strnew(ft_strlen(*value) - len + val_len);
 	if (new == NULL)
 		return (FUNCT_ERROR);
 	ft_strncpy(new, *value, start);
-	if (val != NULL)
-		ft_strcat(new, val);
+	if (replace_str != NULL)
+		ft_strcat(new, replace_str);
 	ft_strcat(new, &(*value)[start + len]);
 	ft_strdel(value);
 	*value = new;
@@ -45,27 +46,28 @@ static int	repl_regular_var(char **value, char *val, int start, int len)
 
 int			exec_handle_dollar(char **value, int *i, t_envlst *envlst)
 {
-	int		i_offset;
-	char	*identifier;
+	int		i_dollar;
 	char	*replace_str;
+	char	*identifier;
 
 	if ((*value)[*i + 1] == '{')
 		return (exec_handle_bracketed_var(value, i, envlst));
-	i_offset = *i;
+	i_dollar = *i;
 	(*i)++;
 	while (tools_isidentifierchar((*value)[*i]) == true)
 		(*i)++;
-	if (*i == i_offset + 1)
+	if (*i == i_dollar + 1)
 		return (FUNCT_FAILURE);
-	identifier = ft_strndup(&(*value)[i_offset + 1], *i - (i_offset + 1));
+	identifier = ft_strndup(&(*value)[i_dollar + 1], *i - (i_dollar + 1));
 	if (identifier == NULL)
 		return (FUNCT_ERROR);
 	replace_str = env_getvalue(identifier, envlst);
 	ft_strdel(&identifier);
-	if (repl_regular_var(value, replace_str, i_offset, *i - i_offset) == FUNCT_ERROR)
+	if (repl_regular_var(value, replace_str, i_dollar, *i - i_dollar)
+		== FUNCT_ERROR)
 		return (FUNCT_ERROR);
 	if (replace_str != NULL)
-		i_offset += ft_strlen(replace_str);
-	*i = i_offset;
+		i_dollar += ft_strlen(replace_str);
+	*i = i_dollar;
 	return (FUNCT_SUCCESS);
 }
