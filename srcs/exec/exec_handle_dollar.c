@@ -6,7 +6,7 @@
 /*   By: jbrinksm <jbrinksm@student.codam.nl>         +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2019/07/14 01:05:00 by jbrinksm       #+#    #+#                */
-/*   Updated: 2019/07/31 13:06:52 by mavan-he      ########   odam.nl         */
+/*   Updated: 2019/07/31 15:45:53 by mavan-he      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -52,11 +52,11 @@ int			exec_handle_dollar(char **value, int *i, t_envlst *envlst)
 	if ((*value)[*i + 1] == '{')
 		return (exec_handle_bracketed_var(value, i, envlst));
 	i_offset = *i;
-	(*i)++; // skip '$'
+	(*i)++;
 	while (tools_isidentifierchar((*value)[*i]) == true)
 		(*i)++;
-/* 	if (*i == i_offset + 1) // if there is no identifier
-		return (FUNCT_FAILURE); */
+	if (*i == i_offset + 1)
+		return (FUNCT_FAILURE);
 	identifier = ft_strndup(&(*value)[i_offset + 1], *i - (i_offset + 1));
 	if (identifier == NULL)
 		return (FUNCT_ERROR);
@@ -64,8 +64,8 @@ int			exec_handle_dollar(char **value, int *i, t_envlst *envlst)
 	ft_strdel(&identifier);
 	if (repl_regular_var(value, replace_str, i_offset, *i - i_offset) == FUNCT_ERROR)
 		return (FUNCT_ERROR);
-	if (replace_str != NULL)				// puts 'i' behind the var
-		i_offset += ft_strlen(replace_str);	// we just placed in the string
+	if (replace_str != NULL)
+		i_offset += ft_strlen(replace_str);
 	*i = i_offset;
 	return (FUNCT_SUCCESS);
 }
