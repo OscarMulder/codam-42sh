@@ -6,12 +6,18 @@
 /*   By: omulder <omulder@student.codam.nl>           +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2019/07/30 16:46:21 by omulder        #+#    #+#                */
-/*   Updated: 2019/07/30 17:27:58 by omulder       ########   odam.nl         */
+/*   Updated: 2019/07/31 16:47:28 by omulder       ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "vsh.h"
 #include <sys/param.h>
+
+int				cd_alloc_error(void)
+{
+	ft_eprintf("cd: failed to allocate memory\n");
+	return (FUNCT_FAILURE);
+}
 
 int				cd_print_usage(void)
 {

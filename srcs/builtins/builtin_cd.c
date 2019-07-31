@@ -6,7 +6,7 @@
 /*   By: omulder <omulder@student.codam.nl>           +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2019/07/30 12:41:21 by omulder        #+#    #+#                */
-/*   Updated: 2019/07/31 16:27:15 by omulder       ########   odam.nl         */
+/*   Updated: 2019/07/31 16:56:17 by omulder       ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -39,38 +39,27 @@
 **  - When cwd doesn't return correctly.
 */
 
-static void		cd_post_process_var(char *old_path, char *path,
+static int		cd_post_process_var(char *old_path, char *path,
 t_envlst *envlst, char cd_flag)
 {
 	char *correct_path;
 
 	correct_path = cd_get_correct_path(old_path, path);
 	if (correct_path == NULL)
-	{
-		ft_eprintf("cd: failed to allocate memory\n");
-		return ;
-	}
+		return (cd_alloc_error());
 	if (env_add_extern_value(envlst, "OLDPWD", old_path) == FUNCT_ERROR)
-	{
-		ft_eprintf("cd: failed to allocate memory\n");
-		return ;
-	}
+		return (cd_alloc_error());
 	if (cd_flag == BUILTIN_CD_PU)
 	{
 		free(correct_path);
 		correct_path = getcwd(NULL, 0);
 		if (correct_path == NULL)
-		{
-			ft_eprintf("cd: failed to allocate memory\n");
-			return ;
-		}
+			return (cd_alloc_error());
 	}
 	if (env_add_extern_value(envlst, "PWD", correct_path) == FUNCT_ERROR)
-	{
-		ft_eprintf("cd: failed to allocate memory\n");
-		return ;
-	}
+		return (cd_alloc_error());
 	free(correct_path);
+	return (FUNCT_SUCCESS);
 }
 
 static int		cd_change_dir(char *path, t_envlst *envlst, char cd_flag,
@@ -90,7 +79,8 @@ int print)
 		return (cd_change_dir_error(path));
 	if (print)
 		ft_putendl(path);
-	cd_post_process_var(old_path, path, envlst, cd_flag);
+	if (cd_post_process_var(old_path, path, envlst, cd_flag) == FUNCT_FAILURE)
+		return (FUNCT_FAILURE);
 	free(old_path);
 	return (FUNCT_SUCCESS);
 }
