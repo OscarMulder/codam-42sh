@@ -6,7 +6,7 @@
 /*   By: omulder <omulder@student.codam.nl>           +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2019/04/10 20:29:42 by jbrinksm       #+#    #+#                */
-/*   Updated: 2019/07/31 14:25:24 by jbrinksm      ########   odam.nl         */
+/*   Updated: 2019/07/31 18:17:36 by jbrinksm      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -408,7 +408,7 @@ int				input_parse_ctrl_k(t_inputdata *data, char **line);
 **----------------------------------shell---------------------------------------
 */
 
-void			shell_display_prompt(void);
+void			shell_display_prompt(t_envlst *envlst);
 int				shell_dless_read_till_stop(char **heredoc, char *stop,
 					t_vshdata *vshdata);
 int				shell_dless_set_tk_val(t_tokenlst *probe, char **heredoc,
