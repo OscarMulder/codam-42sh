@@ -6,14 +6,14 @@
 /*   By: omulder <omulder@student.codam.nl>           +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2019/05/16 13:37:33 by rkuijper       #+#    #+#                */
-/*   Updated: 2019/07/31 13:33:14 by omulder       ########   odam.nl         */
+/*   Updated: 2019/07/31 15:32:05 by jbrinksm      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "vsh.h"
 
 /*
-** The else if condition is to prevent the cursor to go over the 'prompt' part
+** The nested if condition is to prevent the cursor to go over the 'prompt' part
 ** (vsh >) of the terminal line, while also preventing other input functions
 ** from executing the keypress.
 */
