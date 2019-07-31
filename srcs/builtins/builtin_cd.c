@@ -6,7 +6,7 @@
 /*   By: omulder <omulder@student.codam.nl>           +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2019/07/30 12:41:21 by omulder        #+#    #+#                */
-/*   Updated: 2019/07/30 17:13:26 by omulder       ########   odam.nl         */
+/*   Updated: 2019/07/31 16:27:15 by omulder       ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -45,15 +45,31 @@ t_envlst *envlst, char cd_flag)
 	char *correct_path;
 
 	correct_path = cd_get_correct_path(old_path, path);
-	env_add_extern_value(envlst, "OLDPWD", old_path);
+	if (correct_path == NULL)
+	{
+		ft_eprintf("cd: failed to allocate memory\n");
+		return ;
+	}
+	if (env_add_extern_value(envlst, "OLDPWD", old_path) == FUNCT_ERROR)
+	{
+		ft_eprintf("cd: failed to allocate memory\n");
+		return ;
+	}
 	if (cd_flag == BUILTIN_CD_PU)
 	{
 		free(correct_path);
 		correct_path = getcwd(NULL, 0);
-		env_add_extern_value(envlst, "PWD", correct_path);
+		if (correct_path == NULL)
+		{
+			ft_eprintf("cd: failed to allocate memory\n");
+			return ;
+		}
 	}
-	else
-		env_add_extern_value(envlst, "PWD", correct_path);
+	if (env_add_extern_value(envlst, "PWD", correct_path) == FUNCT_ERROR)
+	{
+		ft_eprintf("cd: failed to allocate memory\n");
+		return ;
+	}
 	free(correct_path);
 }
 
