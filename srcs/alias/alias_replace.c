@@ -6,7 +6,7 @@
 /*   By: mavan-he <mavan-he@student.codam.nl>         +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2019/07/26 20:29:50 by mavan-he       #+#    #+#                */
-/*   Updated: 2019/07/31 14:11:24 by jbrinksm      ########   odam.nl         */
+/*   Updated: 2019/07/31 15:13:18 by jbrinksm      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -90,9 +90,9 @@ int			alias_replace(t_vshdata *vshdata, t_tokenlst *probe, char *alias,
 
 	status = 1;
 	alias_equal = ft_strchr(alias, '=');
-	new_line = ft_strdup(alias_equal + 1);
+	new_line = ft_strjoin(alias_equal + 1, "\n");
 	new_tokenlst = NULL;
-	if (new_line == NULL || shell_close_unclosed_quotes(vshdata, &new_line,
+	if (new_line == NULL || shell_close_quote_and_esc(vshdata, &new_line,
 		&status) == FUNCT_ERROR
 		|| lexer(&new_line, &new_tokenlst) != FUNCT_SUCCESS
 		|| shell_dless_input(vshdata, &new_tokenlst) != FUNCT_SUCCESS)

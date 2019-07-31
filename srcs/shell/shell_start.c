@@ -6,7 +6,7 @@
 /*   By: omulder <omulder@student.codam.nl>           +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2019/04/18 16:44:50 by omulder        #+#    #+#                */
-/*   Updated: 2019/07/31 14:21:54 by jbrinksm      ########   odam.nl         */
+/*   Updated: 2019/07/31 15:17:18 by jbrinksm      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -28,8 +28,7 @@ int		shell_close_quote_and_esc(t_vshdata *vshdata, char **line,
 	ret = FUNCT_SUCCESS;
 	while (ret == FUNCT_SUCCESS)
 	{
-		ret = shell_close_unclosed_quotes(vshdata, line, status);
-		if (ret == FUNCT_ERROR)
+		if (shell_close_unclosed_quotes(vshdata, line, status) == FUNCT_ERROR)
 			return (FUNCT_ERROR);
 		ret = shell_handle_escaped_newlines(vshdata, line, status);
 		if (ret == FUNCT_ERROR)
@@ -37,8 +36,6 @@ int		shell_close_quote_and_esc(t_vshdata *vshdata, char **line,
 	}
 	return (FUNCT_SUCCESS);
 }
-
-
 
 int		shell_start(t_vshdata *vshdata)
 {

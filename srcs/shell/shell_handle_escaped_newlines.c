@@ -6,7 +6,7 @@
 /*   By: jbrinksm <jbrinksm@student.codam.nl>         +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2019/07/31 14:18:35 by jbrinksm       #+#    #+#                */
-/*   Updated: 2019/07/31 14:25:10 by jbrinksm      ########   odam.nl         */
+/*   Updated: 2019/07/31 14:59:57 by jbrinksm      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,9 +16,7 @@ static bool	remove_last_escaped_newline(char *line)
 {
 	int i;
 
-	i = 0;
-	while (line[i] != '\0')
-		i++;
+	i = ft_strlen(line);
 	if (i == 0)
 		return (false);
 	i--;
