@@ -6,7 +6,7 @@
 /*   By: omulder <omulder@student.codam.nl>           +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2019/04/18 16:44:50 by omulder        #+#    #+#                */
-/*   Updated: 2019/07/29 15:25:06 by mavan-he      ########   odam.nl         */
+/*   Updated: 2019/07/31 15:17:18 by jbrinksm      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -20,23 +20,44 @@ void	lexer_tokenlstiter(t_tokenlst *lst, void (*f)(t_tokenlst *elem))
 	lexer_tokenlstiter(lst->next, f);
 }
 
+int		shell_close_quote_and_esc(t_vshdata *vshdata, char **line,
+				int *status)
+{
+	int ret;
+
+	ret = FUNCT_SUCCESS;
+	while (ret == FUNCT_SUCCESS)
+	{
+		if (shell_close_unclosed_quotes(vshdata, line, status) == FUNCT_ERROR)
+			return (FUNCT_ERROR);
+		ret = shell_handle_escaped_newlines(vshdata, line, status);
+		if (ret == FUNCT_ERROR)
+			return (FUNCT_ERROR);
+	}
+	return (FUNCT_SUCCESS);
+}
+
 int		shell_start(t_vshdata *vshdata)
 {
 	int			status;
 	char		*line;
 	t_tokenlst	*token_lst;
 	t_ast		*ast;
+	t_pipes		pipes;
 
 	status = 1;
 	line = NULL;
 	token_lst = NULL;
 	ast = NULL;
+	pipes = redir_init_pipestruct();
 	while (status != CTRLD)
 	{
+		parser_astdel(&ast);
+		lexer_tokenlstdel(&token_lst);
 		shell_display_prompt();
 		if (input_read(vshdata, &line, &status) == FUNCT_ERROR)
 			continue;
-		if (shell_quote_checker(vshdata, &line, &status) == FUNCT_ERROR)
+		if (shell_close_quote_and_esc(vshdata, &line, &status) == FUNCT_ERROR)
 			continue ;
 		ft_putchar('\n');
 		if (history_line_to_array(vshdata->history, &line) == FUNCT_ERROR)
@@ -51,11 +72,7 @@ int		shell_start(t_vshdata *vshdata)
 		if (alias_expansion(vshdata, &token_lst, NULL) != FUNCT_SUCCESS)
 			continue ;
 		if ((token_lst->next)->type == NEWLINE)
-		{
-			lexer_tokenlstdel(&token_lst);
 			continue ;
-		}
-
 		#ifdef DEBUG
  		lexer_tokenlstiter(token_lst, print_node);
 		#endif
@@ -65,8 +82,7 @@ int		shell_start(t_vshdata *vshdata)
 		ft_putstr("\n\n\nTREE:\n\n");
 		print_tree(ast);
 		#endif
-		exec_start(ast, vshdata, 0);
-		parser_astdel(&ast);
+		exec_start(ast, vshdata, pipes);
 	}
 	return (FUNCT_SUCCESS);
 }

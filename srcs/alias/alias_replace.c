@@ -6,7 +6,7 @@
 /*   By: mavan-he <mavan-he@student.codam.nl>         +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2019/07/26 20:29:50 by mavan-he       #+#    #+#                */
-/*   Updated: 2019/07/30 14:27:28 by mavan-he      ########   odam.nl         */
+/*   Updated: 2019/07/31 15:13:18 by jbrinksm      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -29,11 +29,10 @@ static void	alias_combine_tokenlsts(t_tokenlst *probe, t_tokenlst *new_tokenlst)
 	probe->next = new_tokenlst;
 }
 
-int			alias_error(t_tokenlst **tokenlst, char **expanded)
+int			alias_error(char **expanded)
 {
 	if (expanded != NULL)
 		ft_strarrdel(&expanded);
-	lexer_tokenlstdel(tokenlst);
 	return (FUNCT_ERROR);
 }
 
@@ -91,17 +90,18 @@ int			alias_replace(t_vshdata *vshdata, t_tokenlst *probe, char *alias,
 
 	status = 1;
 	alias_equal = ft_strchr(alias, '=');
-	new_line = ft_strdup(alias_equal + 1);
+	new_line = ft_strjoin(alias_equal + 1, "\n");
 	new_tokenlst = NULL;
-	if (new_line == NULL || shell_quote_checker(vshdata, &new_line, &status)
-		== FUNCT_ERROR || lexer(&new_line, &new_tokenlst) != FUNCT_SUCCESS ||
-		shell_dless_input(vshdata, &new_tokenlst) != FUNCT_SUCCESS)
+	if (new_line == NULL || shell_close_quote_and_esc(vshdata, &new_line,
+		&status) == FUNCT_ERROR
+		|| lexer(&new_line, &new_tokenlst) != FUNCT_SUCCESS
+		|| shell_dless_input(vshdata, &new_tokenlst) != FUNCT_SUCCESS)
 		return (FUNCT_ERROR);
 	new_expanded = alias_add_expanded(expanded, alias, alias_equal);
 	if (new_expanded == NULL)
 		return (FUNCT_ERROR);
 	if (alias_expansion(vshdata, &new_tokenlst, new_expanded) == FUNCT_ERROR)
-		return (alias_error(&new_tokenlst, new_expanded));
+		return (alias_error(new_expanded));
 	ft_strarrdel(&new_expanded);
 	alias_combine_tokenlsts(probe, new_tokenlst);
 	return (FUNCT_SUCCESS);
