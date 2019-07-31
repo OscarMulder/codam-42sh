@@ -6,7 +6,7 @@
 /*   By: omulder <omulder@student.codam.nl>           +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2019/05/29 17:52:22 by omulder        #+#    #+#                */
-/*   Updated: 2019/07/31 18:13:39 by mavan-he      ########   odam.nl         */
+/*   Updated: 2019/07/31 18:28:09 by mavan-he      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -131,6 +131,7 @@ int				exec_start(t_ast *ast, t_vshdata *vshdata, t_pipes pipes)
 	if (ast->type == PIPE)
 		return (redir_run_pipesequence(ast, vshdata, pipes));
 	if (ast->type != WORD && ast->type != ASSIGN &&
+		tool_is_redirect_tk(ast->type) == false &&
 		exec_start(ast->child, vshdata, pipes) == FUNCT_ERROR)
 		return (FUNCT_ERROR);
 	if (ast->type == AND_IF && g_state->exit_code != EXIT_SUCCESS)
