@@ -6,7 +6,7 @@
 /*   By: jbrinksm <jbrinksm@student.codam.nl>         +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2019/07/07 20:54:47 by jbrinksm       #+#    #+#                */
-/*   Updated: 2019/07/14 01:19:50 by jbrinksm      ########   odam.nl         */
+/*   Updated: 2019/07/31 12:35:33 by mavan-he      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -23,66 +23,53 @@
 **	faulty param replacement).
 */
 
-static int	scan_var(t_ast *item, t_envlst *envlst)
+
+static void	update_quote_status(char c, int *i, char *quote)
+{
+	if (*quote == '\0')
+			*quote = c;
+	else if (c == *quote)
+			*quote = '\0';
+	(*i)++;
+}
+
+
+static int	scan_value(char **value, t_envlst *envlst)
 {
 	char	quote;
 	int		i;
-	int		ret;
 
-	if (item == NULL || item->type != WORD)
-		return (FUNCT_FAILURE);
 	i = 0;
 	quote = '\0';
-	while (item->value[i] != '\0')
+	while ((*value)[i] != '\0')
 	{
-		tools_update_quote_status(item->value, i, &quote);
-		if (item->value[i] == '$' && quote != '\'' &&
-			tools_is_char_escaped(item->value, i) == false)
+		if ((*value)[i] == '\\' && quote != '\'') // backslash kan nooit aan het einde staan?
+			i += 2;
+		else if ((*value)[i] == '\'' || (*value)[i] == '\"')
+			update_quote_status((*value)[i], &i, &quote);
+		else if ((*value)[i] == '$' && quote != '\'')
 		{
-			if (item->value[i + 1] == '{')
-				ret = exec_handle_bracketed_var(item, &i, envlst);
-			else
-			{
-				// ADD BRACKET FORCE CLOSER HERE (think dless_input)
-				ret = exec_handle_regular_var(item, &i, envlst);
-			}
-			if (ret != FUNCT_SUCCESS)
-				return (FUNCT_FAILURE);
-			continue ;
+			if (exec_handle_dollar(value, &i, envlst) == FUNCT_ERROR)
+				return (FUNCT_ERROR);
 		}
-		i++;
+		else
+			i++;
 	}
 	return (FUNCT_SUCCESS);
 }
 
-/*
-**	ASSIGN's are not yet supported.
-*/
-
-int		exec_handle_variables(t_ast *complete_command, t_envlst *envlst)
+int		exec_handle_variables(t_ast *node, t_envlst *envlst)
 {
-	t_ast	*probe;
-
-	if (complete_command == NULL)
+	if (node == NULL)
 		return (FUNCT_FAILURE);
-	probe = complete_command;
-	if (complete_command->type != WORD)
-		return (FUNCT_FAILURE);
-	while (probe != NULL)
+	if (exec_handle_variables(node->sibling, envlst) == FUNCT_ERROR)
+		return (FUNCT_ERROR);
+	if (exec_handle_variables(node->child, envlst) == FUNCT_ERROR)
+		return (FUNCT_ERROR);
+	if (node->type == WORD || node->type == ASSIGN)
 	{
-		if (probe->type == WORD)
-		{
-			if (scan_var(probe, envlst) != FUNCT_SUCCESS)
-				return (FUNCT_FAILURE);
-		}
-		#ifdef DEBUG
-		else
-		{
-			ft_printf("warning: exec_handle_variables found a %s\n",
-			parser_return_token_str(probe->type));
-		}
-		#endif
-		probe = probe->child;
+		if (scan_value(&node->value, envlst) == FUNCT_ERROR)
+			return (FUNCT_ERROR);
 	}
 	return (FUNCT_SUCCESS);
 }

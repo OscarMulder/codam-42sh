@@ -6,7 +6,7 @@
 #    By: jbrinksm <jbrinksm@student.codam.nl>         +#+                      #
 #                                                    +#+                       #
 #    Created: 2019/04/10 20:30:07 by jbrinksm       #+#    #+#                 #
-#    Updated: 2019/07/31 10:46:19 by mavan-he      ########   odam.nl          #
+#    Updated: 2019/07/31 12:34:04 by mavan-he      ########   odam.nl          #
 #                                                                              #
 # **************************************************************************** #
 
@@ -33,11 +33,9 @@ input_parse_ctrl_up input_parse_ctrl_down input_is_word_start \
 term_prepare term_is_valid term_init_struct term_get_attributes \
 term_set_attributes term_reset_attributes term_free_struct \
 env_getvalue env_getlst env_lsttoarr env_lstnew env_lstaddback env_lstdel \
-env_remove_tmp env_sort env_lstadd_to_sortlst \
-tools_isidentifierchar tools_update_quote_status \
+env_remove_tmp env_sort env_lstadd_to_sortlst tools_isidentifierchar \
 tools_is_char_escaped tool_is_redirect_tk tools_is_valid_identifier \
-tools_is_builtin \
-tool_is_special tool_check_for_special tools_is_fdnumstr \
+tools_is_builtin tool_is_special tool_check_for_special tools_is_fdnumstr \
 tool_check_for_whitespace \
 builtin_echo builtin_echo_set_flags builtin_exit builtin_assign \
 builtin_export builtin_export_print builtin_set builtin_unset \
@@ -50,7 +48,7 @@ alias_expansion alias_replace alias_read_file \
 history_to_file history_get_file_content history_line_to_array history_print \
 history_change_line \
 exec_builtin exec_cmd exec_external exec_start exec_find_binary \
-exec_quote_remove exec_handle_variables exec_handle_regular_var \
+exec_quote_remove exec_handle_variables exec_handle_dollar \
 exec_handle_bracketed_var \
 redir_pipe redir redir_tools redir_tools2 \
 print_errors

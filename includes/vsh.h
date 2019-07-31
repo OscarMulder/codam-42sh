@@ -6,13 +6,13 @@
 /*   By: omulder <omulder@student.codam.nl>           +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2019/04/10 20:29:42 by jbrinksm       #+#    #+#                */
-/*   Updated: 2019/07/31 10:31:50 by mavan-he      ########   odam.nl         */
+/*   Updated: 2019/07/31 12:34:42 by mavan-he      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
 #ifndef VSH_H
 # define VSH_H
-// # define DEBUG
+# define DEBUG
 # include <sys/stat.h>
 # include <fcntl.h>
 
@@ -526,9 +526,9 @@ int				exec_complete_command(t_ast *node, t_vshdata *vshdata,
 bool			exec_builtin(char **args, t_vshdata *vshdata);
 bool			exec_external(char **args, t_vshdata *vshdata);
 char			*exec_find_binary(char *filename, t_vshdata *vshdata);
-int				exec_handle_variables(t_ast *complete_command, t_envlst *envlst);
-int				exec_handle_bracketed_var(t_ast *item, int *i, t_envlst *envlst);
-int				exec_handle_regular_var(t_ast *item, int *i, t_envlst *envlst);
+int				exec_handle_variables(t_ast *node, t_envlst *envlst);
+int				exec_handle_bracketed_var(char **value, int *i, t_envlst *envlst);
+int				exec_handle_dollar(char **value, int *i, t_envlst *envlst);
 void			exec_quote_remove(t_ast *node);
 
 void			signal_print_newline(int signum);

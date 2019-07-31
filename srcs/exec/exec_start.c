@@ -6,7 +6,7 @@
 /*   By: omulder <omulder@student.codam.nl>           +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2019/05/29 17:52:22 by omulder        #+#    #+#                */
-/*   Updated: 2019/07/31 10:40:42 by mavan-he      ########   odam.nl         */
+/*   Updated: 2019/07/31 12:57:08 by mavan-he      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -93,7 +93,8 @@ int				exec_complete_command(t_ast *node, t_vshdata *vshdata,
 {
 	char	**command;
 
-	exec_handle_variables(node, vshdata->envlst);
+	if (exec_handle_variables(node, vshdata->envlst) == FUNCT_ERROR)
+		return (FUNCT_ERROR);
 	exec_quote_remove(node);
 	if (node->type == WORD)
 	{
