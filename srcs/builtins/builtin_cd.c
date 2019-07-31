@@ -6,7 +6,7 @@
 /*   By: omulder <omulder@student.codam.nl>           +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2019/07/30 12:41:21 by omulder        #+#    #+#                */
-/*   Updated: 2019/07/31 16:56:17 by omulder       ########   odam.nl         */
+/*   Updated: 2019/07/31 17:37:01 by omulder       ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -69,7 +69,7 @@ int print)
 	char		*old_path;
 
 	pwd = env_getvalue("PWD", envlst);
-	if (cd_flag == BUILTIN_CD_LU && pwd)
+	if (cd_flag == BUILTIN_CD_LU && pwd != NULL)
 		old_path = ft_strdup(pwd);
 	else
 		old_path = getcwd(NULL, 0);
