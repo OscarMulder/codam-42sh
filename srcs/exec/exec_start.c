@@ -6,7 +6,7 @@
 /*   By: omulder <omulder@student.codam.nl>           +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2019/05/29 17:52:22 by omulder        #+#    #+#                */
-/*   Updated: 2019/07/20 16:23:40 by mavan-he      ########   odam.nl         */
+/*   Updated: 2019/07/31 10:40:42 by mavan-he      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -27,7 +27,7 @@ static size_t	count_args(t_ast *ast)
 	return (i);
 }
 
-static char	**create_args(t_ast *ast)
+static char		**create_args(t_ast *ast)
 {
 	char	**args;
 	t_ast	*probe;
@@ -55,82 +55,66 @@ static char	**create_args(t_ast *ast)
 }
 
 /*
-**	This will edit the I/O table based on the redirect given as input.
-**	DOESNT WORK YET
-*/
-
-static void exec_redir(t_ast *node, t_envlst *envlst, int *exit_code)
-{
-	t_ast	*probe;
-	char	*left;
-	char	*right;
-
-	(void)exit_code;
-	(void)envlst;
-
-	probe = node->sibling;
-	if (probe->type == WORD)
-		left = probe->value;
-	else
-		left = parser_return_token_str(probe->type);
-	probe = node->sibling->child;
-	if (probe->type == WORD)
-		right = probe->value;
-	else
-		right = parser_return_token_str(probe->type);
-	ft_printf("Redirect: %s > %s\n", left, right);
-}
-
-/*
 **	This is used to handle all the redirects and/or assignments in a
 **	complete_command
 */
 
-static void	exec_redirs_or_assigns(t_ast *node, t_envlst *envlst, int env_type, int *exit_code)
+static int		exec_redirs_or_assigns(t_ast *node, t_vshdata *vshdata,
+	int env_type)
 {
 	t_ast	*probe;
 
 	probe = node;
 	while (probe != NULL)
 	{
-		if (probe->type == SGREAT)
-			exec_redir(probe, envlst, exit_code);
+		if (tool_is_redirect_tk(node->type) == true)
+		{
+			if (redir(probe) == FUNCT_ERROR)
+				return (FUNCT_ERROR);
+		}
 		else if (probe->type == ASSIGN)
-			builtin_assign(probe->value, envlst, exit_code, env_type);
+		{
+			if (builtin_assign(node->value, vshdata->envlst, env_type)
+			== FUNCT_ERROR)
+				return (FUNCT_ERROR);
+		}
 		probe = probe->child;
 	}
+	return (FUNCT_SUCCESS);
 }
 
 /*
 **	This function has to prepare the complete_command before
-**	execution. Wildcard, quote removal, variables.
+**	execution.
 */
 
-static void	exec_complete_command(t_ast *node, t_envlst *envlst, int *exit_code, int flags)
+int				exec_complete_command(t_ast *node, t_vshdata *vshdata,
+				t_pipes pipes)
 {
 	char	**command;
 
-	(void)flags;
-
-	/* Replace wildcards */
-	exec_handle_variables(node, envlst);
-
-	/* There is atleast one cmd_word in complete_command */
+	exec_handle_variables(node, vshdata->envlst);
 	exec_quote_remove(node);
 	if (node->type == WORD)
 	{
-		if (node->sibling)
-			exec_redirs_or_assigns(node->sibling, envlst, ENV_TEMP, exit_code);
+		redir_handle_pipe(pipes);
+		if (node->sibling &&
+		exec_redirs_or_assigns(node->sibling, vshdata, ENV_TEMP)
+		== FUNCT_ERROR)
+			return (return_and_reset_fds(FUNCT_ERROR, vshdata));
 		command = create_args(node);
-		/* add handling of flag = EXEC_PIPE */
-		/* add option for flag = EXEC_BG */
-		if (command != NULL)
-			exec_cmd(command, envlst, exit_code);
+		if (command == NULL)
+			return (return_and_reset_fds(FUNCT_ERROR, vshdata));
+		exec_cmd(command, vshdata);
 	}
-
-	/* There is no cmd_word in complete_command */
-	else if (node->type == ASSIGN || node->type == SGREAT)
-		exec_redirs_or_assigns(node, envlst, ENV_LOCAL, exit_code);
+	else if (node->type == ASSIGN || tool_is_redirect_tk(node->type) == true)
+	{
+		redir_handle_pipe(pipes);
+		if (exec_redirs_or_assigns(node, vshdata, ENV_LOCAL)
+		== FUNCT_ERROR)
+			return (return_and_reset_fds(FUNCT_ERROR, vshdata));
+	}
+	return (return_and_reset_fds(FUNCT_SUCCESS, vshdata));
 }
 
 /*
@@ -138,34 +122,30 @@ static void	exec_complete_command(t_ast *node, t_envlst *envlst, int *exit_code,
 **	Read PR.
 */
 
-void		exec_start(t_ast *ast, t_envlst *envlst, int *exit_code, int flags)
+int				exec_start(t_ast *ast, t_vshdata *vshdata, t_pipes pipes)
 {
 	if (ast == NULL)
-		return ;
-	/* Set flags */
+		return (FUNCT_ERROR);
 	if (ast->type == PIPE)
-		flags &= ~EXEC_PIPE;
-	else if (ast->type == BG)
-		flags &= ~EXEC_BG;
-	else if (ast->type == AND_IF)
-		flags &= ~EXEC_AND_IF;
-	else if (ast->type == OR_IF)
-		flags &= ~EXEC_OR_IF;
-	else if (ast->type == SEMICOL)
-		flags &= ~EXEC_SEMICOL;
-
-	/* Goes through the tree to find complete_commands first */
-	/* problem if there are no WORD's but only prefix or suffix */
-	if (ast->type != WORD && ast->type != ASSIGN && ast->type != SGREAT)
-		exec_start(ast->child, envlst, exit_code, flags);
-	
-	/* Runs after the above exec_start returns or isn't run */
-	if (ast->type == AND_IF && *exit_code != EXIT_SUCCESS)
-		return ;
-	else if (ast->type == OR_IF && *exit_code == EXIT_SUCCESS)
-		return ;
-	else if (ast->type == WORD || ast->type == ASSIGN || ast->type == SGREAT)
-		exec_complete_command(ast, envlst, exit_code, flags);
-	else if (ast->sibling != NULL)
-		exec_start(ast->sibling, envlst, exit_code, flags);
+		return (redir_run_pipesequence(ast, vshdata, pipes));
+	if (ast->type != WORD && ast->type != ASSIGN)
+	{
+		if (tool_is_redirect_tk(ast->type) == false)
+			exec_start(ast->child, vshdata, pipes);
+	}
+	if (ast->type == AND_IF && g_state->exit_code != EXIT_SUCCESS)
+		return (FUNCT_ERROR);
+	else if (ast->type == OR_IF && g_state->exit_code == EXIT_SUCCESS)
+		return (FUNCT_FAILURE);
+	else if (ast->type == WORD || ast->type == ASSIGN
+	|| tool_is_redirect_tk(ast->type) == true)
+	{
+		if (exec_complete_command(ast, vshdata, pipes)
+		== FUNCT_ERROR)
+			return (FUNCT_ERROR);
+	}
+	else if (ast->sibling != NULL
+	&& exec_start(ast->sibling, vshdata, pipes) == FUNCT_ERROR)
+		return (FUNCT_ERROR);
+	return (FUNCT_SUCCESS);
 }

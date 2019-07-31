@@ -6,7 +6,7 @@
 /*   By: jbrinksm <jbrinksm@student.codam.nl>         +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2019/06/04 08:06:54 by jbrinksm       #+#    #+#                */
-/*   Updated: 2019/07/20 18:45:43 by mavan-he      ########   odam.nl         */
+/*   Updated: 2019/07/29 11:34:32 by mavan-he      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,8 +17,8 @@ static int	env_add_to_list(char *str, t_envlst **new)
 	int type;
 
 	type = ENV_EXTERN;
-	if (tool_check_for_whitespace(str) == true)
-		type |= ENV_WHITESPACE;
+	if (tool_check_for_special(str) == true)
+		type |= ENV_SPECIAL;
 	*new = env_lstnew(str, type);
 	if (*new == NULL)
 		return (FUNCT_ERROR);
@@ -38,7 +38,7 @@ t_envlst	*env_getlst(void)
 		return (NULL);
 	while (environ[i] != NULL)
 	{
-		if (env_add_to_list(environ[i], &new) == FUNCT_FAILURE)
+		if (env_add_to_list(environ[i], &new) == FUNCT_ERROR)
 		{
 			env_lstdel(&envlst);
 			return (NULL);

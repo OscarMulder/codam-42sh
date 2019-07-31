@@ -1,19 +1,23 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        ::::::::            */
-/*   tool_has_special.c                                 :+:    :+:            */
+/*   exec_handle_variables.c                            :+:    :+:            */
 /*                                                     +:+                    */
-/*   By: mavan-he <mavan-he@student.codam.nl>         +#+                     */
+/*   By: jbrinksm <jbrinksm@student.codam.nl>         +#+                     */
 /*                                                   +#+                      */
-/*   Created: 2019/07/22 11:31:54 by mavan-he       #+#    #+#                */
-/*   Updated: 2019/07/22 11:34:40 by mavan-he      ########   odam.nl         */
+/*   Created: 2019/07/24 11:35:41 by jbrinksm       #+#    #+#                */
+/*   Updated: 2019/07/24 11:42:34 by jbrinksm      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "vsh.h"
+#include <criterion/criterion.h>
 
-bool	tool_has_special(char c)
+TestSuite(exec_handle_variables);
+
+Test(exec_handle_variables, basic)
 {
-	return (c == '*' || c == '\'' || c == '"' || c == '\\'
-		|| c == '$' || c == '~');
+	t_envlst *envlst;
+
+	envlst = env_getlst();
 }

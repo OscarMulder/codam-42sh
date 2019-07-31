@@ -6,7 +6,7 @@
 /*   By: jbrinksm <jbrinksm@student.codam.nl>         +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2019/04/10 20:29:49 by jbrinksm       #+#    #+#                */
-/*   Updated: 2019/07/18 12:14:13 by mavan-he      ########   odam.nl         */
+/*   Updated: 2019/07/30 16:36:20 by jbrinksm      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,19 +19,20 @@
 int		main(int argc, char **argv)
 {
 	t_term		*term_p;
-	t_envlst	*envlst;
+	t_vshdata	vshdata;
 
 	(void)argv;
 	(void)argc;
-	envlst = env_getlst();
-	if (envlst == NULL)
+	g_state = (t_state*)ft_memalloc(sizeof(t_state));
+	g_state->exit_code = EXIT_SUCCESS;
+	if (shell_init_vshdata(&vshdata) == FUNCT_ERROR)
 		return (EXIT_FAILURE);
-	term_p = term_prepare(envlst);
-	history_get_file_content();
-	/* if !term_p, history or envlst failed: send appropriate error message/log */
-	if (term_p == NULL)
+	term_p = term_prepare(vshdata.envlst);
+	if (g_state == NULL || term_p == NULL)
 		return (EXIT_FAILURE);
-	shell_start(envlst);
+	if (redir_save_stdfds(&vshdata) == FUNCT_ERROR)
+		return (EXIT_FAILURE);
+	shell_start(&vshdata);
 	if (term_reset(term_p) == FUNCT_FAILURE)
 		return (EXIT_FAILURE);
 	term_free_struct(&term_p);

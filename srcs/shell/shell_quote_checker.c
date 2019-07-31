@@ -6,11 +6,12 @@
 /*   By: jbrinksm <jbrinksm@student.codam.nl>         +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2019/05/31 07:47:19 by jbrinksm       #+#    #+#                */
-/*   Updated: 2019/06/02 08:52:11 by jbrinksm      ########   odam.nl         */
+/*   Updated: 2019/07/30 14:45:58 by jbrinksm      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "vsh.h"
+#include <unistd.h>
 
 char		shell_quote_checker_find_quote(char *line)
 {
@@ -22,7 +23,7 @@ char		shell_quote_checker_find_quote(char *line)
 	quote = '\0';
 	while (line[i] != '\0')
 	{
-		if (tools_is_char_escaped(line, i) == true)
+		if (quote != '\'' && tools_is_char_escaped(line, i) == true)
 		{
 			i++;
 			continue ;
@@ -43,7 +44,7 @@ char		shell_quote_checker_find_quote(char *line)
 **	some termcaps shit.
 */
 
-int		shell_quote_checker(char **line)
+int		shell_quote_checker(t_vshdata *vshdata, char **line, int *status)
 {
 	char	quote;
 	char	*extra_line;
@@ -55,12 +56,15 @@ int		shell_quote_checker(char **line)
 			ft_printf("\nquote> ");
 		else if (quote == '"')
 			ft_printf("\ndquote> ");
-		input_read(&extra_line);
+		if (input_read(vshdata, &extra_line, status) == FUNCT_ERROR)
+		{
+			ft_strdel(line);
+			return (FUNCT_ERROR);
+		}
 		*line = ft_joinstrcstr_free_all(*line, '\n', extra_line);
 		if (*line == NULL)
 		{
-			ft_printf("vsh: failed to allocate enough memory for"
-			" commandline input\n");
+			ft_eprintf("vsh: failed to allocate enough memory\n");
 			return (FUNCT_ERROR);
 		}
 		quote = shell_quote_checker_find_quote(*line);

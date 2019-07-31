@@ -6,7 +6,7 @@
 /*   By: jbrinksm <jbrinksm@student.codam.nl>         +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2019/06/05 09:09:49 by jbrinksm       #+#    #+#                */
-/*   Updated: 2019/07/20 19:10:29 by mavan-he      ########   odam.nl         */
+/*   Updated: 2019/07/29 11:33:59 by mavan-he      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -52,28 +52,29 @@ int			builtin_assign_addnew(t_envlst *envlst, char *var, int env_type)
 	return (FUNCT_SUCCESS);
 }
 
-void		builtin_assign(char *arg, t_envlst *envlst,
-	int *exit_code, int env_type)
+int			builtin_assign(char *arg, t_envlst *envlst, int env_type)
 {
 	char		*var;
 
-	*exit_code = EXIT_FAILURE;
+	g_state->exit_code = EXIT_FAILURE;
 	if (envlst == NULL || arg == NULL)
-		return ;
+		return (FUNCT_ERROR);
 	var = ft_strdup(arg);
 	if (var == NULL)
-		return ;
-	if (tool_check_for_whitespace(arg) == true)
-		env_type |= ENV_WHITESPACE;
+		return (FUNCT_ERROR);
+	if (tool_check_for_special(arg) == true)
+		env_type |= ENV_SPECIAL;
 	else
-		env_type &= ~ENV_WHITESPACE;
-	*exit_code = EXIT_SUCCESS;
+		env_type &= ~ENV_SPECIAL;
+	g_state->exit_code = EXIT_SUCCESS;
 	if (builtin_assign_addexist(envlst, arg, var, env_type) != FUNCT_SUCCESS)
 	{
 		if (builtin_assign_addnew(envlst, var, env_type) != FUNCT_SUCCESS)
 		{
 			ft_printf("assign: failed to allocate enough memory\n");
-			*exit_code = EXIT_FAILURE;
+			g_state->exit_code = EXIT_FAILURE;
+			return (FUNCT_ERROR);
 		}
 	}
+	return (FUNCT_SUCCESS);
 }
