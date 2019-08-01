@@ -6,7 +6,7 @@
 /*   By: omulder <omulder@student.codam.nl>           +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2019/04/10 20:29:42 by jbrinksm       #+#    #+#                */
-/*   Updated: 2019/07/31 13:09:53 by mavan-he      ########   odam.nl         */
+/*   Updated: 2019/08/01 11:00:32 by mavan-he      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -382,6 +382,8 @@ typedef struct	s_inputdata
 	char		c;
 	int			input_state;
 	int			hist_index;
+	int			hist_start;
+	int			hist_first;
 	unsigned	index;
 	int			len_max;
 	t_history	**history;
@@ -399,7 +401,7 @@ int				input_parse_next(t_inputdata *data, char **line);
 int				input_parse_prev(t_inputdata *data, char **line);
 int				input_parse_delete(t_inputdata *data, char **line);
 int				input_parse_ctrl_c(t_inputdata *data);
-int				input_parse_ctrl_d(t_inputdata *data, char **line);
+int				input_parse_ctrl_d(t_inputdata *data, t_vshdata *vshdata, char **line);
 int				input_parse_ctrl_up(t_inputdata *data, char **line);
 int				input_parse_ctrl_down(t_inputdata *data, char **line);
 int				input_parse_ctrl_k(t_inputdata *data, char **line);
@@ -408,16 +410,23 @@ int				input_parse_ctrl_k(t_inputdata *data, char **line);
 **----------------------------------shell---------------------------------------
 */
 
-void			shell_display_prompt(void);
-int				shell_dless_read_till_stop(char **heredoc, char *stop, t_vshdata *vshdata);
-int				shell_dless_set_tk_val(t_tokenlst *probe, char **heredoc, char *stop, t_vshdata *vshdata);
+void			shell_display_prompt(t_envlst *envlst);
+int				shell_dless_read_till_stop(char **heredoc, char *stop,
+					t_vshdata *vshdata);
+int				shell_dless_set_tk_val(t_tokenlst *probe, char **heredoc,
+					char *stop, t_vshdata *vshdata);
 int				shell_dless_input(t_vshdata *vshdata, t_tokenlst **token_lst);
-int				shell_quote_checker(t_vshdata *vshdata, char **line, int *status);
-char			shell_quote_checker_find_quote(char *line);
+int				shell_close_unclosed_quotes(t_vshdata *vshdata, char **line,
+					int *status);
 int				shell_init_files(t_vshdata *vshdata);
 int				shell_start(t_vshdata *vshdata);
 int				shell_init_vshdata(t_vshdata *vshdata);
 char			*shell_getcurrentdir(char *cwd);
+int				shell_close_quote_and_esc(t_vshdata *vshdata, char **line,
+					int *status);
+char			shell_quote_checker_find_quote(char *line);
+int				shell_handle_escaped_newlines(t_vshdata *vshdata, char **line,
+					int *status);
 
 /*
 **----------------------------------lexer---------------------------------------
@@ -576,6 +585,8 @@ int				history_get_file_content(t_vshdata *vshdata);
 int				history_line_to_array(t_history **history, char **line);
 void	        history_print(t_history **history);
 int				history_change_line(t_inputdata *data, char **line, char arrow);
+int				history_index_change_down(t_inputdata *data);
+int				history_index_change_up(t_inputdata *data);
 
 /*
 **--------------------------------error_handling--------------------------------

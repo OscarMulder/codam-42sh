@@ -6,7 +6,7 @@
 /*   By: omulder <omulder@student.codam.nl>           +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2019/04/18 16:37:32 by omulder        #+#    #+#                */
-/*   Updated: 2019/07/31 18:03:18 by mavan-he      ########   odam.nl         */
+/*   Updated: 2019/08/01 11:01:24 by mavan-he      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -206,19 +206,19 @@ Test(shell_quote_checker, basic)
 	vshdata.history_file = "/tmp/.vsh_history";
 	history_get_file_content(&vshdata);
 	line = strdup("lala");
-	shell_quote_checker(&vshdata, &line, &status);
+	shell_close_unclosed_quotes(&vshdata, &line, &status);
 	cr_expect_str_eq(line, "lala");
 	ft_strdel(&line);
 	line = strdup("lala''");
-	shell_quote_checker(&vshdata, &line, &status);
+	shell_close_unclosed_quotes(&vshdata, &line, &status);
 	cr_expect_str_eq(line, "lala''");
 	ft_strdel(&line);
 	line = strdup("lala\"\"");
-	shell_quote_checker(&vshdata, &line, &status);
+	shell_close_unclosed_quotes(&vshdata, &line, &status);
 	cr_expect_str_eq(line, "lala\"\"");
 	ft_strdel(&line);
 	line = strdup("lala'\"'");
-	shell_quote_checker(&vshdata, &line, &status);
+	shell_close_unclosed_quotes(&vshdata, &line, &status);
 	cr_expect_str_eq(line, "lala'\"'");
 	ft_strdel(&line);
 }

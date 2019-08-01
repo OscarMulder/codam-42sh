@@ -6,7 +6,7 @@
 /*   By: omulder <omulder@student.codam.nl>           +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2019/04/18 16:44:50 by omulder        #+#    #+#                */
-/*   Updated: 2019/07/31 10:38:07 by mavan-he      ########   odam.nl         */
+/*   Updated: 2019/08/01 11:01:03 by mavan-he      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,6 +18,23 @@ void	lexer_tokenlstiter(t_tokenlst *lst, void (*f)(t_tokenlst *elem))
 		return ;
 	f(lst);
 	lexer_tokenlstiter(lst->next, f);
+}
+
+int		shell_close_quote_and_esc(t_vshdata *vshdata, char **line,
+				int *status)
+{
+	int ret;
+
+	ret = FUNCT_SUCCESS;
+	while (ret == FUNCT_SUCCESS)
+	{
+		if (shell_close_unclosed_quotes(vshdata, line, status) == FUNCT_ERROR)
+			return (FUNCT_ERROR);
+		ret = shell_handle_escaped_newlines(vshdata, line, status);
+		if (ret == FUNCT_ERROR)
+			return (FUNCT_ERROR);
+	}
+	return (FUNCT_SUCCESS);
 }
 
 int		shell_start(t_vshdata *vshdata)
@@ -37,11 +54,10 @@ int		shell_start(t_vshdata *vshdata)
 	{
 		parser_astdel(&ast);
 		lexer_tokenlstdel(&token_lst);
-		shell_display_prompt();
-
+		shell_display_prompt(vshdata->envlst);
 		if (input_read(vshdata, &line, &status) == FUNCT_ERROR)
 			continue;
-		if (shell_quote_checker(vshdata, &line, &status) == FUNCT_ERROR)
+		if (shell_close_quote_and_esc(vshdata, &line, &status) == FUNCT_ERROR)
 			continue ;
 		ft_putchar('\n');
 		if (history_line_to_array(vshdata->history, &line) == FUNCT_ERROR)

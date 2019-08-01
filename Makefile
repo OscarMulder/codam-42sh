@@ -3,10 +3,10 @@
 #                                                         ::::::::             #
 #    Makefile                                           :+:    :+:             #
 #                                                      +:+                     #
-#    By: jbrinksm <jbrinksm@student.codam.nl>         +#+                      #
+#    By: omulder <omulder@student.codam.nl>           +#+                      #
 #                                                    +#+                       #
 #    Created: 2019/04/10 20:30:07 by jbrinksm       #+#    #+#                 #
-#    Updated: 2019/07/31 13:10:09 by mavan-he      ########   odam.nl          #
+#    Updated: 2019/08/01 11:00:46 by mavan-he      ########   odam.nl          #
 #                                                                              #
 # **************************************************************************** #
 
@@ -26,6 +26,7 @@ VPATH = ./test ./libft ./srcs ./srcs/builtins ./srcs/input_handling \
 ./srcs/exec ./srcs/redir ./srcs/error_handling ./srcs/exec ./includes
 SRCS = shell_start shell_prompt shell_quote_checker shell_dless_input \
 shell_init_files shell_init_vshdata shell_getcurrentdir \
+shell_handle_escaped_newlines \
 input_read input_parse_char input_parse_escape input_parse_home \
 input_parse_end input_parse_prev input_parse_next input_parse_backspace \
 input_parse_delete input_parse_ctrl_c input_parse_ctrl_d input_parse_ctrl_k \
@@ -46,7 +47,7 @@ parser_start parser_debug parser_utils parser_command parser_error \
 parser_astdel \
 alias_expansion alias_replace alias_read_file \
 history_to_file history_get_file_content history_line_to_array history_print \
-history_change_line \
+history_change_line history_index_change \
 exec_builtin exec_cmd exec_external exec_start exec_find_binary \
 exec_quote_remove exec_handle_variables exec_handle_dollar \
 exec_handle_bracketed_var \
