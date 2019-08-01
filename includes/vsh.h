@@ -6,7 +6,7 @@
 /*   By: omulder <omulder@student.codam.nl>           +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2019/04/10 20:29:42 by jbrinksm       #+#    #+#                */
-/*   Updated: 2019/07/31 16:59:02 by omulder       ########   odam.nl         */
+/*   Updated: 2019/08/01 07:54:31 by omulder       ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -390,6 +390,8 @@ typedef struct	s_inputdata
 	char		c;
 	int			input_state;
 	int			hist_index;
+	int			hist_start;
+	int			hist_first;
 	unsigned	index;
 	int			len_max;
 	t_history	**history;
@@ -416,7 +418,7 @@ int				input_parse_ctrl_k(t_inputdata *data, char **line);
 **----------------------------------shell---------------------------------------
 */
 
-void			shell_display_prompt(void);
+void			shell_display_prompt(t_envlst *envlst);
 int				shell_dless_read_till_stop(char **heredoc, char *stop,
 					t_vshdata *vshdata);
 int				shell_dless_set_tk_val(t_tokenlst *probe, char **heredoc,
@@ -592,6 +594,8 @@ int				history_get_file_content(t_vshdata *vshdata);
 int				history_line_to_array(t_history **history, char **line);
 void	        history_print(t_history **history);
 int				history_change_line(t_inputdata *data, char **line, char arrow);
+int				history_index_change_down(t_inputdata *data);
+int				history_index_change_up(t_inputdata *data);
 
 /*
 **--------------------------------error_handling--------------------------------
