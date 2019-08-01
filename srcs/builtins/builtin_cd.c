@@ -6,7 +6,7 @@
 /*   By: omulder <omulder@student.codam.nl>           +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2019/07/30 12:41:21 by omulder        #+#    #+#                */
-/*   Updated: 2019/08/01 15:04:38 by jbrinksm      ########   odam.nl         */
+/*   Updated: 2019/08/01 15:06:45 by jbrinksm      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -61,11 +61,11 @@ int		cd_gobackone(char **newpath, char *argpath)
 {
 	int i;
 
+<<<<<<< HEAD
 	i = ft_strlen(*newpath);
 	if (i > 0)
 		i--;
 	while ((*newpath)[i] != '/' && i > 0)
-	{
 		(*newpath)[i] = '\0';
 		i--;
 	}
@@ -145,11 +145,11 @@ static int		cd_post_process_var(char *currpath, char *newpath,
 t_envlst *envlst, char cd_flag)
 {
 	if (newpath == NULL)
-		return (cd_alloc_error());
-	if (env_add_extern_value(envlst, "OLDPWD", currpath) == FUNCT_ERROR)
-		return (cd_alloc_error());
-
-	if (cd_flag == BUILTIN_CD_UP)
+=======
+	correct_path = cd_get_correct_path(old_path, path);
+	ret = lstat(correct_path, &ptr);
+	if (ret == 0 && S_ISREG(ptr.st_mode) && cd_flag == BUILTIN_CD_LU)
+		correct_path = getcwd(NULL, 0);
 	{
 		ft_strdel(&newpath);
 		newpath = getcwd(NULL, 0);
@@ -267,8 +267,18 @@ int				builtin_cd(char **args, t_envlst *envlst)
 	}
 	if (ft_strequ(args[1 + flags], "-") == 1)
 	{
+<<<<<<< HEAD
 		newpath = env_getvalue("OLDPWD", envlst);
 		return (cd_parse_dash(newpath, envlst, cd_flag, "OLDPWD"));
+=======
+		path = env_getvalue("OLDPWD", envlst);
+		return (cd_parse_dash(path, envlst, cd_flag, "OLDPWD"));
+	}
+	if (args[1 + flags][0] == '.' && args[1 + flags][1] == '\0')
+	{
+		path = env_getvalue("PWD", envlst);
+		return (cd_change_dir(path, envlst, cd_flag, 0));
+>>>>>>> 14663e3a0a883bf975d925a88527917b1804def7
 	}
 	return (cd_change_dir(args[1 + flags], envlst, cd_flag, false));
 }
