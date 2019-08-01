@@ -52,6 +52,7 @@ int		shell_start(t_vshdata *vshdata)
 	pipes = redir_init_pipestruct();
 	while (status != CTRLD)
 	{
+		ft_strdel(&line);
 		parser_astdel(&ast);
 		lexer_tokenlstdel(&token_lst);
 		shell_display_prompt(vshdata->envlst);
