@@ -6,7 +6,7 @@
 /*   By: omulder <omulder@student.codam.nl>           +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2019/04/18 16:37:32 by omulder        #+#    #+#                */
-/*   Updated: 2019/08/01 15:16:34 by mavan-he      ########   odam.nl         */
+/*   Updated: 2019/08/01 16:14:31 by mavan-he      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -956,7 +956,6 @@ Test(alias, basic_test)
 	char		*line;
 	t_vshdata	vshdata;
 	t_tokenlst	*token_lst;
-	t_aliaslst	*tmp;
 	t_ast		*ast;
 	t_pipes		pipes;
 
@@ -965,6 +964,7 @@ Test(alias, basic_test)
 	line = ft_strdup("alias echo='echo hoi ; echo dit ' ; alias hoi=ditte ; alias dit=dat\n");
 	vshdata.aliaslst = NULL;
 	vshdata.envlst = env_getlst();
+	redir_save_stdfds(&vshdata);
 	cr_assert(vshdata.envlst != NULL);
 	token_lst = NULL;
 	ast = NULL;
@@ -975,14 +975,7 @@ Test(alias, basic_test)
 	cr_assert(ast != NULL);
 	print_tree(ast);
 	cr_expect(exec_start(ast, &vshdata, pipes) == FUNCT_SUCCESS);
-	tmp = vshdata.aliaslst;
-	while (tmp)
-	{
-		ft_putendl(tmp->var);
-		tmp = tmp->next;
-	}
 	cr_expect_str_eq(vshdata.aliaslst->var, "dit=dat");
-
 	line = ft_strdup("echo\n");
 	cr_assert(line != NULL);
 	cr_expect(lexer(&line, &token_lst) == FUNCT_SUCCESS);
