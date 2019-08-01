@@ -6,7 +6,7 @@
 /*   By: omulder <omulder@student.codam.nl>           +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2019/05/31 10:47:19 by tde-jong       #+#    #+#                */
-/*   Updated: 2019/07/31 16:13:33 by omulder       ########   odam.nl         */
+/*   Updated: 2019/08/01 11:39:42 by tde-jong      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -55,6 +55,7 @@ static bool	exec_bin(char *binary, char **args, char **vshenviron)
 	signal(SIGINT, SIG_DFL);
 	term_flags_destroy();
 	free(vshenviron);
+	ft_strdel(&binary);
 	return (true);
 }
 
