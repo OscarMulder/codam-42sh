@@ -6,21 +6,29 @@
 /*   By: omulder <omulder@student.codam.nl>           +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2019/05/16 13:44:53 by rkuijper       #+#    #+#                */
-/*   Updated: 2019/07/31 16:12:01 by omulder       ########   odam.nl         */
+/*   Updated: 2019/08/01 16:56:00 by rkuijper      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "vsh.h"
 
-int	input_parse_delete(t_inputdata *data, char **line)
+/* TODO
+	Fix a newline deletion to visually remove the last line.
+	Also fix deletion before a newline to fill newly found spaces with.. Spaces.
+*/
+int	input_parse_delete(t_inputdata *data, t_vshdata *vshdata, char **line)
 {
+	int i;
+	
 	if (data->input_state == INPUT_THREE && data->c == '~')
 	{
 		if (data->index < ft_strlen(*line))
 		{
 			input_clear_char_at(line, data->index);
 			ft_printf("%s ", *line + data->index);
-			ft_printf("\e[%dD", ft_strlen(*line + data->index) + 1);
+			i = ft_strlen(*line + data->index) + 1;
+			data->index += i;
+			input_move_to_index(&data->index, data->index - i, *line, vshdata);
 		}
 		else
 			ft_putchar('\a');

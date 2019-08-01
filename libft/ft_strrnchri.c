@@ -1,24 +1,28 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        ::::::::            */
-/*   input_parse_end.c                                  :+:    :+:            */
+/*   ft_strrnchri.c                                     :+:    :+:            */
 /*                                                     +:+                    */
 /*   By: rkuijper <rkuijper@student.codam.nl>         +#+                     */
 /*                                                   +#+                      */
-/*   Created: 2019/05/16 13:39:04 by rkuijper       #+#    #+#                */
-/*   Updated: 2019/08/01 16:53:38 by rkuijper      ########   odam.nl         */
+/*   Created: 2019/08/01 13:52:11 by rkuijper       #+#    #+#                */
+/*   Updated: 2019/08/01 15:11:57 by rkuijper      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "vsh.h"
+#include "libft.h"
 
-int	input_parse_end(t_inputdata *data, char **line)
+int         ft_strrnchri(char *str, char c, int from, int to)
 {
-	if ((data->input_state == INPUT_BRACE && data->c == 'F') || data->c == '\5')
-	{
-		input_move_to_index(&data->index, ft_strlen(*line), *line, NULL);
-		data->input_state = INPUT_NONE;
-		return (FUNCT_SUCCESS);
-	}
-	return (FUNCT_FAILURE);
+    int i;
+
+    i = from;
+    while (i > to)
+    {
+        if (str[i] == c)
+            return (i);
+        i--;
+    }
+    return (0);
 }
+

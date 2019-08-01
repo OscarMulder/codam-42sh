@@ -6,7 +6,7 @@
 /*   By: omulder <omulder@student.codam.nl>           +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2019/05/16 13:37:33 by rkuijper       #+#    #+#                */
-/*   Updated: 2019/07/31 15:32:05 by jbrinksm      ########   odam.nl         */
+/*   Updated: 2019/08/01 16:09:59 by rkuijper      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,13 +18,11 @@
 ** from executing the keypress.
 */
 
-int	input_parse_home(t_inputdata *data)
+int	input_parse_home(t_inputdata *data, t_vshdata *vshdata, char **line)
 {
 	if ((data->input_state == INPUT_BRACE && data->c == 'H') || data->c == '\1')
 	{
-		if (data->index > 0)
-			ft_printf("\e[%dD", data->index);
-		data->index = 0;
+		input_move_to_index(&data->index, 0, *line, vshdata);
 		data->input_state = INPUT_NONE;
 		return (FUNCT_SUCCESS);
 	}

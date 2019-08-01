@@ -6,25 +6,25 @@
 /*   By: omulder <omulder@student.codam.nl>           +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2019/06/02 14:28:54 by mavan-he       #+#    #+#                */
-/*   Updated: 2019/07/31 16:00:12 by omulder       ########   odam.nl         */
+/*   Updated: 2019/08/01 13:50:53 by rkuijper      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "vsh.h"
 #include "libft.h"
 
-static void	history_clear_line(unsigned *index, unsigned linelen)
+static void	history_clear_line(t_vshdata *vshdata, unsigned *index, char *line)
 {
-	if (*index > 0)
-		ft_printf("\e[%dD", *index);
-	*index = 0;
-	while (*index < linelen)
+	unsigned len;
+
+	len = ft_strlen(line);
+	while (*index < len)
 	{
-		ft_putchar(' ');
+		if (line[*index] == '\n')
+			ft_printf("\e[1B\r");
 		(*index)++;
 	}
-	if (*index > 0)
-		ft_printf("\e[%dD", *index);
+	(void)vshdata;
 }
 
 static int	malloc_and_copy(t_inputdata *data, char **line, char *str)
@@ -56,9 +56,10 @@ static int	set_line(t_inputdata *data, char **line)
 	return (FUNCT_SUCCESS);
 }
 
-int			history_change_line(t_inputdata *data, char **line, char arrow)
+int			history_change_line(t_inputdata *data, t_vshdata *vshdata,
+	char **line, char arrow)
 {
-	history_clear_line(&(data->index), ft_strlen(*line));
+	history_clear_line(vshdata, &(data->index), *line);
 	if (arrow == ARROW_UP)
 	{
 		if (history_index_change_up(data))

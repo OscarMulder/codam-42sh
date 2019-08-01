@@ -6,7 +6,7 @@
 /*   By: omulder <omulder@student.codam.nl>           +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2019/04/17 14:03:16 by jbrinksm       #+#    #+#                */
-/*   Updated: 2019/07/31 16:04:14 by omulder       ########   odam.nl         */
+/*   Updated: 2019/08/01 16:44:39 by rkuijper      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -79,13 +79,13 @@ int			input_read(t_vshdata *vshdata, char **line, int *status)
 	{
 		local_status = 0;
 		local_status |= input_parse_escape(data);
-		local_status |= input_parse_home(data);
+		local_status |= input_parse_home(data, vshdata, line);
 		local_status |= input_parse_end(data, line);
-		local_status |= input_parse_prev(data, line);
+		local_status |= input_parse_prev(data, vshdata, line);
 		local_status |= input_parse_next(data, line);
-		local_status |= input_parse_delete(data, line);
-		local_status |= input_parse_ctrl_up(data, line);
-		local_status |= input_parse_ctrl_down(data, line);
+		local_status |= input_parse_delete(data, vshdata, line);
+		local_status |= input_parse_ctrl_up(data, vshdata, line);
+		local_status |= input_parse_ctrl_down(data, vshdata, line);
 		if (local_status == 0)
 			data->input_state = 0;
 		local_status |= input_parse_backspace(data, line);
