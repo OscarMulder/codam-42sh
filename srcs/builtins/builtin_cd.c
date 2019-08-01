@@ -6,7 +6,7 @@
 /*   By: omulder <omulder@student.codam.nl>           +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2019/07/30 12:41:21 by omulder        #+#    #+#                */
-/*   Updated: 2019/08/01 17:43:59 by jbrinksm      ########   odam.nl         */
+/*   Updated: 2019/08/01 17:45:02 by jbrinksm      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -127,7 +127,9 @@ char		*cd_make_new_sympath(char *currpath, char *argpath)
 	ft_strcpy(newpath, currpath);
 	while (argpath[i] != '\0')
 	{
+		#ifdef DEBUG
 		ft_printf("CURRENT:\t%s\nTO HANDLE:\t%s\n\n", newpath, &argpath[i]);
+		#endif
 		if (ft_strequ(&argpath[i], ".") || ft_strnequ(&argpath[i], "./", 2))
 			i += cd_stayhere(&newpath, &argpath[i]);
 		else if (ft_strequ(&argpath[i], "..") || ft_strnequ(&argpath[i], "../", 3))
@@ -135,7 +137,9 @@ char		*cd_make_new_sympath(char *currpath, char *argpath)
 		else
 			i += cd_addsymdir(&newpath, &argpath[i]);
 	}
+	#ifdef DEBUG
 	ft_printf("FINAL:\t\t%s\n", newpath);
+	#endif
 	return (newpath);
 }
 
