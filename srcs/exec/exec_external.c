@@ -55,6 +55,7 @@ static bool		exec_bin(char *binary, char **args, char **vshenviron)
 	signal(SIGINT, SIG_DFL);
 	term_flags_destroy();
 	free(vshenviron);
+	ft_strdel(&binary);
 	return (true);
 }
 
@@ -79,6 +80,7 @@ bool			exec_external(char **args, t_vshdata *vshdata)
 	{
 		ft_printf("vsh: failed to allocate enough memory!\n");
 		g_state->exit_code = EXIT_FAILURE;
+		ft_strdel(&binary);
 		return (false);
 	}
 	return (exec_bin(binary, args, vshenviron));
