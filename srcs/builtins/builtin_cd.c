@@ -6,7 +6,7 @@
 /*   By: omulder <omulder@student.codam.nl>           +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2019/07/30 12:41:21 by omulder        #+#    #+#                */
-/*   Updated: 2019/08/01 10:51:31 by omulder       ########   odam.nl         */
+/*   Updated: 2019/08/01 10:59:04 by omulder       ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -41,21 +41,6 @@
 **  - When cwd doesn't return correctly.
 */
 
-char		*ms_make_path(char *dir, char *file)
-{
-	char *temp;
-	char *path;
-
-	if (!file || !dir)
-		return (NULL);
-	if (file[0] == '/')
-		return (ft_strdup(file));
-	temp = ft_strjoin(dir, "/");
-	path = ft_strjoin(temp, file);
-	ft_strdel(&temp);
-	return (path);
-}
-
 static int		cd_post_process_var(char *old_path, char *path,
 t_envlst *envlst, char cd_flag)
 {
@@ -65,7 +50,6 @@ t_envlst *envlst, char cd_flag)
 
 	correct_path = cd_get_correct_path(old_path, path);
 	ret = lstat(correct_path, &ptr);
-	ft_eprintf("ret: %d - correct: %s: - path: %s\n", ret, correct_path, path);
 	if (ret == 0 && S_ISREG(ptr.st_mode) && cd_flag == BUILTIN_CD_LU)
 		correct_path = getcwd(NULL, 0);
 	if (correct_path == NULL)
