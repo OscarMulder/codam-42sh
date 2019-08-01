@@ -6,7 +6,7 @@
 /*   By: omulder <omulder@student.codam.nl>           +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2019/07/30 12:41:21 by omulder        #+#    #+#                */
-/*   Updated: 2019/07/31 17:37:01 by omulder       ########   odam.nl         */
+/*   Updated: 2019/08/01 08:23:48 by omulder       ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -44,21 +44,22 @@ t_envlst *envlst, char cd_flag)
 {
 	char *correct_path;
 
-	correct_path = cd_get_correct_path(old_path, path);
+	// correct_path = cd_get_correct_path(old_path, path);
+	correct_path = getcwd(NULL, 0);
 	if (correct_path == NULL)
 		return (cd_alloc_error());
 	if (env_add_extern_value(envlst, "OLDPWD", old_path) == FUNCT_ERROR)
 		return (cd_alloc_error());
 	if (cd_flag == BUILTIN_CD_PU)
 	{
-		free(correct_path);
+		ft_strdel(&correct_path);
 		correct_path = getcwd(NULL, 0);
 		if (correct_path == NULL)
 			return (cd_alloc_error());
 	}
 	if (env_add_extern_value(envlst, "PWD", correct_path) == FUNCT_ERROR)
 		return (cd_alloc_error());
-	free(correct_path);
+	ft_strdel(&correct_path);
 	return (FUNCT_SUCCESS);
 }
 
