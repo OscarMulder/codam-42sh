@@ -6,7 +6,7 @@
 /*   By: omulder <omulder@student.codam.nl>           +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2019/07/30 12:41:21 by omulder        #+#    #+#                */
-/*   Updated: 2019/08/01 17:00:48 by jbrinksm      ########   odam.nl         */
+/*   Updated: 2019/08/01 17:43:59 by jbrinksm      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -50,7 +50,7 @@ int		cd_stayhere(char **newpath, char *argpath)
 		i--;
 	/* If we're at the end of argpath and thus we don't need a '/' at the end */
 	if ((*newpath)[i] == '/' && i != 0 && (argpath[1] == '\0'
-		|| (argpath[2] == '/' && argpath[2] == '\0')))
+		|| (argpath[1] == '/' && argpath[2] == '\0')))
 		(*newpath)[i] = '\0';
 	if (argpath[1] == '/')
 		return (2);
@@ -62,7 +62,6 @@ int		cd_gobackone(char **newpath, char *argpath)
 	int i;
 
 	i = ft_strlen(*newpath);
-	ft_printf("ARGPATH: >%s<\n", argpath);
 	if (i > 0)
 		i--;
 	if ((*newpath)[i] == '/' && i > 0)
@@ -109,7 +108,7 @@ int		cd_addsymdir(char **newpath, char *argpath)
 		arg_i++;
 	}
 	(*newpath)[i] = '\0';
-	return (arg_i + 1);
+	return (arg_i);
 }
 
 char		*cd_make_new_sympath(char *currpath, char *argpath)
@@ -119,7 +118,6 @@ char		*cd_make_new_sympath(char *currpath, char *argpath)
 
 	if (currpath == NULL || argpath == NULL)
 		return (NULL);
-	ft_printf(">:%s\n>:%s\n", currpath, argpath);
 	i = 0;
 	newpath = ft_strnew(ft_strlen(currpath) + ft_strlen(argpath));
 	if (newpath == NULL)
@@ -129,15 +127,15 @@ char		*cd_make_new_sympath(char *currpath, char *argpath)
 	ft_strcpy(newpath, currpath);
 	while (argpath[i] != '\0')
 	{
+		ft_printf("CURRENT:\t%s\nTO HANDLE:\t%s\n\n", newpath, &argpath[i]);
 		if (ft_strequ(&argpath[i], ".") || ft_strnequ(&argpath[i], "./", 2))
 			i += cd_stayhere(&newpath, &argpath[i]);
 		else if (ft_strequ(&argpath[i], "..") || ft_strnequ(&argpath[i], "../", 3))
 			i += cd_gobackone(&newpath, &argpath[i]);
 		else
 			i += cd_addsymdir(&newpath, &argpath[i]);
-		ft_printf("i IS>%i\n", i);
 	}
-	ft_printf(">>>%s\n", newpath);
+	ft_printf("FINAL:\t\t%s\n", newpath);
 	return (newpath);
 }
 
@@ -156,7 +154,6 @@ t_envlst *envlst, char cd_flag)
 		if (newpath == NULL)
 			return (cd_alloc_error());
 	}
-	ft_printf(">>>>>>>>>>>>>>>>>>>>\nPWD: >%s<\n", newpath);
 	if (env_add_extern_value(envlst, "PWD", newpath) == FUNCT_ERROR)
 		return (cd_alloc_error());
 	return (FUNCT_SUCCESS);
@@ -164,18 +161,11 @@ t_envlst *envlst, char cd_flag)
 
 static char		*cd_return_symlink_path(char *currpath, char *argpath, char cd_flag)
 {
-	struct stat	ptr;
-	struct stat	ptr2;
-	int			ret;
+	char		*newpath;
 
-	ret = lstat(cd_make_new_sympath(currpath, argpath), &ptr);
-	ft_printf("path: %s - ret: %d - errno: %s\n", argpath, ret, strerror(errno));
-	lstat(currpath, &ptr2);
-	if (cd_flag == BUILTIN_CD_UL && (S_ISLNK(ptr.st_mode) || S_ISLNK(ptr2.st_mode)))
-	{
-		ft_putendl("CORRECT SYMLINK!!!!!!");
-		return (cd_make_new_sympath(currpath, argpath));
-	}
+	newpath = cd_make_new_sympath(currpath, argpath);
+	if (cd_flag == BUILTIN_CD_UL)
+		return (newpath);
 	return (NULL);
 }
 
@@ -197,7 +187,10 @@ int print)
 
 	newpath = cd_return_symlink_path(currpath, argpath, cd_flag);
 	if (newpath == NULL)
-		chdir(argpath);
+	{
+		if (chdir(argpath) != 0)
+			return (cd_change_dir_error(argpath));
+	}
 	else
 	{
 		if (chdir(newpath) != 0)
