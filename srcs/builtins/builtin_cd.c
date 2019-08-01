@@ -6,7 +6,7 @@
 /*   By: omulder <omulder@student.codam.nl>           +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2019/07/30 12:41:21 by omulder        #+#    #+#                */
-/*   Updated: 2019/08/01 10:32:12 by omulder       ########   odam.nl         */
+/*   Updated: 2019/08/01 10:51:31 by omulder       ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -63,12 +63,10 @@ t_envlst *envlst, char cd_flag)
 	struct stat	ptr;
 	int			ret;
 
-
-	ret = lstat(ms_make_path(old_path, path), &ptr);
-	ft_printf("path: %s - ret: %d - errno: %s\n", path, ret, strerror(errno));
-	if (S_ISLNK(ptr.st_mode) && cd_flag == BUILTIN_CD_LU)
-		correct_path = ms_make_path(old_path, path);
-	else
+	correct_path = cd_get_correct_path(old_path, path);
+	ret = lstat(correct_path, &ptr);
+	ft_eprintf("ret: %d - correct: %s: - path: %s\n", ret, correct_path, path);
+	if (ret == 0 && S_ISREG(ptr.st_mode) && cd_flag == BUILTIN_CD_LU)
 		correct_path = getcwd(NULL, 0);
 	if (correct_path == NULL)
 		return (cd_alloc_error());
@@ -174,8 +172,6 @@ int				builtin_cd(char **args, t_envlst *envlst)
 	if (args[1 + flags][0] == '.' && args[1 + flags][1] == '\0')
 	{
 		path = env_getvalue("PWD", envlst);
-		if (path == NULL)
-			return (cd_alloc_error());
 		return (cd_change_dir(path, envlst, cd_flag, 0));
 	}
 	return (cd_change_dir(args[1 + flags], envlst, cd_flag, 0));
