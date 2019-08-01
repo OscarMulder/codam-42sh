@@ -6,7 +6,7 @@
 /*   By: omulder <omulder@student.codam.nl>           +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2019/07/30 12:41:21 by omulder        #+#    #+#                */
-/*   Updated: 2019/08/01 10:32:12 by omulder       ########   odam.nl         */
+/*   Updated: 2019/08/01 15:04:38 by jbrinksm      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -41,72 +41,171 @@
 **  - When cwd doesn't return correctly.
 */
 
-char		*ms_make_path(char *dir, char *file)
+int		cd_stayhere(char **newpath, char *argpath)
 {
-	char *temp;
-	char *path;
+	int i;
 
-	if (!file || !dir)
-		return (NULL);
-	if (file[0] == '/')
-		return (ft_strdup(file));
-	temp = ft_strjoin(dir, "/");
-	path = ft_strjoin(temp, file);
-	ft_strdel(&temp);
-	return (path);
+	i = ft_strlen(*newpath);
+	if (i > 0)
+		i--;
+	/* If we're at the end of argpath and thus we don't need a '/' at the end */
+	if ((*newpath)[i] == '/' && i != 0 && (argpath[1] == '\0'
+		|| (argpath[2] == '/' && argpath[2] == '\0')))
+		(*newpath)[i] = '\0';
+	if (argpath[1] == '/')
+		return (2);
+	return (1);
 }
 
-static int		cd_post_process_var(char *old_path, char *path,
+int		cd_gobackone(char **newpath, char *argpath)
+{
+	int i;
+
+	i = ft_strlen(*newpath);
+	if (i > 0)
+		i--;
+	while ((*newpath)[i] != '/' && i > 0)
+	{
+		(*newpath)[i] = '\0';
+		i--;
+	}
+	/* If we're at the end of argpath and thus we don't need a '/' at the end */
+	if ((*newpath)[i] == '/' && i != 0 && (argpath[2] == '\0'
+		|| (argpath[2] == '/' && argpath[3] == '\0')))
+		(*newpath)[i] = '\0';
+	if (argpath[2] == '/')
+		return (3);
+	return (2);
+}
+
+int		cd_addsymdir(char **newpath, char *argpath)
+{
+	int i;
+	int	arg_i;
+
+	if (*argpath == '/')
+	{
+		ft_putendl("NEED TO ADD A HANDLER FOR THIS SITUATION");
+		exit(1);
+	}
+
+	i = ft_strlen(*newpath);
+	if (i != 0 && (*newpath)[i - 1] != '/')
+	{
+		(*newpath)[i] = '/';
+		i++;
+	}
+	arg_i = 0;
+	while (argpath[arg_i] != '/' && argpath[arg_i] != '\0')
+	{
+		(*newpath)[i] = argpath[arg_i];
+		i++;
+		arg_i++;
+	}
+	if (argpath[arg_i] == '/' && argpath[arg_i + 1] != '\0')
+	{
+		(*newpath)[i] = argpath[arg_i];
+		i++;
+		arg_i++;
+	}
+	(*newpath)[i] = '\0';
+	return (arg_i + 1);
+}
+
+char		*cd_make_new_sympath(char *currpath, char *argpath)
+{
+	char	*newpath;
+	int		i;
+
+	if (currpath == NULL || argpath == NULL)
+		return (NULL);
+	ft_printf(">:%s\n>:%s\n", currpath, argpath);
+	i = 0;
+	newpath = ft_strnew(ft_strlen(currpath) + ft_strlen(argpath));
+	if (newpath == NULL)
+		return (NULL);
+	if (*argpath == '/') //INSERT FUNCTION
+		return (NULL); //dosomethingelse
+	ft_strcpy(newpath, currpath);
+	while (argpath[i] != '\0')
+	{
+		if (ft_strequ(&argpath[i], ".") || ft_strnequ(&argpath[i], "./", 2))
+			i += cd_stayhere(&newpath, &argpath[i]);
+		else if (ft_strequ(&argpath[i], "..") || ft_strnequ(&argpath[i], "../", 3))
+			i += cd_gobackone(&newpath, &argpath[i]);
+		else
+			i += cd_addsymdir(&newpath, &argpath[i]);
+		ft_printf("i IS>%i\n", i);
+	}
+	ft_printf(">>>%s\n", newpath);
+	return (newpath);
+}
+
+static int		cd_post_process_var(char *currpath, char *newpath,
 t_envlst *envlst, char cd_flag)
 {
-	char		*correct_path;
-	struct stat	ptr;
-	int			ret;
-
-
-	ret = lstat(ms_make_path(old_path, path), &ptr);
-	ft_printf("path: %s - ret: %d - errno: %s\n", path, ret, strerror(errno));
-	if (S_ISLNK(ptr.st_mode) && cd_flag == BUILTIN_CD_LU)
-		correct_path = ms_make_path(old_path, path);
-	else
-		correct_path = getcwd(NULL, 0);
-	if (correct_path == NULL)
+	if (newpath == NULL)
 		return (cd_alloc_error());
-	if (env_add_extern_value(envlst, "OLDPWD", old_path) == FUNCT_ERROR)
+	if (env_add_extern_value(envlst, "OLDPWD", currpath) == FUNCT_ERROR)
 		return (cd_alloc_error());
-	if (cd_flag == BUILTIN_CD_PU)
+
+	if (cd_flag == BUILTIN_CD_UP)
 	{
-		ft_strdel(&correct_path);
-		correct_path = getcwd(NULL, 0);
-		if (correct_path == NULL)
+		ft_strdel(&newpath);
+		newpath = getcwd(NULL, 0);
+		if (newpath == NULL)
 			return (cd_alloc_error());
 	}
-	if (env_add_extern_value(envlst, "PWD", correct_path) == FUNCT_ERROR)
+	ft_printf(">>>>>>>>>>>>>>>>>>>>\nPWD: >%s<\n", newpath);
+	if (env_add_extern_value(envlst, "PWD", newpath) == FUNCT_ERROR)
 		return (cd_alloc_error());
-	ft_strdel(&correct_path);
 	return (FUNCT_SUCCESS);
 }
 
-static int		cd_change_dir(char *path, t_envlst *envlst, char cd_flag,
+static int		cd_change_dir(char *argpath, t_envlst *envlst, char cd_flag,
 int print)
 {
 	char		*pwd;
-	char		*old_path;
+	char		*currpath;
 
 	pwd = env_getvalue("PWD", envlst);
-	if (cd_flag == BUILTIN_CD_LU && pwd != NULL)
-		old_path = ft_strdup(pwd);
+	if (cd_flag == BUILTIN_CD_UL && pwd != NULL)
+		currpath = ft_strdup(pwd);
 	else
-		old_path = getcwd(NULL, 0);
-	if (old_path == NULL)
+		currpath = getcwd(NULL, 0);
+
+	
+	struct stat	ptr;
+	struct stat	ptr2;
+	int			ret;
+	char		*correct_path;
+	char		*newpwdstr;
+
+	newpwdstr = NULL;
+	correct_path = argpath;
+
+	#ifdef DEBUG
+	ret = lstat(cd_make_new_sympath(currpath, argpath), &ptr);
+	ft_printf("path: %s - ret: %d - errno: %s\n", argpath, ret, strerror(errno));
+	#endif
+	lstat(currpath, &ptr2);
+	if (cd_flag == BUILTIN_CD_UL && (S_ISLNK(ptr.st_mode) || S_ISLNK(ptr2.st_mode)))
+	{
+		ft_putendl("CORRECT SYMLINK!!!!!!");
+		correct_path = cd_make_new_sympath(currpath, argpath);
+		newpwdstr = correct_path;
+	}
+	if (currpath == NULL)
 		return (cd_change_dir_error(NULL));
-	if (chdir(path) != 0)
-		return (cd_change_dir_error(path));
-	if (print)
-		ft_putendl(path);
-	if (cd_post_process_var(old_path, path, envlst, cd_flag) == FUNCT_ERROR)
+	if (chdir(correct_path) != 0)
+		return (cd_change_dir_error(argpath));
+	if (print == true)
+		ft_putendl(argpath);
+	if (newpwdstr == NULL)
+		newpwdstr = getcwd(NULL, 0);
+	if (cd_post_process_var(currpath, newpwdstr, envlst, cd_flag) == FUNCT_ERROR)
 		return (FUNCT_ERROR);
-	free(old_path);
+	ft_strdel(&currpath);
 	return (FUNCT_SUCCESS);
 }
 
@@ -124,9 +223,9 @@ static int		cd_parse_flags(char **args, char *cd_flag, int *countflags)
 		while (args[j][i] != 0)
 		{
 			if (args[j][i] == 'P')
-				*cd_flag = BUILTIN_CD_PU;
+				*cd_flag = BUILTIN_CD_UP;
 			else if (args[j][i] == 'L')
-				*cd_flag = BUILTIN_CD_LU;
+				*cd_flag = BUILTIN_CD_UL;
 			else
 				return (cd_invalid_option(args[j][i]));
 			i++;
@@ -137,46 +236,39 @@ static int		cd_parse_flags(char **args, char *cd_flag, int *countflags)
 	return (FUNCT_SUCCESS);
 }
 
-static int		cd_parse_dash(char *path, t_envlst *envlst, char cd_flag,
+static int		cd_parse_dash(char *newpath, t_envlst *envlst, char cd_flag,
 char *var)
 {
-	if (path == NULL || path[0] == '\0')
+	if (newpath == NULL || *newpath == '\0')
 	{
-		ft_dprintf(2, "vsh: cd: %s: not set\n", var);
+		ft_eprintf("vsh: cd: %s: not set\n", var);
 		return (FUNCT_ERROR);
 	}
-	if (ft_strequ(var, "HOME"))
-		return (cd_change_dir(path, envlst, cd_flag, 0));
+	if (ft_strequ(var, "HOME") == 1)
+		return (cd_change_dir(newpath, envlst, cd_flag, false));
 	else
-		return (cd_change_dir(path, envlst, cd_flag, 1));
+		return (cd_change_dir(newpath, envlst, cd_flag, true));
 }
 
 int				builtin_cd(char **args, t_envlst *envlst)
 {
 	char	cd_flag;
-	char	*path;
+	char	*newpath;
 	int		flags;
 
-	cd_flag = BUILTIN_CD_LU;
+	cd_flag = BUILTIN_CD_UL;
 	flags = 0;
 	if (cd_parse_flags(args, &cd_flag, &flags) == 0)
 		return (FUNCT_ERROR);
-	if (args[1 + flags] == NULL || ft_strequ(args[1 + flags], "--"))
+	if (args[1 + flags] == NULL || ft_strequ(args[1 + flags], "--") == 1)
 	{
-		path = env_getvalue("HOME", envlst);
-		return (cd_parse_dash(path, envlst, cd_flag, "HOME"));
+		newpath = env_getvalue("HOME", envlst);
+		return (cd_parse_dash(newpath, envlst, cd_flag, "HOME"));
 	}
-	if (args[1 + flags][0] == '-' && args[1 + flags][1] == '\0')
+	if (ft_strequ(args[1 + flags], "-") == 1)
 	{
-		path = env_getvalue("OLDPWD", envlst);
-		return (cd_parse_dash(path, envlst, cd_flag, "OLDPWD"));
+		newpath = env_getvalue("OLDPWD", envlst);
+		return (cd_parse_dash(newpath, envlst, cd_flag, "OLDPWD"));
 	}
-	if (args[1 + flags][0] == '.' && args[1 + flags][1] == '\0')
-	{
-		path = env_getvalue("PWD", envlst);
-		if (path == NULL)
-			return (cd_alloc_error());
-		return (cd_change_dir(path, envlst, cd_flag, 0));
-	}
-	return (cd_change_dir(args[1 + flags], envlst, cd_flag, 0));
+	return (cd_change_dir(args[1 + flags], envlst, cd_flag, false));
 }
