@@ -6,7 +6,7 @@
 /*   By: omulder <omulder@student.codam.nl>           +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2019/04/10 20:29:42 by jbrinksm       #+#    #+#                */
-/*   Updated: 2019/08/01 08:59:07 by omulder       ########   odam.nl         */
+/*   Updated: 2019/08/01 09:29:18 by omulder       ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -529,6 +529,7 @@ int				cd_print_usage(void);
 int				cd_change_dir_error(char *path);
 int				cd_alloc_error(void);
 int				cd_invalid_option(char c);
+char			*cd_get_correct_path(char *old_path, char *path);
 
 /*
 **---------------------------------tools----------------------------------------

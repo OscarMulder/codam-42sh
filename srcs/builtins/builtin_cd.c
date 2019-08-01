@@ -6,12 +6,14 @@
 /*   By: omulder <omulder@student.codam.nl>           +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2019/07/30 12:41:21 by omulder        #+#    #+#                */
-/*   Updated: 2019/08/01 08:59:16 by omulder       ########   odam.nl         */
+/*   Updated: 2019/08/01 10:32:12 by omulder       ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "vsh.h"
 #include <sys/stat.h>
+#include <errno.h>
+#include <string.h>
 
 /*
 **  cd: usage: cd [-L|-P] [dir]
@@ -39,12 +41,35 @@
 **  - When cwd doesn't return correctly.
 */
 
-static int		cd_post_process_var(char *old_path, t_envlst *envlst,
-char cd_flag)
+char		*ms_make_path(char *dir, char *file)
 {
-	char *correct_path;
+	char *temp;
+	char *path;
 
-	correct_path = getcwd(NULL, 0);
+	if (!file || !dir)
+		return (NULL);
+	if (file[0] == '/')
+		return (ft_strdup(file));
+	temp = ft_strjoin(dir, "/");
+	path = ft_strjoin(temp, file);
+	ft_strdel(&temp);
+	return (path);
+}
+
+static int		cd_post_process_var(char *old_path, char *path,
+t_envlst *envlst, char cd_flag)
+{
+	char		*correct_path;
+	struct stat	ptr;
+	int			ret;
+
+
+	ret = lstat(ms_make_path(old_path, path), &ptr);
+	ft_printf("path: %s - ret: %d - errno: %s\n", path, ret, strerror(errno));
+	if (S_ISLNK(ptr.st_mode) && cd_flag == BUILTIN_CD_LU)
+		correct_path = ms_make_path(old_path, path);
+	else
+		correct_path = getcwd(NULL, 0);
 	if (correct_path == NULL)
 		return (cd_alloc_error());
 	if (env_add_extern_value(envlst, "OLDPWD", old_path) == FUNCT_ERROR)
@@ -79,7 +104,7 @@ int print)
 		return (cd_change_dir_error(path));
 	if (print)
 		ft_putendl(path);
-	if (cd_post_process_var(old_path, envlst, cd_flag) == FUNCT_ERROR)
+	if (cd_post_process_var(old_path, path, envlst, cd_flag) == FUNCT_ERROR)
 		return (FUNCT_ERROR);
 	free(old_path);
 	return (FUNCT_SUCCESS);
@@ -145,6 +170,13 @@ int				builtin_cd(char **args, t_envlst *envlst)
 	{
 		path = env_getvalue("OLDPWD", envlst);
 		return (cd_parse_dash(path, envlst, cd_flag, "OLDPWD"));
+	}
+	if (args[1 + flags][0] == '.' && args[1 + flags][1] == '\0')
+	{
+		path = env_getvalue("PWD", envlst);
+		if (path == NULL)
+			return (cd_alloc_error());
+		return (cd_change_dir(path, envlst, cd_flag, 0));
 	}
 	return (cd_change_dir(args[1 + flags], envlst, cd_flag, 0));
 }
