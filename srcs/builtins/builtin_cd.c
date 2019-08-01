@@ -6,7 +6,7 @@
 /*   By: omulder <omulder@student.codam.nl>           +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2019/07/30 12:41:21 by omulder        #+#    #+#                */
-/*   Updated: 2019/08/01 08:23:48 by omulder       ########   odam.nl         */
+/*   Updated: 2019/08/01 08:59:16 by omulder       ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -39,12 +39,11 @@
 **  - When cwd doesn't return correctly.
 */
 
-static int		cd_post_process_var(char *old_path, char *path,
-t_envlst *envlst, char cd_flag)
+static int		cd_post_process_var(char *old_path, t_envlst *envlst,
+char cd_flag)
 {
 	char *correct_path;
 
-	// correct_path = cd_get_correct_path(old_path, path);
 	correct_path = getcwd(NULL, 0);
 	if (correct_path == NULL)
 		return (cd_alloc_error());
@@ -80,13 +79,13 @@ int print)
 		return (cd_change_dir_error(path));
 	if (print)
 		ft_putendl(path);
-	if (cd_post_process_var(old_path, path, envlst, cd_flag) == FUNCT_FAILURE)
-		return (FUNCT_FAILURE);
+	if (cd_post_process_var(old_path, envlst, cd_flag) == FUNCT_ERROR)
+		return (FUNCT_ERROR);
 	free(old_path);
 	return (FUNCT_SUCCESS);
 }
 
-static int		cd_parse_flags(char **args, char *cd_flag)
+static int		cd_parse_flags(char **args, char *cd_flag, int *countflags)
 {
 	int i;
 	int j;
@@ -104,21 +103,19 @@ static int		cd_parse_flags(char **args, char *cd_flag)
 			else if (args[j][i] == 'L')
 				*cd_flag = BUILTIN_CD_LU;
 			else
-			{
-				ft_dprintf(2, "vsh: cd: -%c: invalid option\n", args[j][i]);
-				return (cd_print_usage());
-			}
+				return (cd_invalid_option(args[j][i]));
 			i++;
 		}
 		j++;
 	}
+	*countflags = j - 1;
 	return (FUNCT_SUCCESS);
 }
 
 static int		cd_parse_dash(char *path, t_envlst *envlst, char cd_flag,
 char *var)
 {
-	if (path == NULL)
+	if (path == NULL || path[0] == '\0')
 	{
 		ft_dprintf(2, "vsh: cd: %s: not set\n", var);
 		return (FUNCT_ERROR);
@@ -133,19 +130,21 @@ int				builtin_cd(char **args, t_envlst *envlst)
 {
 	char	cd_flag;
 	char	*path;
+	int		flags;
 
 	cd_flag = BUILTIN_CD_LU;
-	if (cd_parse_flags(args, &cd_flag) == 0)
+	flags = 0;
+	if (cd_parse_flags(args, &cd_flag, &flags) == 0)
 		return (FUNCT_ERROR);
-	if (args[1] == NULL || ft_strequ(args[1], "--"))
+	if (args[1 + flags] == NULL || ft_strequ(args[1 + flags], "--"))
 	{
 		path = env_getvalue("HOME", envlst);
 		return (cd_parse_dash(path, envlst, cd_flag, "HOME"));
 	}
-	if (args[1][0] == '-' && args[1][1] == '\0')
+	if (args[1 + flags][0] == '-' && args[1 + flags][1] == '\0')
 	{
 		path = env_getvalue("OLDPWD", envlst);
 		return (cd_parse_dash(path, envlst, cd_flag, "OLDPWD"));
 	}
-	return (cd_change_dir(args[1], envlst, cd_flag, 0));
+	return (cd_change_dir(args[1 + flags], envlst, cd_flag, 0));
 }

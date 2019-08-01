@@ -6,7 +6,7 @@
 /*   By: omulder <omulder@student.codam.nl>           +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2019/07/31 17:54:03 by omulder        #+#    #+#                */
-/*   Updated: 2019/07/31 17:54:22 by omulder       ########   odam.nl         */
+/*   Updated: 2019/08/01 08:58:42 by omulder       ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,13 +15,19 @@
 int				cd_alloc_error(void)
 {
 	ft_eprintf("cd: failed to allocate memory\n");
-	return (FUNCT_FAILURE);
+	return (FUNCT_ERROR);
 }
 
 int				cd_print_usage(void)
 {
 	ft_eprintf("cd: usage: cd [-L|-P] [dir]\n");
 	return (FUNCT_ERROR);
+}
+
+int				cd_invalid_option(char c)
+{
+	ft_eprintf("vsh: cd: -%c: invalid option\n", c);
+	return (cd_print_usage());
 }
 
 int				cd_change_dir_error(char *path)
