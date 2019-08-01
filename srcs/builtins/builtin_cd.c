@@ -6,7 +6,7 @@
 /*   By: omulder <omulder@student.codam.nl>           +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2019/07/30 12:41:21 by omulder        #+#    #+#                */
-/*   Updated: 2019/08/01 15:08:35 by jbrinksm      ########   odam.nl         */
+/*   Updated: 2019/08/01 17:00:48 by jbrinksm      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -62,8 +62,14 @@ int		cd_gobackone(char **newpath, char *argpath)
 	int i;
 
 	i = ft_strlen(*newpath);
+	ft_printf("ARGPATH: >%s<\n", argpath);
 	if (i > 0)
 		i--;
+	if ((*newpath)[i] == '/' && i > 0)
+	{
+		(*newpath)[i] = '\0';
+		i--;
+	}
 	while ((*newpath)[i] != '/' && i > 0)
 	{
 		(*newpath)[i] = '\0';
@@ -73,7 +79,7 @@ int		cd_gobackone(char **newpath, char *argpath)
 	if ((*newpath)[i] == '/' && i != 0 && (argpath[2] == '\0'
 		|| (argpath[2] == '/' && argpath[3] == '\0')))
 		(*newpath)[i] = '\0';
-	if (argpath[2] == '/')
+	if (argpath[0] == '.' && argpath[1] == '.' && argpath[2] == '/')
 		return (3);
 	return (2);
 }
@@ -82,12 +88,6 @@ int		cd_addsymdir(char **newpath, char *argpath)
 {
 	int i;
 	int	arg_i;
-
-	if (*argpath == '/')
-	{
-		ft_putendl("NEED TO ADD A HANDLER FOR THIS SITUATION");
-		exit(1);
-	}
 
 	i = ft_strlen(*newpath);
 	if (i != 0 && (*newpath)[i - 1] != '/')
@@ -162,48 +162,54 @@ t_envlst *envlst, char cd_flag)
 	return (FUNCT_SUCCESS);
 }
 
+static char		*cd_return_symlink_path(char *currpath, char *argpath, char cd_flag)
+{
+	struct stat	ptr;
+	struct stat	ptr2;
+	int			ret;
+
+	ret = lstat(cd_make_new_sympath(currpath, argpath), &ptr);
+	ft_printf("path: %s - ret: %d - errno: %s\n", argpath, ret, strerror(errno));
+	lstat(currpath, &ptr2);
+	if (cd_flag == BUILTIN_CD_UL && (S_ISLNK(ptr.st_mode) || S_ISLNK(ptr2.st_mode)))
+	{
+		ft_putendl("CORRECT SYMLINK!!!!!!");
+		return (cd_make_new_sympath(currpath, argpath));
+	}
+	return (NULL);
+}
+
 static int		cd_change_dir(char *argpath, t_envlst *envlst, char cd_flag,
 int print)
 {
 	char		*pwd;
 	char		*currpath;
+	char		*newpath;
 
+	newpath = NULL;
 	pwd = env_getvalue("PWD", envlst);
 	if (cd_flag == BUILTIN_CD_UL && pwd != NULL)
 		currpath = ft_strdup(pwd);
 	else
 		currpath = getcwd(NULL, 0);
-
-	
-	struct stat	ptr;
-	struct stat	ptr2;
-	int			ret;
-	char		*correct_path;
-	char		*newpwdstr;
-
-	newpwdstr = NULL;
-	correct_path = argpath;
-
-	#ifdef DEBUG
-	ret = lstat(cd_make_new_sympath(currpath, argpath), &ptr);
-	ft_printf("path: %s - ret: %d - errno: %s\n", argpath, ret, strerror(errno));
-	#endif
-	lstat(currpath, &ptr2);
-	if (cd_flag == BUILTIN_CD_UL && (S_ISLNK(ptr.st_mode) || S_ISLNK(ptr2.st_mode)))
-	{
-		ft_putendl("CORRECT SYMLINK!!!!!!");
-		correct_path = cd_make_new_sympath(currpath, argpath);
-		newpwdstr = correct_path;
-	}
 	if (currpath == NULL)
 		return (cd_change_dir_error(NULL));
-	if (chdir(correct_path) != 0)
-		return (cd_change_dir_error(argpath));
+
+	newpath = cd_return_symlink_path(currpath, argpath, cd_flag);
+	if (newpath == NULL)
+		chdir(argpath);
+	else
+	{
+		if (chdir(newpath) != 0)
+			return (cd_change_dir_error(argpath));
+	}
+
 	if (print == true)
 		ft_putendl(argpath);
-	if (newpwdstr == NULL)
-		newpwdstr = getcwd(NULL, 0);
-	if (cd_post_process_var(currpath, newpwdstr, envlst, cd_flag) == FUNCT_ERROR)
+
+	if (newpath == NULL)
+		newpath = getcwd(NULL, 0);
+	if (cd_post_process_var(currpath, newpath, envlst, cd_flag) == FUNCT_ERROR)
 		return (FUNCT_ERROR);
 	ft_strdel(&currpath);
 	return (FUNCT_SUCCESS);

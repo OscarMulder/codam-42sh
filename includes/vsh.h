@@ -6,13 +6,13 @@
 /*   By: omulder <omulder@student.codam.nl>           +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2019/04/10 20:29:42 by jbrinksm       #+#    #+#                */
-/*   Updated: 2019/08/01 11:17:10 by jbrinksm      ########   odam.nl         */
+/*   Updated: 2019/08/01 16:43:19 by jbrinksm      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
 #ifndef VSH_H
 # define VSH_H
-# define DEBUG
+// # define DEBUG
 # include <sys/stat.h>
 # include <fcntl.h>
 
@@ -479,8 +479,10 @@ void			lexer_state_ionum(t_scanner *scanner);
 **----------------------------------alias---------------------------------------
 */
 
-int				alias_expansion(t_vshdata *vhsdata, t_tokenlst **tokenlst, char **expanded_aliases);
-int				alias_replace(t_vshdata *vshdata, t_tokenlst *probe, char *alias, char **expanded_aliases);
+int				alias_expansion(t_vshdata *vhsdata, t_tokenlst **tokenlst,
+					char **expanded_aliases);
+int				alias_replace(t_vshdata *vshdata, t_tokenlst *probe,
+					char *alias, char **expanded_aliases);
 int				alias_error(char **expanded);
 int				alias_read_file(t_vshdata *vshdata);
 
