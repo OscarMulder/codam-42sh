@@ -6,7 +6,7 @@
 /*   By: omulder <omulder@student.codam.nl>           +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2019/04/17 14:03:16 by jbrinksm       #+#    #+#                */
-/*   Updated: 2019/07/31 16:04:14 by omulder       ########   odam.nl         */
+/*   Updated: 2019/08/01 11:15:50 by tde-jong      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -74,7 +74,10 @@ int			input_read(t_vshdata *vshdata, char **line, int *status)
 		return (FUNCT_ERROR);
 	*line = ft_strnew(data->len_max);
 	if (*line == NULL)
+	{
+		free(data);
 		return (FUNCT_ERROR);
+	}
 	while (read(STDIN_FILENO, &data->c, 1) > 0)
 	{
 		local_status = 0;
