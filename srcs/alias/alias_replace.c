@@ -6,7 +6,7 @@
 /*   By: mavan-he <mavan-he@student.codam.nl>         +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2019/07/26 20:29:50 by mavan-he       #+#    #+#                */
-/*   Updated: 2019/08/01 14:25:28 by mavan-he      ########   odam.nl         */
+/*   Updated: 2019/08/01 17:01:20 by mavan-he      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -67,7 +67,6 @@ static void	alias_combine_tokenlsts(t_tokenlst *probe, t_tokenlst *new_tokenlst)
 
 int			alias_error(char **expanded)
 {
-	ft_eprintf("In alias error moet nog een error komen\n");
 	if (expanded != NULL)
 		ft_strarrdel(&expanded);
 	return (FUNCT_ERROR);
