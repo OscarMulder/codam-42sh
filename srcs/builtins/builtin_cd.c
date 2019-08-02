@@ -6,7 +6,7 @@
 /*   By: omulder <omulder@student.codam.nl>           +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2019/07/30 12:41:21 by omulder        #+#    #+#                */
-/*   Updated: 2019/08/02 15:24:20 by tde-jong      ########   odam.nl         */
+/*   Updated: 2019/08/02 15:27:59 by tde-jong      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -73,8 +73,8 @@ static int	cd_parse_dash(char *newpath, t_envlst *envlst, char cd_flag,
 		ft_eprintf("vsh: cd: %s: not set\n", var);
 		return (FUNCT_ERROR);
 	}
-	builtin_cd_change_dir(newpath, envlst, cd_flag,
-		(ft_strequ(var, "HOME") == 1) ? false : true);
+	return (builtin_cd_change_dir(newpath, envlst, cd_flag,
+		(ft_strequ(var, "HOME") == 1) ? false : true));
 }
 
 int			builtin_cd(char **args, t_envlst *envlst)
