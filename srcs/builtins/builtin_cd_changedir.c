@@ -6,7 +6,7 @@
 /*   By: jbrinksm <jbrinksm@student.codam.nl>         +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2019/08/02 15:03:51 by jbrinksm       #+#    #+#                */
-/*   Updated: 2019/08/02 15:14:27 by jbrinksm      ########   odam.nl         */
+/*   Updated: 2019/08/02 15:32:53 by tde-jong      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -59,13 +59,13 @@ int			builtin_cd_change_dir(char *argpath, t_envlst *envlst, char cd_flag,
 
 	newpath = NULL;
 	pwd = env_getvalue("PWD", envlst);
-	if (cd_flag == BUILTIN_CD_UL && pwd != NULL)
+	if (cd_flag & BUILTIN_CD_UL && pwd != NULL)
 		currpath = ft_strdup(pwd);
 	else
 		currpath = getcwd(NULL, 0);
 	if (currpath == NULL)
 		return (cd_change_dir_error(NULL, argpath, NULL, NULL));
-	if (cd_flag == BUILTIN_CD_UL)
+	if (cd_flag & BUILTIN_CD_UL)
 		newpath = cd_return_symlink_path(currpath, argpath, cd_flag);
 	if (newpath == NULL && chdir(argpath) == -1)
 		return (cd_change_dir_error(argpath, argpath, &newpath, &currpath));
