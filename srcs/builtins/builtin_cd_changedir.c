@@ -6,11 +6,22 @@
 /*   By: jbrinksm <jbrinksm@student.codam.nl>         +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2019/08/02 15:03:51 by jbrinksm       #+#    #+#                */
-/*   Updated: 2019/08/02 15:50:30 by tde-jong      ########   odam.nl         */
+/*   Updated: 2019/08/02 17:47:44 by jbrinksm      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "vsh.h"
+
+static int	return_and_free(int ret, char **newpath, char **currpath)
+{
+	ft_strdel(currpath);
+	ft_strdel(newpath);
+	return (ret);
+}
+
+/*
+**	Updates OLDPWD and PWD.
+*/
 
 static int		cd_post_process_var(char *currpath, char *newpath,
 t_envlst *envlst, char cd_flag)
@@ -32,20 +43,16 @@ t_envlst *envlst, char cd_flag)
 	return (FUNCT_SUCCESS);
 }
 
-static char	*cd_return_symlink_path(char *currpath, char *argpath,
-					char cd_flag)
-{
-	if (cd_flag != BUILTIN_CD_UL)
-		return (NULL);
-	return (builtin_cd_create_newpath_wrap(currpath, argpath));
-}
-
-static int	return_and_free(int ret, char **newpath, char **currpath)
-{
-	ft_strdel(currpath);
-	ft_strdel(newpath);
-	return (ret);
-}
+/*
+**	This function is the heart of builtin_cd.
+**	If BUILTIN_CD_UL is set, then newpath will be set to
+**	either `NULL` if the argpath doesn't make sense, or the new path
+**	if argpath was parsed succesfully. If newpath wasn't set successfully
+**	-- meaning either BUILTIN_CD_UL isn't set OR argpath wasn't valid --
+**	chdir will take argpath instead of newpath.
+**
+**	Afterwards, PWD and OLDPWD are set appropriately.
+*/
 
 int			builtin_cd_change_dir(char *argpath, t_envlst *envlst, char cd_flag,
 				int print)
@@ -63,7 +70,7 @@ int			builtin_cd_change_dir(char *argpath, t_envlst *envlst, char cd_flag,
 	if (currpath == NULL)
 		return (cd_change_dir_error(NULL, argpath, NULL, NULL));
 	if (cd_flag == BUILTIN_CD_UL)
-		newpath = cd_return_symlink_path(currpath, argpath, cd_flag);
+		newpath = builtin_cd_create_newpath_wrap(currpath, argpath);
 	if (newpath == NULL && chdir(argpath) == -1)
 		return (cd_change_dir_error(argpath, argpath, &newpath, &currpath));
 	else if (newpath != NULL && chdir(newpath) == -1)

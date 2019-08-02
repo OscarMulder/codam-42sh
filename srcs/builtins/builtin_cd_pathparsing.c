@@ -6,11 +6,18 @@
 /*   By: jbrinksm <jbrinksm@student.codam.nl>         +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2019/08/02 14:51:29 by jbrinksm       #+#    #+#                */
-/*   Updated: 2019/08/02 15:52:59 by tde-jong      ########   odam.nl         */
+/*   Updated: 2019/08/02 17:45:21 by jbrinksm      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "vsh.h"
+
+/*
+**	Wrapper function for builtin_cd_create_newpath.
+**	If `argpath` starts with '/', it means that an absolute path will
+**	be used instead of a relative path and there is no need to copy
+**	currpath into newpath.
+*/
 
 char		*builtin_cd_create_newpath_wrap(char *currpath, char *argpath)
 {
@@ -26,10 +33,8 @@ char		*builtin_cd_create_newpath_wrap(char *currpath, char *argpath)
 	else
 		ft_strcpy(newpath, currpath);
 	builtin_cd_create_newpath(&newpath, argpath);
-
 	#ifdef DEBUG
 	ft_printf("FINAL:\t\t%s\n", newpath);
 	#endif
-
 	return (newpath);
 }
