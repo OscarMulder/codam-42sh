@@ -6,7 +6,7 @@
 /*   By: jbrinksm <jbrinksm@student.codam.nl>         +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2019/08/02 14:51:29 by jbrinksm       #+#    #+#                */
-/*   Updated: 2019/08/02 15:14:21 by jbrinksm      ########   odam.nl         */
+/*   Updated: 2019/08/02 15:52:59 by tde-jong      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,13 +18,13 @@ char		*builtin_cd_create_newpath_wrap(char *currpath, char *argpath)
 
 	if (currpath == NULL || argpath == NULL)
 		return (NULL);
-	newpath = ft_strnew(ft_strlen(currpath) + ft_strlen(argpath) + 2);
+	newpath = ft_strnew(ft_strlen(currpath) + ft_strlen(argpath) + 1);
 	if (newpath == NULL)
 		return (NULL);
-	else
-		ft_strcpy(newpath, currpath);
 	if (*argpath == '/')
 		*newpath = '/';
+	else
+		ft_strcpy(newpath, currpath);
 	builtin_cd_create_newpath(&newpath, argpath);
 
 	#ifdef DEBUG
