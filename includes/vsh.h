@@ -157,6 +157,7 @@
 # define ARROW_UP	    1
 # define ARROW_DOWN	    2
 # define HISTFILENAME	".vsh_history"
+# define HIST_SEPARATE	-1
 
 /*
 **===============================personal headers===============================
