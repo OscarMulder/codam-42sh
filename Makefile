@@ -6,13 +6,13 @@
 #    By: omulder <omulder@student.codam.nl>           +#+                      #
 #                                                    +#+                       #
 #    Created: 2019/04/10 20:30:07 by jbrinksm       #+#    #+#                 #
-#    Updated: 2019/08/01 15:09:00 by jbrinksm      ########   odam.nl          #
+#    Updated: 2019/08/02 12:56:28 by jbrinksm      ########   odam.nl          #
 #                                                                              #
 # **************************************************************************** #
 
 NAME = vsh
 CC = gcc
-FLAGS = -Wall -Werror -Wextra -Wunreachable-code
+FLAGS = -Wall -Werror -Wextra -Wunreachable-code -g
 COVERAGE =
 INCLUDES = -I./libft/ -I./includes
 LIBFT = ./libft/libft.a
