@@ -6,7 +6,7 @@
 /*   By: jbrinksm <jbrinksm@student.codam.nl>         +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2019/08/02 15:03:51 by jbrinksm       #+#    #+#                */
-/*   Updated: 2019/08/02 15:38:08 by tde-jong      ########   odam.nl         */
+/*   Updated: 2019/08/02 15:32:53 by tde-jong      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -38,7 +38,7 @@ static char	*cd_return_symlink_path(char *currpath, char *argpath,
 	char		*newpath;
 
 	newpath = builtin_cd_create_newpath_wrap(currpath, argpath);
-	if (cd_flag & BUILTIN_CD_UL)
+	if (cd_flag == BUILTIN_CD_UL)
 		return (newpath);
 	return (NULL);
 }
