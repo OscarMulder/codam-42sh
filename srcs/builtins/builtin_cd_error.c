@@ -6,7 +6,7 @@
 /*   By: omulder <omulder@student.codam.nl>           +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2019/07/31 17:54:03 by omulder        #+#    #+#                */
-/*   Updated: 2019/08/02 15:09:03 by jbrinksm      ########   odam.nl         */
+/*   Updated: 2019/08/02 15:36:29 by tde-jong      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -33,7 +33,7 @@ int		cd_invalid_option(char c)
 int		cd_change_dir_error(char *realpath, char *argpath, char **newpath,
 			char **currpath)
 {
-	ft_putstr_fd("cd: ", STDERR_FILENO);
+	ft_putstr_fd("vsh: cd: ", STDERR_FILENO);
 	if (argpath == NULL || realpath == NULL)
 		ft_eprintf("could not get current working directory parsing: %s\n",
 			argpath);
