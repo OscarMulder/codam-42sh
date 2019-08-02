@@ -6,7 +6,7 @@
 /*   By: omulder <omulder@student.codam.nl>           +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2019/07/30 12:41:21 by omulder        #+#    #+#                */
-/*   Updated: 2019/08/01 17:45:02 by jbrinksm      ########   odam.nl         */
+/*   Updated: 2019/08/02 12:02:53 by jbrinksm      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -101,10 +101,13 @@ int		cd_addsymdir(char **newpath, char *argpath)
 		i++;
 		arg_i++;
 	}
-	if (argpath[arg_i] == '/' && argpath[arg_i + 1] != '\0')
+	if (argpath[arg_i] == '/')
 	{
-		(*newpath)[i] = argpath[arg_i];
-		i++;
+		if (argpath[arg_i + 1] != '\0')
+		{
+			(*newpath)[i] = argpath[arg_i];
+			i++;
+		}
 		arg_i++;
 	}
 	(*newpath)[i] = '\0';
@@ -119,7 +122,7 @@ char		*cd_make_new_sympath(char *currpath, char *argpath)
 	if (currpath == NULL || argpath == NULL)
 		return (NULL);
 	i = 0;
-	newpath = ft_strnew(ft_strlen(currpath) + ft_strlen(argpath));
+	newpath = ft_strnew(ft_strlen(currpath) + ft_strlen(argpath) + 2);
 	if (newpath == NULL)
 		return (NULL);
 	if (*argpath == '/') //INSERT FUNCTION
@@ -209,6 +212,7 @@ int print)
 	if (cd_post_process_var(currpath, newpath, envlst, cd_flag) == FUNCT_ERROR)
 		return (FUNCT_ERROR);
 	ft_strdel(&currpath);
+	ft_strdel(&newpath);
 	return (FUNCT_SUCCESS);
 }
 
