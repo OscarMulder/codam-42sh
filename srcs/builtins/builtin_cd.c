@@ -6,7 +6,7 @@
 /*   By: omulder <omulder@student.codam.nl>           +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2019/07/30 12:41:21 by omulder        #+#    #+#                */
-/*   Updated: 2019/08/02 12:39:05 by jbrinksm      ########   odam.nl         */
+/*   Updated: 2019/08/02 13:28:20 by jbrinksm      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -131,6 +131,7 @@ static void	cd_removetrailingslash(char **newpath)
 char		*cd_make_new_sympath(char *currpath, char *argpath)
 {
 	char	*newpath;
+	struct stat	ptr;
 	int		i;
 
 	if (currpath == NULL || argpath == NULL)
@@ -159,6 +160,11 @@ char		*cd_make_new_sympath(char *currpath, char *argpath)
 			i += cd_gobackone(&newpath, &argpath[i]);
 		else
 			i += cd_addsymdir(&newpath, &argpath[i]);
+		if (stat(newpath, &ptr) == -1)
+		{
+			ft_strdel(&newpath);
+			return (NULL);
+		}
 	}
 	cd_removetrailingslash(&newpath);
 	#ifdef DEBUG
@@ -218,12 +224,20 @@ static int		cd_change_dir(char *argpath, t_envlst *envlst, char cd_flag,
 	if (newpath == NULL)
 	{
 		if (chdir(argpath) != 0)
+		{
+			ft_strdel(&currpath);
+			ft_strdel(&newpath);
 			return (cd_change_dir_error(argpath));
+		}
 	}
 	else
 	{
 		if (chdir(newpath) != 0)
+		{
+			ft_strdel(&currpath);
+			ft_strdel(&newpath);
 			return (cd_change_dir_error(argpath));
+		}
 	}
 
 	if (print == true)
