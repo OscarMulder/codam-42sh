@@ -6,7 +6,7 @@
 /*   By: jbrinksm <jbrinksm@student.codam.nl>         +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2019/08/02 15:03:51 by jbrinksm       #+#    #+#                */
-/*   Updated: 2019/08/02 15:14:27 by jbrinksm      ########   odam.nl         */
+/*   Updated: 2019/08/02 15:50:30 by tde-jong      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -35,12 +35,9 @@ t_envlst *envlst, char cd_flag)
 static char	*cd_return_symlink_path(char *currpath, char *argpath,
 					char cd_flag)
 {
-	char		*newpath;
-
-	newpath = builtin_cd_create_newpath_wrap(currpath, argpath);
-	if (cd_flag == BUILTIN_CD_UL)
-		return (newpath);
-	return (NULL);
+	if (cd_flag != BUILTIN_CD_UL)
+		return (NULL);
+	return (builtin_cd_create_newpath_wrap(currpath, argpath));
 }
 
 static int	return_and_free(int ret, char **newpath, char **currpath)
