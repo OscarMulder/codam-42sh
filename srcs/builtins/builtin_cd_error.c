@@ -6,7 +6,7 @@
 /*   By: omulder <omulder@student.codam.nl>           +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2019/07/31 17:54:03 by omulder        #+#    #+#                */
-/*   Updated: 2019/08/02 14:34:37 by jbrinksm      ########   odam.nl         */
+/*   Updated: 2019/08/02 15:09:03 by jbrinksm      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -30,11 +30,13 @@ int		cd_invalid_option(char c)
 	return (cd_print_usage());
 }
 
-int		cd_change_dir_error(char *realpath, char *argpath, char **newpath, char **currpath)
+int		cd_change_dir_error(char *realpath, char *argpath, char **newpath,
+			char **currpath)
 {
 	ft_putstr_fd("cd: ", STDERR_FILENO);
 	if (argpath == NULL || realpath == NULL)
-		ft_eprintf("could not get current working directory parsing: %s\n", argpath);
+		ft_eprintf("could not get current working directory parsing: %s\n",
+			argpath);
 	else if (access(realpath, F_OK) == -1)
 		ft_eprintf("no such file or directory: %s\n", argpath);
 	else if (access(realpath, R_OK) == -1)

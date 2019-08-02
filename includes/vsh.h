@@ -6,7 +6,7 @@
 /*   By: omulder <omulder@student.codam.nl>           +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2019/04/10 20:29:42 by jbrinksm       #+#    #+#                */
-/*   Updated: 2019/08/02 14:33:42 by jbrinksm      ########   odam.nl         */
+/*   Updated: 2019/08/02 15:14:46 by jbrinksm      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -528,12 +528,15 @@ void			builtin_alias_delnode(t_aliaslst **node);
 void			builtin_alias_lstdel(t_aliaslst **lst);
 void			builtin_unalias(char **args, t_aliaslst **aliaslst);
 int				builtin_cd(char **args, t_envlst *envlst);
+int				builtin_cd_create_newpath(char **newpath, char *argpath);
+int				builtin_cd_change_dir(char *argpath, t_envlst *envlst,
+					char cd_flag, int print);
+char			*builtin_cd_create_newpath_wrap(char *currpath, char *argpath);
 int				cd_print_usage(void);
 int				cd_change_dir_error(char *realpath, char *argpath,
 					char **newpath, char **currpath);
 int				cd_alloc_error(void);
 int				cd_invalid_option(char c);
-char			*cd_get_correct_path(char *old_path, char *path);
 
 /*
 **---------------------------------tools----------------------------------------
