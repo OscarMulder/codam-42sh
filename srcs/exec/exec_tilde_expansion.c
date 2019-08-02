@@ -6,7 +6,7 @@
 /*   By: mavan-he <mavan-he@student.codam.nl>         +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2019/08/02 13:50:51 by mavan-he       #+#    #+#                */
-/*   Updated: 2019/08/02 18:25:54 by mavan-he      ########   odam.nl         */
+/*   Updated: 2019/08/02 18:31:30 by mavan-he      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -23,7 +23,7 @@ static int	add_home_to_value(t_ast *node, int *i, char *home)
 	int		len_home;
 
 	len_home = ft_strlen(home);
-	new_value = ft_strnew(sizeof(char) * (len_home + ft_strlen(node->value)));
+	new_value = ft_strnew(len_home + ft_strlen(node->value));
 	if (new_value == NULL)
 		return (FUNCT_ERROR);
 	if (node->type == ASSIGN)
