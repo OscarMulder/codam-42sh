@@ -1,23 +1,19 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        ::::::::            */
-/*   exec_handle_variables.c                            :+:    :+:            */
+/*   ft_free_return.c                                   :+:    :+:            */
 /*                                                     +:+                    */
-/*   By: jbrinksm <jbrinksm@student.codam.nl>         +#+                     */
+/*   By: tde-jong <tde-jong@student.codam.nl>         +#+                     */
 /*                                                   +#+                      */
-/*   Created: 2019/07/24 11:35:41 by jbrinksm       #+#    #+#                */
-/*   Updated: 2019/07/24 11:42:34 by jbrinksm      ########   odam.nl         */
+/*   Created: 2019/08/01 14:58:31 by tde-jong       #+#    #+#                */
+/*   Updated: 2019/08/01 14:58:57 by tde-jong      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "vsh.h"
-#include <criterion/criterion.h>
+#include "libft.h"
 
-TestSuite(exec_handle_variables);
-
-Test(exec_handle_variables, basic)
+int	ft_free_return(void *tofree, int ret)
 {
-	t_envlst *envlst;
-
-	envlst = env_getlst();
+	free(tofree);
+	return (ret);
 }
