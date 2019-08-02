@@ -6,7 +6,7 @@
 /*   By: mavan-he <mavan-he@student.codam.nl>         +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2019/08/02 13:50:51 by mavan-he       #+#    #+#                */
-/*   Updated: 2019/08/02 17:43:56 by mavan-he      ########   odam.nl         */
+/*   Updated: 2019/08/02 18:21:28 by mavan-he      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -23,13 +23,12 @@ static int	add_home_to_value(t_ast *node, int *i, char *home)
 	int		len_home;
 
 	len_home = ft_strlen(home);
-	new_value =
-	(char*)ft_memalloc(sizeof(char) * (len_home + ft_strlen(node->value)));
+	new_value = ft_strnew(sizeof(char) * (len_home + ft_strlen(node->value)));
 	if (new_value == NULL)
 		return (FUNCT_ERROR);
 	if (node->type == ASSIGN)
 		ft_strncpy(new_value, node->value,
-		(ft_strchr(node->value, '=') - node->value) + 1);
+		ft_strchr(node->value, '=') - node->value);
 	ft_strcat(new_value, home);
 	ft_strcat(new_value, &node->value[*i + 1]);
 	*i += len_home;
