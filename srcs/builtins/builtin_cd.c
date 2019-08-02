@@ -6,7 +6,7 @@
 /*   By: omulder <omulder@student.codam.nl>           +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2019/07/30 12:41:21 by omulder        #+#    #+#                */
-/*   Updated: 2019/08/02 15:22:00 by tde-jong      ########   odam.nl         */
+/*   Updated: 2019/08/02 15:24:20 by tde-jong      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -38,7 +38,7 @@
 **  - When cwd doesn't return correctly.
 */
 
-static int		cd_parse_flags(char **args, char *cd_flag, int *countflags)
+static int	cd_parse_flags(char **args, char *cd_flag, int *countflags)
 {
 	int i;
 	int j;
@@ -65,8 +65,8 @@ static int		cd_parse_flags(char **args, char *cd_flag, int *countflags)
 	return (FUNCT_SUCCESS);
 }
 
-static int		cd_parse_dash(char *newpath, t_envlst *envlst, char cd_flag,
-char *var)
+static int	cd_parse_dash(char *newpath, t_envlst *envlst, char cd_flag,
+				char *var)
 {
 	if (newpath == NULL || *newpath == '\0')
 	{
@@ -77,7 +77,7 @@ char *var)
 		(ft_strequ(var, "HOME") == 1) ? false : true);
 }
 
-int				builtin_cd(char **args, t_envlst *envlst)
+int			builtin_cd(char **args, t_envlst *envlst)
 {
 	char	cd_flag;
 	char	*newpath;
