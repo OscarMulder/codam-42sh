@@ -6,7 +6,7 @@
 /*   By: omulder <omulder@student.codam.nl>           +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2019/07/30 12:41:21 by omulder        #+#    #+#                */
-/*   Updated: 2019/08/02 12:02:53 by jbrinksm      ########   odam.nl         */
+/*   Updated: 2019/08/02 12:39:05 by jbrinksm      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -114,6 +114,20 @@ int		cd_addsymdir(char **newpath, char *argpath)
 	return (arg_i);
 }
 
+static void	cd_removetrailingslash(char **newpath)
+{
+	int i;
+
+	i = ft_strlen(*newpath);
+	if (i > 0)
+		i--;
+	while (i > 0 && (*newpath)[i] == '/')
+	{
+		(*newpath)[i] = '\0';
+		i--;
+	}
+}
+
 char		*cd_make_new_sympath(char *currpath, char *argpath)
 {
 	char	*newpath;
@@ -125,14 +139,20 @@ char		*cd_make_new_sympath(char *currpath, char *argpath)
 	newpath = ft_strnew(ft_strlen(currpath) + ft_strlen(argpath) + 2);
 	if (newpath == NULL)
 		return (NULL);
-	if (*argpath == '/') //INSERT FUNCTION
-		return (NULL); //dosomethingelse
-	ft_strcpy(newpath, currpath);
+	if (*argpath == '/')
+	{
+		*newpath = '/';
+		i++;
+	}
+	else
+		ft_strcpy(newpath, currpath);
 	while (argpath[i] != '\0')
 	{
 		#ifdef DEBUG
 		ft_printf("CURRENT:\t%s\nTO HANDLE:\t%s\n\n", newpath, &argpath[i]);
 		#endif
+		while (argpath[i] == '/')
+			i++;
 		if (ft_strequ(&argpath[i], ".") || ft_strnequ(&argpath[i], "./", 2))
 			i += cd_stayhere(&newpath, &argpath[i]);
 		else if (ft_strequ(&argpath[i], "..") || ft_strnequ(&argpath[i], "../", 3))
@@ -140,6 +160,7 @@ char		*cd_make_new_sympath(char *currpath, char *argpath)
 		else
 			i += cd_addsymdir(&newpath, &argpath[i]);
 	}
+	cd_removetrailingslash(&newpath);
 	#ifdef DEBUG
 	ft_printf("FINAL:\t\t%s\n", newpath);
 	#endif
@@ -166,7 +187,8 @@ t_envlst *envlst, char cd_flag)
 	return (FUNCT_SUCCESS);
 }
 
-static char		*cd_return_symlink_path(char *currpath, char *argpath, char cd_flag)
+static char		*cd_return_symlink_path(char *currpath, char *argpath,
+					char cd_flag)
 {
 	char		*newpath;
 
@@ -177,7 +199,7 @@ static char		*cd_return_symlink_path(char *currpath, char *argpath, char cd_flag
 }
 
 static int		cd_change_dir(char *argpath, t_envlst *envlst, char cd_flag,
-int print)
+					int print)
 {
 	char		*pwd;
 	char		*currpath;
