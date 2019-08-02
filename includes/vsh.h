@@ -479,11 +479,9 @@ void			lexer_state_ionum(t_scanner *scanner);
 **----------------------------------alias---------------------------------------
 */
 
-int				alias_expansion(t_vshdata *vhsdata, t_tokenlst **tokenlst,
-					char **expanded_aliases);
-int				alias_replace(t_vshdata *vshdata, t_tokenlst *probe,
-					char *alias, char **expanded_aliases);
-int				alias_error(char **expanded);
+int				alias_expansion(t_vshdata *vhsdata, t_tokenlst **tokenlst, char **expanded_aliases);
+int				alias_replace(t_vshdata *vshdata, t_tokenlst *probe, char *alias, char **expanded_aliases);
+int				alias_error(char **line, t_tokenlst **tokenlst, char **expanded);
 int				alias_read_file(t_vshdata *vshdata);
 char			**alias_add_expanded(char **expanded, char *alias, char *alias_equal);
 
