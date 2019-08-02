@@ -6,7 +6,7 @@
 /*   By: jbrinksm <jbrinksm@student.codam.nl>         +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2019/08/02 14:58:14 by jbrinksm       #+#    #+#                */
-/*   Updated: 2019/08/02 15:12:37 by jbrinksm      ########   odam.nl         */
+/*   Updated: 2019/08/02 16:06:04 by tde-jong      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -21,7 +21,7 @@ static int	cd_stayhere(char **newpath, char *argpath)
 		i--;
 	/* If we're at the end of argpath and thus we don't need a '/' at the end */
 	if ((*newpath)[i] == '/' && i != 0 && (argpath[1] == '\0'
-		|| (argpath[1] == '/' && argpath[2] == '\0')))
+		|| (argpath[0] == '.' && argpath[1] == '/' && argpath[2] == '\0')))
 		(*newpath)[i] = '\0';
 	if (argpath[1] == '/')
 		return (2);
