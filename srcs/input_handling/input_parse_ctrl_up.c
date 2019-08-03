@@ -6,7 +6,7 @@
 /*   By: omulder <omulder@student.codam.nl>           +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2019/05/16 15:03:17 by rkuijper       #+#    #+#                */
-/*   Updated: 2019/08/01 13:37:19 by rkuijper      ########   odam.nl         */
+/*   Updated: 2019/08/03 14:42:46 by rkuijper      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -32,16 +32,15 @@ static void	parse_ctrl_line_up(unsigned *index)
 	}
 }
 
-int			input_parse_ctrl_up(t_inputdata *data, t_vshdata *vshdata, char **line)
+int			input_parse_ctrl_up(t_inputdata *data, t_vshdata *vshdata)
 {
-	(void)line;
 	if (((data->input_state == INPUT_BRACE
 	|| data->input_state == INPUT_D_BRACE) && data->c == 'A') ||
 	(data->input_state == INPUT_ESC && data->c == 10))
 	{
 		if (data->input_state == INPUT_BRACE)
 		{
-			if (history_change_line(data, vshdata, line, ARROW_UP) == FUNCT_ERROR)
+			if (history_change_line(data, vshdata, &vshdata->line, ARROW_UP) == FUNCT_ERROR)
 				return (FUNCT_ERROR);
 		}
 		else

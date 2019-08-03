@@ -6,7 +6,7 @@
 /*   By: omulder <omulder@student.codam.nl>           +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2019/04/18 16:37:32 by omulder        #+#    #+#                */
-/*   Updated: 2019/08/02 17:41:32 by mavan-he      ########   odam.nl         */
+/*   Updated: 2019/08/03 13:45:03 by rkuijper      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -199,28 +199,27 @@ TestSuite(shell_quote_checker);
 
 Test(shell_quote_checker, basic)
 {
-	char		*line;
-	int			status;
 	t_vshdata	vshdata;
 
+	vshdata.line = NULL;
 	vshdata.history_file = "/tmp/.vsh_history";
 	history_get_file_content(&vshdata);
-	line = strdup("lala");
-	shell_close_unclosed_quotes(&vshdata, &line, &status);
-	cr_expect_str_eq(line, "lala");
-	ft_strdel(&line);
-	line = strdup("lala''");
-	shell_close_unclosed_quotes(&vshdata, &line, &status);
-	cr_expect_str_eq(line, "lala''");
-	ft_strdel(&line);
-	line = strdup("lala\"\"");
-	shell_close_unclosed_quotes(&vshdata, &line, &status);
-	cr_expect_str_eq(line, "lala\"\"");
-	ft_strdel(&line);
-	line = strdup("lala'\"'");
-	shell_close_unclosed_quotes(&vshdata, &line, &status);
-	cr_expect_str_eq(line, "lala'\"'");
-	ft_strdel(&line);
+	vshdata.line = strdup("lala");
+	shell_close_unclosed_quotes(&vshdata);
+	cr_expect_str_eq(vshdata.line, "lala");
+	ft_strdel(&vshdata.line);
+	vshdata.line = strdup("lala''");
+	shell_close_unclosed_quotes(&vshdata);
+	cr_expect_str_eq(vshdata.line, "lala''");
+	ft_strdel(&vshdata.line);
+	vshdata.line = strdup("lala\"\"");
+	shell_close_unclosed_quotes(&vshdata);
+	cr_expect_str_eq(vshdata.line, "lala\"\"");
+	ft_strdel(&vshdata.line);
+	vshdata.line = strdup("lala'\"'");
+	shell_close_unclosed_quotes(&vshdata);
+	cr_expect_str_eq(vshdata.line, "lala'\"'");
+	ft_strdel(&vshdata.line);
 }
 
 /*
@@ -987,13 +986,13 @@ Test(alias, basic_test)
 
 Test(alias, multi_line_test)
 {
-	char		*line;
 	char		*args[3];
 	t_vshdata	vshdata;
 	t_tokenlst	*token_lst;
 
 	g_state = (t_state*)ft_memalloc(sizeof(t_state));
 	g_state->exit_code = 0;
+	vshdata.line = NULL;
 	vshdata.envlst = env_getlst();
 	cr_assert(vshdata.envlst != NULL);
 	vshdata.aliaslst = NULL;
@@ -1002,10 +1001,10 @@ Test(alias, multi_line_test)
 	args[2] = NULL;
 	builtin_alias(args, &vshdata.aliaslst);
 	cr_assert(g_state->exit_code == EXIT_SUCCESS);
-	line = ft_strdup("echo\n");
-	cr_assert(line != NULL);
+	vshdata.line = ft_strdup("echo\n");
+	cr_assert(vshdata.line != NULL);
 	token_lst = NULL;
-	cr_expect(lexer(&line, &token_lst) == FUNCT_SUCCESS);
+	cr_expect(lexer(&vshdata.line, &token_lst) == FUNCT_SUCCESS);
 	cr_assert(token_lst != NULL);
 	cr_expect(alias_expansion(&vshdata, &token_lst, NULL) == FUNCT_SUCCESS);
 	cr_expect_str_eq(token_lst->next->next->value, "hoi");

@@ -6,21 +6,21 @@
 /*   By: omulder <omulder@student.codam.nl>           +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2019/04/17 14:03:16 by jbrinksm       #+#    #+#                */
-/*   Updated: 2019/08/03 11:35:58 by rkuijper      ########   odam.nl         */
+/*   Updated: 2019/08/03 11:50:35 by rkuijper      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "vsh.h"
 #include <unistd.h>
 
-void		input_clear_char_at(char **line, unsigned index)
+void		input_clear_char_at(t_vshdata *vshdata, unsigned index)
 {
 	unsigned i;
 
 	i = index;
-	while ((*line)[i])
+	while ((vshdata->line)[i])
 	{
-		(*line)[i] = (*line)[i + 1];
+		vshdata->line[i] = vshdata->line[i + 1];
 		i++;
 	}
 }
@@ -64,7 +64,7 @@ t_inputdata	*init_inputdata(t_vshdata *vshdata)
 	return (new);
 }
 
-int			input_read(t_vshdata *vshdata, char **line)
+int			input_read(t_vshdata *vshdata)
 {
 	t_inputdata	*data;
 	int			local_status;
@@ -72,28 +72,28 @@ int			input_read(t_vshdata *vshdata, char **line)
 	data = init_inputdata(vshdata);
 	if (data == NULL)
 		return (FUNCT_ERROR);
-	*line = ft_strnew(data->len_max);
-	if (*line == NULL)
+	vshdata->line = ft_strnew(data->len_max);
+	if (vshdata->line == NULL)
 		return (ft_free_return(data, FUNCT_ERROR));
 	while (read(STDIN_FILENO, &data->c, 1) > 0)
 	{
 		local_status = 0;
 		local_status |= input_parse_escape(data);
-		local_status |= input_parse_home(data, vshdata, line);
-		local_status |= input_parse_end(data, line);
-		local_status |= input_parse_prev(data, vshdata, line);
-		local_status |= input_parse_next(data, line);
-		local_status |= input_parse_delete(data, vshdata, line);
-		local_status |= input_parse_ctrl_up(data, vshdata, line);
-		local_status |= input_parse_ctrl_down(data, vshdata, line);
+		local_status |= input_parse_home(data, vshdata);
+		local_status |= input_parse_end(data, vshdata);
+		local_status |= input_parse_prev(data, vshdata);
+		local_status |= input_parse_next(data, vshdata);
+		local_status |= input_parse_delete(data, vshdata);
+		local_status |= input_parse_ctrl_up(data, vshdata);
+		local_status |= input_parse_ctrl_down(data, vshdata);
 		if (local_status == 0)
 			data->input_state = 0;
-		local_status |= input_parse_backspace(data, line);
+		local_status |= input_parse_backspace(data, vshdata);
 		if (input_parse_ctrl_c(data) == FUNCT_SUCCESS)
 			return (ft_free_return(data, NEW_PROMPT));
-		local_status |= input_parse_ctrl_d(data, vshdata, line);
-		local_status |= input_parse_ctrl_k(data, line);
-		if (local_status == 0 && input_parse_char(data, line) == FUNCT_ERROR)
+		local_status |= input_parse_ctrl_d(data, vshdata);
+		local_status |= input_parse_ctrl_k(data, vshdata);
+		if (local_status == 0 && input_parse_char(data, vshdata) == FUNCT_ERROR)
 			return (ft_free_return(data, FUNCT_ERROR));
 		if (data->c == '\n')
 			break ;

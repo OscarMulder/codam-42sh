@@ -6,7 +6,7 @@
 /*   By: jbrinksm <jbrinksm@student.codam.nl>         +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2019/06/02 13:23:16 by jbrinksm       #+#    #+#                */
-/*   Updated: 2019/08/03 11:41:57 by rkuijper      ########   odam.nl         */
+/*   Updated: 2019/08/03 12:29:53 by rkuijper      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,29 +16,28 @@
 int			shell_dless_read_till_stop(char **heredoc, char *heredoc_delim,
 			t_vshdata *vshdata)
 {
-	char	*temp;
-	int		done;
+	char	*line_tmp;
 
-	temp = NULL;
-	done = false;
-	while (done == false)
+	line_tmp = vshdata->line;
+	vshdata->line = NULL;
+	while (true)
 	{
 		ft_putstr("> ");
-		if (input_read(vshdata, &temp) == FUNCT_ERROR)
+		if (input_read(vshdata) == FUNCT_ERROR)
 			return (FUNCT_ERROR);
-		done = ft_strequ(temp, heredoc_delim);
 		ft_putstr("\n");
-		if (done == true)
-			continue ;
+		if (ft_strequ(vshdata->line, heredoc_delim) == true)
+			break ;
 		if (*heredoc == NULL)
-			*heredoc = ft_strdup(temp);
+			*heredoc = ft_strdup(vshdata->line);
 		else
-			*heredoc = ft_strjoinfree_s1(*heredoc, temp);
-		ft_strdel(&temp);
+			*heredoc = ft_strjoinfree_s1(*heredoc, vshdata->line);
+		ft_strdel(&vshdata->line);
 		if (*heredoc == NULL)
 			return (FUNCT_ERROR);
 	}
-	ft_strdel(&temp);
+	ft_strdel(&vshdata->line);
+	vshdata->line = line_tmp;
 	return (FUNCT_SUCCESS);
 }
 
