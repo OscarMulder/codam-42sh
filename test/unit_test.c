@@ -6,7 +6,7 @@
 /*   By: omulder <omulder@student.codam.nl>           +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2019/04/18 16:37:32 by omulder        #+#    #+#                */
-/*   Updated: 2019/08/03 13:45:03 by rkuijper      ########   odam.nl         */
+/*   Updated: 2019/08/03 18:24:56 by mavan-he      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -962,6 +962,7 @@ Test(alias, basic_test)
 	g_state->exit_code = 0;
 	line = ft_strdup("alias echo='echo hoi ; echo dit ' ; alias hoi=ditte ; alias dit=dat\n");
 	vshdata.aliaslst = NULL;
+	vshdata.line = NULL;
 	vshdata.envlst = env_getlst();
 	redir_save_stdfds(&vshdata);
 	cr_assert(vshdata.envlst != NULL);
