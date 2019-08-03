@@ -6,7 +6,7 @@
 /*   By: jbrinksm <jbrinksm@student.codam.nl>         +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2019/06/02 13:23:16 by jbrinksm       #+#    #+#                */
-/*   Updated: 2019/07/30 15:31:21 by jbrinksm      ########   odam.nl         */
+/*   Updated: 2019/08/03 11:41:57 by rkuijper      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,14 +18,13 @@ int			shell_dless_read_till_stop(char **heredoc, char *heredoc_delim,
 {
 	char	*temp;
 	int		done;
-	int		status;
 
 	temp = NULL;
 	done = false;
 	while (done == false)
 	{
 		ft_putstr("> ");
-		if (input_read(vshdata, &temp, &status) == FUNCT_ERROR)
+		if (input_read(vshdata, &temp) == FUNCT_ERROR)
 			return (FUNCT_ERROR);
 		done = ft_strequ(temp, heredoc_delim);
 		ft_putstr("\n");

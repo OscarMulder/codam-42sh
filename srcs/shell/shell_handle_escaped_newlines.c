@@ -6,7 +6,7 @@
 /*   By: jbrinksm <jbrinksm@student.codam.nl>         +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2019/07/31 14:18:35 by jbrinksm       #+#    #+#                */
-/*   Updated: 2019/07/31 15:26:31 by jbrinksm      ########   odam.nl         */
+/*   Updated: 2019/08/03 11:38:36 by rkuijper      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -29,8 +29,7 @@ static bool	remove_last_escaped_newline(char *line)
 	return (false);
 }
 
-int			shell_handle_escaped_newlines(t_vshdata *vshdata, char **line,
-			int *status)
+int			shell_handle_escaped_newlines(t_vshdata *vshdata, char **line)
 {
 	int		ret;
 	char	*extra_line;
@@ -41,7 +40,7 @@ int			shell_handle_escaped_newlines(t_vshdata *vshdata, char **line,
 	while (ret != false)
 	{
 		ft_putstr("\nlinecont> ");
-		input_read(vshdata, &extra_line, status);
+		input_read(vshdata, &extra_line);
 		*line = ft_strjoinfree_all(*line, extra_line);
 		ret = remove_last_escaped_newline(*line);
 	}
