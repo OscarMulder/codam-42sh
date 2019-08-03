@@ -6,7 +6,7 @@
 /*   By: omulder <omulder@student.codam.nl>           +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2019/04/10 20:29:42 by jbrinksm       #+#    #+#                */
-/*   Updated: 2019/08/03 16:37:25 by mavan-he      ########   odam.nl         */
+/*   Updated: 2019/08/03 17:32:28 by mavan-he      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -41,6 +41,7 @@
 */
 
 # define EXIT_WRONG_USE 2
+# define EXIT_NOT_EXECUTABLE 126
 # define EXIT_NOTFOUND 127
 # define EXIT_FATAL 128
 
@@ -571,6 +572,7 @@ int				exec_handle_bracketed_var(char **value, int *i, t_envlst *envlst);
 int				exec_handle_dollar(char **value, int *i, t_envlst *envlst);
 void			exec_quote_remove(t_ast *node);
 int				exec_tilde_expansion(t_ast *node, int *i);
+int				exec_validate_binary(char *binary);
 
 void			signal_print_newline(int signum);
 

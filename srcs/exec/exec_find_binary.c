@@ -6,7 +6,7 @@
 /*   By: tde-jong <tde-jong@student.codam.nl>         +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2019/06/05 15:16:46 by tde-jong       #+#    #+#                */
-/*   Updated: 2019/08/03 16:38:36 by mavan-he      ########   odam.nl         */
+/*   Updated: 2019/08/03 17:08:36 by mavan-he      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -33,9 +33,10 @@ static int	check_dir(DIR *d, char *filename, char *path, char **binary)
 {
 	struct dirent	*dir;
 
-	dir = readdir(d); // check how this works
+	dir = readdir(d);
 	while (dir != NULL)
 	{
+		// needs a check if it is a file or directory
 		if (ft_strequ(filename, dir->d_name) == true)
 		{
 			*binary = ft_joinstrcstr(path, '/', filename);

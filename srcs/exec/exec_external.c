@@ -6,7 +6,7 @@
 /*   By: omulder <omulder@student.codam.nl>           +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2019/05/31 10:47:19 by tde-jong       #+#    #+#                */
-/*   Updated: 2019/08/03 16:27:18 by mavan-he      ########   odam.nl         */
+/*   Updated: 2019/08/03 17:44:39 by mavan-he      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -34,15 +34,21 @@ void			signal_print_newline(int signum)
 	ft_putchar('\n');
 }
 
-static bool		exec_bin(char *binary, char **args, char **vshenviron)
+static void		exec_bin(char *binary, char **args, char **vshenviron)
 {
 	pid_t	pid;
 	int		status;
 
+	if (exec_validate_binary(binary) == FUNCT_ERROR)
+		return ;
 	term_flags_init();
 	pid = fork();
 	if (pid < 0)
-		return (false);
+	{
+		g_state->exit_code = EXIT_FAILURE;
+		ft_eprintf("vsh: Fork Failed\n");
+		return ;
+	}
 	if (pid > 0)
 		signal(SIGINT, signal_print_newline);
 	else
@@ -56,7 +62,7 @@ static bool		exec_bin(char *binary, char **args, char **vshenviron)
 	term_flags_destroy();
 	free(vshenviron);
 	ft_strdel(&binary);
-	return (true);
+	return ;
 }
 
 void			exec_external(char **args, t_vshdata *vshdata)
