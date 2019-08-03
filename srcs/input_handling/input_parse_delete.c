@@ -6,16 +6,12 @@
 /*   By: omulder <omulder@student.codam.nl>           +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2019/05/16 13:44:53 by rkuijper       #+#    #+#                */
-/*   Updated: 2019/08/03 16:00:29 by rkuijper      ########   odam.nl         */
+/*   Updated: 2019/08/03 16:05:02 by rkuijper      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "vsh.h"
 
-/* TODO
-	Fix a newline deletion to visually remove the last line.
-	Also fix deletion before a newline to fill newly found spaces with.. Spaces.
-*/
 int	input_parse_delete(t_inputdata *data, t_vshdata *vshdata)
 {
 	int i;
