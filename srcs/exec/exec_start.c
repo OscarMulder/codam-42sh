@@ -94,12 +94,12 @@ int				exec_complete_command(t_ast *node, t_vshdata *vshdata,
 	char	**command;
 
 	if (exec_handle_variables(node, vshdata->envlst) == FUNCT_ERROR)
-		return (g_state->exit_code == EXIT_WRONG_USE ?
-		FUNCT_ERROR : error_return(FUNCT_ERROR, E_ALLOC, NULL));
-		exec_quote_remove(node);
+		return (FUNCT_ERROR);
+	exec_quote_remove(node);
+	if (redir_handle_pipe(pipes) == FUNCT_ERROR)
+		return (return_and_reset_fds(FUNCT_ERROR, vshdata)); 
 	if (node->type == WORD)
 	{
-		redir_handle_pipe(pipes);
 		if (node->sibling &&
 		exec_redirs_or_assigns(node->sibling, vshdata, ENV_TEMP) == FUNCT_ERROR)
 			return (return_and_reset_fds(FUNCT_ERROR, vshdata));
@@ -110,7 +110,6 @@ int				exec_complete_command(t_ast *node, t_vshdata *vshdata,
 	}
 	else if (node->type == ASSIGN || tool_is_redirect_tk(node->type) == true)
 	{
-		redir_handle_pipe(pipes);
 		if (exec_redirs_or_assigns(node, vshdata, ENV_LOCAL) == FUNCT_ERROR)
 			return (return_and_reset_fds(FUNCT_ERROR, vshdata));
 	}
