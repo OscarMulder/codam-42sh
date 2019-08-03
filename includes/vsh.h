@@ -6,7 +6,7 @@
 /*   By: omulder <omulder@student.codam.nl>           +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2019/04/10 20:29:42 by jbrinksm       #+#    #+#                */
-/*   Updated: 2019/08/01 16:44:12 by rkuijper      ########   odam.nl         */
+/*   Updated: 2019/08/02 15:45:26 by mavan-he      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -77,6 +77,13 @@
 # define UNALIAS_FLAG_LA	(2 << 0)
 # define ALIASFILENAME		".vsh_alias"
 # define ALIAS_MAX	500
+
+/*
+**-----------------------------------builtin------------------------------------
+*/
+
+# define BUILTIN_CD_UL		(1 << 0)
+# define BUILTIN_CD_UP		(2 << 0)
 
 /*
 **------------------------------------lexer-------------------------------------
@@ -157,6 +164,7 @@
 # define ARROW_UP	    1
 # define ARROW_DOWN	    2
 # define HISTFILENAME	".vsh_history"
+# define HIST_SEPARATE	-1
 
 /*
 **===============================personal headers===============================
@@ -362,6 +370,7 @@ void		env_lstdel(t_envlst **envlst);
 void   		env_remove_tmp(t_envlst *env);
 void		env_sort(t_envlst *head);
 void		env_lstadd_to_sortlst(t_envlst *envlst, t_envlst *new);
+int			env_add_extern_value(t_envlst *envlst, char *name, char *value);
 
 /*
 **----------------------------------terminal------------------------------------
@@ -477,8 +486,9 @@ void			lexer_state_ionum(t_scanner *scanner);
 
 int				alias_expansion(t_vshdata *vhsdata, t_tokenlst **tokenlst, char **expanded_aliases);
 int				alias_replace(t_vshdata *vshdata, t_tokenlst *probe, char *alias, char **expanded_aliases);
-int				alias_error(char **expanded);
+int				alias_error(char **line, t_tokenlst **tokenlst, char ***expanded);
 int				alias_read_file(t_vshdata *vshdata);
+char			**alias_add_expanded(char **expanded, char *alias, char *alias_equal);
 
 
 /*
@@ -511,7 +521,7 @@ void			builtin_export_var_to_type(char *varname, t_envlst *envlst, int type);
 void			builtin_export_print(t_envlst *envlst, int flags);
 void			builtin_export_args(char **args, t_envlst *envlst, int i);
 int				builtin_assign(char *arg, t_envlst *envlst, int env_type);
-int				builtin_assign_addexist(t_envlst *envlst, char *arg, char *var, int env_type);
+int				builtin_assign_addexist(t_envlst *envlst, char *var, int env_type);
 int				builtin_assign_addnew(t_envlst *envlst, char *var, int env_type);
 void			builtin_set(char **args, t_envlst *envlst);
 void			builtin_unset(char **args, t_envlst *envlst);
@@ -520,6 +530,16 @@ int				builtin_alias_set(char *arg, t_aliaslst **aliaslst);
 void			builtin_alias_delnode(t_aliaslst **node);
 void			builtin_alias_lstdel(t_aliaslst **lst);
 void			builtin_unalias(char **args, t_aliaslst **aliaslst);
+int				builtin_cd(char **args, t_envlst *envlst);
+void			builtin_cd_create_newpath(char **newpath, char *argpath);
+int				builtin_cd_change_dir(char *argpath, t_envlst *envlst,
+					char cd_flag, int print);
+char			*builtin_cd_create_newpath_wrap(char *currpath, char *argpath);
+int				cd_print_usage(void);
+int				cd_change_dir_error(char *realpath, char *argpath,
+					char **newpath, char **currpath);
+int				cd_alloc_error(void);
+int				cd_invalid_option(char c);
 
 /*
 **---------------------------------tools----------------------------------------
@@ -530,6 +550,7 @@ bool			tools_is_char_escaped(char *line, int i);
 int				tools_update_quote_status(char *line, int cur_index,
 					char *quote);
 bool			tool_is_redirect_tk(t_tokens type);
+bool			tools_isidentifierchar(char c);
 bool			tools_is_valid_identifier(char *str);
 bool			tools_is_builtin(char *exec_name);
 bool			tools_is_fdnumstr(char *str);
@@ -548,7 +569,11 @@ int				exec_complete_command(t_ast *node, t_vshdata *vshdata,
 bool			exec_builtin(char **args, t_vshdata *vshdata);
 bool			exec_external(char **args, t_vshdata *vshdata);
 char			*exec_find_binary(char *filename, t_vshdata *vshdata);
+int				exec_handle_variables(t_ast *node, t_envlst *envlst);
+int				exec_handle_bracketed_var(char **value, int *i, t_envlst *envlst);
+int				exec_handle_dollar(char **value, int *i, t_envlst *envlst);
 void			exec_quote_remove(t_ast *node);
+int				exec_tilde_expansion(t_ast *node, int *i);
 
 void			signal_print_newline(int signum);
 

@@ -12,7 +12,7 @@
 
 NAME = vsh
 CC = gcc
-FLAGS = -Wall -Werror -Wextra -Wunreachable-code
+FLAGS = -Wall -Werror -Wextra -Wunreachable-code -g
 COVERAGE =
 INCLUDES = -I./libft/ -I./includes
 LIBFT = ./libft/libft.a
@@ -35,23 +35,25 @@ input_move_to_index \
 term_prepare term_is_valid term_init_struct term_get_attributes \
 term_set_attributes term_reset_attributes term_free_struct \
 env_getvalue env_getlst env_lsttoarr env_lstnew env_lstaddback env_lstdel \
-env_remove_tmp env_sort env_lstadd_to_sortlst \
+env_remove_tmp env_sort env_lstadd_to_sortlst env_addvalue \
 tools_is_char_escaped tool_is_redirect_tk tools_is_valid_identifier \
-tools_is_builtin \
-tool_is_special tool_check_for_special tools_is_fdnumstr \
-tool_check_for_whitespace \
+tools_is_builtin tool_is_special tool_check_for_special tools_is_fdnumstr \
+tools_isidentifierchar tool_check_for_whitespace \
 builtin_echo builtin_echo_set_flags builtin_exit builtin_assign \
 builtin_export builtin_export_print builtin_set builtin_unset \
 builtin_alias builtin_alias_set builtin_alias_lstdel builtin_unalias \
+builtin_cd builtin_cd_error builtin_cd_pathparsing \
+builtin_cd_pathparsing_tools builtin_cd_changedir \
 lexer lexer_utils lexer_debug lexer_evaluator lexer_scanner \
 lexer_state_if_else lexer_state_single lexer_state_start lexer_state_strings \
 parser_start parser_debug parser_utils parser_command parser_error \
 parser_astdel \
-alias_expansion alias_replace alias_read_file \
+alias_expansion alias_replace alias_read_file alias_add_expanded \
 history_to_file history_get_file_content history_line_to_array history_print \
 history_change_line history_index_change \
 exec_builtin exec_cmd exec_external exec_start exec_find_binary \
-exec_quote_remove \
+exec_quote_remove exec_handle_variables exec_handle_dollar \
+exec_handle_bracketed_var exec_tilde_expansion \
 redir_pipe redir redir_tools redir_tools2 \
 print_errors
 TESTS = unit_test builtin_assign_test

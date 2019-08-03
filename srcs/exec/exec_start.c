@@ -93,13 +93,15 @@ int				exec_complete_command(t_ast *node, t_vshdata *vshdata,
 {
 	char	**command;
 
-	exec_quote_remove(node);
+	if (exec_handle_variables(node, vshdata->envlst) == FUNCT_ERROR)
+		return (g_state->exit_code == EXIT_WRONG_USE ?
+		FUNCT_ERROR : error_return(FUNCT_ERROR, E_ALLOC, NULL));
+		exec_quote_remove(node);
 	if (node->type == WORD)
 	{
 		redir_handle_pipe(pipes);
 		if (node->sibling &&
-		exec_redirs_or_assigns(node->sibling, vshdata, ENV_TEMP)
-		== FUNCT_ERROR)
+		exec_redirs_or_assigns(node->sibling, vshdata, ENV_TEMP) == FUNCT_ERROR)
 			return (return_and_reset_fds(FUNCT_ERROR, vshdata));
 		command = create_args(node);
 		if (command == NULL)
@@ -109,8 +111,7 @@ int				exec_complete_command(t_ast *node, t_vshdata *vshdata,
 	else if (node->type == ASSIGN || tool_is_redirect_tk(node->type) == true)
 	{
 		redir_handle_pipe(pipes);
-		if (exec_redirs_or_assigns(node, vshdata, ENV_LOCAL)
-		== FUNCT_ERROR)
+		if (exec_redirs_or_assigns(node, vshdata, ENV_LOCAL) == FUNCT_ERROR)
 			return (return_and_reset_fds(FUNCT_ERROR, vshdata));
 	}
 	return (return_and_reset_fds(FUNCT_SUCCESS, vshdata));
@@ -127,11 +128,10 @@ int				exec_start(t_ast *ast, t_vshdata *vshdata, t_pipes pipes)
 		return (FUNCT_ERROR);
 	if (ast->type == PIPE)
 		return (redir_run_pipesequence(ast, vshdata, pipes));
-	if (ast->type != WORD && ast->type != ASSIGN)
-	{
-		if (tool_is_redirect_tk(ast->type) == false)
-			exec_start(ast->child, vshdata, pipes);
-	}
+	if (ast->type != WORD && ast->type != ASSIGN &&
+		tool_is_redirect_tk(ast->type) == false &&
+		exec_start(ast->child, vshdata, pipes) == FUNCT_ERROR)
+		return (FUNCT_ERROR);
 	if (ast->type == AND_IF && g_state->exit_code != EXIT_SUCCESS)
 		return (FUNCT_ERROR);
 	else if (ast->type == OR_IF && g_state->exit_code == EXIT_SUCCESS)
@@ -139,8 +139,7 @@ int				exec_start(t_ast *ast, t_vshdata *vshdata, t_pipes pipes)
 	else if (ast->type == WORD || ast->type == ASSIGN
 	|| tool_is_redirect_tk(ast->type) == true)
 	{
-		if (exec_complete_command(ast, vshdata, pipes)
-		== FUNCT_ERROR)
+		if (exec_complete_command(ast, vshdata, pipes) == FUNCT_ERROR)
 			return (FUNCT_ERROR);
 	}
 	else if (ast->sibling != NULL

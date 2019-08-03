@@ -100,7 +100,8 @@ char				*ft_strjoinfree_all(char *s1, char *s2);
 int					ft_strclen(const char *arg, char c);
 int					ft_isalnum(int c);
 int					ft_isalpha(int c);
-char       			*ft_strnchr(char *str, char c, int from, int to);
-int       			ft_strrnchri(char *str, char c, int from, int to);
+char       	*ft_strnchr(char *str, char c, int from, int to);
+int       	ft_strrnchri(char *str, char c, int from, int to);
+int					ft_free_return(void *tofree, int ret);
 
 #endif

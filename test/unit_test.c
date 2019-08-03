@@ -6,7 +6,7 @@
 /*   By: omulder <omulder@student.codam.nl>           +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2019/04/18 16:37:32 by omulder        #+#    #+#                */
-/*   Updated: 2019/07/31 14:24:20 by jbrinksm      ########   odam.nl         */
+/*   Updated: 2019/08/02 17:41:32 by mavan-he      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -497,7 +497,7 @@ Test(history_check, history_to_file)
 	char		*str1 = ft_strdup("check1\n");
 	char		*str2 = ft_strdup("check2\n");
 	char		*str3 = ft_strdup("check3\n");
-
+	char		temp[23] = { 'c', 'h', 'e', 'c', 'k', '1', -1, 'c', 'h', 'e', 'c', 'k', '2', -1, 'c', 'h', 'e', 'c', 'k', '3', -1, '\0'};
 	i = 0;
 	vshdata.history_file = ft_strdup("/tmp/.vsh_history1");
 	vshdata.history = (t_history **)ft_memalloc(sizeof(t_history *) * HISTORY_MAX);
@@ -516,7 +516,7 @@ Test(history_check, history_to_file)
 	ft_bzero(buf, 22);
 	ret = read(fd, buf, 22);
 	cr_expect(ret == 21);
-	cr_expect(ft_strcmp(buf, "check1\ncheck2\ncheck3\n") == 0);
+	cr_expect(ft_strcmp(buf, temp)== 0);
 	remove(vshdata.history_file);
 }
 
@@ -959,19 +959,21 @@ Test(alias, basic_test)
 	t_ast		*ast;
 	t_pipes		pipes;
 
+	g_state = (t_state*)ft_memalloc(sizeof(t_state));
+	g_state->exit_code = 0;
 	line = ft_strdup("alias echo='echo hoi ; echo dit ' ; alias hoi=ditte ; alias dit=dat\n");
 	vshdata.aliaslst = NULL;
 	vshdata.envlst = env_getlst();
+	redir_save_stdfds(&vshdata);
 	cr_assert(vshdata.envlst != NULL);
-	g_state = (t_state*)ft_memalloc(sizeof(t_state));
-	g_state->exit_code = 0;
 	token_lst = NULL;
+	ast = NULL;
 	pipes = redir_init_pipestruct();
 	cr_expect(lexer(&line, &token_lst) == FUNCT_SUCCESS);
 	cr_assert(token_lst != NULL);
 	cr_expect(parser_start(&token_lst, &ast) == FUNCT_SUCCESS);
 	cr_assert(ast != NULL);
-	exec_start(ast, &vshdata, pipes);
+	cr_expect(exec_start(ast, &vshdata, pipes) == FUNCT_SUCCESS);
 	cr_expect_str_eq(vshdata.aliaslst->var, "dit=dat");
 	line = ft_strdup("echo\n");
 	cr_assert(line != NULL);
@@ -981,6 +983,33 @@ Test(alias, basic_test)
 	cr_assert(token_lst != NULL);
 	cr_expect_str_eq(token_lst->next->next->value, "hoi");
 	cr_expect_str_eq(token_lst->next->next->next->next->value, "echo");
+}
+
+Test(alias, multi_line_test)
+{
+	char		*line;
+	char		*args[3];
+	t_vshdata	vshdata;
+	t_tokenlst	*token_lst;
+
+	g_state = (t_state*)ft_memalloc(sizeof(t_state));
+	g_state->exit_code = 0;
+	vshdata.envlst = env_getlst();
+	cr_assert(vshdata.envlst != NULL);
+	vshdata.aliaslst = NULL;
+	args[0] = "alias";
+	args[1] = ft_strdup("echo=echo hoi\necho doei\n\n");
+	args[2] = NULL;
+	builtin_alias(args, &vshdata.aliaslst);
+	cr_assert(g_state->exit_code == EXIT_SUCCESS);
+	line = ft_strdup("echo\n");
+	cr_assert(line != NULL);
+	token_lst = NULL;
+	cr_expect(lexer(&line, &token_lst) == FUNCT_SUCCESS);
+	cr_assert(token_lst != NULL);
+	cr_expect(alias_expansion(&vshdata, &token_lst, NULL) == FUNCT_SUCCESS);
+	cr_expect_str_eq(token_lst->next->next->value, "hoi");
+	cr_expect(token_lst->next->next->next->type == SEMICOL);
 }
 
 TestSuite(alias_file);
@@ -1007,4 +1036,69 @@ Test(alias_file, basic_file_test)
 	alias_read_file(&vshdata);
 	cr_expect_str_eq(vshdata.aliaslst->var, "test=alias");
 	remove(vshdata.alias_file);
+}
+
+TestSuite(replace_var);
+
+Test(replace_var, basic_test, .init=redirect_all_stdout)
+{
+	char		*line;
+	t_vshdata	vshdata;
+	t_tokenlst	*token_lst;
+	t_ast		*ast;
+	t_pipes		pipes;
+
+	g_state = (t_state*)ft_memalloc(sizeof(t_state));
+	g_state->exit_code = 0;
+	line = ft_strdup("dit=dat ; hier=daar\n");
+	vshdata.aliaslst = NULL;
+	vshdata.envlst = env_getlst();
+	redir_save_stdfds(&vshdata);
+	cr_assert(vshdata.envlst != NULL);
+	token_lst = NULL;
+	ast = NULL;
+	pipes = redir_init_pipestruct();
+	cr_expect(lexer(&line, &token_lst) == FUNCT_SUCCESS);
+	cr_assert(token_lst != NULL);
+	cr_expect(parser_start(&token_lst, &ast) == FUNCT_SUCCESS);
+	cr_assert(ast != NULL);
+	cr_expect(exec_start(ast, &vshdata, pipes) == FUNCT_SUCCESS);
+	cr_expect_str_eq(env_getvalue("dit", vshdata.envlst), "dat");
+	line = ft_strdup("echo $dit \"${hier}\"\n");
+	cr_assert(line != NULL);
+	cr_expect(lexer(&line, &token_lst) == FUNCT_SUCCESS);
+	cr_assert(token_lst != NULL);
+	cr_expect(parser_start(&token_lst, &ast) == FUNCT_SUCCESS);
+	cr_assert(ast != NULL);
+	cr_expect(exec_start(ast, &vshdata, pipes) == FUNCT_SUCCESS);
+	cr_expect_stdout_eq_str("dat daar\n");
+}
+
+TestSuite(tilde_expansion);
+
+Test(tilde_expansion, basic_test)
+{
+	t_vshdata	vshdata;
+	t_ast		ast;
+	char		*home;
+
+	g_state = (t_state*)ft_memalloc(sizeof(t_state));
+	g_state->exit_code = 0;
+	vshdata.aliaslst = NULL;
+	vshdata.envlst = env_getlst();
+	cr_assert(vshdata.envlst != NULL);
+	home = getenv("HOME");
+	cr_assert(home != NULL);
+	ast.child = NULL;
+	ast.sibling = NULL;
+	ast.flags = T_FLAG_HASSPECIAL;
+	ast.type = WORD;
+	ast.value = ft_strdup("~/");
+	cr_expect(exec_handle_variables(&ast, vshdata.envlst) == FUNCT_SUCCESS);
+	cr_expect_str_eq(ast.value, ft_strjoin(home, "/"));
+	ast.flags = T_FLAG_HASSPECIAL;
+	ast.type = ASSIGN;
+	ast.value = ft_strdup("dit=~");
+	cr_expect(exec_handle_variables(&ast, vshdata.envlst) == FUNCT_SUCCESS);
+	cr_expect_str_eq(ast.value, ft_strjoin("dit=", home));
 }

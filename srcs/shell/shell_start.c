@@ -6,7 +6,7 @@
 /*   By: omulder <omulder@student.codam.nl>           +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2019/04/18 16:44:50 by omulder        #+#    #+#                */
-/*   Updated: 2019/08/01 13:30:31 by rkuijper      ########   odam.nl         */
+/*   Updated: 2019/08/01 13:02:18 by mavan-he      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -50,8 +50,10 @@ int		shell_start(t_vshdata *vshdata)
 	token_lst = NULL;
 	ast = NULL;
 	pipes = redir_init_pipestruct();
+	env_add_extern_value(vshdata->envlst, "OLDPWD", "");
 	while (status != CTRLD)
 	{
+		ft_strdel(&line);
 		parser_astdel(&ast);
 		lexer_tokenlstdel(&token_lst);
 		shell_display_prompt(vshdata);
@@ -71,11 +73,11 @@ int		shell_start(t_vshdata *vshdata)
 			continue ;
 		if (alias_expansion(vshdata, &token_lst, NULL) != FUNCT_SUCCESS)
 			continue ;
-		if ((token_lst->next)->type == NEWLINE)
-			continue ;
 		#ifdef DEBUG
  		lexer_tokenlstiter(token_lst, print_node);
 		#endif
+		if ((token_lst->next)->type == NEWLINE)
+			continue ;
 		if (parser_start(&token_lst, &ast) != FUNCT_SUCCESS)
 			continue ;
 		#ifdef DEBUG
