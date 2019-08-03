@@ -6,13 +6,16 @@
 /*   By: omulder <omulder@student.codam.nl>           +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2019/06/02 14:28:54 by mavan-he       #+#    #+#                */
-/*   Updated: 2019/08/01 13:50:53 by rkuijper      ########   odam.nl         */
+/*   Updated: 2019/08/03 16:18:08 by rkuijper      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "vsh.h"
 #include "libft.h"
 
+/*
+** Unfinished, since there is no multiline support yet. Works with single lines.
+*/
 static void	history_clear_line(t_vshdata *vshdata, unsigned *index, char *line)
 {
 	unsigned len;

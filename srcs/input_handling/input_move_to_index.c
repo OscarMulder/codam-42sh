@@ -6,7 +6,7 @@
 /*   By: rkuijper <rkuijper@student.codam.nl>         +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2019/08/01 14:11:23 by rkuijper       #+#    #+#                */
-/*   Updated: 2019/08/03 15:19:16 by rkuijper      ########   odam.nl         */
+/*   Updated: 2019/08/03 16:27:29 by rkuijper      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,7 +15,17 @@
 /*
 **
 **	Moves the cursor backward/up (both visually and in the background).
-**		- Extra checks for newline handling and first line (prompt space).
+**		- If no newline is encountered in one step back,
+**			the cursor is simply moved one space back `\e[D`.
+**		- When moving the cursor backwards and encountering a newline,
+**			the length of the string before the newline is calculated,
+**			up to the next encountered newline or the beginning of the buffer.
+**		- If there is no newline to be found, the length of the prompt is added
+**			to the amt variable, since it's moving to the first line of the
+**			buffer and should account for the space of the shell prompt.
+**		- At last, the cursor is moved one space up `\e[A and 'amt' spaces
+**			to the right `\e[%dC` to have the cursor end up at the end of
+**			the string on the previous line.
 **
 */
 static void	move_cursor_backward(unsigned *index, unsigned new_index,
@@ -41,10 +51,12 @@ static void	move_cursor_backward(unsigned *index, unsigned new_index,
 /*
 **
 **	Moves the cursor forward/down (both visually and in the background).
-**		- No extra checks needed for first line, since we won't encounter
-**		  the prompt going down.
-**		- Backward motion upon encountering a newline is hacky (10000D)
-**		  very hardcoded, rework?
+**		- If no newline is encountered, the cursor is simply moved one space
+**			forward `\e[C`.
+**		- If a newline is encountered, the cursor is moved down `\e[B` and
+**			10000 spaces backwards, to make sure the cursor ends up at the
+**			leftmost edge of the screen, to start from the leftmost side of
+**			the line below.
 **
 */
 
