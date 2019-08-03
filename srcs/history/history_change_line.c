@@ -16,18 +16,21 @@
 /*
 ** Unfinished, since there is no multiline support yet. Works with single lines.
 */
-static void	history_clear_line(t_vshdata *vshdata, unsigned *index, char *line)
+static void	history_clear_line(t_vshdata *vshdata, unsigned *index)
 {
-	unsigned len;
+	int line_len;
 
-	len = ft_strlen(line);
-	while (*index < len)
+	line_len = ft_strlen(vshdata->line);
+	if (*index > 0)
+		ft_printf("\e[%dD", *index);
+	*index = 0;
+	while (*index < line_len)
 	{
-		if (line[*index] == '\n')
-			ft_printf("\e[1B\r");
+		ft_putchar(' ');
 		(*index)++;
 	}
-	(void)vshdata;
+	if (*index > 0)
+		ft_printf("\e[%D", *index);
 }
 
 static int	malloc_and_copy(t_inputdata *data, char **line, char *str)
@@ -62,7 +65,7 @@ static int	set_line(t_inputdata *data, char **line)
 int			history_change_line(t_inputdata *data, t_vshdata *vshdata,
 	char **line, char arrow)
 {
-	history_clear_line(vshdata, &(data->index), *line);
+	history_clear_line(vshdata, &(data->index));
 	if (arrow == ARROW_UP)
 	{
 		if (history_index_change_up(data))
