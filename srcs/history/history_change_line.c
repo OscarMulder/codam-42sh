@@ -6,7 +6,7 @@
 /*   By: omulder <omulder@student.codam.nl>           +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2019/06/02 14:28:54 by mavan-he       #+#    #+#                */
-/*   Updated: 2019/08/03 16:18:08 by rkuijper      ########   odam.nl         */
+/*   Updated: 2019/08/04 12:06:32 by mavan-he      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,7 +18,7 @@
 */
 static void	history_clear_line(t_vshdata *vshdata, unsigned *index)
 {
-	int line_len;
+	unsigned line_len;
 
 	line_len = ft_strlen(vshdata->line);
 	if (*index > 0)
