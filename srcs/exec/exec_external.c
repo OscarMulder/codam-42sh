@@ -6,7 +6,7 @@
 /*   By: omulder <omulder@student.codam.nl>           +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2019/05/31 10:47:19 by tde-jong       #+#    #+#                */
-/*   Updated: 2019/08/03 17:44:39 by mavan-he      ########   odam.nl         */
+/*   Updated: 2019/08/04 13:37:27 by mavan-he      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -60,9 +60,6 @@ static void		exec_bin(char *binary, char **args, char **vshenviron)
 		g_state->exit_code = EXIT_FATAL + WTERMSIG(status);
 	signal(SIGINT, SIG_DFL);
 	term_flags_destroy();
-	free(vshenviron);
-	ft_strdel(&binary);
-	return ;
 }
 
 void			exec_external(char **args, t_vshdata *vshdata)
@@ -84,12 +81,11 @@ void			exec_external(char **args, t_vshdata *vshdata)
 		ft_strnequ(args[0], "../", 3) == 0)
 	{
 		ft_strdel(&binary);
-		if (exec_find_binary(args[0], vshdata, &binary) == FUNCT_ERROR)
-		{
-			ft_strdel(&binary);
-			free(vshenviron);
-			return ;
-		}
+		if (exec_find_binary(args[0], vshdata, &binary) == FUNCT_SUCCESS)
+			exec_bin(binary, args, vshenviron);
 	}
-	exec_bin(binary, args, vshenviron);
+	else
+		exec_bin(binary, args, vshenviron);
+	free(vshenviron);
+	ft_strdel(&binary);
 }

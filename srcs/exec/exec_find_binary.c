@@ -6,7 +6,7 @@
 /*   By: tde-jong <tde-jong@student.codam.nl>         +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2019/06/05 15:16:46 by tde-jong       #+#    #+#                */
-/*   Updated: 2019/08/04 12:44:46 by mavan-he      ########   odam.nl         */
+/*   Updated: 2019/08/04 13:45:07 by mavan-he      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -57,14 +57,11 @@ static int	check_dir(DIR *d, char *filename, char *path, char **binary)
 	return (FUNCT_FAILURE);
 }
 
-int			exec_find_binary(char *filename, t_vshdata *vshdata, char **binary)
+static int	check_paths(char **paths, char *filename, char **binary)
 {
 	DIR				*dir;
-	char			**paths;
 	size_t			i;
 
-	if (get_paths(filename, vshdata->envlst, &paths) == FUNCT_ERROR)
-		return (FUNCT_ERROR);
 	i = 0;
 	while (paths[i] != NULL)
 	{
@@ -79,10 +76,21 @@ int			exec_find_binary(char *filename, t_vshdata *vshdata, char **binary)
 			}
 			closedir(dir);
 			if (*binary != NULL)
-				break ;
+				return (FUNCT_SUCCESS);
 		}
 		i++;
 	}
+	return (FUNCT_FAILURE);
+}
+
+int			exec_find_binary(char *filename, t_vshdata *vshdata, char **binary)
+{
+	char			**paths;
+
+	if (get_paths(filename, vshdata->envlst, &paths) == FUNCT_ERROR)
+		return (FUNCT_ERROR);
+	if (check_paths(paths, filename, binary) == FUNCT_ERROR)
+		return (FUNCT_ERROR);
 	ft_strarrdel(&paths);
 	if (*binary == NULL)
 	{
