@@ -6,7 +6,7 @@
 /*   By: omulder <omulder@student.codam.nl>           +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2019/05/29 17:52:22 by omulder        #+#    #+#                */
-/*   Updated: 2019/08/04 13:49:12 by jbrinksm      ########   odam.nl         */
+/*   Updated: 2019/08/04 16:17:34 by jbrinksm      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -83,97 +83,114 @@ static int		exec_redirs_or_assigns(t_ast *node, t_vshdata *vshdata,
 	return (FUNCT_SUCCESS);
 }
 
-/*
-**	This function has to prepare the complete_command before
-**	execution.
-*/
+int				exec_command(t_ast *ast, t_vshdata *vshdata, t_pipes pipes)
+{
+	char	**command;
 
-// int				exec_complete_command(t_ast *node, t_vshdata *vshdata,
-// 				t_pipes pipes)
-// {
-// 	char	**command;
-
-// 	if (exec_handle_variables(node, vshdata->envlst) == FUNCT_ERROR)
-// 		return (FUNCT_ERROR);
-// 	exec_quote_remove(node);
-// 	if (redir_handle_pipe(pipes) == FUNCT_ERROR)
-// 		return (return_and_reset_fds(FUNCT_ERROR, vshdata)); 
-// 	if (node->type == WORD)
-// 	{
-// 		if (node->sibling &&
-// 		exec_redirs_or_assigns(node->sibling, vshdata, ENV_TEMP) == FUNCT_ERROR)
-// 			return (return_and_reset_fds(FUNCT_ERROR, vshdata));
-// 		command = create_args(node);
-// 		if (command == NULL)
-// 			return (return_and_reset_fds(FUNCT_ERROR, vshdata));
-// 		exec_cmd(command, vshdata);
-// 	}
-// 	else if (node->type == ASSIGN || tool_is_redirect_tk(node->type) == true)
-// 	{
-// 		if (exec_redirs_or_assigns(node, vshdata, ENV_LOCAL) == FUNCT_ERROR)
-// 			return (return_and_reset_fds(FUNCT_ERROR, vshdata));
-// 	}
-// 	return (return_and_reset_fds(FUNCT_SUCCESS, vshdata));
-// }
-
-/*
-**	General structure:
-**	Read PR.
-*/
+	if (exec_handle_variables(ast, vshdata->envlst) == FUNCT_ERROR)
+		return (FUNCT_ERROR);
+	exec_quote_remove(ast);
+	if (redir_handle_pipe(pipes) == FUNCT_ERROR)
+		return (return_and_reset_fds(FUNCT_ERROR, vshdata));
+	if (ast->type == WORD)
+	{
+		if (ast->sibling &&
+		exec_redirs_or_assigns(ast->sibling, vshdata, ENV_TEMP) == FUNCT_ERROR)
+			return (return_and_reset_fds(FUNCT_ERROR, vshdata));
+		command = create_args(ast);
+		if (command == NULL)
+			return (return_and_reset_fds(FUNCT_ERROR, vshdata));
+		exec_cmd(command, vshdata);
+	}
+	else if (ast->type == ASSIGN || tool_is_redirect_tk(ast->type) == true)
+	{
+		if (exec_redirs_or_assigns(ast, vshdata, ENV_LOCAL) == FUNCT_ERROR)
+			return (return_and_reset_fds(FUNCT_ERROR, vshdata));
+	}
+	return (return_and_reset_fds(FUNCT_SUCCESS, vshdata));
+}
 
 int				exec_pipe_sequence(t_ast *ast, t_vshdata *vshdata, t_pipes pipes)
 {
-	t_ast	*probe;
+	t_pipes	childpipes;
+
 	/* Skip this phase if there is no PIPE node */
 	if (ast->type != PIPE)
-		return (exec_command(ast, vshdata));
-	
-	/* do pipe shenanigans */
+		return (exec_command(ast, vshdata, pipes));
 
-	/* loop through all pipe nodes */
-	probe = ast->child;
-	while (probe->type == PIPE)
+	/* create pipe so that childs are properly linked */
+	if (pipe(pipes.currentpipe) == -1)
 	{
-		if (exec_pipe_sequence(probe, vshdata, pipe))
-		probe = probe->child;
+		ft_putendl("vsh: unable to create pipe");
+		return (FUNCT_FAILURE);
+	}
+	/* start with last pipe node */
+	if (ast->child->type == PIPE)
+	{
+		childpipes = pipes;
+		childpipes.parentpipe[0] = pipes.currentpipe[0];
+		childpipes.parentpipe[1] = pipes.currentpipe[1];
+		if (exec_pipe_sequence(ast->child, vshdata, childpipes) == FUNCT_ERROR)
+			return (FUNCT_ERROR);
 	}
 
-	if (ast->)
+	/* this is the first command node of the pipe sequence */
+	if (ast->child->type != PIPE)
+	{
+		pipes.pipeside = PIPE_START;
+		if (exec_command(ast->child, vshdata, pipes) == FUNCT_ERROR)
+			return (FUNCT_ERROR);
+	}
 
+	/* always attempt to close the read end */
+	close(pipes.currentpipe[1]);
+
+	/* these are the other nodes to be piped towards (and from) */
+	pipes.pipeside = PIPE_EXTEND;
+	if (exec_command(ast->sibling, vshdata, pipes) == FUNCT_ERROR)
+		return (FUNCT_ERROR);
+
+	/* always attempt to close the write end */
+	close(pipes.currentpipe[0]);
+	return (FUNCT_SUCCESS);
 }
 
 int				exec_and_or(t_ast *ast, t_vshdata *vshdata)
 {
-	t_ast	*probe;
 	t_pipes pipes;
 
 	/* init pipes */
+	pipes = redir_init_pipestruct();
 
 	/* Skip this phase if no and_or node is present */
 	if (ast->type != AND_IF && ast->type != OR_IF)
 		return (exec_pipe_sequence(ast, vshdata, pipes));
 
 	/* loop through all and_or nodes */
-	probe = ast->child;
-	while (probe->type == AND_IF || probe->type == OR_IF)
+	if (ast->child->type == AND_IF || ast->child->type == OR_IF)
 	{
-		if (exec_and_or(probe, vshdata) == FUNCT_ERROR)
+		if (exec_and_or(ast->child, vshdata) == FUNCT_ERROR)
 			return (FUNCT_ERROR);
-		probe = probe->child;
 	}
 
-	/* Do conditional shenanigans */
+	if (ast->type == AND_IF && g_state->exit_code != EXIT_SUCCESS)
+		return (FUNCT_ERROR);
+	else if (ast->type == OR_IF && g_state->exit_code == EXIT_SUCCESS)
+		return (FUNCT_FAILURE);
 
-	/* Only runs at the bottom node */
-	if (ast->child->type == PIPE)
+	/* Only runs at the bottom and_or node */
+	if (ast->child->type != AND_IF && ast->child->type != OR_IF)
 	{
 		if (exec_pipe_sequence(ast->child, vshdata, pipes) == FUNCT_ERROR)
 			return (FUNCT_ERROR);
 	}
 
 	/* Runs once every node */
-	if (ast->sibling->type == PIPE)
+	if (ast->sibling->type != AND_IF && ast->sibling->type != OR_IF)
 	{
+		if ((ast->type == AND_IF && g_state->exit_code != EXIT_SUCCESS)
+		|| (ast->type == OR_IF && g_state->exit_code == EXIT_SUCCESS))
+			return (FUNCT_FAILURE);
 		if (exec_pipe_sequence(ast->sibling, vshdata, pipes) == FUNCT_ERROR)
 			return (FUNCT_ERROR);
 	}
@@ -182,34 +199,30 @@ int				exec_and_or(t_ast *ast, t_vshdata *vshdata)
 
 int				exec_list(t_ast *ast, t_vshdata *vshdata)
 {
-	t_ast	*probe;
-
 	/* Skip this phase if node no seperator is present */
 	if (ast->type != BG && ast->type != SEMICOL)
-		return (exec_list(ast, vshdata));
+		return (exec_and_or(ast, vshdata));
 
 	/* loop through all the seperator nodes */
-	probe = ast->child;
-	while (probe->type == BG || probe->type == SEMICOL)
-	{
-		if (exec_complete_command(probe, vshdata) == FUNCT_ERROR)
-			return (FUNCT_ERROR);
-		probe = probe->child;
-	}
-	
-	/* do BG shenanigans */
-	
-	/* only runs at the bottom node */
-	if (ast->child->type == AND_IF || ast->child->type == OR_IF)
+	if (ast->child->type == BG || ast->child->type == SEMICOL)
 	{
 		if (exec_list(ast->child, vshdata) == FUNCT_ERROR)
 			return (FUNCT_ERROR);
 	}
-	
-	/* runs once every node */
-	if (ast->sibling->type == AND_IF || ast->sibling->type == OR_IF)
+
+	/* do optional BG shenanigans */
+
+	/* only runs at the bottom node */
+	if (ast->child->type != BG && ast->child->type != SEMICOL)
 	{
-		if (exec_list(ast->sibling, vshdata) == FUNCT_ERROR)
+		if (exec_and_or(ast->child, vshdata) == FUNCT_ERROR)
+			return (FUNCT_ERROR);
+	}
+
+	/* runs once every node */
+	if (ast->sibling->type != BG || ast->sibling->type != SEMICOL)
+	{
+		if (exec_and_or(ast->sibling, vshdata) == FUNCT_ERROR)
 			return (FUNCT_ERROR);
 	}
 	return (FUNCT_SUCCESS);
@@ -219,35 +232,11 @@ int				exec_complete_command(t_ast *ast, t_vshdata *vshdata)
 {
 	if (ast == NULL)
 		return (FUNCT_ERROR);
-	
+
 	/* run list */
+	exec_list(ast, vshdata);
 
 	/* run optional seperator */
-	return (FUNCT_SUCCESS);
-}
-
-int				exec_start(t_ast *ast, t_vshdata *vshdata, t_pipes pipes)
-{
-	if (ast == NULL)
-		return (FUNCT_ERROR);
-	if (ast->type == PIPE)
-		return (redir_run_pipesequence(ast, vshdata, pipes));
-	if (ast->type != WORD && ast->type != ASSIGN &&
-		tool_is_redirect_tk(ast->type) == false &&
-		exec_start(ast->child, vshdata, pipes) == FUNCT_ERROR)
-		return (FUNCT_ERROR);
-	if (ast->type == AND_IF && g_state->exit_code != EXIT_SUCCESS)
-		return (FUNCT_ERROR);
-	else if (ast->type == OR_IF && g_state->exit_code == EXIT_SUCCESS)
-		return (FUNCT_FAILURE);
-	else if (ast->type == WORD || ast->type == ASSIGN
-	|| tool_is_redirect_tk(ast->type) == true)
-	{
-		if (exec_complete_command(ast, vshdata, pipes) == FUNCT_ERROR)
-			return (FUNCT_ERROR);
-	}
-	else if (ast->sibling != NULL
-	&& exec_start(ast->sibling, vshdata, pipes) == FUNCT_ERROR)
-		return (FUNCT_ERROR);
+	
 	return (FUNCT_SUCCESS);
 }

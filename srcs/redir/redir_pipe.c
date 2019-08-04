@@ -6,7 +6,7 @@
 /*   By: jbrinksm <jbrinksm@student.codam.nl>         +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2019/07/14 10:37:41 by jbrinksm       #+#    #+#                */
-/*   Updated: 2019/07/30 10:51:57 by jbrinksm      ########   odam.nl         */
+/*   Updated: 2019/08/04 15:46:25 by jbrinksm      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,26 +14,26 @@
 #include <unistd.h>
 #include <sys/wait.h>
 
-static int	exec_pipe(t_ast *pipenode, t_vshdata *vshdata, t_pipes pipes)
-{
-	if (pipenode->child != NULL && pipenode->child->type != PIPE)
-	{
-		pipes.pipeside = PIPE_START;
-		if (exec_complete_command(pipenode->child, vshdata, pipes)
-		== FUNCT_ERROR)
-			return (FUNCT_ERROR);
-	}
-	close(pipes.currentpipe[1]);
-	if (pipenode->sibling != NULL)
-	{
-		pipes.pipeside = PIPE_EXTEND;
-		if (exec_complete_command(pipenode->sibling, vshdata, pipes)
-		== FUNCT_ERROR)
-			return (FUNCT_ERROR);
-	}
-	close(pipes.currentpipe[0]);
-	return (FUNCT_SUCCESS);
-}
+// static int	exec_pipe(t_ast *pipenode, t_vshdata *vshdata, t_pipes pipes)
+// {
+// 	if (pipenode->child != NULL && pipenode->child->type != PIPE)
+// 	{
+// 		pipes.pipeside = PIPE_START;
+// 		if (exec_complete_command(pipenode->child, vshdata, pipes)
+// 		== FUNCT_ERROR)
+// 			return (FUNCT_ERROR);
+// 	}
+// 	close(pipes.currentpipe[1]);
+// 	if (pipenode->sibling != NULL)
+// 	{
+// 		pipes.pipeside = PIPE_EXTEND;
+// 		if (exec_complete_command(pipenode->sibling, vshdata, pipes)
+// 		== FUNCT_ERROR)
+// 			return (FUNCT_ERROR);
+// 	}
+// 	close(pipes.currentpipe[0]);
+// 	return (FUNCT_SUCCESS);
+// }
 
 t_pipes		redir_init_pipestruct(void)
 {
@@ -103,22 +103,22 @@ int			redir_handle_pipe(t_pipes pipes)
 **	be siblings of pipenodes, and will thus be PIPE_EXTEND.
 */
 
-int			redir_run_pipesequence(t_ast *pipenode, t_vshdata *vshdata,
-t_pipes pipes)
-{
-	t_pipes	childpipes;
+// int			redir_run_pipesequence(t_ast *pipenode, t_vshdata *vshdata,
+// t_pipes pipes)
+// {
+// 	t_pipes	childpipes;
 
-	if (pipe(pipes.currentpipe) == -1)
-	{
-		ft_putendl("vsh: unable to create pipe");
-		return (FUNCT_FAILURE);
-	}
-	if (pipenode->child != NULL && pipenode->child->type == PIPE)
-	{
-		childpipes = pipes;
-		childpipes.parentpipe[0] = pipes.currentpipe[0];
-		childpipes.parentpipe[1] = pipes.currentpipe[1];
-		redir_run_pipesequence(pipenode->child, vshdata, childpipes);
-	}
-	return (exec_pipe(pipenode, vshdata, pipes));
-}
+// 	if (pipe(pipes.currentpipe) == -1)
+// 	{
+// 		ft_putendl("vsh: unable to create pipe");
+// 		return (FUNCT_FAILURE);
+// 	}
+// 	if (pipenode->child != NULL && pipenode->child->type == PIPE)
+// 	{
+// 		childpipes = pipes;
+// 		childpipes.parentpipe[0] = pipes.currentpipe[0];
+// 		childpipes.parentpipe[1] = pipes.currentpipe[1];
+// 		redir_run_pipesequence(pipenode->child, vshdata, childpipes);
+// 	}
+// 	return (exec_pipe(pipenode, vshdata, pipes));
+// }
