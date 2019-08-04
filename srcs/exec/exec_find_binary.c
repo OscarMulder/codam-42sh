@@ -6,7 +6,7 @@
 /*   By: tde-jong <tde-jong@student.codam.nl>         +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2019/06/05 15:16:46 by tde-jong       #+#    #+#                */
-/*   Updated: 2019/08/03 17:08:36 by mavan-he      ########   odam.nl         */
+/*   Updated: 2019/08/04 12:44:46 by mavan-he      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -32,18 +32,26 @@ static int	get_paths(char *filename, t_envlst *envlst, char ***paths)
 static int	check_dir(DIR *d, char *filename, char *path, char **binary)
 {
 	struct dirent	*dir;
+	char			file_status;
 
 	dir = readdir(d);
 	while (dir != NULL)
 	{
-		// needs a check if it is a file or directory
+		*binary = ft_joinstrcstr(path, '/', filename);
+		if (*binary == NULL)
+			return (err_ret_exit(E_ALLOC_STR, EXIT_FAILURE));
 		if (ft_strequ(filename, dir->d_name) == true)
 		{
-			*binary = ft_joinstrcstr(path, '/', filename);
-			if (*binary == NULL)
-				return (err_ret_exit(E_ALLOC_STR, EXIT_FAILURE));
+			file_status = ft_is_regular_file(*binary);
+			if (file_status == true)
+				return (FUNCT_SUCCESS);
+			ft_strdel(&(*binary));
+			if (file_status == -1)
+				return (err_ret_exit(E_STAT, EXIT_FAILURE));
 			return (FUNCT_SUCCESS);
 		}
+		else
+			ft_strdel(&(*binary));
 		dir = readdir(d);
 	}
 	return (FUNCT_FAILURE);

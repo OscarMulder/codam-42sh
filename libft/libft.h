@@ -6,7 +6,7 @@
 /*   By: jbrinksm <jbrinksm@student.codam.nl>         +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2019/01/09 11:10:09 by omulder        #+#    #+#                */
-/*   Updated: 2019/08/01 14:59:16 by tde-jong      ########   odam.nl         */
+/*   Updated: 2019/08/04 12:20:49 by mavan-he      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -101,5 +101,6 @@ int					ft_strclen(const char *arg, char c);
 int					ft_isalnum(int c);
 int					ft_isalpha(int c);
 int					ft_free_return(void *tofree, int ret);
+int					ft_is_regular_file(const char *path);
 
 #endif
