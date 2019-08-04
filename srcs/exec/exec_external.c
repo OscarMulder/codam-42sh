@@ -6,7 +6,7 @@
 /*   By: omulder <omulder@student.codam.nl>           +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2019/05/31 10:47:19 by tde-jong       #+#    #+#                */
-/*   Updated: 2019/08/04 16:10:32 by mavan-he      ########   odam.nl         */
+/*   Updated: 2019/08/04 16:26:06 by mavan-he      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -44,11 +44,7 @@ static void		exec_bin(char *binary, char **args, char **vshenviron)
 	term_flags_init();
 	pid = fork();
 	if (pid < 0)
-	{
-		g_state->exit_code = EXIT_FAILURE;
-		ft_eprintf("vsh: Fork Failed\n");
-		return ;
-	}
+		return (err_void_exit(E_FORK_STR, EXIT_FAILURE));
 	if (pid > 0)
 		signal(SIGINT, signal_print_newline);
 	else

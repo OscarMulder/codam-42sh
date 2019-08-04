@@ -6,7 +6,7 @@
 /*   By: omulder <omulder@student.codam.nl>           +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2019/04/10 20:29:42 by jbrinksm       #+#    #+#                */
-/*   Updated: 2019/08/04 15:21:35 by mavan-he      ########   odam.nl         */
+/*   Updated: 2019/08/04 16:26:23 by mavan-he      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -28,6 +28,7 @@
 # define NEW_PROMPT -1
 # define E_STAT_STR "vsh: could not get stat info of file\n"
 # define E_ALLOC_STR "vsh: failed to allocate enough memory\n"
+# define E_FORK_STR "vsh: Fork Failed\n"
 # define E_ALLOC 420
 # define E_DUP 100
 # define E_OPEN 101
@@ -619,6 +620,7 @@ int				history_index_change_up(t_inputdata *data);
 
 int				error_return(int ret, int error, char *opt_str);
 int				err_ret_exit(char *str, int exitcode);
+void			err_void_exit(char *str, int exitcode);
 
 /*
 **----------------------------------debugging-----------------------------------
