@@ -16,21 +16,18 @@
 /*
 ** Unfinished, since there is no multiline support yet. Works with single lines.
 */
-static void	history_clear_line(t_vshdata *vshdata, unsigned *index)
+static void	history_clear_line(unsigned *index, unsigned linelen)
 {
-	unsigned line_len;
-
-	line_len = ft_strlen(vshdata->line);
 	if (*index > 0)
 		ft_printf("\e[%dD", *index);
 	*index = 0;
-	while (*index < line_len)
+	while (*index < linelen)
 	{
 		ft_putchar(' ');
 		(*index)++;
 	}
 	if (*index > 0)
-		ft_printf("\e[%D", *index);
+		ft_printf("\e[%dD", *index);
 }
 
 static int	malloc_and_copy(t_inputdata *data, char **line, char *str)
@@ -63,24 +60,24 @@ static int	set_line(t_inputdata *data, char **line)
 }
 
 int			history_change_line(t_inputdata *data, t_vshdata *vshdata,
-	char **line, char arrow)
+		char arrow)
 {
-	history_clear_line(vshdata, &(data->index));
+	history_clear_line(&(data->index), ft_strlen(vshdata->line));
 	if (arrow == ARROW_UP)
 	{
 		if (history_index_change_up(data))
-			set_line(data, line);
+			set_line(data, &vshdata->line);
 		else
 			ft_printf("\a");
 	}
 	else if (arrow == ARROW_DOWN)
 	{
 		if (history_index_change_down(data))
-			set_line(data, line);
+			set_line(data, &vshdata->line);
 		else
-			ft_bzero(*line, data->len_max);
+			ft_bzero(vshdata->line, data->len_max);
 	}
-	ft_putstr(*line);
-	data->index = ft_strlen(*line);
+	ft_putstr(vshdata->line);
+	data->index = ft_strlen(vshdata->line);
 	return (FUNCT_SUCCESS);
 }

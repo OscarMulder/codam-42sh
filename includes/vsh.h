@@ -610,7 +610,7 @@ int				history_get_file_content(t_vshdata *vshdata);
 int				history_line_to_array(t_history **history, char **line);
 void	        history_print(t_history **history);
 int				history_change_line(t_inputdata *data, t_vshdata *vshdata,
-					char **line, char arrow);
+					char arrow);
 int				history_index_change_down(t_inputdata *data);
 int				history_index_change_up(t_inputdata *data);
 

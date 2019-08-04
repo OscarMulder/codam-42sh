@@ -40,7 +40,7 @@ int			input_parse_ctrl_up(t_inputdata *data, t_vshdata *vshdata)
 	{
 		if (data->input_state == INPUT_BRACE)
 		{
-			if (history_change_line(data, vshdata, &vshdata->line, ARROW_UP) == FUNCT_ERROR)
+			if (history_change_line(data, vshdata, ARROW_UP) == FUNCT_ERROR)
 				return (FUNCT_ERROR);
 		}
 		else
