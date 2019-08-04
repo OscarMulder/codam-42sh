@@ -6,7 +6,7 @@
 /*   By: omulder <omulder@student.codam.nl>           +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2019/04/10 20:29:42 by jbrinksm       #+#    #+#                */
-/*   Updated: 2019/08/04 12:45:02 by mavan-he      ########   odam.nl         */
+/*   Updated: 2019/08/04 15:21:35 by mavan-he      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -26,7 +26,7 @@
 # define PROG_FAILURE 1
 # define PROG_SUCCESS 0
 # define NEW_PROMPT -1
-# define E_STAT "vsh: could not get stat info of file\n"
+# define E_STAT_STR "vsh: could not get stat info of file\n"
 # define E_ALLOC_STR "vsh: failed to allocate enough memory\n"
 # define E_ALLOC 420
 # define E_DUP 100

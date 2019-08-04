@@ -6,7 +6,7 @@
 /*   By: jbrinksm <jbrinksm@student.codam.nl>         +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2019/07/22 11:14:25 by jbrinksm       #+#    #+#                */
-/*   Updated: 2019/08/03 16:21:13 by mavan-he      ########   odam.nl         */
+/*   Updated: 2019/08/04 15:23:26 by mavan-he      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -32,6 +32,14 @@ int	error_return(int ret, int error, char *opt_str)
 }
 
 int	err_ret_exit(char *str, int exitcode)
+{
+	g_state->exit_code = exitcode;
+	if (str != NULL)
+		ft_eprintf("%s", str);
+	return (FUNCT_ERROR);
+}
+
+int	err_void_exit(char *str, int exitcode)
 {
 	g_state->exit_code = exitcode;
 	if (str != NULL)

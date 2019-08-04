@@ -6,7 +6,7 @@
 /*   By: tde-jong <tde-jong@student.codam.nl>         +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2019/06/05 15:16:46 by tde-jong       #+#    #+#                */
-/*   Updated: 2019/08/04 13:45:07 by mavan-he      ########   odam.nl         */
+/*   Updated: 2019/08/04 16:07:37 by mavan-he      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -47,7 +47,7 @@ static int	check_dir(DIR *d, char *filename, char *path, char **binary)
 				return (FUNCT_SUCCESS);
 			ft_strdel(&(*binary));
 			if (file_status == -1)
-				return (err_ret_exit(E_STAT, EXIT_FAILURE));
+				return (err_ret_exit(E_STAT_STR, EXIT_FAILURE));
 			return (FUNCT_SUCCESS);
 		}
 		else

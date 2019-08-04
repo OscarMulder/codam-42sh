@@ -6,7 +6,7 @@
 /*   By: omulder <omulder@student.codam.nl>           +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2019/05/31 10:47:19 by tde-jong       #+#    #+#                */
-/*   Updated: 2019/08/04 13:37:27 by mavan-he      ########   odam.nl         */
+/*   Updated: 2019/08/04 16:10:32 by mavan-he      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -52,7 +52,11 @@ static void		exec_bin(char *binary, char **args, char **vshenviron)
 	if (pid > 0)
 		signal(SIGINT, signal_print_newline);
 	else
+	{
 		execve(binary, args, vshenviron);
+		ft_eprintf("vsh: failed to execute %s\n", binary);
+		exit(EXIT_FAILURE);
+	}
 	waitpid(pid, &status, WUNTRACED);
 	if (WIFEXITED(status))
 		g_state->exit_code = WEXITSTATUS(status);
