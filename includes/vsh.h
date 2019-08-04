@@ -94,7 +94,7 @@
 # define T_FLAG_HASSPECIAL (1 << 0)
 # define T_STATE_SQUOTE (1 << 1)
 # define T_STATE_DQUOTE (1 << 2)
-# define T_FLAG_HASEQUAL (1 << 3)
+# define T_FLAG_ISASSIGN (1 << 3)
 # define T_MALLOC_ERROR (1 << 4)
 
 /*
