@@ -6,7 +6,7 @@
 /*   By: omulder <omulder@student.codam.nl>           +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2019/05/29 17:52:22 by omulder        #+#    #+#                */
-/*   Updated: 2019/08/04 16:24:13 by jbrinksm      ########   odam.nl         */
+/*   Updated: 2019/08/04 16:27:02 by jbrinksm      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -109,6 +109,15 @@ int				exec_command(t_ast *ast, t_vshdata *vshdata, t_pipes pipes)
 	}
 	return (return_and_reset_fds(FUNCT_SUCCESS, vshdata));
 }
+
+/*
+**	Recursively runs commands of the whole pipesequence, and
+**	redirects their input and output according to the pipesequence.
+**
+**	The child of the last pipenode in the pipesequence is the first
+**	command in the pipesequence PIPE_START. All other commands will
+**	be siblings of pipenodes, and will thus be PIPE_EXTEND.
+*/
 
 int				exec_pipe_sequence(t_ast *ast, t_vshdata *vshdata, t_pipes pipes)
 {
