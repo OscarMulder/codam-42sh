@@ -6,7 +6,7 @@
 /*   By: omulder <omulder@student.codam.nl>           +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2019/05/29 17:52:22 by omulder        #+#    #+#                */
-/*   Updated: 2019/08/04 16:27:02 by jbrinksm      ########   odam.nl         */
+/*   Updated: 2019/08/04 16:36:22 by jbrinksm      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -151,7 +151,7 @@ int				exec_pipe_sequence(t_ast *ast, t_vshdata *vshdata, t_pipes pipes)
 			return (FUNCT_ERROR);
 	}
 
-	/* always attempt to close the read end */
+	/* always attempt to close the write end of pipe */
 	close(pipes.currentpipe[1]);
 
 	/* these are the nodes to be piped towards (and potentially from) */
@@ -159,7 +159,7 @@ int				exec_pipe_sequence(t_ast *ast, t_vshdata *vshdata, t_pipes pipes)
 	if (exec_command(ast->sibling, vshdata, pipes) == FUNCT_ERROR)
 		return (FUNCT_ERROR);
 
-	/* always attempt to close the write end */
+	/* always attempt to close the read end of pipe */
 	close(pipes.currentpipe[0]);
 	return (FUNCT_SUCCESS);
 }
@@ -243,7 +243,8 @@ int				exec_complete_command(t_ast *ast, t_vshdata *vshdata)
 		return (FUNCT_ERROR);
 
 	/* run list */
-	exec_list(ast, vshdata);
+	if (exec_list(ast, vshdata) == FUNCT_ERROR)
+		return (FUNCT_ERROR);
 
 	/* run optional seperator */
 	
