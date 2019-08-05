@@ -6,7 +6,7 @@
 /*   By: omulder <omulder@student.codam.nl>           +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2019/04/10 20:29:42 by jbrinksm       #+#    #+#                */
-/*   Updated: 2019/08/05 13:41:43 by mavan-he      ########   odam.nl         */
+/*   Updated: 2019/08/05 15:05:10 by mavan-he      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -155,6 +155,8 @@
 # define PIPE_UNINIT	-42
 # define PIPE_START		0
 # define PIPE_EXTEND	1
+# define PIPE_READ		0
+# define PIPE_WRITE		1
 
 /*
 **----------------------------------history-------------------------------------

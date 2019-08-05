@@ -6,7 +6,7 @@
 /*   By: jbrinksm <jbrinksm@student.codam.nl>         +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2019/07/14 10:37:41 by jbrinksm       #+#    #+#                */
-/*   Updated: 2019/08/04 16:27:24 by jbrinksm      ########   odam.nl         */
+/*   Updated: 2019/08/05 15:04:51 by mavan-he      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,10 +19,10 @@ t_pipes		redir_init_pipestruct(void)
 	t_pipes	pipes;
 
 	pipes.pipeside = PIPE_UNINIT;
-	pipes.parentpipe[0] = PIPE_UNINIT;
-	pipes.parentpipe[1] = PIPE_UNINIT;
-	pipes.currentpipe[0] = PIPE_UNINIT;
-	pipes.currentpipe[1] = PIPE_UNINIT;
+	pipes.parentpipe[PIPE_READ] = PIPE_UNINIT;
+	pipes.parentpipe[PIPE_WRITE] = PIPE_UNINIT;
+	pipes.currentpipe[PIPE_READ] = PIPE_UNINIT;
+	pipes.currentpipe[PIPE_WRITE] = PIPE_UNINIT;
 	return (pipes);
 }
 
@@ -47,26 +47,26 @@ t_pipes		redir_init_pipestruct(void)
 
 int			redir_handle_pipe(t_pipes pipes)
 {
-	if (pipes.currentpipe[0] != PIPE_UNINIT
-	&& pipes.currentpipe[1] != PIPE_UNINIT)
+	if (pipes.currentpipe[PIPE_READ] != PIPE_UNINIT
+	&& pipes.currentpipe[PIPE_WRITE] != PIPE_UNINIT)
 	{
 		if (pipes.pipeside == PIPE_START)
 		{
-			if (dup2(pipes.currentpipe[1], STDOUT_FILENO) == -1)
+			if (dup2(pipes.currentpipe[PIPE_WRITE], STDOUT_FILENO) == -1)
 				error_return(FUNCT_ERROR, E_DUP, NULL);
-			close(pipes.currentpipe[1]);
+			close(pipes.currentpipe[PIPE_WRITE]);
 		}
 		else if (pipes.pipeside == PIPE_EXTEND)
 		{
-			if (dup2(pipes.currentpipe[0], STDIN_FILENO) == -1)
+			if (dup2(pipes.currentpipe[PIPE_READ], STDIN_FILENO) == -1)
 				error_return(FUNCT_ERROR, E_DUP, NULL);
-			close(pipes.currentpipe[0]);
-			if (pipes.parentpipe[0] != PIPE_UNINIT
-			&& pipes.parentpipe[1] != PIPE_UNINIT)
+			close(pipes.currentpipe[PIPE_READ]);
+			if (pipes.parentpipe[PIPE_READ] != PIPE_UNINIT
+			&& pipes.parentpipe[PIPE_WRITE] != PIPE_UNINIT)
 			{
-				if (dup2(pipes.parentpipe[1], STDOUT_FILENO) == -1)
+				if (dup2(pipes.parentpipe[PIPE_WRITE], STDOUT_FILENO) == -1)
 					error_return(FUNCT_ERROR, E_DUP, NULL);
-				close(pipes.parentpipe[1]);
+				close(pipes.parentpipe[PIPE_WRITE]);
 			}
 		}
 	}

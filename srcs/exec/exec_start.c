@@ -6,7 +6,7 @@
 /*   By: omulder <omulder@student.codam.nl>           +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2019/05/29 17:52:22 by omulder        #+#    #+#                */
-/*   Updated: 2019/08/05 13:21:34 by mavan-he      ########   odam.nl         */
+/*   Updated: 2019/08/05 15:04:55 by mavan-he      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -130,15 +130,15 @@ int				exec_pipe_sequence(t_ast *ast, t_vshdata *vshdata, t_pipes pipes)
 	/* create pipe so that childs are properly linked */
 	if (pipe(pipes.currentpipe) == -1)
 	{
-		ft_putendl("vsh: unable to create pipe");
-		return (FUNCT_FAILURE);
+		ft_eprintf("vsh: unable to create pipe");
+		return (FUNCT_ERROR);
 	}
 	/* always execute a deeper `pipe_sequence` node first */
 	if (ast->left->type == PIPE)
 	{
 		childpipes = pipes;
-		childpipes.parentpipe[0] = pipes.currentpipe[0];
-		childpipes.parentpipe[1] = pipes.currentpipe[1];
+		childpipes.parentpipe[PIPE_READ] = pipes.currentpipe[PIPE_READ];
+		childpipes.parentpipe[PIPE_WRITE] = pipes.currentpipe[PIPE_WRITE];
 		if (exec_pipe_sequence(ast->left, vshdata, childpipes) == FUNCT_ERROR)
 			return (FUNCT_ERROR);
 	}
@@ -152,7 +152,7 @@ int				exec_pipe_sequence(t_ast *ast, t_vshdata *vshdata, t_pipes pipes)
 	}
 
 	/* always attempt to close the write end of pipe */
-	close(pipes.currentpipe[1]);
+	close(pipes.currentpipe[PIPE_WRITE]);
 
 	/* these are the nodes to be piped towards (and potentially from) */
 	pipes.pipeside = PIPE_EXTEND;
@@ -160,7 +160,7 @@ int				exec_pipe_sequence(t_ast *ast, t_vshdata *vshdata, t_pipes pipes)
 		return (FUNCT_ERROR);
 
 	/* always attempt to close the read end of pipe */
-	close(pipes.currentpipe[0]);
+	close(pipes.currentpipe[PIPE_READ]);
 	return (FUNCT_SUCCESS);
 }
 
