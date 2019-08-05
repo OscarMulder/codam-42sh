@@ -26,6 +26,9 @@
 # define PROG_FAILURE 1
 # define PROG_SUCCESS 0
 # define NEW_PROMPT -1
+# define E_STAT_STR "vsh: could not get stat info of file\n"
+# define E_ALLOC_STR "vsh: failed to allocate enough memory\n"
+# define E_FORK_STR "vsh: Fork Failed\n"
 # define E_ALLOC 420
 # define E_DUP 100
 # define E_OPEN 101
@@ -40,6 +43,7 @@
 */
 
 # define EXIT_WRONG_USE 2
+# define EXIT_NOT_EXECUTABLE 126
 # define EXIT_NOTFOUND 127
 # define EXIT_FATAL 128
 
@@ -569,13 +573,14 @@ int				exec_command(t_ast *ast, t_vshdata *vshdata, t_pipes pipes);
 
 void			exec_cmd(char **args, t_vshdata *vshdata);
 bool			exec_builtin(char **args, t_vshdata *vshdata);
-bool			exec_external(char **args, t_vshdata *vshdata);
-char			*exec_find_binary(char *filename, t_vshdata *vshdata);
+void			exec_external(char **args, t_vshdata *vshdata);
+int				exec_find_binary(char *filename, t_vshdata *vshdata, char **binary);
 int				exec_handle_variables(t_ast *node, t_envlst *envlst);
 int				exec_handle_bracketed_var(char **value, int *i, t_envlst *envlst);
 int				exec_handle_dollar(char **value, int *i, t_envlst *envlst);
 void			exec_quote_remove(t_ast *node);
 int				exec_tilde_expansion(t_ast *node, int *i);
+int				exec_validate_binary(char *binary);
 
 void			signal_print_newline(int signum);
 
@@ -620,6 +625,8 @@ int				history_index_change_up(t_inputdata *data);
 */
 
 int				error_return(int ret, int error, char *opt_str);
+int				err_ret_exit(char *str, int exitcode);
+void			err_void_exit(char *str, int exitcode);
 
 /*
 **----------------------------------debugging-----------------------------------

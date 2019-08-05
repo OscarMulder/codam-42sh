@@ -672,7 +672,7 @@ Test(exec_find_bin, basic)
 	vshdata.envlst->type = ENV_EXTERN;
 	vshdata.envlst->next = NULL;
 	str = ft_strdup("vsh");
-	bin = exec_find_binary(str, &vshdata);
+	exec_find_binary(str, &vshdata, &bin);
 	cr_expect_str_eq(bin, ".//vsh");
 	ft_strdel(&bin);
 	ft_strdel(&str);
@@ -688,8 +688,9 @@ Test(exec_find_bin, basic2)
 	vshdata.envlst->var = "PATH=/bin:./";
 	vshdata.envlst->type = ENV_EXTERN;
 	vshdata.envlst->next = NULL;
+	bin = NULL;
 	str = ft_strdup("ls");
-	bin = exec_find_binary(str, &vshdata);
+	exec_find_binary(str, &vshdata, &bin);
 	cr_expect_str_eq(bin, "/bin/ls");
 	ft_strdel(&bin);
 	ft_strdel(&str);
@@ -705,25 +706,29 @@ Test(exec_find_bin, advanced)
 	vshdata.envlst->var = "PATH=/Users/travis/.rvm/gems/ruby-2.4.2/bin:/Users/travis/.rvm/gems/ruby-2.4.2@global/bin:/Users/travis/.rvm/rubies/ruby-2.4.2/bin:/Users/travis/.rvm/bin:/Users/travis/bin:/Users/travis/.local/bin:/Users/travis/.nvm/versions/node/v6.11.4/bin:/bin:/usr/local/bin:/usr/bin:/usr/sbin:/sbin:/opt/X11/bin";
 	vshdata.envlst->type = ENV_EXTERN;
 	vshdata.envlst->next = NULL;
+	bin = NULL;
 	str = ft_strdup("ls");
-	bin = exec_find_binary(str, &vshdata);
+	exec_find_binary(str, &vshdata, &bin);
 	cr_expect_str_eq(bin, "/bin/ls");
 	ft_strdel(&bin);
 	ft_strdel(&str);
 }
 
-Test(exec_find_bin, nopath)
+Test(exec_find_bin, nopath, .init=redirect_all_stdout)
 {
 	char 		*str;
 	char		*bin;
 	t_vshdata	vshdata;
-
+	
+	g_state = (t_state*)ft_memalloc(sizeof(t_state));
+	g_state->exit_code = 0;
 	vshdata.envlst = (t_envlst*)ft_memalloc(sizeof(t_envlst));
 	vshdata.envlst->var = "PATH=";
 	vshdata.envlst->type = ENV_EXTERN;
 	vshdata.envlst->next = NULL;
+	bin = NULL;
 	str = ft_strdup("ls");
-	bin = exec_find_binary(str, &vshdata);
+	exec_find_binary(str, &vshdata, &bin);
 	cr_expect(bin == NULL);
 	ft_strdel(&bin);
 	ft_strdel(&str);
@@ -747,7 +752,7 @@ Test(exec_find_bin, execnonexistent, .init=redirect_all_stdout)
 	cr_expect(parser_start(&lst, &ast) == FUNCT_SUCCESS);
 	exec_complete_command(ast, &vshdata);
 	cr_expect(g_state->exit_code == EXIT_NOTFOUND);
-	cr_expect_stdout_eq_str("idontexist: Command not found.\n");
+	cr_expect_stderr_eq_str("vsh: idontexist: Command not found.\n");
 	parser_astdel(&ast);
 }
 
