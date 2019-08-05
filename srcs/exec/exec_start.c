@@ -6,7 +6,7 @@
 /*   By: omulder <omulder@student.codam.nl>           +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2019/05/29 17:52:22 by omulder        #+#    #+#                */
-/*   Updated: 2019/08/04 16:43:34 by jbrinksm      ########   odam.nl         */
+/*   Updated: 2019/08/05 13:17:14 by mavan-he      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -175,34 +175,19 @@ int				exec_and_or(t_ast *ast, t_vshdata *vshdata)
 	if (ast->type != AND_IF && ast->type != OR_IF)
 		return (exec_pipe_sequence(ast, vshdata, pipes));
 
-	/* always execute a deeper `and_or` node first */
-	if (ast->child->type == AND_IF || ast->child->type == OR_IF)
-	{
-		if (exec_and_or(ast->child, vshdata) == FUNCT_ERROR)
-			return (FUNCT_ERROR);
-	}
+	/* Execute the leftside of `and_or / or_if` node */
+	if (exec_and_or(ast->child, vshdata) == FUNCT_ERROR)
+		return (FUNCT_ERROR);
 
+	/* Depending on EXIT status return or continue */
 	if (ast->type == AND_IF && g_state->exit_code != EXIT_SUCCESS)
 		return (FUNCT_ERROR);
 	else if (ast->type == OR_IF && g_state->exit_code == EXIT_SUCCESS)
 		return (FUNCT_FAILURE);
 
-	/* only runs at the deepest `and_or` node */
-	if (ast->child->type != AND_IF && ast->child->type != OR_IF)
-	{
-		if (exec_pipe_sequence(ast->child, vshdata, pipes) == FUNCT_ERROR)
-			return (FUNCT_ERROR);
-	}
-
-	/* Runs once every `and_or` node */
-	if (ast->sibling->type != AND_IF && ast->sibling->type != OR_IF)
-	{
-		if ((ast->type == AND_IF && g_state->exit_code != EXIT_SUCCESS)
-		|| (ast->type == OR_IF && g_state->exit_code == EXIT_SUCCESS))
-			return (FUNCT_FAILURE);
-		if (exec_pipe_sequence(ast->sibling, vshdata, pipes) == FUNCT_ERROR)
-			return (FUNCT_ERROR);
-	}
+	/* Execute the rightside of `and_or / or_if` node  */
+	if (exec_and_or(ast->sibling, vshdata) == FUNCT_ERROR)
+		return (FUNCT_ERROR);
 	return (FUNCT_SUCCESS);
 }
 
@@ -212,26 +197,16 @@ int				exec_list(t_ast *ast, t_vshdata *vshdata)
 	if (ast->type != BG && ast->type != SEMICOL)
 		return (exec_and_or(ast, vshdata));
 
-	/* always execute a deeper `list` node first */
-	if (ast->child->type == BG || ast->child->type == SEMICOL)
-	{
-		if (exec_list(ast->child, vshdata) == FUNCT_ERROR)
-			return (FUNCT_ERROR);
-	}
+	/* if background token: do optional BG shenanigans */
 
-	/* do optional BG shenanigans */
+	/* Execute first list */
+	if (exec_and_or(ast->child, vshdata) == FUNCT_ERROR)
+		return (FUNCT_ERROR);
 
-	/* only runs at the deepest `list` node */
-	if (ast->child->type != BG && ast->child->type != SEMICOL)
+	/* If there are more lists */
+	if (ast->sibling != NULL)
 	{
-		if (exec_and_or(ast->child, vshdata) == FUNCT_ERROR)
-			return (FUNCT_ERROR);
-	}
-
-	/* runs once every `list` node */
-	if (ast->sibling->type != BG || ast->sibling->type != SEMICOL)
-	{
-		if (exec_and_or(ast->sibling, vshdata) == FUNCT_ERROR)
+		if (exec_list(ast->sibling, vshdata) == FUNCT_ERROR)
 			return (FUNCT_ERROR);
 	}
 	return (FUNCT_SUCCESS);
@@ -245,8 +220,6 @@ int				exec_complete_command(t_ast *ast, t_vshdata *vshdata)
 	/* run list */
 	if (exec_list(ast, vshdata) == FUNCT_ERROR)
 		return (FUNCT_ERROR);
-
-	/* run optional seperator */
 	
 	return (FUNCT_SUCCESS);
 }
