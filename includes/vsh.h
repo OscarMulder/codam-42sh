@@ -6,7 +6,7 @@
 /*   By: omulder <omulder@student.codam.nl>           +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2019/04/10 20:29:42 by jbrinksm       #+#    #+#                */
-/*   Updated: 2019/08/04 16:35:41 by jbrinksm      ########   odam.nl         */
+/*   Updated: 2019/08/05 13:41:43 by mavan-he      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -336,8 +336,8 @@ typedef struct	s_ast
 	t_tokens		type;
 	char			flags;
 	char			*value;
-	struct s_ast	*child;
-	struct s_ast	*sibling;
+	struct s_ast	*left;
+	struct s_ast	*right;
 }				t_ast;
 
 /*
@@ -558,7 +558,6 @@ bool			tool_check_for_whitespace(char *str);
 **----------------------------------execution-----------------------------------
 */
 
-int				exec_start(t_ast *ast, t_vshdata *vshdata);
 int				exec_complete_command(t_ast *ast, t_vshdata *vshdata);
 int				exec_list(t_ast *ast, t_vshdata *vshdata);
 int				exec_and_or(t_ast *ast, t_vshdata *vshdata);

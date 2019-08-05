@@ -6,7 +6,7 @@
 /*   By: omulder <omulder@student.codam.nl>           +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2019/05/29 17:52:22 by omulder        #+#    #+#                */
-/*   Updated: 2019/08/05 13:17:14 by mavan-he      ########   odam.nl         */
+/*   Updated: 2019/08/05 13:21:34 by mavan-he      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -22,7 +22,7 @@ static size_t	count_args(t_ast *ast)
 	while (probe != NULL)
 	{
 		i++;
-		probe = probe->child;
+		probe = probe->left;
 	}
 	return (i);
 }
@@ -48,7 +48,7 @@ static char		**create_args(t_ast *ast)
 			ft_strarrdel(&args);
 			return (NULL);
 		}
-		probe = probe->child;
+		probe = probe->left;
 		i++;
 	}
 	return (args);
@@ -78,7 +78,7 @@ static int		exec_redirs_or_assigns(t_ast *node, t_vshdata *vshdata,
 			== FUNCT_ERROR)
 				return (FUNCT_ERROR);
 		}
-		probe = probe->child;
+		probe = probe->left;
 	}
 	return (FUNCT_SUCCESS);
 }
@@ -94,8 +94,8 @@ int				exec_command(t_ast *ast, t_vshdata *vshdata, t_pipes pipes)
 		return (return_and_reset_fds(FUNCT_ERROR, vshdata));
 	if (ast->type == WORD)
 	{
-		if (ast->sibling &&
-		exec_redirs_or_assigns(ast->sibling, vshdata, ENV_TEMP) == FUNCT_ERROR)
+		if (ast->right &&
+		exec_redirs_or_assigns(ast->right, vshdata, ENV_TEMP) == FUNCT_ERROR)
 			return (return_and_reset_fds(FUNCT_ERROR, vshdata));
 		command = create_args(ast);
 		if (command == NULL)
@@ -114,7 +114,7 @@ int				exec_command(t_ast *ast, t_vshdata *vshdata, t_pipes pipes)
 **	Recursively runs commands of the whole pipesequence, and
 **	redirects their input and output according to the pipesequence.
 **
-**	The child of the last pipenode in the pipesequence is the first
+**	The left of the last pipenode in the pipesequence is the first
 **	command in the pipesequence PIPE_START. All other commands will
 **	be siblings of pipenodes, and will thus be PIPE_EXTEND.
 */
@@ -134,20 +134,20 @@ int				exec_pipe_sequence(t_ast *ast, t_vshdata *vshdata, t_pipes pipes)
 		return (FUNCT_FAILURE);
 	}
 	/* always execute a deeper `pipe_sequence` node first */
-	if (ast->child->type == PIPE)
+	if (ast->left->type == PIPE)
 	{
 		childpipes = pipes;
 		childpipes.parentpipe[0] = pipes.currentpipe[0];
 		childpipes.parentpipe[1] = pipes.currentpipe[1];
-		if (exec_pipe_sequence(ast->child, vshdata, childpipes) == FUNCT_ERROR)
+		if (exec_pipe_sequence(ast->left, vshdata, childpipes) == FUNCT_ERROR)
 			return (FUNCT_ERROR);
 	}
 
 	/* this is the first command node of the pipe sequence */
-	if (ast->child->type != PIPE)
+	if (ast->left->type != PIPE)
 	{
 		pipes.pipeside = PIPE_START;
-		if (exec_command(ast->child, vshdata, pipes) == FUNCT_ERROR)
+		if (exec_command(ast->left, vshdata, pipes) == FUNCT_ERROR)
 			return (FUNCT_ERROR);
 	}
 
@@ -156,7 +156,7 @@ int				exec_pipe_sequence(t_ast *ast, t_vshdata *vshdata, t_pipes pipes)
 
 	/* these are the nodes to be piped towards (and potentially from) */
 	pipes.pipeside = PIPE_EXTEND;
-	if (exec_command(ast->sibling, vshdata, pipes) == FUNCT_ERROR)
+	if (exec_command(ast->right, vshdata, pipes) == FUNCT_ERROR)
 		return (FUNCT_ERROR);
 
 	/* always attempt to close the read end of pipe */
@@ -176,7 +176,7 @@ int				exec_and_or(t_ast *ast, t_vshdata *vshdata)
 		return (exec_pipe_sequence(ast, vshdata, pipes));
 
 	/* Execute the leftside of `and_or / or_if` node */
-	if (exec_and_or(ast->child, vshdata) == FUNCT_ERROR)
+	if (exec_and_or(ast->left, vshdata) == FUNCT_ERROR)
 		return (FUNCT_ERROR);
 
 	/* Depending on EXIT status return or continue */
@@ -186,7 +186,7 @@ int				exec_and_or(t_ast *ast, t_vshdata *vshdata)
 		return (FUNCT_FAILURE);
 
 	/* Execute the rightside of `and_or / or_if` node  */
-	if (exec_and_or(ast->sibling, vshdata) == FUNCT_ERROR)
+	if (exec_and_or(ast->right, vshdata) == FUNCT_ERROR)
 		return (FUNCT_ERROR);
 	return (FUNCT_SUCCESS);
 }
@@ -200,13 +200,13 @@ int				exec_list(t_ast *ast, t_vshdata *vshdata)
 	/* if background token: do optional BG shenanigans */
 
 	/* Execute first list */
-	if (exec_and_or(ast->child, vshdata) == FUNCT_ERROR)
+	if (exec_and_or(ast->left, vshdata) == FUNCT_ERROR)
 		return (FUNCT_ERROR);
 
 	/* If there are more lists */
-	if (ast->sibling != NULL)
+	if (ast->right != NULL)
 	{
-		if (exec_list(ast->sibling, vshdata) == FUNCT_ERROR)
+		if (exec_list(ast->right, vshdata) == FUNCT_ERROR)
 			return (FUNCT_ERROR);
 	}
 	return (FUNCT_SUCCESS);
