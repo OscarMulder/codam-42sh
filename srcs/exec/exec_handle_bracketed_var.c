@@ -6,7 +6,7 @@
 /*   By: jbrinksm <jbrinksm@student.codam.nl>         +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2019/07/14 01:02:46 by jbrinksm       #+#    #+#                */
-/*   Updated: 2019/07/31 17:52:44 by mavan-he      ########   odam.nl         */
+/*   Updated: 2019/08/05 16:43:37 by mavan-he      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,7 +17,7 @@
 **	replace it with the value of the parameter.
 */
 
-static int	exec_var_error_print(char *str, int len)
+int			exec_var_error_print(char *str, int len)
 {
 	ft_eprintf("vsh: %.*s: bad substitution\n", len, str);
 	g_state->exit_code = EXIT_WRONG_USE;

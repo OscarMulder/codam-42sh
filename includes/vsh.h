@@ -6,7 +6,7 @@
 /*   By: omulder <omulder@student.codam.nl>           +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2019/04/10 20:29:42 by jbrinksm       #+#    #+#                */
-/*   Updated: 2019/08/04 16:26:23 by mavan-he      ########   odam.nl         */
+/*   Updated: 2019/08/05 16:43:54 by mavan-he      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -574,6 +574,7 @@ int				exec_handle_bracketed_var(char **value, int *i, t_envlst *envlst);
 int				exec_handle_dollar(char **value, int *i, t_envlst *envlst);
 void			exec_quote_remove(t_ast *node);
 int				exec_tilde_expansion(t_ast *node, int *i);
+int				exec_var_error_print(char *str, int len);
 int				exec_validate_binary(char *binary);
 
 void			signal_print_newline(int signum);
