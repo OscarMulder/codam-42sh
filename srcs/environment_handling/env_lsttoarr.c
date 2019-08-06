@@ -6,7 +6,7 @@
 /*   By: jbrinksm <jbrinksm@student.codam.nl>         +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2019/06/04 10:54:56 by jbrinksm       #+#    #+#                */
-/*   Updated: 2019/08/05 15:22:10 by mavan-he      ########   odam.nl         */
+/*   Updated: 2019/08/06 11:05:07 by tde-jong      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -21,7 +21,7 @@ int		env_lstlen(t_envlst *lst)
 	len = 0;
 	while (probe != NULL)
 	{
-		if (probe->type & ENV_EXTERN || probe->type & ENV_TEMP)
+		if (probe->type & (ENV_EXTERN | ENV_TEMP))
 			len++;
 		probe = probe->next;
 	}
@@ -43,7 +43,7 @@ char	**env_lsttoarr(t_envlst *lst)
 	probe = lst;
 	while (i < len)
 	{
-		if (probe->type & ENV_EXTERN || probe->type & ENV_TEMP)
+		if (probe->type & (ENV_EXTERN | ENV_TEMP))
 		{
 			vshenviron[i] = probe->var;
 			i++;
