@@ -6,7 +6,7 @@
 /*   By: omulder <omulder@student.codam.nl>           +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2019/04/10 20:29:42 by jbrinksm       #+#    #+#                */
-/*   Updated: 2019/08/06 11:10:48 by mavan-he      ########   odam.nl         */
+/*   Updated: 2019/08/06 12:20:52 by mavan-he      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -29,6 +29,11 @@
 # define E_STAT_STR "vsh: could not get stat info of file\n"
 # define E_ALLOC_STR "vsh: failed to allocate enough memory\n"
 # define E_FORK_STR "vsh: Fork Failed\n"
+# define E_HOME_NOTSET_STR "vsh: Environment value HOME not set\n"
+# define E_HIST_READ_STR "vsh: Failed to read history file\n"
+# define E_HIST_OPEN_STR "vsh: Failed to open / create history file\n"
+# define E_ALIAS_OPEN_STR "vsh: Failed to open alias file\n"
+# define E_ALIAS_READ_STR "vsh: Failed to read alias file\n"
 # define E_ALLOC 420
 # define E_DUP 100
 # define E_OPEN 101
@@ -368,8 +373,8 @@ char			**env_free_and_return_null(char ***vshenviron);
 t_envlst	*env_getlst(void);
 void		env_lstaddback(t_envlst **lst, t_envlst *new);
 t_envlst	*env_lstnew(char *var, unsigned char type);
-char		**env_lsttoarr(t_envlst *lst, unsigned char minimal_type);
-int			env_lstlen(t_envlst *lst, unsigned char minimal_type);
+char		**env_lsttoarr(t_envlst *lst);
+int			env_lstlen(t_envlst *lst);
 void		env_lstdel(t_envlst **envlst);
 void   		env_remove_tmp(t_envlst *env);
 void		env_sort(t_envlst *head);
@@ -575,14 +580,20 @@ void			exec_cmd(char **args, t_vshdata *vshdata);
 bool			exec_builtin(char **args, t_vshdata *vshdata);
 void			exec_external(char **args, t_vshdata *vshdata);
 int				exec_find_binary(char *filename, t_vshdata *vshdata, char **binary);
-int				exec_handle_variables(t_ast *node, t_envlst *envlst);
-int				exec_handle_bracketed_var(char **value, int *i, t_envlst *envlst);
-int				exec_handle_dollar(char **value, int *i, t_envlst *envlst);
 void			exec_quote_remove(t_ast *node);
-int				exec_tilde_expansion(t_ast *node, int *i);
 int				exec_validate_binary(char *binary);
 
 void			signal_print_newline(int signum);
+
+/*
+**------------------------------------expan-------------------------------------
+*/
+
+int				expan_handle_variables(t_ast *node, t_envlst *envlst);
+int				expan_handle_bracketed_var(char **value, int *i, t_envlst *envlst);
+int				expan_handle_dollar(char **value, int *i, t_envlst *envlst);
+int				expan_tilde_expansion(t_ast *node, int *i);
+int				expan_var_error_print(char *str, int len);
 
 /*
 **------------------------------------redir-------------------------------------
@@ -627,6 +638,7 @@ int				history_index_change_up(t_inputdata *data);
 int				error_return(int ret, int error, char *opt_str);
 int				err_ret_exit(char *str, int exitcode);
 void			err_void_exit(char *str, int exitcode);
+int				err_ret(char *str);
 
 /*
 **----------------------------------debugging-----------------------------------
