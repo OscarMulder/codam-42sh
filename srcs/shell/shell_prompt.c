@@ -6,7 +6,7 @@
 /*   By: jbrinksm <jbrinksm@student.codam.nl>         +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2019/04/11 20:16:38 by jbrinksm       #+#    #+#                */
-/*   Updated: 2019/08/01 16:16:57 by rkuijper      ########   odam.nl         */
+/*   Updated: 2019/08/06 11:24:26 by jbrinksm      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -24,12 +24,12 @@ void	shell_display_prompt(t_vshdata *vshdata)
 	else
 		arrow = RED "> ";
 	lastdir = shell_getcurrentdir(cwd);
-	vshdata->prompt_len = 7;
-	if (lastdir == NULL)
+	vshdata->prompt_len = 6;
+	// if (lastdir == NULL)
 		ft_printf(RED "vsh %s" RESET, arrow);
-	else
-	{
-		ft_printf(RED "vsh " BLU "%s %s" RESET, lastdir, arrow);
-		vshdata->prompt_len = 8 + ft_strlen(lastdir);
-	}
+	// else
+	// {
+	// 	ft_printf(RED "vsh " BLU "%s %s" RESET, lastdir, arrow);
+	// 	vshdata->prompt_len = 6 + ft_strlen(lastdir);
+	// }
 }
