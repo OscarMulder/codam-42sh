@@ -6,13 +6,13 @@
 /*   By: mavan-he <mavan-he@student.codam.nl>         +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2019/08/06 16:16:21 by mavan-he       #+#    #+#                */
-/*   Updated: 2019/08/06 18:17:59 by mavan-he      ########   odam.nl         */
+/*   Updated: 2019/08/06 20:21:53 by tde-jong      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "vsh.h"
 
-int		find_files(t_ast *ast)
+static int	find_files(t_ast *ast)
 {
 	char	*file;
 	int		fd;
@@ -39,7 +39,7 @@ int		find_files(t_ast *ast)
 	return (FUNCT_SUCCESS);
 }
 
-int		exec_create_files(t_ast *ast)
+int			exec_create_files(t_ast *ast)
 {
 	if (ast->left->type != PIPE)
 	{
