@@ -6,7 +6,7 @@
 /*   By: omulder <omulder@student.codam.nl>           +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2019/04/10 20:29:42 by jbrinksm       #+#    #+#                */
-/*   Updated: 2019/08/06 15:54:28 by tde-jong      ########   odam.nl         */
+/*   Updated: 2019/08/06 16:27:57 by tde-jong      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -538,7 +538,7 @@ int				builtin_alias_set(char *arg, t_aliaslst **aliaslst);
 void			builtin_alias_delnode(t_aliaslst **node);
 void			builtin_alias_lstdel(t_aliaslst **lst);
 void			builtin_unalias(char **args, t_aliaslst **aliaslst);
-void			builtin_type(char **args, t_envlst *envlst);
+void			builtin_type(char **args, t_envlst *envlst, t_aliaslst *aliaslst);
 int				builtin_cd(char **args, t_envlst *envlst);
 void			builtin_cd_create_newpath(char **newpath, char *argpath);
 int				builtin_cd_change_dir(char *argpath, t_envlst *envlst,

@@ -6,7 +6,7 @@
 /*   By: omulder <omulder@student.codam.nl>           +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2019/05/29 16:59:41 by omulder        #+#    #+#                */
-/*   Updated: 2019/08/06 14:43:41 by tde-jong      ########   odam.nl         */
+/*   Updated: 2019/08/06 16:28:51 by tde-jong      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -29,7 +29,7 @@ bool	exec_builtin(char **args, t_vshdata *vshdata)
 	else if (ft_strequ(args[0], "history"))
 		history_print(vshdata->history);
 	else if (ft_strequ(args[0], "type"))
-		builtin_type(args, vshdata->envlst);
+		builtin_type(args, vshdata->envlst, vshdata->aliaslst);
 	else if (ft_strequ(args[0], "alias"))
 		builtin_alias(args, &vshdata->aliaslst);
 	else if (ft_strequ(args[0], "unalias"))
