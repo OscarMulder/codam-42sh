@@ -6,7 +6,7 @@
 /*   By: omulder <omulder@student.codam.nl>           +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2019/05/29 17:52:22 by omulder        #+#    #+#                */
-/*   Updated: 2019/08/06 12:19:51 by mavan-he      ########   odam.nl         */
+/*   Updated: 2019/08/06 12:25:18 by mavan-he      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -87,7 +87,7 @@ int				exec_command(t_ast *ast, t_vshdata *vshdata, t_pipes pipes)
 {
 	char	**command;
 
-	if (exec_handle_variables(ast, vshdata->envlst) == FUNCT_ERROR)
+	if (expan_handle_variables(ast, vshdata->envlst) == FUNCT_ERROR)
 		return (FUNCT_ERROR);
 	exec_quote_remove(ast);
 	if (redir_handle_pipe(pipes) == FUNCT_ERROR)
