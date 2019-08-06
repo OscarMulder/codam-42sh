@@ -6,7 +6,7 @@
 /*   By: omulder <omulder@student.codam.nl>           +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2019/04/10 20:29:42 by jbrinksm       #+#    #+#                */
-/*   Updated: 2019/08/05 15:05:10 by mavan-he      ########   odam.nl         */
+/*   Updated: 2019/08/06 11:10:48 by mavan-he      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -498,7 +498,7 @@ char			**alias_add_expanded(char **expanded, char *alias, char *alias_equal);
 */
 int				parser_start(t_tokenlst **token_lst, t_ast **ast);
 bool			parser_add_astnode(t_tokenlst **token_lst, t_ast **ast);
-bool			parser_add_sibling(t_tokenlst **token_lst, t_ast **ast,
+bool			parser_add_right(t_tokenlst **token_lst, t_ast **ast,
 				bool (*parse_priority_x)(t_tokenlst **, t_ast **));
 t_ast			*parser_new_node(t_tokenlst *token);
 bool			parser_command(t_tokenlst **token_lst, t_ast **ast);

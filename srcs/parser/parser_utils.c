@@ -6,7 +6,7 @@
 /*   By: mavan-he <mavan-he@student.codam.nl>         +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2019/05/21 19:54:55 by mavan-he       #+#    #+#                */
-/*   Updated: 2019/08/05 13:21:34 by mavan-he      ########   odam.nl         */
+/*   Updated: 2019/08/06 11:10:48 by mavan-he      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -56,7 +56,7 @@ t_ast	*parser_new_node(t_tokenlst *token)
 	return (node);
 }
 
-bool	parser_add_sibling(t_tokenlst **token_lst, t_ast **ast,
+bool	parser_add_right(t_tokenlst **token_lst, t_ast **ast,
 		bool (*parse_priority_x)(t_tokenlst **, t_ast **))
 {
 	t_ast *right;
