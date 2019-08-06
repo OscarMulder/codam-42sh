@@ -6,7 +6,7 @@
 /*   By: tde-jong <tde-jong@student.codam.nl>         +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2019/06/05 15:16:46 by tde-jong       #+#    #+#                */
-/*   Updated: 2019/08/04 16:07:37 by mavan-he      ########   odam.nl         */
+/*   Updated: 2019/08/06 13:18:53 by tde-jong      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -83,11 +83,11 @@ static int	check_paths(char **paths, char *filename, char **binary)
 	return (FUNCT_FAILURE);
 }
 
-int			exec_find_binary(char *filename, t_vshdata *vshdata, char **binary)
+int			exec_find_binary(char *filename, t_envlst *envlst, char **binary)
 {
 	char			**paths;
 
-	if (get_paths(filename, vshdata->envlst, &paths) == FUNCT_ERROR)
+	if (get_paths(filename, envlst, &paths) == FUNCT_ERROR)
 		return (FUNCT_ERROR);
 	if (check_paths(paths, filename, binary) == FUNCT_ERROR)
 		return (FUNCT_ERROR);
