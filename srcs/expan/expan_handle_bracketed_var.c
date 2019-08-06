@@ -1,7 +1,7 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        ::::::::            */
-/*   exec_handle_bracketed_var.c                        :+:    :+:            */
+/*   expan_handle_bracketed_var.c                        :+:    :+:            */
 /*                                                     +:+                    */
 /*   By: jbrinksm <jbrinksm@student.codam.nl>         +#+                     */
 /*                                                   +#+                      */
@@ -17,7 +17,7 @@
 **	replace it with the value of the parameter.
 */
 
-int			exec_var_error_print(char *str, int len)
+int			expan_var_error_print(char *str, int len)
 {
 	ft_eprintf("vsh: %.*s: bad substitution\n", len, str);
 	g_state->exit_code = EXIT_WRONG_USE;
@@ -54,7 +54,7 @@ static int	repl_bracketed_var(char **value, char *replace_str,
 **	and get its value (or nothing if it doesn't exist)
 */
 
-int			exec_handle_bracketed_var(char **value, int *i, t_envlst *envlst)
+int			expan_handle_bracketed_var(char **value, int *i, t_envlst *envlst)
 {
 	int		i_dollar;
 	char	*identifier;
@@ -65,7 +65,7 @@ int			exec_handle_bracketed_var(char **value, int *i, t_envlst *envlst)
 	while (tools_isidentifierchar((*value)[*i]) == true)
 		(*i)++;
 	if ((*value)[*i] != '}' || *i == i_dollar + 2)
-		return (exec_var_error_print(&(*value)[i_dollar], (*i - i_dollar) + 1));
+		return (expan_var_error_print(&(*value)[i_dollar], (*i - i_dollar) + 1));
 	identifier = ft_strndup(&(*value)[i_dollar + 2], *i - (i_dollar + 2));
 	if (identifier == NULL)
 		return (FUNCT_ERROR);

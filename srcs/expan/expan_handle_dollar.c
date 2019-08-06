@@ -1,12 +1,12 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        ::::::::            */
-/*   exec_handle_dollar.c                               :+:    :+:            */
+/*   expan_handle_dollar.c                              :+:    :+:            */
 /*                                                     +:+                    */
 /*   By: jbrinksm <jbrinksm@student.codam.nl>         +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2019/07/14 01:05:00 by jbrinksm       #+#    #+#                */
-/*   Updated: 2019/08/05 17:05:52 by mavan-he      ########   odam.nl         */
+/*   Updated: 2019/08/06 10:53:34 by mavan-he      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -52,7 +52,7 @@ static int	repl_regular_var(char **value, char *replace_str,
 **	and get its value (or nothing if it doesn't exist)
 */
 
-static int	exec_handle_var(char **value, int *i, t_envlst *envlst)
+static int	expan_handle_var(char **value, int *i, t_envlst *envlst)
 {
 	int		i_dollar;
 	char	*replace_str;
@@ -78,7 +78,7 @@ static int	exec_handle_var(char **value, int *i, t_envlst *envlst)
 	return (FUNCT_SUCCESS);
 }
 
-static int	exec_questionmark(char **value, int *i)
+static int	expan_questionmark(char **value, int *i)
 {
 	int		i_dollar;
 	char	*exit_str;
@@ -89,7 +89,7 @@ static int	exec_questionmark(char **value, int *i)
 	{
 		(*i) += 2;
 		if ((*value)[*i] != '}')
-			return (exec_var_error_print(&(*value)[i_dollar],
+			return (expan_var_error_print(&(*value)[i_dollar],
 			(*i - i_dollar) + 1));
 	}
 	(*i)++;
@@ -103,16 +103,16 @@ static int	exec_questionmark(char **value, int *i)
 	return (FUNCT_SUCCESS);
 }
 
-int			exec_handle_dollar(char **value, int *i, t_envlst *envlst)
+int			expan_handle_dollar(char **value, int *i, t_envlst *envlst)
 {
 	if ((*value)[*i + 1] == '{')
 	{
 		if ((*value)[*i + 2] == '?')
-			return (exec_questionmark(value, i));
-		return (exec_handle_bracketed_var(value, i, envlst));
+			return (expan_questionmark(value, i));
+		return (expan_handle_bracketed_var(value, i, envlst));
 	}
 	else if ((*value)[*i + 1] == '?')
-		return (exec_questionmark(value, i));
+		return (expan_questionmark(value, i));
 	else
-		return (exec_handle_var(value, i, envlst));
+		return (expan_handle_var(value, i, envlst));
 }
