@@ -6,7 +6,7 @@
 /*   By: omulder <omulder@student.codam.nl>           +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2019/04/17 14:03:16 by jbrinksm       #+#    #+#                */
-/*   Updated: 2019/08/07 18:45:13 by jbrinksm      ########   odam.nl         */
+/*   Updated: 2019/08/07 19:49:40 by omulder       ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -102,7 +102,7 @@ static int	get_cursor_linepos()
 		ft_strdel(&response);
 		return (-1);
 	}
-	return ((short)ft_atoi(&response[i + 1]));
+	return ((short)ft_atoi(&response[i + 1]) /*needs unsigned atoi and short  ret */);
 }
 
 void		curs_relocate(void)
@@ -195,10 +195,12 @@ int			input_read_ansi(t_inputdata *data, char *line)
 			ft_strdel(&termcapbuf);
 			return (FUNCT_ERROR);
 		}
+
 		if (ft_strequ(termcapbuf, TC_LEFT_ARROW) == true)
 			curs_move_left(data);
 		else if (ft_strequ(termcapbuf, TC_RIGHT_ARROW) == true)
 			curs_move_right(data, line);
+
 		else
 		{
 			ft_strdel(&termcapbuf);
@@ -211,19 +213,19 @@ int			input_read_ansi(t_inputdata *data, char *line)
 	return (FUNCT_FAILURE);
 }
 
-int			input_read(t_vshdata *vshdata)
+int			input_read(t_vshdata *vshdata /*will need ws.ws_col backup and cursor backup x and y*/)
 {
 	t_inputdata *data;
-	
+
 	data = init_inputdata(vshdata);
 	if (data == NULL)
 		return (FUNCT_ERROR);
 	vshdata->line = ft_strnew(data->len_max);
 	if (vshdata->line == NULL)
 		return (ft_free_return(data, FUNCT_ERROR));
-	
 	while (true)
 	{
+		// get and compare new ws.ws_col
 		if (read(STDIN_FILENO, &data->c, 1) == -1)
 			return (ft_free_return(data, FUNCT_ERROR));
 		if (input_parse_ctrl_c(data) == FUNCT_SUCCESS)
@@ -238,6 +240,36 @@ int			input_read(t_vshdata *vshdata)
 	}
 	return (ft_free_return(data, FUNCT_ERROR));
 }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 // int			input_read(t_vshdata *vshdata, char **line, int *status)
 // {
