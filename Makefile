@@ -6,7 +6,7 @@
 #    By: omulder <omulder@student.codam.nl>           +#+                      #
 #                                                    +#+                       #
 #    Created: 2019/04/10 20:30:07 by jbrinksm       #+#    #+#                 #
-#    Updated: 2019/08/07 11:50:10 by mavan-he      ########   odam.nl          #
+#    Updated: 2019/08/07 16:23:38 by mavan-he      ########   odam.nl          #
 #                                                                              #
 # **************************************************************************** #
 
@@ -90,6 +90,9 @@ fclean: clean
 
 re: fclean all
 
+run_valgrind_vsh: all
+	@valgrind --tool=memcheck --leak-check=full ./vsh
+
 test_norm: fclean
 	@echo "[ + ] cloning norminette+"
 	@git clone https://github.com/thijsdejong/codam-norminette-plus ~/norminette+
@@ -110,8 +113,6 @@ test: build_test
 test_valgrind: build_test
 	@valgrind --tool=memcheck --leak-check=full ./vsh_tests
 
-valgrindvsh: all
-	@valgrind --tool=memcheck --leak-check=full ./vsh
 
 test_coverage: COVERAGE = -coverage
 test_coverage: test
