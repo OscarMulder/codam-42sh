@@ -6,7 +6,7 @@
 #    By: omulder <omulder@student.codam.nl>           +#+                      #
 #                                                    +#+                       #
 #    Created: 2019/04/10 20:30:07 by jbrinksm       #+#    #+#                 #
-#    Updated: 2019/08/06 16:36:01 by mavan-he      ########   odam.nl          #
+#    Updated: 2019/08/07 11:50:10 by mavan-he      ########   odam.nl          #
 #                                                                              #
 # **************************************************************************** #
 
@@ -109,6 +109,9 @@ test: build_test
 
 test_valgrind: build_test
 	@valgrind --tool=memcheck --leak-check=full ./vsh_tests
+
+valgrindvsh: all
+	@valgrind --tool=memcheck --leak-check=full ./vsh
 
 test_coverage: COVERAGE = -coverage
 test_coverage: test
