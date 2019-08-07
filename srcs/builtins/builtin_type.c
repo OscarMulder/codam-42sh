@@ -6,7 +6,7 @@
 /*   By: tde-jong <tde-jong@student.codam.nl>         +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2019/08/06 13:09:18 by tde-jong       #+#    #+#                */
-/*   Updated: 2019/08/07 13:40:19 by tde-jong      ########   odam.nl         */
+/*   Updated: 2019/08/07 15:38:13 by tde-jong      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -53,15 +53,21 @@ static bool	is_binary(char *name, t_envlst *envlst)
 
 static bool	is_executable(char *name)
 {
-	char *ret;
+	char	*ret;
+	char	*currpath;
 
 	if (!ft_strnequ(name, "./", 2) && !ft_strnequ(name, "../", 3))
 		return (false);
-	ret = builtin_cd_create_newpath_wrap(getcwd(NULL, 0), name);
+	currpath = getcwd(NULL, 0);
+	if (currpath == NULL)
+		return (false);
+	ret = builtin_cd_create_newpath_wrap(currpath, name);
+	ft_strdel(&currpath);
 	if (ret == NULL)
 		return (false);
 	if (access(ret, F_OK) == -1 || access(ret, X_OK) == -1)
 		return (false);
+	ft_strdel(&ret);
 	ft_printf("%s is %s\n", name, name);
 	return (true);
 }
