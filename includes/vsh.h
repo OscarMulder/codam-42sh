@@ -6,7 +6,7 @@
 /*   By: omulder <omulder@student.codam.nl>           +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2019/04/10 20:29:42 by jbrinksm       #+#    #+#                */
-/*   Updated: 2019/08/06 16:17:58 by mavan-he      ########   odam.nl         */
+/*   Updated: 2019/08/07 11:09:48 by jbrinksm      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -263,6 +263,7 @@ typedef struct	s_vshdata
 	int			stdfds[3];
 	char		*history_file;
 	char		*alias_file;
+	char		*line;
 }				t_vshdata;
 
 /*

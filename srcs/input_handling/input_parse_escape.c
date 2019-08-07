@@ -6,7 +6,7 @@
 /*   By: rkuijper <rkuijper@student.codam.nl>         +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2019/05/16 13:36:25 by rkuijper       #+#    #+#                */
-/*   Updated: 2019/08/02 10:03:20 by tde-jong      ########   odam.nl         */
+/*   Updated: 2019/08/07 10:18:59 by jbrinksm      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,16 +15,30 @@
 int	input_parse_escape(t_inputdata *data)
 {
 	if (data->input_state == INPUT_NONE && data->c == '\e')
+	{
+		ft_eprintf("ESC RECIEVED\n");
 		data->input_state = INPUT_ESC;
+	}
 	else if (data->input_state == INPUT_ESC && data->c == '\e')
-		data->input_state = INPUT_D_ESC;
-	else if ((data->input_state == INPUT_ESC
-			|| data->input_state == INPUT_D_ESC) && data->c == '[')
+	{
+		ft_eprintf("DESC RECIEVED\n");
+		// data->input_state = INPUT_D_ESC;
+		data->input_state = INPUT_ESC;
+	}
+	else if (data->input_state == INPUT_ESC && data->c == '[')
+	{
+		ft_eprintf("LBRACE RECEIVED\n");
 		(data->input_state)++;
-	else if ((data->input_state == INPUT_BRACE
-			|| data->input_state == INPUT_D_BRACE) && data->c == '3')
+	}
+	else if (data->input_state == INPUT_BRACE && data->c == '3')
+	{
+		ft_eprintf("3 RECIEVED\n");
 		(data->input_state)++;
+	}
 	else
+	{
+		ft_eprintf("%c RECEIVED\n", data->c);
 		return (FUNCT_FAILURE);
+	}
 	return (FUNCT_SUCCESS);
 }
