@@ -6,7 +6,7 @@
 /*   By: tde-jong <tde-jong@student.codam.nl>         +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2019/08/07 09:57:59 by tde-jong       #+#    #+#                */
-/*   Updated: 2019/08/07 10:17:13 by tde-jong      ########   odam.nl         */
+/*   Updated: 2019/08/07 11:21:39 by tde-jong      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -37,14 +37,14 @@ static char		*check_dir(DIR *d, char *filename, char *path)
 	return (NULL);
 }
 
-char			*builtin_type_find_binary(char *filename, t_vshdata *vshdata)
+char			*builtin_type_find_binary(char *filename, t_envlst *envlst)
 {
 	DIR				*d;
 	char			**paths;
 	char			*ret;
 	size_t			i;
 
-	paths = get_paths(vshdata->envlst);
+	paths = get_paths(envlst);
 	if (paths == NULL)
 		return (NULL);
 	i = 0;

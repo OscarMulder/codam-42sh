@@ -6,7 +6,7 @@
 /*   By: tde-jong <tde-jong@student.codam.nl>         +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2019/08/06 13:09:18 by tde-jong       #+#    #+#                */
-/*   Updated: 2019/08/06 16:32:28 by tde-jong      ########   odam.nl         */
+/*   Updated: 2019/08/07 13:40:19 by tde-jong      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -41,13 +41,29 @@ static bool	is_binary(char *name, t_envlst *envlst)
 {
 	char *binary;
 
-	if (exec_find_binary(name, envlst, &binary) && binary != NULL)
+	binary = builtin_type_find_binary(name, envlst);
+	if (binary != NULL)
 	{
 		ft_printf("%s is %s\n", name, binary);
 		ft_strdel(&binary);
 		return (true);
 	}
 	return (false);
+}
+
+static bool	is_executable(char *name)
+{
+	char *ret;
+
+	if (!ft_strnequ(name, "./", 2) && !ft_strnequ(name, "../", 3))
+		return (false);
+	ret = builtin_cd_create_newpath_wrap(getcwd(NULL, 0), name);
+	if (ret == NULL)
+		return (false);
+	if (access(ret, F_OK) == -1 || access(ret, X_OK) == -1)
+		return (false);
+	ft_printf("%s is %s\n", name, name);
+	return (true);
 }
 
 void		builtin_type(char **args, t_envlst *envlst, t_aliaslst *aliaslst)
@@ -58,8 +74,10 @@ void		builtin_type(char **args, t_envlst *envlst, t_aliaslst *aliaslst)
 	i = 1;
 	while (args[i] != NULL)
 	{
-		if (is_builtin(args[i]) == false && is_alias(args[i], aliaslst) == false
-			&& is_binary(args[i], envlst) == false)
+		if (is_builtin(args[i]) == false &&
+			is_alias(args[i], aliaslst) == false &&
+			is_binary(args[i], envlst) == false &&
+			is_executable(args[i]) == false)
 		{
 			g_state->exit_code = EXIT_FAILURE;
 			ft_eprintf("vsh: type: %s: not found\n", args[i]);
