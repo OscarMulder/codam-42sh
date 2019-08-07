@@ -6,11 +6,12 @@
 /*   By: omulder <omulder@student.codam.nl>           +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2019/05/16 13:41:00 by rkuijper       #+#    #+#                */
-/*   Updated: 2019/08/07 11:25:51 by jbrinksm      ########   odam.nl         */
+/*   Updated: 2019/08/07 20:32:54 by jbrinksm      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "vsh.h"
+#include <sys/ioctl.h>
 
 // static void	parse_next_move_word(unsigned *index, char **line)
 // {
@@ -50,3 +51,25 @@
 // 	}
 // 	return (FUNCT_FAILURE);
 // }
+
+void		curs_move_right(t_inputdata *data, char *line)
+{
+	struct winsize	ws;
+	size_t			linelen;
+
+	ioctl(STDIN_FILENO, TIOCGWINSZ, &ws);
+	linelen = ft_strlen(line);
+	ft_eprintf("R BEF LINEPOS: %i/%i\n", get_cursor_linepos(), ws.ws_col);
+	if (data->index < linelen)
+	{
+		if (get_cursor_linepos() == ws.ws_col)
+		{
+			ft_putstr("\e[B");
+			ft_printf("\e[%iD", ws.ws_col - 1);
+		}
+		else
+			ft_putstr(CURS_RIGHT);
+		(data->index)++;
+	}
+	ft_eprintf("R AFT LINEPOS: %i/%i\n", get_cursor_linepos(), ws.ws_col);
+}

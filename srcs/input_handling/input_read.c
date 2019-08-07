@@ -6,12 +6,14 @@
 /*   By: omulder <omulder@student.codam.nl>           +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2019/04/17 14:03:16 by jbrinksm       #+#    #+#                */
-/*   Updated: 2019/08/07 19:49:40 by omulder       ########   odam.nl         */
+/*   Updated: 2019/08/07 22:44:53 by jbrinksm      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "vsh.h"
 #include <unistd.h>
+#include <sys/ioctl.h> // REMOVE
+#include <term.h> //remove
 
 void		input_clear_char_at(char **line, unsigned index)
 {
@@ -79,12 +81,7 @@ static char	*get_cursor_pos(void)
 	return (buf);
 }
 
-#include <sys/ioctl.h> //ADDED BY ME
-#define TC_GETCURSORPOS "\e[6n" //ADDED BY ME
-#define CURS_LEFT "\e[D"
-#define CURS_RIGHT "\e[C"
-
-static int	get_cursor_linepos()
+int		get_cursor_linepos(void)
 {
 	char	*response;
 	int		i;
@@ -105,78 +102,7 @@ static int	get_cursor_linepos()
 	return ((short)ft_atoi(&response[i + 1]) /*needs unsigned atoi and short  ret */);
 }
 
-void		curs_relocate(void)
-{
-	struct winsize	ws;
-
-	ioctl(STDIN_FILENO, TIOCGWINSZ, &ws);
-	ft_eprintf("REPOS BEF LINEPOS: %i/%i\n", get_cursor_linepos(), ws.ws_col);
-	if (get_cursor_linepos() == ws.ws_col + 1)
-		ft_eprintf("ERRORRR\n");
-	ft_eprintf("REPOS AFT LINEPOS: %i/%i\n", get_cursor_linepos(), ws.ws_col);
-}
-
-void		curs_move_left_n(t_inputdata *data, int n)
-{
-	int i;
-
-	if (n <= 0)
-		return ;
-	i = 0;
-	while (i < n)
-	{
-		curs_move_left(data);
-		i++;
-	}
-}
-
-void		curs_move_left(t_inputdata *data) //PROTECT
-{
-	struct winsize	ws;
-
-	ioctl(STDIN_FILENO, TIOCGWINSZ, &ws);
-	ft_eprintf("L BEF LINEPOS: %i/%i\n", get_cursor_linepos(), ws.ws_col);
-	if (data->index > 0)
-	{
-		if (get_cursor_linepos() == 1)
-		{
-			ft_putstr("\e[A");
-			ft_printf("\e[%iC", ws.ws_col - 1);
-		}
-		else
-			ft_putstr(CURS_LEFT);
-		(data->index)--;
-	}
-	ft_eprintf("L AFT LINEPOS: %i/%i\n", get_cursor_linepos(), ws.ws_col);
-}
-
-void		curs_move_right(t_inputdata *data, char *line)
-{
-	struct winsize	ws;
-	size_t			linelen;
-
-	ioctl(STDIN_FILENO, TIOCGWINSZ, &ws);
-	linelen = ft_strlen(line);
-	ft_eprintf("R BEF LINEPOS: %i/%i\n", get_cursor_linepos(), ws.ws_col);
-	if (data->index < linelen)
-	{
-		if (get_cursor_linepos() == ws.ws_col)
-		{
-			ft_putstr("\e[B");
-			ft_printf("\e[%iD", ws.ws_col - 1);
-		}
-		else
-			ft_putstr(CURS_RIGHT);
-		(data->index)++;
-	}
-	ft_eprintf("R AFT LINEPOS: %i/%i\n", get_cursor_linepos(), ws.ws_col);
-}
-
-#define TERMCAPBUFFSIZE 12
-#define TC_LEFT_ARROW "\e[D"
-#define TC_RIGHT_ARROW "\e[C"
-
-int			input_read_ansi(t_inputdata *data, char *line)
+int			input_read_ansi(t_inputdata *data, t_vshdata *vshdata)
 {
 	char	*termcapbuf;
 
@@ -199,18 +125,39 @@ int			input_read_ansi(t_inputdata *data, char *line)
 		if (ft_strequ(termcapbuf, TC_LEFT_ARROW) == true)
 			curs_move_left(data);
 		else if (ft_strequ(termcapbuf, TC_RIGHT_ARROW) == true)
-			curs_move_right(data, line);
-
+			curs_move_right(data, vshdata->line);
+		else if (ft_strequ(termcapbuf, TC_HOME) == true)
+			curs_go_home(data, vshdata);
+		else if (ft_strequ(termcapbuf, TC_END) == true)
+			curs_go_end(data, vshdata);
+		else if (ft_strequ(termcapbuf, TC_DELETE) == true)
+			input_handle_delete(data, vshdata);
+		else if (ft_strequ(termcapbuf, TC_UP_ARROW) == true)
+			history_change_line(data, vshdata, ARROW_UP);
+		else if (ft_strequ(termcapbuf, TC_DOWN_ARROW) == true)
+			history_change_line(data, vshdata, ARROW_DOWN);
 		else
 		{
+			ft_eprintf(">%s< TERMCAP NOT FOUND\n", &termcapbuf[1]); //temp
 			ft_strdel(&termcapbuf);
-			ft_eprintf("TERMCAP NOT FOUND\n"); //temp
 			return (FUNCT_FAILURE);
 		}
 		ft_strdel(&termcapbuf);
 		return (FUNCT_SUCCESS);
 	}
 	return (FUNCT_FAILURE);
+}
+
+
+int			input_read_special(t_inputdata *data, t_vshdata *vshdata)
+{
+	if (data->c == INPUT_BACKSPACE)
+		input_handle_backspace(data, vshdata);
+	else if (data->c == INPUT_CTRL_D)
+		input_parse_ctrl_d(data, vshdata);
+	else
+		return (FUNCT_FAILURE);
+	return (FUNCT_SUCCESS);
 }
 
 int			input_read(t_vshdata *vshdata /*will need ws.ws_col backup and cursor backup x and y*/)
@@ -226,19 +173,24 @@ int			input_read(t_vshdata *vshdata /*will need ws.ws_col backup and cursor back
 	while (true)
 	{
 		// get and compare new ws.ws_col
+		// ft_eprintf("BEF: index: >%i<\n", data->index);
 		if (read(STDIN_FILENO, &data->c, 1) == -1)
 			return (ft_free_return(data, FUNCT_ERROR));
-		if (input_parse_ctrl_c(data) == FUNCT_SUCCESS)
+		if (input_parse_ctrl_c(data, vshdata) == FUNCT_SUCCESS)
 			return (ft_free_return(data, NEW_PROMPT));
-		if (input_read_ansi(data, vshdata->line) == FUNCT_FAILURE)
+		else if (input_read_ansi(data, vshdata) == FUNCT_FAILURE)
 		{
-			if (input_parse_char(data, &vshdata->line) == FUNCT_ERROR)
-				return (ft_free_return(data, FUNCT_ERROR));
-			if (data->c == '\n')
-				builtin_exit(&vshdata->line, vshdata);
+			if (input_read_special(data, vshdata) == FUNCT_FAILURE)
+			{
+				if (input_parse_char(data, &vshdata->line) == FUNCT_ERROR)
+					return (ft_free_return(data, FUNCT_ERROR));
+				if (data->c == '\n')
+					break ;
+			}
 		}
+		ft_eprintf("AFT: index: >%i<\n", data->index);
 	}
-	return (ft_free_return(data, FUNCT_ERROR));
+	return (ft_free_return(data, FUNCT_SUCCESS));
 }
 
 

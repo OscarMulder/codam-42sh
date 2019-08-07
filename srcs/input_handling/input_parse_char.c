@@ -6,7 +6,7 @@
 /*   By: omulder <omulder@student.codam.nl>           +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2019/05/16 13:33:54 by rkuijper       #+#    #+#                */
-/*   Updated: 2019/08/07 18:48:31 by jbrinksm      ########   odam.nl         */
+/*   Updated: 2019/08/07 23:00:15 by jbrinksm      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -100,8 +100,6 @@ int			ft_tputchar(int c)
 	return (1);
 }
 
-// cd CLEAR THE 
-
 int			input_parse_char(t_inputdata *data, char **line)
 {
 	unsigned len;
@@ -114,7 +112,7 @@ int			input_parse_char(t_inputdata *data, char **line)
 		ft_putstr("\e[s"); //save cursor pos
 		len = ft_strlen(*line + data->index);
 		ft_putstr(*line + data->index);
-		ft_putstr("\e[u"); //reset cursor pos
+		ft_putstr("\e[u"); //recover cursor pos
 		curs_move_right(data, *line);
 	}
 	else if (data->c == '\n')

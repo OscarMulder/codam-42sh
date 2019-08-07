@@ -6,26 +6,28 @@
 /*   By: omulder <omulder@student.codam.nl>           +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2019/06/02 14:28:54 by mavan-he       #+#    #+#                */
-/*   Updated: 2019/08/07 11:27:28 by jbrinksm      ########   odam.nl         */
+/*   Updated: 2019/08/07 22:43:33 by jbrinksm      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "vsh.h"
 #include "libft.h"
+#include <term.h>
 
-static void	history_clear_line(unsigned *index, int linelen, int promptsize)
+static void	history_clear_line(t_inputdata *data, t_vshdata *vshdata)
 {
-	(void)promptsize;
-	if (*index > 0)
-		ft_printf("\e[%dD", *index);
-	*index = 0;
-	while (*index < (unsigned)linelen)
+	char	*tc_clear_lines_str;
+
+	curs_go_home(data, vshdata);
+	ft_printf("\e[%iD", vshdata->prompt_len);
+	tc_clear_lines_str = tgetstr("cd", NULL);
+	if (tc_clear_lines_str == NULL)
 	{
-		ft_putchar(' ');
-		(*index)++;
+		ft_eprintf("ERROR\n");
+		return ; // do fatal shit
 	}
-	if (*index > 0)
-		ft_printf("\e[%dD", *index);
+	tputs(tc_clear_lines_str, 1, &ft_tputchar);
+	shell_display_prompt(vshdata);
 }
 
 static int	malloc_and_copy(t_inputdata *data, char **line, char *str)
@@ -60,7 +62,7 @@ static int	set_line(t_inputdata *data, char **line)
 int			history_change_line(t_inputdata *data, t_vshdata *vshdata,
 		char arrow)
 {
-	history_clear_line(&(data->index), ft_strlen(vshdata->line), vshdata->prompt_len);
+	history_clear_line(data, vshdata);
 	if (arrow == ARROW_UP)
 	{
 		if (history_index_change_up(data))
