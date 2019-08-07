@@ -6,7 +6,7 @@
 /*   By: tde-jong <tde-jong@student.codam.nl>         +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2019/06/05 15:16:46 by tde-jong       #+#    #+#                */
-/*   Updated: 2019/08/07 16:05:15 by tde-jong      ########   odam.nl         */
+/*   Updated: 2019/08/07 16:19:59 by tde-jong      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -80,7 +80,7 @@ static int	check_paths(char **paths, char *filename, char **binary)
 	return (FUNCT_FAILURE);
 }
 
-int			exec_find_binary(char *filename, t_envlst *envlst, char **binary)
+int			find_binary(char *filename, t_envlst *envlst, char **binary)
 {
 	char			**paths;
 
@@ -91,6 +91,18 @@ int			exec_find_binary(char *filename, t_envlst *envlst, char **binary)
 		return (FUNCT_ERROR);
 	ft_strarrdel(&paths);
 	if (*binary == NULL)
+		return (FUNCT_FAILURE);
+	return (FUNCT_SUCCESS);
+}
+
+int			exec_find_binary(char *filename, t_envlst *envlst, char **binary)
+{
+	int ret;
+
+	ret = find_binary(filename, envlst, binary);
+	if (ret == FUNCT_ERROR)
+		return (FUNCT_ERROR);
+	if (ret == FUNCT_FAILURE)
 	{
 		ft_eprintf("vsh: %s: Command not found.\n", filename);
 		return (err_ret_exit(NULL, EXIT_NOTFOUND));

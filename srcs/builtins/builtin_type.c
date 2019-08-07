@@ -6,7 +6,7 @@
 /*   By: tde-jong <tde-jong@student.codam.nl>         +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2019/08/06 13:09:18 by tde-jong       #+#    #+#                */
-/*   Updated: 2019/08/07 15:38:13 by tde-jong      ########   odam.nl         */
+/*   Updated: 2019/08/07 16:29:59 by tde-jong      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -41,7 +41,7 @@ static bool	is_binary(char *name, t_envlst *envlst)
 {
 	char *binary;
 
-	binary = builtin_type_find_binary(name, envlst);
+	binary = find_binary(name, envlst, &binary);
 	if (binary != NULL)
 	{
 		ft_printf("%s is %s\n", name, binary);
