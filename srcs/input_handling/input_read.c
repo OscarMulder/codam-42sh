@@ -6,7 +6,7 @@
 /*   By: omulder <omulder@student.codam.nl>           +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2019/04/17 14:03:16 by jbrinksm       #+#    #+#                */
-/*   Updated: 2019/08/07 11:23:40 by jbrinksm      ########   odam.nl         */
+/*   Updated: 2019/08/07 18:45:13 by jbrinksm      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -82,6 +82,7 @@ static char	*get_cursor_pos(void)
 #include <sys/ioctl.h> //ADDED BY ME
 #define TC_GETCURSORPOS "\e[6n" //ADDED BY ME
 #define CURS_LEFT "\e[D"
+#define CURS_RIGHT "\e[C"
 
 static int	get_cursor_linepos()
 {
@@ -104,35 +105,37 @@ static int	get_cursor_linepos()
 	return ((short)ft_atoi(&response[i + 1]));
 }
 
-int			input_move_cursor_left(t_inputdata *data)
+void		curs_relocate(void)
 {
 	struct winsize	ws;
 
 	ioctl(STDIN_FILENO, TIOCGWINSZ, &ws);
-	ft_eprintf("BEF LINEPOS: %i/%i\n", get_cursor_linepos(), ws.ws_col);
-	if (data->index > 0)
-	{
-		if (get_cursor_linepos() == 1)
-		{
-			ft_putstr("\e[A");
-			ft_printf("\e[%iC", ws.ws_col - 1);
-		}
-		else
-			ft_putstr(CURS_LEFT);
-		(data->index)--;
-	}
-	ft_eprintf("AFT LINEPOS: %i/%i\n", get_cursor_linepos(), ws.ws_col);
-	return (FUNCT_SUCCESS);
+	ft_eprintf("REPOS BEF LINEPOS: %i/%i\n", get_cursor_linepos(), ws.ws_col);
+	if (get_cursor_linepos() == ws.ws_col + 1)
+		ft_eprintf("ERRORRR\n");
+	ft_eprintf("REPOS AFT LINEPOS: %i/%i\n", get_cursor_linepos(), ws.ws_col);
 }
 
-int			input_move_cursor_right(t_inputdata *data, t_vshdata *vshdata)
+void		curs_move_left_n(t_inputdata *data, int n)
+{
+	int i;
+
+	if (n <= 0)
+		return ;
+	i = 0;
+	while (i < n)
+	{
+		curs_move_left(data);
+		i++;
+	}
+}
+
+void		curs_move_left(t_inputdata *data) //PROTECT
 {
 	struct winsize	ws;
-	int				strlen;
 
 	ioctl(STDIN_FILENO, TIOCGWINSZ, &ws);
-	strlen = ft_strlen(vshdata->line);
-	ft_eprintf("BEF LINEPOS: %i/%i\n", get_cursor_linepos(), ws.ws_col);
+	ft_eprintf("L BEF LINEPOS: %i/%i\n", get_cursor_linepos(), ws.ws_col);
 	if (data->index > 0)
 	{
 		if (get_cursor_linepos() == 1)
@@ -144,14 +147,73 @@ int			input_move_cursor_right(t_inputdata *data, t_vshdata *vshdata)
 			ft_putstr(CURS_LEFT);
 		(data->index)--;
 	}
-	ft_eprintf("AFT LINEPOS: %i/%i\n", get_cursor_linepos(), ws.ws_col);
-	return (FUNCT_SUCCESS);
+	ft_eprintf("L AFT LINEPOS: %i/%i\n", get_cursor_linepos(), ws.ws_col);
+}
+
+void		curs_move_right(t_inputdata *data, char *line)
+{
+	struct winsize	ws;
+	size_t			linelen;
+
+	ioctl(STDIN_FILENO, TIOCGWINSZ, &ws);
+	linelen = ft_strlen(line);
+	ft_eprintf("R BEF LINEPOS: %i/%i\n", get_cursor_linepos(), ws.ws_col);
+	if (data->index < linelen)
+	{
+		if (get_cursor_linepos() == ws.ws_col)
+		{
+			ft_putstr("\e[B");
+			ft_printf("\e[%iD", ws.ws_col - 1);
+		}
+		else
+			ft_putstr(CURS_RIGHT);
+		(data->index)++;
+	}
+	ft_eprintf("R AFT LINEPOS: %i/%i\n", get_cursor_linepos(), ws.ws_col);
+}
+
+#define TERMCAPBUFFSIZE 12
+#define TC_LEFT_ARROW "\e[D"
+#define TC_RIGHT_ARROW "\e[C"
+
+int			input_read_ansi(t_inputdata *data, char *line)
+{
+	char	*termcapbuf;
+
+	if (data->c == '\e')
+	{
+		termcapbuf = ft_strnew(12);
+		if (termcapbuf == NULL)
+		{
+			// do fatal shit
+			return (FUNCT_ERROR);
+		}
+		*termcapbuf = '\e';
+		if (read(STDIN_FILENO, &termcapbuf[1], TERMCAPBUFFSIZE - 1) == -1)
+		{
+			// do fatal shit
+			ft_strdel(&termcapbuf);
+			return (FUNCT_ERROR);
+		}
+		if (ft_strequ(termcapbuf, TC_LEFT_ARROW) == true)
+			curs_move_left(data);
+		else if (ft_strequ(termcapbuf, TC_RIGHT_ARROW) == true)
+			curs_move_right(data, line);
+		else
+		{
+			ft_strdel(&termcapbuf);
+			ft_eprintf("TERMCAP NOT FOUND\n"); //temp
+			return (FUNCT_FAILURE);
+		}
+		ft_strdel(&termcapbuf);
+		return (FUNCT_SUCCESS);
+	}
+	return (FUNCT_FAILURE);
 }
 
 int			input_read(t_vshdata *vshdata)
 {
 	t_inputdata *data;
-	int			char_status;
 	
 	data = init_inputdata(vshdata);
 	if (data == NULL)
@@ -160,23 +222,19 @@ int			input_read(t_vshdata *vshdata)
 	if (vshdata->line == NULL)
 		return (ft_free_return(data, FUNCT_ERROR));
 	
-	while (read(STDIN_FILENO, &data->c, 1) > 0)
+	while (true)
 	{
-		char_status = 0;
-		char_status |= input_parse_escape(data);
+		if (read(STDIN_FILENO, &data->c, 1) == -1)
+			return (ft_free_return(data, FUNCT_ERROR));
 		if (input_parse_ctrl_c(data) == FUNCT_SUCCESS)
 			return (ft_free_return(data, NEW_PROMPT));
-		ft_eprintf("%i %c|E\n", data->input_state, data->c);
-		if (data->input_state == INPUT_BRACE && data->c == 'D')
-			input_move_cursor_left(data);
-		if (data->c == 'i')
+		if (input_read_ansi(data, vshdata->line) == FUNCT_FAILURE)
 		{
-			ft_putstr("teststr");
-			data->index += 7;
-			data->input_state = INPUT_NONE;
+			if (input_parse_char(data, &vshdata->line) == FUNCT_ERROR)
+				return (ft_free_return(data, FUNCT_ERROR));
+			if (data->c == '\n')
+				builtin_exit(&vshdata->line, vshdata);
 		}
-		if (data->c == '\n')
-			builtin_exit(&vshdata->line, vshdata);
 	}
 	return (ft_free_return(data, FUNCT_ERROR));
 }

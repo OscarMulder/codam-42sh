@@ -6,11 +6,12 @@
 /*   By: omulder <omulder@student.codam.nl>           +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2019/05/16 13:33:54 by rkuijper       #+#    #+#                */
-/*   Updated: 2019/08/07 11:25:33 by jbrinksm      ########   odam.nl         */
+/*   Updated: 2019/08/07 18:48:31 by jbrinksm      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "vsh.h"
+#include <termcap.h>
 
 /*
 **	This function makes sure that when you are inserting a char
@@ -19,18 +20,18 @@
 **	that needs to be inserted.
 */
 
-// static void	create_char_gap(char *line, int len, int gap_index)
-// {
-// 	int	i;
+static void	create_char_gap(char *line, int len, int gap_index)
+{
+	int	i;
 
-// 	i = len;
-// 	i--;
-// 	while (i >= gap_index)
-// 	{
-// 		line[i + 1] = line[i];
-// 		i--;
-// 	}
-// }
+	i = len;
+	i--;
+	while (i >= gap_index)
+	{
+		line[i + 1] = line[i];
+		i--;
+	}
+}
 
 /*
 **	Inserts a char `c` at `index` on `*line`.
@@ -38,31 +39,31 @@
 **	of memory allocated for `*line` is doubled first.
 */
 
-// static int	add_char_at(char **line, int index, char c, int *len_max)
-// {
-// 	char		*tmp;
-// 	int			len;
+static int	add_char_at(char **line, int index, char c, int *len_max)
+{
+	char		*tmp;
+	int			len;
 
-// 	len = ft_strlen(*line);
-// 	if (len < *len_max)
-// 	{
-// 		create_char_gap(*line, len, index);
-// 		(*line)[index] = c;
-// 	}
-// 	else
-// 	{
-// 		*len_max *= 2;
-// 		tmp = ft_strnew(*len_max);
-// 		if (tmp == NULL)
-// 			return (FUNCT_ERROR);
-// 		ft_strcpy(tmp, *line);
-// 		ft_strdel(line);
-// 		create_char_gap(tmp, len, index);
-// 		tmp[index] = c;
-// 		*line = tmp;
-// 	}
-// 	return (FUNCT_SUCCESS);
-// }
+	len = ft_strlen(*line);
+	if (len < *len_max)
+	{
+		create_char_gap(*line, len, index);
+		(*line)[index] = c;
+	}
+	else
+	{
+		*len_max *= 2;
+		tmp = ft_strnew(*len_max);
+		if (tmp == NULL)
+			return (FUNCT_ERROR);
+		ft_strcpy(tmp, *line);
+		ft_strdel(line);
+		create_char_gap(tmp, len, index);
+		tmp[index] = c;
+		*line = tmp;
+	}
+	return (FUNCT_SUCCESS);
+}
 
 /*
 **	Makes sure that when a `\n` char is caught, it is put
@@ -71,47 +72,55 @@
 **	by 1 byte first.
 */
 
-// static int	add_newline(char **line, int *len_max)
-// {
-// 	char		*tmp;
-// 	int			len;
+static int	add_newline(char **line, int *len_max)
+{
+	char		*tmp;
+	int			len;
 
-// 	len = ft_strlen(*line);
-// 	if (len < *len_max)
-// 		(*line)[len] = '\n';
-// 	else
-// 	{
-// 		*len_max += 1;
-// 		tmp = ft_strnew(*len_max);
-// 		if (tmp == NULL)
-// 			return (FUNCT_ERROR);
-// 		ft_strcpy(tmp, *line);
-// 		ft_strdel(line);
-// 		tmp[len] = '\n';
-// 		*line = tmp;
-// 	}
-// 	return (FUNCT_SUCCESS);
-// }
+	len = ft_strlen(*line);
+	if (len < *len_max)
+		(*line)[len] = '\n';
+	else
+	{
+		*len_max += 1;
+		tmp = ft_strnew(*len_max);
+		if (tmp == NULL)
+			return (FUNCT_ERROR);
+		ft_strcpy(tmp, *line);
+		ft_strdel(line);
+		tmp[len] = '\n';
+		*line = tmp;
+	}
+	return (FUNCT_SUCCESS);
+}
 
-// int			input_parse_char(t_inputdata *data, char **line)
-// {
-// 	unsigned len;
+int			ft_tputchar(int c)
+{
+	write(1, &c, 1);
+	return (1);
+}
 
-// 	if (ft_isprint(data->c))
-// 	{
-// 		if (add_char_at(line, data->index, data->c, &(data->len_max))
-// 		== FUNCT_ERROR)
-// 			return (FUNCT_ERROR);
-// 		len = ft_strlen(*line + data->index);
-// 		ft_printf("%s", *line + data->index);
-// 		if (len - 1 > 0)
-// 			ft_printf("\e[%dD", len - 1);
-// 		data->index += 1;
-// 	}
-// 	else if (data->c == '\n')
-// 	{
-// 		if (add_newline(line, &(data->len_max)) == FUNCT_ERROR)
-// 			return (FUNCT_ERROR);
-// 	}
-// 	return (FUNCT_SUCCESS);
-// }
+// cd CLEAR THE 
+
+int			input_parse_char(t_inputdata *data, char **line)
+{
+	unsigned len;
+
+	if (ft_isprint(data->c))
+	{
+		if (add_char_at(line, data->index, data->c, &(data->len_max))
+		== FUNCT_ERROR)
+			return (FUNCT_ERROR);
+		ft_putstr("\e[s"); //save cursor pos
+		len = ft_strlen(*line + data->index);
+		ft_putstr(*line + data->index);
+		ft_putstr("\e[u"); //reset cursor pos
+		curs_move_right(data, *line);
+	}
+	else if (data->c == '\n')
+	{
+		if (add_newline(line, &(data->len_max)) == FUNCT_ERROR)
+			return (FUNCT_ERROR);
+	}
+	return (FUNCT_SUCCESS);
+}

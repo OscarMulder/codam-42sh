@@ -6,7 +6,7 @@
 /*   By: omulder <omulder@student.codam.nl>           +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2019/04/10 20:29:42 by jbrinksm       #+#    #+#                */
-/*   Updated: 2019/08/07 11:26:52 by jbrinksm      ########   odam.nl         */
+/*   Updated: 2019/08/07 18:46:08 by jbrinksm      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -414,8 +414,16 @@ typedef struct	s_inputdata
 int				input_read(t_vshdata *vshdata);
 int				input_is_word_start(char *str, int i1, int i2);
 void			input_clear_char_at(char **line, unsigned index);
-int				input_parse_escape(t_inputdata *data);
-// int				input_parse_char(t_inputdata *data, char **line);
+int				input_parse_char(t_inputdata *data, char **line);
+
+void			curs_relocate(void);
+void			curs_move_left(t_inputdata *data);
+void			curs_move_left_n(t_inputdata *data, int n);
+int				input_move_cursor_left(t_inputdata *data);
+int				ft_tputchar(int c);
+
+int				input_move_cursor_right(t_inputdata *data, char *line);
+void			curs_move_right(t_inputdata *data, char *line);
 // int				input_parse_home(t_inputdata *data);
 // int				input_parse_backspace(t_inputdata *data, char **line);
 // int				input_parse_end(t_inputdata *data, char **line);
