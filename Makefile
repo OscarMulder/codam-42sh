@@ -55,6 +55,7 @@ history_to_file history_get_file_content history_line_to_array history_print \
 history_change_line history_index_change \
 exec_builtin exec_cmd exec_external exec_start exec_find_binary \
 exec_quote_remove expan_handle_variables expan_handle_dollar \
+exec_create_files \
 expan_handle_bracketed_var expan_tilde_expansion exec_validate_binary \
 redir_pipe redir redir_tools redir_tools2 \
 print_errors

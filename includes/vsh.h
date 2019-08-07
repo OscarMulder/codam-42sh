@@ -585,6 +585,7 @@ void			exec_external(char **args, t_vshdata *vshdata);
 int				exec_find_binary(char *filename, t_envlst *envlst, char **binary);
 void			exec_quote_remove(t_ast *node);
 int				exec_validate_binary(char *binary);
+int    			exec_create_files(t_ast *ast);
 
 void			signal_print_newline(int signum);
 
