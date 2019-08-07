@@ -6,23 +6,20 @@
 /*   By: tde-jong <tde-jong@student.codam.nl>         +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2019/06/05 15:16:46 by tde-jong       #+#    #+#                */
-/*   Updated: 2019/08/06 13:18:53 by tde-jong      ########   odam.nl         */
+/*   Updated: 2019/08/07 16:05:15 by tde-jong      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "vsh.h"
 #include <dirent.h>
 
-static int	get_paths(char *filename, t_envlst *envlst, char ***paths)
+static int	get_paths(t_envlst *envlst, char ***paths)
 {
 	char *path_value;
 
 	path_value = env_getvalue("PATH", envlst);
 	if (path_value == NULL || *path_value == '\0')
-	{
-		ft_eprintf("vsh: %s: Command not found.\n", filename);
-		return (err_ret_exit(NULL, EXIT_NOTFOUND));
-	}
+		return (FUNCT_FAILURE);
 	*paths = ft_strsplit(path_value, ':');
 	if (*paths == NULL)
 		return (err_ret_exit(E_ALLOC_STR, EXIT_FAILURE));
@@ -63,7 +60,7 @@ static int	check_paths(char **paths, char *filename, char **binary)
 	size_t			i;
 
 	i = 0;
-	while (paths[i] != NULL)
+	while (paths != NULL && paths[i] != NULL)
 	{
 		dir = opendir(paths[i]);
 		if (dir != NULL)
@@ -87,7 +84,8 @@ int			exec_find_binary(char *filename, t_envlst *envlst, char **binary)
 {
 	char			**paths;
 
-	if (get_paths(filename, envlst, &paths) == FUNCT_ERROR)
+	paths = NULL;
+	if (get_paths(envlst, &paths) == FUNCT_ERROR)
 		return (FUNCT_ERROR);
 	if (check_paths(paths, filename, binary) == FUNCT_ERROR)
 		return (FUNCT_ERROR);
