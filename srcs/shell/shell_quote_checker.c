@@ -6,7 +6,7 @@
 /*   By: jbrinksm <jbrinksm@student.codam.nl>         +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2019/05/31 07:47:19 by jbrinksm       #+#    #+#                */
-/*   Updated: 2019/07/31 14:23:35 by jbrinksm      ########   odam.nl         */
+/*   Updated: 2019/08/07 11:19:51 by jbrinksm      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -44,31 +44,32 @@ char	shell_quote_checker_find_quote(char *line)
 **	some termcaps shit.
 */
 
-int		shell_close_unclosed_quotes(t_vshdata *vshdata, char **line,
-			int *status)
+int		shell_close_unclosed_quotes(t_vshdata *vshdata)
 {
 	char	quote;
-	char	*extra_line;
+	char	*line_tmp;
 
-	quote = shell_quote_checker_find_quote(*line);
+	quote = shell_quote_checker_find_quote(vshdata->line);
 	while (quote != '\0')
 	{
+		line_tmp = vshdata->line;
+		vshdata->line = NULL;
 		if (quote == '\'')
 			ft_printf("\nquote> ");
 		else if (quote == '"')
 			ft_printf("\ndquote> ");
-		if (input_read(vshdata, &extra_line, status) == FUNCT_ERROR)
+		if (input_read(vshdata) == FUNCT_ERROR)
 		{
-			ft_strdel(line);
+			ft_strdel(&line_tmp);
 			return (FUNCT_ERROR);
 		}
-		*line = ft_strjoinfree_all(*line, extra_line);
-		if (*line == NULL)
+		vshdata->line = ft_strjoinfree_all(line_tmp, vshdata->line);
+		if (vshdata->line == NULL)
 		{
 			ft_eprintf("vsh: failed to allocate enough memory\n");
 			return (FUNCT_ERROR);
 		}
-		quote = shell_quote_checker_find_quote(*line);
+		quote = shell_quote_checker_find_quote(vshdata->line);
 	}
 	return (FUNCT_SUCCESS);
 }

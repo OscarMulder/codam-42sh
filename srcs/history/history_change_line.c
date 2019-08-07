@@ -6,19 +6,20 @@
 /*   By: omulder <omulder@student.codam.nl>           +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2019/06/02 14:28:54 by mavan-he       #+#    #+#                */
-/*   Updated: 2019/07/31 16:00:12 by omulder       ########   odam.nl         */
+/*   Updated: 2019/08/07 11:27:28 by jbrinksm      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "vsh.h"
 #include "libft.h"
 
-static void	history_clear_line(unsigned *index, unsigned linelen)
+static void	history_clear_line(unsigned *index, int linelen, int promptsize)
 {
+	(void)promptsize;
 	if (*index > 0)
 		ft_printf("\e[%dD", *index);
 	*index = 0;
-	while (*index < linelen)
+	while (*index < (unsigned)linelen)
 	{
 		ft_putchar(' ');
 		(*index)++;
@@ -56,24 +57,25 @@ static int	set_line(t_inputdata *data, char **line)
 	return (FUNCT_SUCCESS);
 }
 
-int			history_change_line(t_inputdata *data, char **line, char arrow)
+int			history_change_line(t_inputdata *data, t_vshdata *vshdata,
+		char arrow)
 {
-	history_clear_line(&(data->index), ft_strlen(*line));
+	history_clear_line(&(data->index), ft_strlen(vshdata->line), vshdata->prompt_len);
 	if (arrow == ARROW_UP)
 	{
 		if (history_index_change_up(data))
-			set_line(data, line);
+			set_line(data, &vshdata->line);
 		else
 			ft_printf("\a");
 	}
 	else if (arrow == ARROW_DOWN)
 	{
 		if (history_index_change_down(data))
-			set_line(data, line);
+			set_line(data, &vshdata->line);
 		else
-			ft_bzero(*line, data->len_max);
+			ft_bzero(vshdata->line, data->len_max);
 	}
-	ft_putstr(*line);
-	data->index = ft_strlen(*line);
+	ft_putstr(vshdata->line);
+	data->index = ft_strlen(vshdata->line);
 	return (FUNCT_SUCCESS);
 }

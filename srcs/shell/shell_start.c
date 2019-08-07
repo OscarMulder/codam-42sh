@@ -6,7 +6,7 @@
 /*   By: omulder <omulder@student.codam.nl>           +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2019/04/18 16:44:50 by omulder        #+#    #+#                */
-/*   Updated: 2019/08/04 16:13:28 by jbrinksm      ########   odam.nl         */
+/*   Updated: 2019/08/07 11:23:12 by jbrinksm      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -20,17 +20,16 @@ void	lexer_tokenlstiter(t_tokenlst *lst, void (*f)(t_tokenlst *elem))
 	lexer_tokenlstiter(lst->next, f);
 }
 
-int		shell_close_quote_and_esc(t_vshdata *vshdata, char **line,
-				int *status)
+int		shell_close_quote_and_esc(t_vshdata *vshdata)
 {
 	int ret;
 
 	ret = FUNCT_SUCCESS;
 	while (ret == FUNCT_SUCCESS)
 	{
-		if (shell_close_unclosed_quotes(vshdata, line, status) == FUNCT_ERROR)
+		if (shell_close_unclosed_quotes(vshdata) == FUNCT_ERROR)
 			return (FUNCT_ERROR);
-		ret = shell_handle_escaped_newlines(vshdata, line, status);
+		ret = shell_handle_escaped_newlines(vshdata);
 		if (ret == FUNCT_ERROR)
 			return (FUNCT_ERROR);
 	}
@@ -39,33 +38,31 @@ int		shell_close_quote_and_esc(t_vshdata *vshdata, char **line,
 
 int		shell_start(t_vshdata *vshdata)
 {
-	int			status;
-	char		*line;
 	t_tokenlst	*token_lst;
 	t_ast		*ast;
+	t_pipes		pipes;
 
-	status = 1;
-	line = NULL;
 	token_lst = NULL;
 	ast = NULL;
+	pipes = redir_init_pipestruct();
 	env_add_extern_value(vshdata->envlst, "OLDPWD", "");
-	while (status != CTRLD)
+	while (true)
 	{
-		ft_strdel(&line);
+		ft_strdel(&vshdata->line);
 		parser_astdel(&ast);
 		lexer_tokenlstdel(&token_lst);
-		shell_display_prompt(vshdata->envlst);
-		if (input_read(vshdata, &line, &status) == FUNCT_ERROR)
+		shell_display_prompt(vshdata);
+		if (input_read(vshdata) == FUNCT_ERROR)
 			continue;
-		if (shell_close_quote_and_esc(vshdata, &line, &status) == FUNCT_ERROR)
+		if (shell_close_quote_and_esc(vshdata) == FUNCT_ERROR)
 			continue ;
 		ft_putchar('\n');
-		if (history_line_to_array(vshdata->history, &line) == FUNCT_ERROR)
+		if (history_line_to_array(vshdata->history, &vshdata->line) == FUNCT_ERROR)
 			continue ;
 		#ifdef DEBUG
-		ft_printf("\n>>>> LINE <<<<\n%s\n\n>>>> TOKEN_LST <<<<\n", line);
+		ft_printf("\n>>>> LINE <<<<\n%s\n\n>>>> TOKEN_LST <<<<\n", vshdata->line);
 		#endif
-		if (lexer(&line, &token_lst) != FUNCT_SUCCESS)
+		if (lexer(&vshdata->line, &token_lst) != FUNCT_SUCCESS)
 			continue ;
 		if (shell_dless_input(vshdata, &token_lst) != FUNCT_SUCCESS)
 			continue ;

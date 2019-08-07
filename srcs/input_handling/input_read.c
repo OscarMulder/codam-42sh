@@ -6,7 +6,7 @@
 /*   By: omulder <omulder@student.codam.nl>           +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2019/04/17 14:03:16 by jbrinksm       #+#    #+#                */
-/*   Updated: 2019/08/07 11:09:53 by jbrinksm      ########   odam.nl         */
+/*   Updated: 2019/08/07 11:23:40 by jbrinksm      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -148,18 +148,16 @@ int			input_move_cursor_right(t_inputdata *data, t_vshdata *vshdata)
 	return (FUNCT_SUCCESS);
 }
 
-int			input_read(t_vshdata *vshdata, char **line, int *status)
+int			input_read(t_vshdata *vshdata)
 {
 	t_inputdata *data;
 	int			char_status;
-
-	(void)status; //useless
 	
 	data = init_inputdata(vshdata);
 	if (data == NULL)
 		return (FUNCT_ERROR);
-	*line = ft_strnew(data->len_max);
-	if (*line == NULL)
+	vshdata->line = ft_strnew(data->len_max);
+	if (vshdata->line == NULL)
 		return (ft_free_return(data, FUNCT_ERROR));
 	
 	while (read(STDIN_FILENO, &data->c, 1) > 0)
@@ -178,7 +176,7 @@ int			input_read(t_vshdata *vshdata, char **line, int *status)
 			data->input_state = INPUT_NONE;
 		}
 		if (data->c == '\n')
-			builtin_exit(line, vshdata);
+			builtin_exit(&vshdata->line, vshdata);
 	}
 	return (ft_free_return(data, FUNCT_ERROR));
 }

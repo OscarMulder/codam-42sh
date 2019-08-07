@@ -6,7 +6,7 @@
 /*   By: omulder <omulder@student.codam.nl>           +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2019/04/10 20:29:42 by jbrinksm       #+#    #+#                */
-/*   Updated: 2019/08/07 11:09:48 by jbrinksm      ########   odam.nl         */
+/*   Updated: 2019/08/07 11:26:52 by jbrinksm      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -264,6 +264,7 @@ typedef struct	s_vshdata
 	char		*history_file;
 	char		*alias_file;
 	char		*line;
+	int			prompt_len;
 }				t_vshdata;
 
 /*
@@ -410,44 +411,41 @@ typedef struct	s_inputdata
 	t_history	**history;
 }				t_inputdata;
 
-int				input_read(t_vshdata *vshdata, char **line, int *status);
+int				input_read(t_vshdata *vshdata);
 int				input_is_word_start(char *str, int i1, int i2);
 void			input_clear_char_at(char **line, unsigned index);
 int				input_parse_escape(t_inputdata *data);
-int				input_parse_char(t_inputdata *data, char **line);
-int				input_parse_home(t_inputdata *data);
-int				input_parse_backspace(t_inputdata *data, char **line);
-int				input_parse_end(t_inputdata *data, char **line);
-int				input_parse_next(t_inputdata *data, char **line);
-int				input_parse_prev(t_inputdata *data, char **line);
-int				input_parse_delete(t_inputdata *data, char **line);
+// int				input_parse_char(t_inputdata *data, char **line);
+// int				input_parse_home(t_inputdata *data);
+// int				input_parse_backspace(t_inputdata *data, char **line);
+// int				input_parse_end(t_inputdata *data, char **line);
+// int				input_parse_next(t_inputdata *data, char **line);
+// int				input_parse_prev(t_inputdata *data, char **line);
+// int				input_parse_delete(t_inputdata *data, char **line);
 int				input_parse_ctrl_c(t_inputdata *data);
-int				input_parse_ctrl_d(t_inputdata *data, t_vshdata *vshdata, char **line);
-int				input_parse_ctrl_up(t_inputdata *data, char **line);
-int				input_parse_ctrl_down(t_inputdata *data, char **line);
-int				input_parse_ctrl_k(t_inputdata *data, char **line);
+// int				input_parse_ctrl_d(t_inputdata *data, t_vshdata *vshdata, char **line);
+// int				input_parse_ctrl_up(t_inputdata *data, char **line);
+// int				input_parse_ctrl_down(t_inputdata *data, char **line);
+// int				input_parse_ctrl_k(t_inputdata *data, char **line);
 
 /*
 **----------------------------------shell---------------------------------------
 */
 
-void			shell_display_prompt(t_envlst *envlst);
+void			shell_display_prompt(t_vshdata *vshdata);
 int				shell_dless_read_till_stop(char **heredoc, char *stop,
 					t_vshdata *vshdata);
 int				shell_dless_set_tk_val(t_tokenlst *probe, char **heredoc,
 					char *stop, t_vshdata *vshdata);
 int				shell_dless_input(t_vshdata *vshdata, t_tokenlst **token_lst);
-int				shell_close_unclosed_quotes(t_vshdata *vshdata, char **line,
-					int *status);
+int				shell_close_unclosed_quotes(t_vshdata *vshdata);
 int				shell_init_files(t_vshdata *vshdata);
 int				shell_start(t_vshdata *vshdata);
 int				shell_init_vshdata(t_vshdata *vshdata);
 char			*shell_getcurrentdir(char *cwd);
-int				shell_close_quote_and_esc(t_vshdata *vshdata, char **line,
-					int *status);
+int				shell_close_quote_and_esc(t_vshdata *vshdata);
 char			shell_quote_checker_find_quote(char *line);
-int				shell_handle_escaped_newlines(t_vshdata *vshdata, char **line,
-					int *status);
+int				shell_handle_escaped_newlines(t_vshdata *vshdata);
 
 /*
 **----------------------------------lexer---------------------------------------
@@ -629,7 +627,8 @@ int				history_to_file(t_vshdata *vshdata);
 int				history_get_file_content(t_vshdata *vshdata);
 int				history_line_to_array(t_history **history, char **line);
 void	        history_print(t_history **history);
-int				history_change_line(t_inputdata *data, char **line, char arrow);
+int				history_change_line(t_inputdata *data, t_vshdata *vshdata,
+					char arrow);
 int				history_index_change_down(t_inputdata *data);
 int				history_index_change_up(t_inputdata *data);
 
