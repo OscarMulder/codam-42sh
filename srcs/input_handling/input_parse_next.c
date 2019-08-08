@@ -6,7 +6,7 @@
 /*   By: omulder <omulder@student.codam.nl>           +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2019/05/16 13:41:00 by rkuijper       #+#    #+#                */
-/*   Updated: 2019/08/07 20:32:54 by jbrinksm      ########   odam.nl         */
+/*   Updated: 2019/08/08 15:08:16 by jbrinksm      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -51,6 +51,50 @@
 // 	}
 // 	return (FUNCT_FAILURE);
 // }
+
+void		curs_move_next_word(t_inputdata *data, t_vshdata *vshdata)
+{
+	size_t	i;
+
+	if (data->index == ft_strlen(vshdata->line))
+		return ;
+	i = 0;
+	while (ft_isprint(vshdata->line[data->index + i]) == true
+		&& ft_isblank(vshdata->line[data->index + i]) == false)
+		i++;
+	while (ft_isblank(vshdata->line[data->index + i]) == true)
+		i++;
+	if ((data->index + i == ft_strlen(vshdata->line)) // end of line
+		|| (ft_isprint(vshdata->line[data->index + i]) == true
+		&& ft_isblank(vshdata->line[data->index + i]) == false))
+		curs_move_n_right(data, vshdata, i);
+}
+
+void		curs_move_n_right(t_inputdata *data, t_vshdata *vshdata, size_t n)
+{
+	struct winsize	ws;
+	size_t			linelen;
+	int				linepos;
+	int				down;
+	int				x_offset;
+
+	linelen = ft_strlen(vshdata->line);
+	if (n == 0 || linelen == data->index)
+		return ;
+	if (n > linelen - data->index)
+		n = linelen - data->index;
+	ioctl(STDIN_FILENO, TIOCGWINSZ, &ws);
+	linepos = get_cursor_linepos();
+	down = ((linepos - 1) + n) / ws.ws_col;
+	x_offset = (((linepos - 1) + n) % ws.ws_col) - (linepos - 1);
+	if (down > 0)
+		ft_printf("\e[%iB", down);
+	if (x_offset > 0)
+		ft_printf("\e[%iC", x_offset);
+	else if (x_offset < 0)
+		ft_printf("\e[%iD", x_offset * -1);
+	data->index += n;
+}
 
 void		curs_move_right(t_inputdata *data, char *line)
 {

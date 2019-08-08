@@ -6,7 +6,7 @@
 /*   By: omulder <omulder@student.codam.nl>           +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2019/04/10 20:29:42 by jbrinksm       #+#    #+#                */
-/*   Updated: 2019/08/07 22:34:32 by jbrinksm      ########   odam.nl         */
+/*   Updated: 2019/08/08 14:42:56 by jbrinksm      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -437,22 +437,25 @@ int				input_parse_char(t_inputdata *data, char **line);
 int				get_cursor_linepos(void);
 
 int				ft_tputchar(int c);
+int				tools_isprintnotblank(int i);
 
 void			input_handle_backspace(t_inputdata *data, t_vshdata *vshdata);
 int				input_handle_delete(t_inputdata *data, t_vshdata *vshdata);
 
 void			curs_move_left(t_inputdata *data);
+void			curs_move_n_left(t_inputdata *data, size_t n);
 void			curs_move_right(t_inputdata *data, char *line);
+void			curs_move_n_right(t_inputdata *data, t_vshdata *vshdata, size_t n);
 int				curs_go_home(t_inputdata *data, t_vshdata *vshdata);
 int				curs_go_end(t_inputdata *data, t_vshdata *vshdata);
 
+void			curs_move_next_word(t_inputdata *data, t_vshdata *vshdata);
+void			curs_move_prev_word(t_inputdata *data, t_vshdata *vshdata);
+
 int				input_parse_ctrl_c(t_inputdata *data, t_vshdata *vshdata);
 int				input_parse_ctrl_d(t_inputdata *data, t_vshdata *vshdata);
-// int				input_parse_home(t_inputdata *data);
-// int				input_parse_end(t_inputdata *data, char **line);
 // int				input_parse_next(t_inputdata *data, char **line);
 // int				input_parse_prev(t_inputdata *data, char **line);
-// int				input_parse_delete(t_inputdata *data, char **line);
 // int				input_parse_ctrl_up(t_inputdata *data, char **line);
 // int				input_parse_ctrl_down(t_inputdata *data, char **line);
 // int				input_parse_ctrl_k(t_inputdata *data, char **line);

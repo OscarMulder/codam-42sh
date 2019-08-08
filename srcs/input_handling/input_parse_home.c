@@ -6,7 +6,7 @@
 /*   By: omulder <omulder@student.codam.nl>           +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2019/05/16 13:37:33 by rkuijper       #+#    #+#                */
-/*   Updated: 2019/08/07 21:48:34 by jbrinksm      ########   odam.nl         */
+/*   Updated: 2019/08/08 13:27:45 by jbrinksm      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -34,24 +34,10 @@
 
 int			curs_go_home(t_inputdata *data, t_vshdata *vshdata)
 {
-	struct winsize	ws;
-	int				linepos;
-	int				up;
-	int				x_offset;
+	size_t	index_to_home;
 
-	ioctl(STDIN_FILENO, TIOCGWINSZ, &ws);
-	linepos = get_cursor_linepos();
-	up = (vshdata->prompt_len + data->index) / ws.ws_col;
-	x_offset = vshdata->prompt_len - linepos + 1;
-
-	ft_eprintf("up %i lr %i\n", up, x_offset);
-
-	if (up > 0)
-		ft_printf("\e[%iA", up);
-	if (x_offset > 0)
-		ft_printf("\e[%iC", x_offset);
-	else if (x_offset < 0)
-		ft_printf("\e[%iD", x_offset * -1);
-	data->index = 0;
+	(void)vshdata;
+	index_to_home = data->index;
+	curs_move_n_left(data, index_to_home);
 	return (FUNCT_SUCCESS);
 }
