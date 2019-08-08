@@ -92,6 +92,9 @@ fclean: clean
 
 re: fclean all
 
+run_valgrind_vsh: all
+	@valgrind --tool=memcheck --leak-check=full ./vsh
+
 test_norm: fclean
 	@echo "[ + ] cloning norminette+"
 	@git clone https://github.com/thijsdejong/codam-norminette-plus ~/norminette+
@@ -111,6 +114,7 @@ test: build_test
 
 test_valgrind: build_test
 	@valgrind --tool=memcheck --leak-check=full ./vsh_tests
+
 
 test_coverage: COVERAGE = -coverage
 test_coverage: test
