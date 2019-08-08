@@ -6,7 +6,7 @@
 /*   By: tde-jong <tde-jong@student.codam.nl>         +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2019/08/06 13:09:18 by tde-jong       #+#    #+#                */
-/*   Updated: 2019/08/08 10:12:08 by tde-jong      ########   odam.nl         */
+/*   Updated: 2019/08/08 11:52:46 by tde-jong      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -61,7 +61,10 @@ static bool	is_executable(char *name)
 		return (false);
 	currpath = getcwd(NULL, 0);
 	if (currpath == NULL)
+	{
+		ft_eprintf("vsh: cannot get current working directory\n");
 		return (false);
+	}
 	ret = builtin_cd_create_newpath_wrap(currpath, name);
 	ft_strdel(&currpath);
 	if (ret == NULL)
