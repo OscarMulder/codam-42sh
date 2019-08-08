@@ -6,12 +6,17 @@
 /*   By: omulder <omulder@student.codam.nl>           +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2019/05/16 13:41:00 by rkuijper       #+#    #+#                */
-/*   Updated: 2019/08/08 16:04:54 by jbrinksm      ########   odam.nl         */
+/*   Updated: 2019/08/08 20:01:08 by jbrinksm      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "vsh.h"
 #include <sys/ioctl.h>
+
+/*
+**	Algorithm that moves the cursor (and index) to the beginning of the next
+**	word (or end of the line if there is none).
+*/
 
 void		curs_move_next_word(t_inputdata *data, t_vshdata *vshdata)
 {
@@ -30,6 +35,15 @@ void		curs_move_next_word(t_inputdata *data, t_vshdata *vshdata)
 		&& ft_isblank(vshdata->line[data->index + i]) == false))
 		curs_move_n_right(data, vshdata, i);
 }
+
+/*
+**	`ws` will be taken from `data` after Oscar is done.
+**
+**	Calculations to move cursor (and index) n times to the right
+**	(or up if necessary) on the current ws.
+**	If used after some weird screen clearing, make sure to compensate
+**	for the automatic `index` change if necessary.
+*/
 
 void		curs_move_n_right(t_inputdata *data, t_vshdata *vshdata, size_t n)
 {
@@ -56,6 +70,14 @@ void		curs_move_n_right(t_inputdata *data, t_vshdata *vshdata, size_t n)
 		ft_printf("\e[%iD", x_offset * -1);
 	data->index += n;
 }
+
+/*
+**	`ws` will be taken from data after Oscar is done.
+**
+**	Moves the cursor (and index) one to the right (or down if necessary)
+**	If used after some weird screen clearing, make sure to compensate
+**	for the automatic `index` change if necessary.
+*/
 
 void		curs_move_right(t_inputdata *data, char *line)
 {

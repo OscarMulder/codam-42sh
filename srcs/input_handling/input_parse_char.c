@@ -6,7 +6,7 @@
 /*   By: omulder <omulder@student.codam.nl>           +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2019/05/16 13:33:54 by rkuijper       #+#    #+#                */
-/*   Updated: 2019/08/07 23:00:15 by jbrinksm      ########   odam.nl         */
+/*   Updated: 2019/08/08 20:08:11 by jbrinksm      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -100,20 +100,57 @@ int			ft_tputchar(int c)
 	return (1);
 }
 
+/*
+**	This function will take care of the printing of the line.
+**	When it is at the last column in the terminal, it will print a `\n` to
+**	make room.
+*/
+
+static void	ft_iputstr(char *str, int linepos, int maxcol)
+{
+	int				i;
+
+	i = 0;
+	while (str[i] != '\0')
+	{
+		ft_putchar(str[i]);
+		ft_eprintf("%i/%i\n", linepos, maxcol); //DEBUG PRINT
+		if (linepos == maxcol)
+		{
+			linepos = 0;
+			ft_putchar('\n');
+		}
+		i++;
+		linepos++;
+	}
+}
+
+#include <sys/ioctl.h>
+
+/*
+**	`ws` will be taken from data when Oscars resize function is finished.
+**
+**	A the string will be edited and reprinted from the point of insertion.
+*/
+
 int			input_parse_char(t_inputdata *data, char **line)
 {
+	struct winsize	ws; //WILL BE OSCARS DATA
+	int				linepos;
 	unsigned len;
 
+	ioctl(STDIN_FILENO, TIOCGWINSZ, &ws); //WILL BE OSCARS DATA
+	linepos = get_cursor_linepos(); //WILL BE OSCARS DATA
 	if (ft_isprint(data->c))
 	{
 		if (add_char_at(line, data->index, data->c, &(data->len_max))
 		== FUNCT_ERROR)
 			return (FUNCT_ERROR);
-		ft_putstr("\e[s"); //save cursor pos
 		len = ft_strlen(*line + data->index);
-		ft_putstr(*line + data->index);
-		ft_putstr("\e[u"); //recover cursor pos
-		curs_move_right(data, *line);
+		ft_iputstr(*line + data->index, linepos, ws.ws_col);
+		data->index += len; // compensate index for automatic reposition because of the putstr
+		curs_move_n_left(data, len); // we don't want the cursor to be displayed at the end of the print
+		curs_move_right(data, *line); // move right after char has been printed
 	}
 	else if (data->c == '\n')
 	{

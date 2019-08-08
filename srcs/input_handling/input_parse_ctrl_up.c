@@ -6,12 +6,17 @@
 /*   By: omulder <omulder@student.codam.nl>           +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2019/05/16 15:03:17 by rkuijper       #+#    #+#                */
-/*   Updated: 2019/08/08 16:32:09 by jbrinksm      ########   odam.nl         */
+/*   Updated: 2019/08/08 20:03:09 by jbrinksm      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "vsh.h"
 #include <sys/ioctl.h>
+
+/*
+**	Moves the cursor (and index) up or sets it at home if it would otherwise
+**	collide with the prompt.
+*/
 
 void		curs_move_up(t_inputdata *data, t_vshdata *vshdata)
 {

@@ -6,12 +6,18 @@
 /*   By: rkuijper <rkuijper@student.codam.nl>         +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2019/05/16 13:43:07 by rkuijper       #+#    #+#                */
-/*   Updated: 2019/08/08 15:28:26 by jbrinksm      ########   odam.nl         */
+/*   Updated: 2019/08/08 19:54:29 by jbrinksm      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "vsh.h"
 #include <term.h>
+
+/*
+**	Backspaces are handled saving the cursor position and then clearing the
+**	screen and then reprinting the edited line and then going back to the old
+**	cursor position.
+*/
 
 void		input_handle_backspace(t_inputdata *data, t_vshdata *vshdata)
 {

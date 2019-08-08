@@ -6,12 +6,17 @@
 /*   By: omulder <omulder@student.codam.nl>           +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2019/05/16 13:44:53 by rkuijper       #+#    #+#                */
-/*   Updated: 2019/08/08 16:03:03 by jbrinksm      ########   odam.nl         */
+/*   Updated: 2019/08/08 19:45:23 by jbrinksm      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "vsh.h"
 #include <term.h>
+
+/*
+**	Real line gets updated, then the cursor position is saved (DOESNT WORK WITH RESIZING)
+**	Lines will be cleared and everything will be reprinted (sadly).
+*/
 
 int			input_handle_delete(t_inputdata *data, t_vshdata *vshdata)
 {
@@ -21,16 +26,15 @@ int			input_handle_delete(t_inputdata *data, t_vshdata *vshdata)
 	input_clear_char_at(&vshdata->line, data->index);
 	ft_putstr("\e[s"); //save cursor pos
 	saved_index = data->index; //save index
-	
 	curs_go_home(data, vshdata);
 	ft_printf("\e[%iD", vshdata->prompt_len);
-	tc_clear_lines_str = tgetstr("cd", NULL);
+	tc_clear_lines_str = tgoto(tgetstr("dc", NULL), 0, 1);
 	if (tc_clear_lines_str == NULL)
 	{
 		ft_eprintf("ERROR\n"); // DEBUG PRINT
 		return (FUNCT_ERROR); // do fatal shit
 	}
-	tputs(tc_clear_lines_str, 1, &ft_tputchar);
+	tputs(tc_clear_lines_str, 20, &ft_tputchar);
 	shell_display_prompt(vshdata);
 	ft_putstr(vshdata->line);
 	ft_putstr("\e[u"); //recover cursor pos

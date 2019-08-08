@@ -6,11 +6,15 @@
 /*   By: omulder <omulder@student.codam.nl>           +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2019/05/16 13:46:55 by rkuijper       #+#    #+#                */
-/*   Updated: 2019/08/07 22:17:29 by jbrinksm      ########   odam.nl         */
+/*   Updated: 2019/08/08 20:04:57 by jbrinksm      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "vsh.h"
+
+/*
+**	Simply exits when line is empty, otherwise functions as `delete`.
+*/
 
 int	input_parse_ctrl_d(t_inputdata *data, t_vshdata *vshdata)
 {

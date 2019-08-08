@@ -6,13 +6,18 @@
 /*   By: omulder <omulder@student.codam.nl>           +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2019/06/02 14:28:54 by mavan-he       #+#    #+#                */
-/*   Updated: 2019/08/07 22:43:33 by jbrinksm      ########   odam.nl         */
+/*   Updated: 2019/08/08 20:09:49 by jbrinksm      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "vsh.h"
 #include "libft.h"
 #include <term.h>
+
+/*
+**	Cursor (and index) will be moved to the start of the string. The screen will
+**	be cleared from that line and onwards. A new prompt will be displayed.
+*/
 
 static void	history_clear_line(t_inputdata *data, t_vshdata *vshdata)
 {
