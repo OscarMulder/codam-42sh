@@ -6,7 +6,7 @@
 /*   By: omulder <omulder@student.codam.nl>           +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2019/04/10 20:29:42 by jbrinksm       #+#    #+#                */
-/*   Updated: 2019/08/08 14:42:56 by jbrinksm      ########   odam.nl         */
+/*   Updated: 2019/08/08 16:34:34 by jbrinksm      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -415,6 +415,8 @@ void			term_free_struct(t_term **term_p);
 #define TC_DELETE "\e[3~"
 #define CURS_LEFT "\e[D"
 #define CURS_RIGHT "\e[C"
+#define CURS_UP "\e[A"
+#define CURS_DOWN "\e[B"
 #define INPUT_CTRL_C '\3'
 #define INPUT_CTRL_D '\4'
 
@@ -444,8 +446,13 @@ int				input_handle_delete(t_inputdata *data, t_vshdata *vshdata);
 
 void			curs_move_left(t_inputdata *data);
 void			curs_move_n_left(t_inputdata *data, size_t n);
+
 void			curs_move_right(t_inputdata *data, char *line);
 void			curs_move_n_right(t_inputdata *data, t_vshdata *vshdata, size_t n);
+
+void			curs_move_up(t_inputdata *data, t_vshdata *vshdata);
+void			curs_move_down(t_inputdata *data, t_vshdata *vshdata);
+
 int				curs_go_home(t_inputdata *data, t_vshdata *vshdata);
 int				curs_go_end(t_inputdata *data, t_vshdata *vshdata);
 

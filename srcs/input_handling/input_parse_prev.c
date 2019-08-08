@@ -6,51 +6,12 @@
 /*   By: omulder <omulder@student.codam.nl>           +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2019/05/16 13:39:59 by rkuijper       #+#    #+#                */
-/*   Updated: 2019/08/08 15:27:31 by jbrinksm      ########   odam.nl         */
+/*   Updated: 2019/08/08 16:05:00 by jbrinksm      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "vsh.h"
 #include <sys/ioctl.h>
-
-// static void	parse_prev_move_word(unsigned *index, char **line)
-// {
-// 	unsigned i;
-
-// 	i = *index;
-// 	if (*index == 0)
-// 		return ;
-// 	while (i > 0)
-// 	{
-// 		if (input_is_word_start(*line, i - 1, i) && i != *index)
-// 			break ;
-// 		i--;
-// 	}
-// 	ft_printf("\e[%dD", *index - i);
-// 	*index = i;
-// }
-
-// int			input_parse_prev(t_inputdata *data, char **line)
-// {
-// 	if (((data->input_state == INPUT_BRACE ||
-// 	data->input_state == INPUT_D_BRACE) && data->c == 'D') ||
-// 	(data->input_state == INPUT_ESC && data->c == 'b'))
-// 	{
-// 		if (data->input_state == 2)
-// 		{
-// 			if (data->index > 0)
-// 			{
-// 				ft_printf("\e[D");
-// 				data->index -= 1;
-// 			}
-// 		}
-// 		else
-// 			parse_prev_move_word(&data->index, line);
-// 		data->input_state = INPUT_NONE;
-// 		return (FUNCT_SUCCESS);
-// 	}
-// 	return (FUNCT_FAILURE);
-// }
 
 void		curs_move_prev_word(t_inputdata *data, t_vshdata *vshdata)
 {
@@ -80,12 +41,12 @@ void		curs_move_prev_word(t_inputdata *data, t_vshdata *vshdata)
 
 void		curs_move_n_left(t_inputdata *data, size_t n)
 {
-	struct winsize	ws;
+	struct winsize	ws; //WILL BE OSCARS DATA
 	int				linepos;
 	int				up;
 	int				x_offset;
 
-	ioctl(STDIN_FILENO, TIOCGWINSZ, &ws);
+	ioctl(STDIN_FILENO, TIOCGWINSZ, &ws); //WILL BE OSCARS DATA
 	linepos = get_cursor_linepos();
 	if (n == 0)
 		return ;
@@ -104,9 +65,9 @@ void		curs_move_n_left(t_inputdata *data, size_t n)
 
 void		curs_move_left(t_inputdata *data)
 {
-	struct winsize	ws;
+	struct winsize	ws; //WILL BE OSCARS DATA
 
-	ioctl(STDIN_FILENO, TIOCGWINSZ, &ws);
+	ioctl(STDIN_FILENO, TIOCGWINSZ, &ws); //WILL BE OSCARS DATA
 	ft_eprintf("L BEF LINEPOS: %i/%i\n", get_cursor_linepos(), ws.ws_col); // DEBUG PRINT
 	if (data->index > 0)
 	{

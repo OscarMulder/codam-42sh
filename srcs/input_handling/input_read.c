@@ -6,7 +6,7 @@
 /*   By: omulder <omulder@student.codam.nl>           +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2019/04/17 14:03:16 by jbrinksm       #+#    #+#                */
-/*   Updated: 2019/08/08 15:29:30 by jbrinksm      ########   odam.nl         */
+/*   Updated: 2019/08/08 16:34:45 by jbrinksm      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -139,6 +139,10 @@ int			input_read_ansi(t_inputdata *data, t_vshdata *vshdata)
 			curs_move_next_word(data, vshdata);
 		else if (ft_strequ(termcapbuf, TC_CTRL_LEFT_ARROW) == true)
 			curs_move_prev_word(data, vshdata);
+		else if (ft_strequ(termcapbuf, TC_CTRL_UP_ARROW) == true)
+			curs_move_up(data, vshdata);
+		else if (ft_strequ(termcapbuf, TC_CTRL_DOWN_ARROW) == true)
+			curs_move_down(data, vshdata);
 		else
 		{
 			ft_eprintf(">%s< TERMCAP NOT FOUND\n", &termcapbuf[1]); // DEBUG PRINT
