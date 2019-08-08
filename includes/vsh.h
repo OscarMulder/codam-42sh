@@ -6,7 +6,7 @@
 /*   By: omulder <omulder@student.codam.nl>           +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2019/04/10 20:29:42 by jbrinksm       #+#    #+#                */
-/*   Updated: 2019/08/07 16:25:08 by tde-jong      ########   odam.nl         */
+/*   Updated: 2019/08/08 10:00:51 by tde-jong      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -539,7 +539,6 @@ void			builtin_alias_delnode(t_aliaslst **node);
 void			builtin_alias_lstdel(t_aliaslst **lst);
 void			builtin_unalias(char **args, t_aliaslst **aliaslst);
 void			builtin_type(char **args, t_envlst *envlst, t_aliaslst *aliaslst);
-char			*builtin_type_find_binary(char *filename, t_envlst *envlst);
 int				builtin_cd(char **args, t_envlst *envlst);
 void			builtin_cd_create_newpath(char **newpath, char *argpath);
 int				builtin_cd_change_dir(char *argpath, t_envlst *envlst,

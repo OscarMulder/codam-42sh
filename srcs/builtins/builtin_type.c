@@ -6,7 +6,7 @@
 /*   By: tde-jong <tde-jong@student.codam.nl>         +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2019/08/06 13:09:18 by tde-jong       #+#    #+#                */
-/*   Updated: 2019/08/07 16:29:59 by tde-jong      ########   odam.nl         */
+/*   Updated: 2019/08/08 10:03:02 by tde-jong      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -39,10 +39,10 @@ static bool	is_alias(char *name, t_aliaslst *aliaslst)
 
 static bool	is_binary(char *name, t_envlst *envlst)
 {
-	char *binary;
+	char	*binary;
 
-	binary = find_binary(name, envlst, &binary);
-	if (binary != NULL)
+	binary = NULL;
+	if (find_binary(name, envlst, &binary) == FUNCT_SUCCESS && binary != NULL)
 	{
 		ft_printf("%s is %s\n", name, binary);
 		ft_strdel(&binary);
