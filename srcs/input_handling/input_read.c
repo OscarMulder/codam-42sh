@@ -6,7 +6,7 @@
 /*   By: omulder <omulder@student.codam.nl>           +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2019/04/17 14:03:16 by jbrinksm       #+#    #+#                */
-/*   Updated: 2019/08/08 14:53:07 by jbrinksm      ########   odam.nl         */
+/*   Updated: 2019/08/08 15:29:30 by jbrinksm      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -102,13 +102,6 @@ int		get_cursor_linepos(void)
 	return ((short)ft_atoi(&response[i + 1]) /*needs unsigned atoi and short  ret */);
 }
 
-int			tools_isprintnotblank(int i)
-{
-	if (ft_isprint(i) == true && ft_isblank(i) == false)
-		return (true);
-	return (false);
-}
-
 int			input_read_ansi(t_inputdata *data, t_vshdata *vshdata)
 {
 	char	*termcapbuf;
@@ -148,7 +141,7 @@ int			input_read_ansi(t_inputdata *data, t_vshdata *vshdata)
 			curs_move_prev_word(data, vshdata);
 		else
 		{
-			ft_eprintf(">%s< TERMCAP NOT FOUND\n", &termcapbuf[1]); //temp
+			ft_eprintf(">%s< TERMCAP NOT FOUND\n", &termcapbuf[1]); // DEBUG PRINT
 			ft_strdel(&termcapbuf);
 			return (FUNCT_FAILURE);
 		}
@@ -198,7 +191,7 @@ int			input_read(t_vshdata *vshdata /*will need ws.ws_col backup and cursor back
 					break ;
 			}
 		}
-		ft_eprintf("AFT: index: %i/%i\n", data->index, ft_strlen(vshdata->line));
+		ft_eprintf("AFT: index: %i/%i\n", data->index, ft_strlen(vshdata->line)); // DEBUG PRINT
 	}
 	return (ft_free_return(data, FUNCT_SUCCESS));
 }

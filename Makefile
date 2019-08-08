@@ -6,7 +6,7 @@
 #    By: omulder <omulder@student.codam.nl>           +#+                      #
 #                                                    +#+                       #
 #    Created: 2019/04/10 20:30:07 by jbrinksm       #+#    #+#                 #
-#    Updated: 2019/08/07 22:46:06 by jbrinksm      ########   odam.nl          #
+#    Updated: 2019/08/08 15:26:21 by jbrinksm      ########   odam.nl          #
 #                                                                              #
 # **************************************************************************** #
 
@@ -38,7 +38,7 @@ env_getvalue env_getlst env_lsttoarr env_lstnew env_lstaddback env_lstdel \
 env_remove_tmp env_sort env_lstadd_to_sortlst env_addvalue \
 tools_is_char_escaped tool_is_redirect_tk tools_is_valid_identifier \
 tools_is_builtin tool_is_special tool_check_for_special tools_is_fdnumstr \
-tools_isidentifierchar tool_check_for_whitespace \
+tools_isidentifierchar tool_check_for_whitespace tools_isprintnotblank \
 builtin_echo builtin_echo_set_flags builtin_exit builtin_assign \
 builtin_export builtin_export_print builtin_set builtin_unset \
 builtin_alias builtin_alias_set builtin_alias_lstdel builtin_unalias \

@@ -6,7 +6,7 @@
 /*   By: omulder <omulder@student.codam.nl>           +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2019/05/16 13:39:59 by rkuijper       #+#    #+#                */
-/*   Updated: 2019/08/08 15:23:19 by jbrinksm      ########   odam.nl         */
+/*   Updated: 2019/08/08 15:27:31 by jbrinksm      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -102,12 +102,12 @@ void		curs_move_n_left(t_inputdata *data, size_t n)
 	data->index -= n;
 }
 
-void		curs_move_left(t_inputdata *data) //PROTECT
+void		curs_move_left(t_inputdata *data)
 {
 	struct winsize	ws;
 
 	ioctl(STDIN_FILENO, TIOCGWINSZ, &ws);
-	ft_eprintf("L BEF LINEPOS: %i/%i\n", get_cursor_linepos(), ws.ws_col);
+	ft_eprintf("L BEF LINEPOS: %i/%i\n", get_cursor_linepos(), ws.ws_col); // DEBUG PRINT
 	if (data->index > 0)
 	{
 		if (get_cursor_linepos() == 1)
@@ -119,5 +119,5 @@ void		curs_move_left(t_inputdata *data) //PROTECT
 			ft_putstr(CURS_LEFT);
 		(data->index)--;
 	}
-	ft_eprintf("L AFT LINEPOS: %i/%i\n", get_cursor_linepos(), ws.ws_col);
+	ft_eprintf("L AFT LINEPOS: %i/%i\n", get_cursor_linepos(), ws.ws_col); // DEBUG PRINT
 }

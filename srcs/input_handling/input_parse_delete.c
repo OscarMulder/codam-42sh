@@ -6,7 +6,7 @@
 /*   By: omulder <omulder@student.codam.nl>           +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2019/05/16 13:44:53 by rkuijper       #+#    #+#                */
-/*   Updated: 2019/08/07 23:07:01 by jbrinksm      ########   odam.nl         */
+/*   Updated: 2019/08/08 15:28:30 by jbrinksm      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -45,7 +45,7 @@ int			input_handle_delete(t_inputdata *data, t_vshdata *vshdata)
 	tc_clear_lines_str = tgetstr("cd", NULL);
 	if (tc_clear_lines_str == NULL)
 	{
-		ft_eprintf("ERROR\n");
+		ft_eprintf("ERROR\n"); // DEBUG PRINT
 		return (FUNCT_ERROR); // do fatal shit
 	}
 	tputs(tc_clear_lines_str, 1, &ft_tputchar);

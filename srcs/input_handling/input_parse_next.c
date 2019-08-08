@@ -6,7 +6,7 @@
 /*   By: omulder <omulder@student.codam.nl>           +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2019/05/16 13:41:00 by rkuijper       #+#    #+#                */
-/*   Updated: 2019/08/08 15:08:16 by jbrinksm      ########   odam.nl         */
+/*   Updated: 2019/08/08 15:27:50 by jbrinksm      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -103,7 +103,7 @@ void		curs_move_right(t_inputdata *data, char *line)
 
 	ioctl(STDIN_FILENO, TIOCGWINSZ, &ws);
 	linelen = ft_strlen(line);
-	ft_eprintf("R BEF LINEPOS: %i/%i\n", get_cursor_linepos(), ws.ws_col);
+	ft_eprintf("R BEF LINEPOS: %i/%i\n", get_cursor_linepos(), ws.ws_col); // DEBUG PRINT
 	if (data->index < linelen)
 	{
 		if (get_cursor_linepos() == ws.ws_col)
@@ -115,5 +115,5 @@ void		curs_move_right(t_inputdata *data, char *line)
 			ft_putstr(CURS_RIGHT);
 		(data->index)++;
 	}
-	ft_eprintf("R AFT LINEPOS: %i/%i\n", get_cursor_linepos(), ws.ws_col);
+	ft_eprintf("R AFT LINEPOS: %i/%i\n", get_cursor_linepos(), ws.ws_col); // DEBUG PRINT
 }
