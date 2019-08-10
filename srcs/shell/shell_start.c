@@ -6,7 +6,7 @@
 /*   By: omulder <omulder@student.codam.nl>           +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2019/04/18 16:44:50 by omulder        #+#    #+#                */
-/*   Updated: 2019/08/04 16:13:28 by jbrinksm      ########   odam.nl         */
+/*   Updated: 2019/08/10 20:10:14 by mavan-he      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -42,6 +42,7 @@ int		shell_start(t_vshdata *vshdata)
 	int			status;
 	char		*line;
 	t_tokenlst	*token_lst;
+	t_list		*match_lst;
 	t_ast		*ast;
 
 	status = 1;
@@ -55,6 +56,13 @@ int		shell_start(t_vshdata *vshdata)
 		parser_astdel(&ast);
 		lexer_tokenlstdel(&token_lst);
 		shell_display_prompt(vshdata->envlst);
+		match_lst = NULL;
+		auto_get_cmdlst("call", vshdata->envlst, &match_lst);
+		while (match_lst != NULL)
+		{
+			ft_putendl((char *)match_lst->content);
+			match_lst = match_lst->next;
+		}
 		if (input_read(vshdata, &line, &status) == FUNCT_ERROR)
 			continue;
 		if (shell_close_quote_and_esc(vshdata, &line, &status) == FUNCT_ERROR)

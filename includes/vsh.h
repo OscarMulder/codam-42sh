@@ -6,7 +6,7 @@
 /*   By: omulder <omulder@student.codam.nl>           +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2019/04/10 20:29:42 by jbrinksm       #+#    #+#                */
-/*   Updated: 2019/08/08 10:00:51 by tde-jong      ########   odam.nl         */
+/*   Updated: 2019/08/10 16:59:37 by mavan-he      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -34,6 +34,7 @@
 # define E_HIST_OPEN_STR "vsh: Failed to open / create history file\n"
 # define E_ALIAS_OPEN_STR "vsh: Failed to open alias file\n"
 # define E_ALIAS_READ_STR "vsh: Failed to read alias file\n"
+# define E_ACCESS_STR "vsh: Failed to read alias file\n"
 # define E_ALLOC 420
 # define E_DUP 100
 # define E_OPEN 101
@@ -566,6 +567,7 @@ bool			tools_is_fdnumstr(char *str);
 bool			tool_is_special(char c);
 bool			tool_check_for_special(char *str);
 bool			tool_check_for_whitespace(char *str);
+int				tool_get_paths(t_envlst *envlst, char ***paths);
 
 /*
 **----------------------------------execution-----------------------------------
@@ -643,6 +645,12 @@ int				error_return(int ret, int error, char *opt_str);
 int				err_ret_exit(char *str, int exitcode);
 void			err_void_exit(char *str, int exitcode);
 int				err_ret(char *str);
+
+/*
+**--------------------------------error_handling--------------------------------
+*/
+
+int				auto_get_cmdlst(char *match, t_envlst *envlst, t_list **matchlst);
 
 /*
 **----------------------------------debugging-----------------------------------
