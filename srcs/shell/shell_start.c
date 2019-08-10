@@ -6,7 +6,7 @@
 /*   By: omulder <omulder@student.codam.nl>           +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2019/04/18 16:44:50 by omulder        #+#    #+#                */
-/*   Updated: 2019/08/10 20:10:14 by mavan-he      ########   odam.nl         */
+/*   Updated: 2019/08/10 20:31:19 by mavan-he      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -57,7 +57,7 @@ int		shell_start(t_vshdata *vshdata)
 		lexer_tokenlstdel(&token_lst);
 		shell_display_prompt(vshdata->envlst);
 		match_lst = NULL;
-		auto_get_cmdlst("call", vshdata->envlst, &match_lst);
+		auto_get_cmdlst("e", vshdata->envlst, &match_lst);
 		while (match_lst != NULL)
 		{
 			ft_putendl((char *)match_lst->content);

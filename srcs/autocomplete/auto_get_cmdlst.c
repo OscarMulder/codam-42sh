@@ -6,14 +6,14 @@
 /*   By: mavan-he <mavan-he@student.codam.nl>         +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2019/08/10 12:53:34 by mavan-he       #+#    #+#                */
-/*   Updated: 2019/08/10 20:13:26 by mavan-he      ########   odam.nl         */
+/*   Updated: 2019/08/10 20:28:27 by mavan-he      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "vsh.h"
 #include <dirent.h>
 
-static int	add_file_tolst(t_list **matchlst, char *filename)
+int			auto_add_tolst(t_list **matchlst, char *filename)
 {
 	t_list *new;
 
@@ -64,7 +64,7 @@ static int	check_dir(DIR *d, char *match, char *path, t_list **matchlst)
 			if (file_status == FUNCT_ERROR)
 				return (FUNCT_ERROR);
 			if (file_status == FUNCT_SUCCESS &&
-				add_file_tolst(matchlst, dir->d_name) == FUNCT_ERROR)
+				auto_add_tolst(matchlst, dir->d_name) == FUNCT_ERROR)
 				return (FUNCT_ERROR);
 		}
 		dir = readdir(d);
@@ -105,8 +105,8 @@ int			auto_get_cmdlst(char *match, t_envlst *envlst, t_list **matchlst)
 		return (FUNCT_ERROR);
 	if (match_files(match, paths, matchlst) == FUNCT_ERROR)
 		return (FUNCT_ERROR);
-//	if (match_builtins(match, matchlst) == FUNCT_ERROR)
-//		return (FUNCT_ERROR);
+	if (auto_match_builtins(match, matchlst) == FUNCT_ERROR)
+		return (FUNCT_ERROR);
 	ft_strarrdel(&paths);
 	return (FUNCT_SUCCESS);
 }
