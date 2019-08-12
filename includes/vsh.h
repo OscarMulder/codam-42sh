@@ -6,7 +6,7 @@
 /*   By: omulder <omulder@student.codam.nl>           +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2019/04/10 20:29:42 by jbrinksm       #+#    #+#                */
-/*   Updated: 2019/08/11 16:39:45 by mavan-he      ########   odam.nl         */
+/*   Updated: 2019/08/12 17:12:55 by mavan-he      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -78,6 +78,14 @@
 
 # define EXP_FLAG_LN	(1 << 0)
 # define EXP_FLAG_LP	(1 << 1)
+
+/*
+**-----------------------------------export-------------------------------------
+*/
+
+# define STATE_CMD	(1 << 0)
+# define STATE_VAR	(1 << 1)
+# define STATE_FILE	(1 << 2)
 
 /*
 **-----------------------------------alias--------------------------------------
@@ -655,6 +663,7 @@ int				auto_add_tolst(t_list **matchlst, char *filename);
 int				auto_match_builtins(char *match, t_list **matchlst);
 int				auto_get_filelst(char *match, char *path, t_list **matchlst);
 int				auto_get_varlst(char *match, int match_len, t_envlst *envlst, t_list **matchlst);
+int				auto_find_state(char *line, int i);
 
 /*
 **----------------------------------debugging-----------------------------------
