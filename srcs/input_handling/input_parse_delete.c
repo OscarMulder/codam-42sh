@@ -6,7 +6,7 @@
 /*   By: omulder <omulder@student.codam.nl>           +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2019/05/16 13:44:53 by rkuijper       #+#    #+#                */
-/*   Updated: 2019/08/08 19:45:23 by jbrinksm      ########   odam.nl         */
+/*   Updated: 2019/08/12 14:20:31 by rkuijper      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,6 +19,25 @@
 */
 
 int			input_handle_delete(t_inputdata *data, t_vshdata *vshdata)
+{
+	char		*tc_clear_lines_str;
+
+	if (data->index < data->len_cur)
+	{
+		input_clear_char_at(&vshdata->line, data->index);
+		data->len_cur--;
+		tc_clear_lines_str = tgetstr("dc", NULL);
+		if (tc_clear_lines_str == NULL)
+		{
+			ft_eprintf("ERROR\n");
+			return (FUNCT_ERROR);
+		}
+		tputs(tc_clear_lines_str, 1, &ft_tputchar);
+	}
+	return (FUNCT_SUCCESS);
+}
+
+/* int			input_handle_delete(t_inputdata *data, t_vshdata *vshdata)
 {
 	char		*tc_clear_lines_str;
 	unsigned	saved_index;
@@ -40,4 +59,4 @@ int			input_handle_delete(t_inputdata *data, t_vshdata *vshdata)
 	ft_putstr("\e[u"); //recover cursor pos
 	data->index = saved_index; // recover index
 	return (FUNCT_SUCCESS);
-}
+} */

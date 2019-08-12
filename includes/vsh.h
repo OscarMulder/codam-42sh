@@ -6,7 +6,7 @@
 /*   By: omulder <omulder@student.codam.nl>           +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2019/04/10 20:29:42 by jbrinksm       #+#    #+#                */
-/*   Updated: 2019/08/08 20:35:38 by jbrinksm      ########   odam.nl         */
+/*   Updated: 2019/08/12 14:36:58 by rkuijper      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -399,26 +399,27 @@ void			term_free_struct(t_term **term_p);
 **-----------------------------------input--------------------------------------
 */
 
-#define TERMCAPBUFFSIZE 12
-#define TC_UP_ARROW "\e[A"
-#define TC_CTRL_UP_ARROW "\e[1;5A"
-#define TC_DOWN_ARROW "\e[B"
-#define TC_CTRL_DOWN_ARROW "\e[1;5B"
-#define TC_LEFT_ARROW "\e[D"
-#define TC_CTRL_LEFT_ARROW "\e[1;5D"
-#define TC_RIGHT_ARROW "\e[C"
-#define TC_CTRL_RIGHT_ARROW "\e[1;5C"
+# define TERMCAPBUFFSIZE 12
+# define TC_UP_ARROW "\e[A"
+# define TC_CTRL_UP_ARROW "\e[1;5A"
+# define TC_DOWN_ARROW "\e[B"
+# define TC_CTRL_DOWN_ARROW "\e[1;5B"
+# define TC_LEFT_ARROW "\e[D"
+# define TC_CTRL_LEFT_ARROW "\e[1;5D"
+# define TC_RIGHT_ARROW "\e[C"
+# define TC_CTRL_RIGHT_ARROW "\e[1;5C"
 
-#define TC_GETCURSORPOS "\e[6n"
-#define TC_HOME "\e[H"
-#define TC_END "\e[F"
-#define TC_DELETE "\e[3~"
-#define CURS_LEFT "\e[D"
-#define CURS_RIGHT "\e[C"
-#define CURS_UP "\e[A"
-#define CURS_DOWN "\e[B"
-#define INPUT_CTRL_C '\3'
-#define INPUT_CTRL_D '\4'
+# define TC_GETCURSORPOS "\e[6n"
+# define TC_HOME "\e[H"
+# define TC_END "\e[F"
+# define TC_DELETE "\e[3~"
+# define CURS_LEFT "\e[D"
+# define CURS_RIGHT "\e[C"
+# define CURS_UP "\e[A"
+# define CURS_DOWN "\e[B"
+# define INPUT_CTRL_C '\3'
+# define INPUT_CTRL_D '\4'
+# define INPUT_CTRL_K '\v'
 
 typedef struct	s_inputdata
 {
@@ -428,6 +429,7 @@ typedef struct	s_inputdata
 	int			hist_first;
 	unsigned	index;
 	int			len_max;
+	unsigned	len_cur;
 	t_history	**history;
 }				t_inputdata;
 
@@ -441,13 +443,13 @@ int				get_cursor_rowpos(void); //row
 int				ft_tputchar(int c);
 int				tools_isprintnotblank(int i);
 
-void			input_handle_backspace(t_inputdata *data, t_vshdata *vshdata);
+int				input_handle_backspace(t_inputdata *data, t_vshdata *vshdata);
 int				input_handle_delete(t_inputdata *data, t_vshdata *vshdata);
 
 void			curs_move_left(t_inputdata *data);
 void			curs_move_n_left(t_inputdata *data, size_t n);
 
-void			curs_move_right(t_inputdata *data, char *line);
+void			curs_move_right(t_inputdata *data);
 void			curs_move_n_right(t_inputdata *data, t_vshdata *vshdata, size_t n);
 
 void			curs_move_up(t_inputdata *data, t_vshdata *vshdata);
@@ -461,6 +463,7 @@ void			curs_move_prev_word(t_inputdata *data, t_vshdata *vshdata);
 
 int				input_parse_ctrl_c(t_inputdata *data, t_vshdata *vshdata);
 int				input_parse_ctrl_d(t_inputdata *data, t_vshdata *vshdata);
+int				input_parse_ctrl_k(t_inputdata *data, t_vshdata *vshdata);
 // int				input_parse_next(t_inputdata *data, char **line);
 // int				input_parse_prev(t_inputdata *data, char **line);
 // int				input_parse_ctrl_up(t_inputdata *data, char **line);

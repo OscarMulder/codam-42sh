@@ -6,7 +6,7 @@
 /*   By: omulder <omulder@student.codam.nl>           +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2019/05/16 13:37:33 by rkuijper       #+#    #+#                */
-/*   Updated: 2019/08/08 20:01:46 by jbrinksm      ########   odam.nl         */
+/*   Updated: 2019/08/12 11:09:23 by rkuijper      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,10 +19,7 @@
 
 int			curs_go_home(t_inputdata *data, t_vshdata *vshdata)
 {
-	size_t	index_to_home;
-
 	(void)vshdata;
-	index_to_home = data->index;
-	curs_move_n_left(data, index_to_home);
+	curs_move_n_left(data, data->index);
 	return (FUNCT_SUCCESS);
 }

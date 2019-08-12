@@ -6,7 +6,7 @@
 /*   By: omulder <omulder@student.codam.nl>           +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2019/05/16 13:39:59 by rkuijper       #+#    #+#                */
-/*   Updated: 2019/08/08 20:00:43 by jbrinksm      ########   odam.nl         */
+/*   Updated: 2019/08/12 14:32:39 by rkuijper      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -28,7 +28,7 @@ void		curs_move_prev_word(t_inputdata *data, t_vshdata *vshdata)
 	if ((data->index > 0
 		&& tools_isprintnotblank(vshdata->line[data->index]) == true // i++ if at beginning of previous word
 		&& ft_isblank(vshdata->line[data->index - 1]) == true)
-		|| (data->index > 0 && data->index == ft_strlen(vshdata->line))) // i++ if at end of line
+		|| (data->index > 0 && data->index == data->len_cur)) // i++ if at end of line
 		i++;
 	while (data->index - i > 0 // i++ blanks
 		&& ft_isblank(vshdata->line[data->index - i]) == true)

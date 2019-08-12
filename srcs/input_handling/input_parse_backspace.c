@@ -6,7 +6,7 @@
 /*   By: rkuijper <rkuijper@student.codam.nl>         +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2019/05/16 13:43:07 by rkuijper       #+#    #+#                */
-/*   Updated: 2019/08/08 19:54:29 by jbrinksm      ########   odam.nl         */
+/*   Updated: 2019/08/12 14:21:46 by rkuijper      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,6 +19,27 @@
 **	cursor position.
 */
 
+int		input_handle_backspace(t_inputdata *data, t_vshdata *vshdata)
+{
+	char		*tc_clear_lines_str;
+
+	if (data->index > 0)
+	{
+		input_clear_char_at(&vshdata->line, data->index - 1);
+		data->len_cur--;
+		tc_clear_lines_str = tgetstr("dc", NULL);
+		if (tc_clear_lines_str == NULL)
+		{
+			ft_eprintf("ERROR\n");
+			return (FUNCT_ERROR);
+		}
+		curs_move_left(data);
+		tputs(tc_clear_lines_str, 1, &ft_tputchar);
+	}
+	return (FUNCT_SUCCESS);
+}
+
+/*
 void		input_handle_backspace(t_inputdata *data, t_vshdata *vshdata)
 {
 	char		*tc_clear_lines_str;
@@ -46,3 +67,4 @@ void		input_handle_backspace(t_inputdata *data, t_vshdata *vshdata)
 		curs_move_left(data);
 	}
 }
+*/

@@ -6,7 +6,7 @@
 /*   By: omulder <omulder@student.codam.nl>           +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2019/05/16 13:46:55 by rkuijper       #+#    #+#                */
-/*   Updated: 2019/08/08 20:04:57 by jbrinksm      ########   odam.nl         */
+/*   Updated: 2019/08/12 14:29:03 by rkuijper      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -22,7 +22,7 @@ int	input_parse_ctrl_d(t_inputdata *data, t_vshdata *vshdata)
 
 	if (data->c == INPUT_CTRL_D)
 	{
-		len = ft_strlen(vshdata->line);
+		len = data->len_cur;
 		if (len == 0)
 			builtin_exit(NULL, vshdata);
 		if (data->index < len)

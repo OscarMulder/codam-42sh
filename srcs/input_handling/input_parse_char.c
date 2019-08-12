@@ -6,7 +6,7 @@
 /*   By: omulder <omulder@student.codam.nl>           +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2019/05/16 13:33:54 by rkuijper       #+#    #+#                */
-/*   Updated: 2019/08/08 20:08:11 by jbrinksm      ########   odam.nl         */
+/*   Updated: 2019/08/12 16:00:51 by rkuijper      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -24,8 +24,7 @@ static void	create_char_gap(char *line, int len, int gap_index)
 {
 	int	i;
 
-	i = len;
-	i--;
+	i = len - 1;
 	while (i >= gap_index)
 	{
 		line[i + 1] = line[i];
@@ -39,29 +38,30 @@ static void	create_char_gap(char *line, int len, int gap_index)
 **	of memory allocated for `*line` is doubled first.
 */
 
-static int	add_char_at(char **line, int index, char c, int *len_max)
+static int	add_char_at(t_inputdata *data, char **line)
 {
 	char		*tmp;
 	int			len;
 
-	len = ft_strlen(*line);
-	if (len < *len_max)
+	len = data->len_cur;
+	if (len < data->len_max)
 	{
-		create_char_gap(*line, len, index);
-		(*line)[index] = c;
+		create_char_gap(*line, len, data->index);
+		(*line)[data->index] = data->c;
 	}
 	else
 	{
-		*len_max *= 2;
-		tmp = ft_strnew(*len_max);
+		data->len_max *= 2;
+		tmp = ft_strnew(data->len_max);
 		if (tmp == NULL)
 			return (FUNCT_ERROR);
 		ft_strcpy(tmp, *line);
 		ft_strdel(line);
-		create_char_gap(tmp, len, index);
-		tmp[index] = c;
+		create_char_gap(tmp, len, data->index);
+		tmp[data->index] = data->c;
 		*line = tmp;
 	}
+	data->len_cur++;
 	return (FUNCT_SUCCESS);
 }
 
@@ -72,18 +72,18 @@ static int	add_char_at(char **line, int index, char c, int *len_max)
 **	by 1 byte first.
 */
 
-static int	add_newline(char **line, int *len_max)
+static int	add_newline(t_inputdata *data, char **line)
 {
 	char		*tmp;
 	int			len;
 
-	len = ft_strlen(*line);
-	if (len < *len_max)
+	len = data->len_cur;
+	if (len < data->len_max)
 		(*line)[len] = '\n';
 	else
 	{
-		*len_max += 1;
-		tmp = ft_strnew(*len_max);
+		data->len_max += 1;
+		tmp = ft_strnew(data->len_max);
 		if (tmp == NULL)
 			return (FUNCT_ERROR);
 		ft_strcpy(tmp, *line);
@@ -91,6 +91,7 @@ static int	add_newline(char **line, int *len_max)
 		tmp[len] = '\n';
 		*line = tmp;
 	}
+	data->len_cur++;
 	return (FUNCT_SUCCESS);
 }
 
@@ -108,7 +109,7 @@ int			ft_tputchar(int c)
 
 static void	ft_iputstr(char *str, int linepos, int maxcol)
 {
-	int				i;
+	int		i;
 
 	i = 0;
 	while (str[i] != '\0')
@@ -120,8 +121,9 @@ static void	ft_iputstr(char *str, int linepos, int maxcol)
 			linepos = 0;
 			ft_putchar('\n');
 		}
+		else
+			linepos++;
 		i++;
-		linepos++;
 	}
 }
 
@@ -136,25 +138,23 @@ static void	ft_iputstr(char *str, int linepos, int maxcol)
 int			input_parse_char(t_inputdata *data, char **line)
 {
 	struct winsize	ws; //WILL BE OSCARS DATA
+	unsigned		len;
 	int				linepos;
-	unsigned len;
 
 	ioctl(STDIN_FILENO, TIOCGWINSZ, &ws); //WILL BE OSCARS DATA
 	linepos = get_cursor_linepos(); //WILL BE OSCARS DATA
 	if (ft_isprint(data->c))
 	{
-		if (add_char_at(line, data->index, data->c, &(data->len_max))
-		== FUNCT_ERROR)
+		if (add_char_at(data, line) == FUNCT_ERROR)
 			return (FUNCT_ERROR);
-		len = ft_strlen(*line + data->index);
+		len = data->len_cur - data->index;
 		ft_iputstr(*line + data->index, linepos, ws.ws_col);
 		data->index += len; // compensate index for automatic reposition because of the putstr
-		curs_move_n_left(data, len); // we don't want the cursor to be displayed at the end of the print
-		curs_move_right(data, *line); // move right after char has been printed
+		curs_move_n_left(data, len - 1); // we don't want the cursor to be displayed at the end of the print
 	}
 	else if (data->c == '\n')
 	{
-		if (add_newline(line, &(data->len_max)) == FUNCT_ERROR)
+		if (add_newline(data, line) == FUNCT_ERROR)
 			return (FUNCT_ERROR);
 	}
 	return (FUNCT_SUCCESS);

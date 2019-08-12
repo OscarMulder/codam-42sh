@@ -6,7 +6,7 @@
 /*   By: omulder <omulder@student.codam.nl>           +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2019/05/16 13:41:00 by rkuijper       #+#    #+#                */
-/*   Updated: 2019/08/08 20:01:08 by jbrinksm      ########   odam.nl         */
+/*   Updated: 2019/08/12 14:36:49 by rkuijper      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -22,7 +22,7 @@ void		curs_move_next_word(t_inputdata *data, t_vshdata *vshdata)
 {
 	size_t	i;
 
-	if (data->index == ft_strlen(vshdata->line))
+	if (data->index == data->len_cur)
 		return ;
 	i = 0;
 	while (ft_isprint(vshdata->line[data->index + i]) == true
@@ -30,7 +30,7 @@ void		curs_move_next_word(t_inputdata *data, t_vshdata *vshdata)
 		i++;
 	while (ft_isblank(vshdata->line[data->index + i]) == true)
 		i++;
-	if ((data->index + i == ft_strlen(vshdata->line)) // end of line
+	if ((data->index + i == data->len_cur) // end of line
 		|| (ft_isprint(vshdata->line[data->index + i]) == true
 		&& ft_isblank(vshdata->line[data->index + i]) == false))
 		curs_move_n_right(data, vshdata, i);
@@ -48,16 +48,15 @@ void		curs_move_next_word(t_inputdata *data, t_vshdata *vshdata)
 void		curs_move_n_right(t_inputdata *data, t_vshdata *vshdata, size_t n)
 {
 	struct winsize	ws; //WILL BE OSCARS DATA
-	size_t			linelen;
 	int				linepos;
 	int				down;
 	int				x_offset;
 
-	linelen = ft_strlen(vshdata->line);
-	if (n == 0 || linelen == data->index)
+	(void)vshdata;
+	if (n == 0 || data->len_cur == data->index)
 		return ;
-	if (n > linelen - data->index)
-		n = linelen - data->index;
+	if (n > data->len_cur - data->index)
+		n = data->len_cur - data->index;
 	ioctl(STDIN_FILENO, TIOCGWINSZ, &ws); //WILL BE OSCARS DATA
 	linepos = get_cursor_linepos();
 	down = ((linepos - 1) + n) / ws.ws_col;
@@ -79,15 +78,13 @@ void		curs_move_n_right(t_inputdata *data, t_vshdata *vshdata, size_t n)
 **	for the automatic `index` change if necessary.
 */
 
-void		curs_move_right(t_inputdata *data, char *line)
+void		curs_move_right(t_inputdata *data)
 {
 	struct winsize	ws; //WILL BE OSCARS DATA
-	size_t			linelen;
 
 	ioctl(STDIN_FILENO, TIOCGWINSZ, &ws); //WILL BE OSCARS DATA
-	linelen = ft_strlen(line);
 	ft_eprintf("R BEF LINEPOS: %i/%i\n", get_cursor_linepos(), ws.ws_col); // DEBUG PRINT
-	if (data->index < linelen)
+	if (data->index < data->len_cur)
 	{
 		if (get_cursor_linepos() == ws.ws_col)
 		{

@@ -6,7 +6,7 @@
 /*   By: omulder <omulder@student.codam.nl>           +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2019/04/17 14:03:16 by jbrinksm       #+#    #+#                */
-/*   Updated: 2019/08/08 20:40:51 by jbrinksm      ########   odam.nl         */
+/*   Updated: 2019/08/12 14:52:45 by rkuijper      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -61,6 +61,7 @@ t_inputdata	*init_inputdata(t_vshdata *vshdata)
 	new->hist_start = new->hist_index - 1;
 	new->hist_first = true;
 	new->history = vshdata->history;
+	new->len_cur = 0;
 	new->len_max = 64;
 	return (new);
 }
@@ -161,14 +162,13 @@ int			input_read_ansi(t_inputdata *data, t_vshdata *vshdata)
 		*termcapbuf = '\e';
 		if (read(STDIN_FILENO, &termcapbuf[1], TERMCAPBUFFSIZE - 1) == -1)
 		{
-			// do fatal shit
 			ft_strdel(&termcapbuf);
 			return (FUNCT_ERROR);
 		}
 		if (ft_strequ(termcapbuf, TC_LEFT_ARROW) == true)
 			curs_move_left(data);
 		else if (ft_strequ(termcapbuf, TC_RIGHT_ARROW) == true)
-			curs_move_right(data, vshdata->line);
+			curs_move_right(data);
 		else if (ft_strequ(termcapbuf, TC_HOME) == true)
 			curs_go_home(data, vshdata);
 		else if (ft_strequ(termcapbuf, TC_END) == true)
@@ -209,6 +209,8 @@ int			input_read_special(t_inputdata *data, t_vshdata *vshdata)
 		input_handle_backspace(data, vshdata);
 	else if (data->c == INPUT_CTRL_D)
 		input_parse_ctrl_d(data, vshdata);
+	else if (data->c == INPUT_CTRL_K)
+		input_parse_ctrl_k(data, vshdata);
 	else
 		return (FUNCT_FAILURE);
 	return (FUNCT_SUCCESS);
@@ -288,7 +290,7 @@ int			input_read(t_vshdata *vshdata /*will need ws.ws_col backup and cursor back
 					break ;
 			}
 		}
-		ft_eprintf("AFT: index: %i/%i\n", data->index, ft_strlen(vshdata->line)); // DEBUG PRINT
+		ft_eprintf("AFT: index: %i/%i\n", data->index, data->len_cur); // DEBUG PRINT
 	}
 	return (ft_free_return(data, FUNCT_SUCCESS));
 }
