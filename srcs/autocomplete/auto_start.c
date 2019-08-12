@@ -6,34 +6,18 @@
 /*   By: mavan-he <mavan-he@student.codam.nl>         +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2019/08/12 14:09:10 by mavan-he       #+#    #+#                */
-/*   Updated: 2019/08/12 17:12:09 by mavan-he      ########   odam.nl         */
+/*   Updated: 2019/08/12 21:04:21 by mavan-he      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "vsh.h"
 
-static bool	is_cmd_seperator(char c)
+char	*auto_get_match_str(char *line, int i)
 {
-	return (c == '|' || c == '&' || c == ';' || c == '\n');
-}
+	int		i_cursor;
+	char	*match;
 
-static int	find_state_before_whitespace(char *line, int i)
-{
-	while (i >= 0)
-	{
-		if (line[i] != ' ' && line[i] != '\t')
-			break ;
-		i--;
-	}
-	if (i < 0 || is_cmd_seperator(line[i]) == true)
-		return (STATE_CMD);
-	return (STATE_FILE);
-}
-
-int		auto_find_state(char *line, int i)
-{
-	if (i == 0)
-		return (STATE_CMD);
+	i_cursor = i;
 	i--;
 	while (i >= 0)
 	{
@@ -41,19 +25,30 @@ int		auto_find_state(char *line, int i)
 			break;
 		i--;
 	}
-	if (i < 0 || is_cmd_seperator(line[i]) == true)
-		return (STATE_CMD);
-	if (line[i] == ' ' || line[i] == '\t')
-		return (find_state_before_whitespace(line, i));
-	if (line[i] == '$' || (i > 0 && line[i] == '{' && line[i - 1] == '$'))
-		return (STATE_VAR);
-	return (STATE_FILE);
+	match = ft_strnew(i_cursor - i);
+	if (match == NULL)
+		return (NULL); // error msg
+	ft_strncpy(match, &line[i + 1], (i_cursor - i) - 1);
+	match[i_cursor - i] = '\0';
+	return (match);
 }
 
-/* int		auto_start(t_vshdata *vshdata, int *i)
+int		auto_start(t_vshdata *vshdata, int *i)
 {
-	int state;
+	int		state;
+	char	*match;
 
-	state = auto_find_state()
+	// vshdata line toevoegen;
+	state = auto_find_state(vshdata->line, *i);
+	match = NULL;
+	if (state == STATE_CMD)
+		match = auto_get_match_str(vshdata->line, *i); // putstr for bug fixing only
+	else if (state == STATE_VAR)
+		match = auto_get_match_str(vshdata->line, *i); // putstr for bug fixing only
+	else if (state == STATE_FILE)
+		;// find file
+	if (match == NULL)
+		return (FUNCT_ERROR); // error msg
+	
+	return (auto_find_matches(vshdata, match, i, state));
 }
- */

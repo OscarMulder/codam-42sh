@@ -6,7 +6,7 @@
 /*   By: omulder <omulder@student.codam.nl>           +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2019/04/10 20:29:42 by jbrinksm       #+#    #+#                */
-/*   Updated: 2019/08/12 17:12:55 by mavan-he      ########   odam.nl         */
+/*   Updated: 2019/08/12 21:03:20 by mavan-he      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -272,6 +272,7 @@ typedef struct	s_vshdata
 	int			stdfds[3];
 	char		*history_file;
 	char		*alias_file;
+	char		*line;
 }				t_vshdata;
 
 /*
@@ -664,6 +665,9 @@ int				auto_match_builtins(char *match, t_list **matchlst);
 int				auto_get_filelst(char *match, char *path, t_list **matchlst);
 int				auto_get_varlst(char *match, int match_len, t_envlst *envlst, t_list **matchlst);
 int				auto_find_state(char *line, int i);
+int				auto_start(t_vshdata *vshdata, int *i);
+int				auto_add_match_toline(char *match, char **line, int *i);
+int				auto_find_matches(t_vshdata *vshdata, char *match, int *i, int state);
 
 /*
 **----------------------------------debugging-----------------------------------

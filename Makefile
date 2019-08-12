@@ -6,7 +6,7 @@
 #    By: omulder <omulder@student.codam.nl>           +#+                      #
 #                                                    +#+                       #
 #    Created: 2019/04/10 20:30:07 by jbrinksm       #+#    #+#                 #
-#    Updated: 2019/08/12 17:13:13 by mavan-he      ########   odam.nl          #
+#    Updated: 2019/08/12 21:03:30 by mavan-he      ########   odam.nl          #
 #                                                                              #
 # **************************************************************************** #
 
@@ -59,7 +59,7 @@ exec_create_files \
 expan_handle_bracketed_var expan_tilde_expansion exec_validate_binary \
 redir_pipe redir redir_tools redir_tools2 \
 auto_get_cmdlst auto_match_builtins auto_get_filelst auto_get_varlst \
-auto_find_state \
+auto_find_state auto_start auto_add_match_toline auto_find_matches \
 print_errors
 TESTS = unit_test builtin_assign_test
 OBJECTS := $(SRCS:%=%.o)
