@@ -6,7 +6,7 @@
 /*   By: mavan-he <mavan-he@student.codam.nl>         +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2019/08/12 20:20:16 by mavan-he       #+#    #+#                */
-/*   Updated: 2019/08/13 17:01:34 by mavan-he      ########   odam.nl         */
+/*   Updated: 2019/08/13 20:28:51 by mavan-he      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -48,7 +48,7 @@ int			auto_find_filelst(char **match, t_list **matchlst)
 		path = ft_strndup((*match), match_len - (match_len - (i + 1)));
 	if (path == NULL || cut_path_from_match(match, i + 1) == FUNCT_ERROR)
 		return (FUNCT_ERROR);
-	ft_printf("<<<<< Path = %s : ReMatch = %s >>>>>> \n", path, *match); // debugging
+	ft_printf("<<<<< Path = %s : New Match = %s >>>>>>\n", path, *match); // debugging
 	ret = auto_get_filelst(*match, path, matchlst);
 	ft_strdel(&path);
 	return (ret);
@@ -62,7 +62,7 @@ int			auto_find_matches(t_vshdata *vshdata, char **match,
 		matchlst) == FUNCT_ERROR)
 		return (FUNCT_ERROR);
 	if (state == STATE_VAR && auto_get_varlst(*match, ft_strlen(*match),
-		vshdata->envlst, matchlst) == FUNCT_ERROR)
+		vshdata->envlst->next, matchlst) == FUNCT_ERROR)
 		return (FUNCT_ERROR);
 	if (state == STATE_FILE && auto_find_filelst(match, matchlst) == FUNCT_ERROR)
 		return (FUNCT_ERROR);

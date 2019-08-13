@@ -1,31 +1,20 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        ::::::::            */
-/*   auto_handle_matchlst.c                             :+:    :+:            */
+/*   auto_big_lst.c                                     :+:    :+:            */
 /*                                                     +:+                    */
 /*   By: mavan-he <mavan-he@student.codam.nl>         +#+                     */
 /*                                                   +#+                      */
-/*   Created: 2019/08/13 11:00:12 by mavan-he       #+#    #+#                */
-/*   Updated: 2019/08/13 20:11:15 by mavan-he      ########   odam.nl         */
+/*   Created: 2019/08/13 20:07:40 by mavan-he       #+#    #+#                */
+/*   Updated: 2019/08/13 20:11:39 by mavan-he      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "vsh.h"
 
-int		auto_handle_matchlst(t_vshdata *vshdata, int *i,
-		char *match, t_list **matchlst)
+int		auto_big_lst(t_list *matchlst, int lst_len)
 {
-	int		lst_len;
-
-	if (*matchlst == NULL)
-		return (FUNCT_FAILURE);
-	lst_len = ft_lstlen(*matchlst);
-	if (lst_len == 1)
-		return (auto_add_match_toline(
-				match, (char *)(*matchlst)->content, &vshdata->line, i));
-	else if (lst_len > 100)
-		auto_big_lst(*matchlst, lst_len);
-	else
-		return (auto_small_matchlst(match, *matchlst, vshdata, i));
+	(void)matchlst;
+	ft_printf("Display all %d possibilities? (y or n)", lst_len);
 	return (FUNCT_SUCCESS);
 }

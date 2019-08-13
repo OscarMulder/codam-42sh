@@ -6,7 +6,7 @@
 /*   By: mavan-he <mavan-he@student.codam.nl>         +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2019/08/12 14:09:10 by mavan-he       #+#    #+#                */
-/*   Updated: 2019/08/13 16:48:14 by mavan-he      ########   odam.nl         */
+/*   Updated: 2019/08/13 17:38:18 by mavan-he      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -83,7 +83,7 @@ int		auto_start(t_vshdata *vshdata, int *i)
 		match = auto_get_match_str(vshdata->line, *i);
 	else if (state == STATE_FILE)
 		match = auto_get_file_str(vshdata->line, *i);
-	ft_printf("\n<<<<< Match = %s >>>>>>\n", match); // Debugging
+	ft_printf("<<<<< Match = %s >>>>>>\n", match); // Debugging
 	if (match == NULL ||
 		auto_find_matches(vshdata, &match, &matchlst, state) == FUNCT_ERROR)
 		state = FUNCT_ERROR;
