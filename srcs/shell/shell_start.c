@@ -6,7 +6,7 @@
 /*   By: omulder <omulder@student.codam.nl>           +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2019/04/18 16:44:50 by omulder        #+#    #+#                */
-/*   Updated: 2019/08/13 15:18:14 by mavan-he      ########   odam.nl         */
+/*   Updated: 2019/08/13 17:30:00 by mavan-he      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -55,8 +55,8 @@ int		shell_start(t_vshdata *vshdata)
 		parser_astdel(&ast);
 		lexer_tokenlstdel(&token_lst);
 		shell_display_prompt(vshdata->envlst);
-		vshdata->line = ft_strdup("echo ../"); //debugging
-		status = 8; // debugging
+		vshdata->line = ft_strdup("nca"); //debugging
+		status = 3; // debugging
 		auto_start(vshdata, &status); //debugging
 		if (input_read(vshdata, &line, &status) == FUNCT_ERROR)
 			continue;
