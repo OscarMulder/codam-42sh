@@ -6,7 +6,7 @@
 /*   By: jbrinksm <jbrinksm@student.codam.nl>         +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2019/04/10 20:29:49 by jbrinksm       #+#    #+#                */
-/*   Updated: 2019/08/13 14:46:09 by tde-jong      ########   odam.nl         */
+/*   Updated: 2019/08/13 15:03:27 by tde-jong      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,7 +18,6 @@
 
 int		main(int argc, char **argv)
 {
-	t_term		*term_p;
 	t_vshdata	vshdata;
 
 	(void)argv;
