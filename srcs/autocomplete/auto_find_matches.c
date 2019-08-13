@@ -6,49 +6,50 @@
 /*   By: mavan-he <mavan-he@student.codam.nl>         +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2019/08/12 20:20:16 by mavan-he       #+#    #+#                */
-/*   Updated: 2019/08/12 21:15:09 by mavan-he      ########   odam.nl         */
+/*   Updated: 2019/08/13 15:15:31 by mavan-he      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "vsh.h"
 
-void	auto_lst_del(void *str, size_t size)
+int		auto_find_filelst(char *match, t_list **matchlst)
 {
-	(void)size;
-	ft_strdel((char**)&str);
+	int		match_len;
+	char	*path;
+	int		i;
+	int		ret;
+
+	match_len = ft_strlen(match);
+	i = match_len - 1;
+	while (i >= 0)
+	{
+		if (tools_isidentifierchar(match[i]) == false && match[i] != '.')
+			break;
+		i--;
+	}
+ 	if (i < 0)
+		path = getcwd(NULL, 0);
+	else
+		path = ft_strndup(match, match_len - (match_len - (i + 1)));
+	if (path == NULL)
+		return (FUNCT_ERROR);
+	ft_printf("<<<<< Path = %s : ReMatch = %s >>>>>> \n", path, &match[i + 1]);
+	ret = auto_get_filelst(&match[i + 1], path, matchlst);
+	ft_strdel(&path);
+	return (ret);
 }
 
-int		auto_find_matches(t_vshdata *vshdata, char *match, int *i, int state)
-{
-	t_list	*matchlst;
-	int		lst_len;
 
-	(void)i;
-	matchlst = NULL;
+int		auto_find_matches(t_vshdata *vshdata, char *match,
+		t_list **matchlst, int state)
+{
 	if (state == STATE_CMD && auto_get_cmdlst(match, vshdata->envlst,
-		&matchlst) == FUNCT_ERROR)
+		matchlst) == FUNCT_ERROR)
 		return (FUNCT_ERROR);
 	if (state == STATE_VAR && auto_get_varlst(match, ft_strlen(match),
-		vshdata->envlst, &matchlst) == FUNCT_ERROR)
+		vshdata->envlst, matchlst) == FUNCT_ERROR)
 		return (FUNCT_ERROR);
-/* 	if (state == STATE_FILE && auto_get_filelst(match, &matchlst) == FUNCT_ERROR)
-		return (FUNCT_ERROR); */
-	lst_len = ft_lstlen(matchlst);
-	ft_putnbr(lst_len);
-	while (matchlst != NULL)
-	{
-		ft_putendl((char *)matchlst->content);
-		matchlst = matchlst->next;
-	}
-	ft_printf("<<<<<<<<< list up, line down >>>>>>>>>\n"); // debug
-	if (lst_len == 0)
-		return (FUNCT_FAILURE);
-	else if (lst_len == 1)
-		auto_add_match_toline(match, &vshdata->line, i); // replace one word
-	else if (lst_len > 100)
-		; // ask for yes no
-	else
-		; // print all matches (maybe autocomplete equal part)
-	ft_lstdel(&matchlst, &auto_lst_del);
+	if (state == STATE_FILE && auto_find_filelst(match, matchlst) == FUNCT_ERROR)
+		return (FUNCT_ERROR);
 	return (FUNCT_SUCCESS);
 }

@@ -6,7 +6,7 @@
 /*   By: omulder <omulder@student.codam.nl>           +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2019/04/10 20:29:42 by jbrinksm       #+#    #+#                */
-/*   Updated: 2019/08/12 21:03:20 by mavan-he      ########   odam.nl         */
+/*   Updated: 2019/08/13 14:21:39 by mavan-he      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -656,7 +656,7 @@ void			err_void_exit(char *str, int exitcode);
 int				err_ret(char *str);
 
 /*
-**--------------------------------error_handling--------------------------------
+**--------------------------------autocomplete----------------------------------
 */
 
 int				auto_get_cmdlst(char *match, t_envlst *envlst, t_list **matchlst);
@@ -667,7 +667,9 @@ int				auto_get_varlst(char *match, int match_len, t_envlst *envlst, t_list **ma
 int				auto_find_state(char *line, int i);
 int				auto_start(t_vshdata *vshdata, int *i);
 int				auto_add_match_toline(char *match, char **line, int *i);
-int				auto_find_matches(t_vshdata *vshdata, char *match, int *i, int state);
+int				auto_find_matches(t_vshdata *vshdata, char *match, t_list **matchlst, int state);
+void			auto_lstdel(void *str, size_t size);
+int				auto_handle_matchlst(char *match, t_list **matchlst);
 
 /*
 **----------------------------------debugging-----------------------------------
