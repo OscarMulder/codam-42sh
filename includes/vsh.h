@@ -6,7 +6,7 @@
 /*   By: omulder <omulder@student.codam.nl>           +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2019/04/10 20:29:42 by jbrinksm       #+#    #+#                */
-/*   Updated: 2019/08/13 14:53:33 by tde-jong      ########   odam.nl         */
+/*   Updated: 2019/08/13 15:01:14 by tde-jong      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -215,7 +215,6 @@
 typedef struct	s_state
 {
 	int				exit_code;
-	struct termios	*termios_p;
 }				t_state;
 
 t_state *g_state;
@@ -252,6 +251,18 @@ typedef struct	s_aliaslst
 }				t_aliaslst;
 
 /*
+**-----------------------------------term---------------------------------------
+*/
+
+typedef struct termios	t_termios;
+
+typedef struct	s_term
+{
+	t_termios	*old_termios_p;
+	t_termios	*termios_p;
+}				t_term;
+
+/*
 **-----------------------------------vsh_data-----------------------------------
 */
 
@@ -265,16 +276,6 @@ typedef struct	s_vshdata
 	char		*history_file;
 	char		*alias_file;
 }				t_vshdata;
-
-/*
-**-----------------------------------term---------------------------------------
-*/
-
-typedef struct	s_term
-{
-	struct termios	*old_termios_p;
-	struct termios	*termios_p;
-}				t_term;
 
 /*
 **----------------------------------lexer--------------------------------------
