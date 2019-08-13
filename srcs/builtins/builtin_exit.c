@@ -28,7 +28,7 @@ void		builtin_exit(char **args, t_vshdata *vshdata)
 	if (args[1] != NULL && args[2] == NULL)
 	{
 		if (ft_aisint(args[1]) == true)
-			exit(ft_atoi(args[1]));
+			reset_exit(ft_atoi(args[1]));
 		ft_printf("vsh: exit: %s: numeric argument required\n", args[1]);
 		reset_exit(EXIT_WRONG_USE, vshdata->term);
 	}
