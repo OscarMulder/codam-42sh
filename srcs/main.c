@@ -6,7 +6,7 @@
 /*   By: jbrinksm <jbrinksm@student.codam.nl>         +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2019/04/10 20:29:49 by jbrinksm       #+#    #+#                */
-/*   Updated: 2019/07/30 16:36:20 by jbrinksm      ########   odam.nl         */
+/*   Updated: 2019/08/13 14:39:32 by tde-jong      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -35,6 +35,5 @@ int		main(int argc, char **argv)
 	shell_start(&vshdata);
 	if (term_reset(term_p) == FUNCT_FAILURE)
 		return (EXIT_FAILURE);
-	term_free_struct(&term_p);
 	return (EXIT_SUCCESS);
 }
