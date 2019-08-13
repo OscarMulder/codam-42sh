@@ -6,7 +6,7 @@
 /*   By: mavan-he <mavan-he@student.codam.nl>         +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2019/08/12 17:12:17 by mavan-he       #+#    #+#                */
-/*   Updated: 2019/08/12 17:14:30 by mavan-he      ########   odam.nl         */
+/*   Updated: 2019/08/13 20:35:01 by mavan-he      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -38,7 +38,7 @@ int			auto_find_state(char *line, int i)
 	while (i >= 0)
 	{
 		if (tools_isidentifierchar(line[i]) == false)
-			break;
+			break ;
 		i--;
 	}
 	if (i < 0 || is_cmd_seperator(line[i]) == true)

@@ -6,7 +6,7 @@
 /*   By: omulder <omulder@student.codam.nl>           +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2019/04/10 20:29:42 by jbrinksm       #+#    #+#                */
-/*   Updated: 2019/08/13 20:10:46 by mavan-he      ########   odam.nl         */
+/*   Updated: 2019/08/13 20:39:02 by mavan-he      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -670,7 +670,7 @@ int				auto_add_match_toline(char *match, char *to_add, char **line, int *i);
 int				auto_find_matches(t_vshdata *vshdata, char **match, t_list **matchlst, int state);
 void			auto_lstdel(void *str, size_t size);
 int				auto_handle_matchlst(t_vshdata *vshdata, int *i, char *match, t_list **matchlst);
-int				auto_small_matchlst(char *match, t_list *matchlst, t_vshdata *vshdata, int *i);
+int				auto_small_lst(char *match, t_list *matchlst, t_vshdata *vshdata, int *i);
 void			auto_lst_print(t_list *matchlst);
 int				auto_big_lst(t_list *matchlst, int lst_len);
 

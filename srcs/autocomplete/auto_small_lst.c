@@ -1,12 +1,12 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        ::::::::            */
-/*   auto_small_matchlst.c                              :+:    :+:            */
+/*   auto_small_lst.c                                   :+:    :+:            */
 /*                                                     +:+                    */
 /*   By: mavan-he <mavan-he@student.codam.nl>         +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2019/08/13 17:40:10 by mavan-he       #+#    #+#                */
-/*   Updated: 2019/08/13 19:55:56 by mavan-he      ########   odam.nl         */
+/*   Updated: 2019/08/13 20:38:43 by mavan-he      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -51,13 +51,14 @@ int		auto_anything_to_add(int i, t_list *matchlst, char **to_add)
 	return (FUNCT_SUCCESS);
 }
 
-int		auto_small_matchlst(char *match, t_list *matchlst,
+int		auto_small_lst(char *match, t_list *matchlst,
 		t_vshdata *vshdata, int *i)
 {
 	char *to_add;
 
 	to_add = NULL;
-	if (auto_anything_to_add(ft_strlen(match), matchlst, &to_add) == FUNCT_ERROR)
+	if (auto_anything_to_add(ft_strlen(match), matchlst, &to_add)
+		== FUNCT_ERROR)
 		return (FUNCT_ERROR);
 	if (to_add != NULL)
 		return (auto_add_match_toline(match, to_add, &vshdata->line, i));

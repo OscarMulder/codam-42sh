@@ -6,7 +6,7 @@
 /*   By: mavan-he <mavan-he@student.codam.nl>         +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2019/08/12 20:20:16 by mavan-he       #+#    #+#                */
-/*   Updated: 2019/08/13 20:28:51 by mavan-he      ########   odam.nl         */
+/*   Updated: 2019/08/13 20:35:25 by mavan-he      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -53,7 +53,6 @@ int			auto_find_filelst(char **match, t_list **matchlst)
 	ft_strdel(&path);
 	return (ret);
 }
-
 
 int			auto_find_matches(t_vshdata *vshdata, char **match,
 			t_list **matchlst, int state)

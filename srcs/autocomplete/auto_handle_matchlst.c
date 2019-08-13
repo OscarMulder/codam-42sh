@@ -6,7 +6,7 @@
 /*   By: mavan-he <mavan-he@student.codam.nl>         +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2019/08/13 11:00:12 by mavan-he       #+#    #+#                */
-/*   Updated: 2019/08/13 20:11:15 by mavan-he      ########   odam.nl         */
+/*   Updated: 2019/08/13 20:38:13 by mavan-he      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -24,8 +24,7 @@ int		auto_handle_matchlst(t_vshdata *vshdata, int *i,
 		return (auto_add_match_toline(
 				match, (char *)(*matchlst)->content, &vshdata->line, i));
 	else if (lst_len > 100)
-		auto_big_lst(*matchlst, lst_len);
+		return (auto_big_lst(*matchlst, lst_len));
 	else
-		return (auto_small_matchlst(match, *matchlst, vshdata, i));
-	return (FUNCT_SUCCESS);
+		return (auto_small_lst(match, *matchlst, vshdata, i));
 }
