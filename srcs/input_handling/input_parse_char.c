@@ -6,7 +6,7 @@
 /*   By: omulder <omulder@student.codam.nl>           +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2019/05/16 13:33:54 by rkuijper       #+#    #+#                */
-/*   Updated: 2019/08/12 16:00:51 by rkuijper      ########   odam.nl         */
+/*   Updated: 2019/08/14 12:05:11 by rkuijper      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -102,59 +102,24 @@ int			ft_tputchar(int c)
 }
 
 /*
-**	This function will take care of the printing of the line.
-**	When it is at the last column in the terminal, it will print a `\n` to
-**	make room.
-*/
-
-static void	ft_iputstr(char *str, int linepos, int maxcol)
-{
-	int		i;
-
-	i = 0;
-	while (str[i] != '\0')
-	{
-		ft_putchar(str[i]);
-		ft_eprintf("%i/%i\n", linepos, maxcol); //DEBUG PRINT
-		if (linepos == maxcol)
-		{
-			linepos = 0;
-			ft_putchar('\n');
-		}
-		else
-			linepos++;
-		i++;
-	}
-}
-
-#include <sys/ioctl.h>
-
-/*
 **	`ws` will be taken from data when Oscars resize function is finished.
 **
 **	A the string will be edited and reprinted from the point of insertion.
 */
 
-int			input_parse_char(t_inputdata *data, char **line)
+int			input_parse_char(t_inputdata *data, t_vshdata *vshdata)
 {
-	struct winsize	ws; //WILL BE OSCARS DATA
-	unsigned		len;
-	int				linepos;
-
-	ioctl(STDIN_FILENO, TIOCGWINSZ, &ws); //WILL BE OSCARS DATA
-	linepos = get_cursor_linepos(); //WILL BE OSCARS DATA
 	if (ft_isprint(data->c))
 	{
-		if (add_char_at(data, line) == FUNCT_ERROR)
+		if (add_char_at(data, &vshdata->line) == FUNCT_ERROR)
 			return (FUNCT_ERROR);
-		len = data->len_cur - data->index;
-		ft_iputstr(*line + data->index, linepos, ws.ws_col);
-		data->index += len; // compensate index for automatic reposition because of the putstr
-		curs_move_n_left(data, len - 1); // we don't want the cursor to be displayed at the end of the print
+		ft_printf("\e[s%s\e[u", vshdata->line + data->index);
+		ft_putchar(data->c);
+		data->index++;
 	}
 	else if (data->c == '\n')
 	{
-		if (add_newline(data, line) == FUNCT_ERROR)
+		if (add_newline(data, &vshdata->line) == FUNCT_ERROR)
 			return (FUNCT_ERROR);
 	}
 	return (FUNCT_SUCCESS);

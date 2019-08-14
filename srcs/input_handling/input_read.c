@@ -6,7 +6,7 @@
 /*   By: omulder <omulder@student.codam.nl>           +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2019/04/17 14:03:16 by jbrinksm       #+#    #+#                */
-/*   Updated: 2019/08/12 14:52:45 by rkuijper      ########   odam.nl         */
+/*   Updated: 2019/08/14 10:13:45 by rkuijper      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -284,7 +284,7 @@ int			input_read(t_vshdata *vshdata /*will need ws.ws_col backup and cursor back
 		{
 			if (input_read_special(data, vshdata) == FUNCT_FAILURE)
 			{
-				if (input_parse_char(data, &vshdata->line) == FUNCT_ERROR)
+				if (input_parse_char(data, vshdata) == FUNCT_ERROR)
 					return (ft_free_return(data, FUNCT_ERROR));
 				if (data->c == '\n')
 					break ;

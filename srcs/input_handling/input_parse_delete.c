@@ -6,57 +6,55 @@
 /*   By: omulder <omulder@student.codam.nl>           +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2019/05/16 13:44:53 by rkuijper       #+#    #+#                */
-/*   Updated: 2019/08/12 14:20:31 by rkuijper      ########   odam.nl         */
+/*   Updated: 2019/08/14 10:50:03 by rkuijper      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "vsh.h"
 #include <term.h>
+#include <sys/ioctl.h>
 
 /*
 **	Real line gets updated, then the cursor position is saved (DOESNT WORK WITH RESIZING)
 **	Lines will be cleared and everything will be reprinted (sadly).
 */
 
+/*
+**	Functionality is subject to change. There *should* be a way to do this more easily
+**	using ncurses and tgetstr("dc") funcionality, but I have yet to find it.
+*/
+static void	ft_iputstr(char *str, int linepos, int maxcol)
+{
+	int		i;
+
+	i = 0;
+	while (str[i] != '\0')
+	{
+		ft_putchar(str[i]);
+		if (linepos == maxcol)
+		{
+			linepos = 0;
+			ft_putchar('\n');
+		}
+		else
+			linepos++;
+		i++;
+	}
+}
+
 int			input_handle_delete(t_inputdata *data, t_vshdata *vshdata)
 {
-	char		*tc_clear_lines_str;
-
+	struct winsize	ws;
+	
+	ioctl(STDIN_FILENO, TIOCGWINSZ, &ws);
 	if (data->index < data->len_cur)
 	{
 		input_clear_char_at(&vshdata->line, data->index);
 		data->len_cur--;
-		tc_clear_lines_str = tgetstr("dc", NULL);
-		if (tc_clear_lines_str == NULL)
-		{
-			ft_eprintf("ERROR\n");
-			return (FUNCT_ERROR);
-		}
-		tputs(tc_clear_lines_str, 1, &ft_tputchar);
+		ft_putstr("\e[s");
+		ft_iputstr(vshdata->line + data->index, get_cursor_linepos(), ws.ws_col);
+		ft_putchar(' ');
+		ft_putstr("\e[u");
 	}
 	return (FUNCT_SUCCESS);
 }
-
-/* int			input_handle_delete(t_inputdata *data, t_vshdata *vshdata)
-{
-	char		*tc_clear_lines_str;
-	unsigned	saved_index;
-
-	input_clear_char_at(&vshdata->line, data->index);
-	ft_putstr("\e[s"); //save cursor pos
-	saved_index = data->index; //save index
-	curs_go_home(data, vshdata);
-	ft_printf("\e[%iD", vshdata->prompt_len);
-	tc_clear_lines_str = tgoto(tgetstr("dc", NULL), 0, 1);
-	if (tc_clear_lines_str == NULL)
-	{
-		ft_eprintf("ERROR\n"); // DEBUG PRINT
-		return (FUNCT_ERROR); // do fatal shit
-	}
-	tputs(tc_clear_lines_str, 20, &ft_tputchar);
-	shell_display_prompt(vshdata);
-	ft_putstr(vshdata->line);
-	ft_putstr("\e[u"); //recover cursor pos
-	data->index = saved_index; // recover index
-	return (FUNCT_SUCCESS);
-} */

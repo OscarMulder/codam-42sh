@@ -6,7 +6,7 @@
 /*   By: omulder <omulder@student.codam.nl>           +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2019/04/10 20:29:42 by jbrinksm       #+#    #+#                */
-/*   Updated: 2019/08/12 14:36:58 by rkuijper      ########   odam.nl         */
+/*   Updated: 2019/08/14 10:13:28 by rkuijper      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -436,7 +436,7 @@ typedef struct	s_inputdata
 int				input_read(t_vshdata *vshdata);
 int				input_is_word_start(char *str, int i1, int i2);
 void			input_clear_char_at(char **line, unsigned index);
-int				input_parse_char(t_inputdata *data, char **line);
+int				input_parse_char(t_inputdata *data, t_vshdata *vshdata);
 int				get_cursor_linepos(void); //column
 int				get_cursor_rowpos(void); //row
 

@@ -6,7 +6,7 @@
 /*   By: rkuijper <rkuijper@student.codam.nl>         +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2019/05/16 13:48:04 by rkuijper       #+#    #+#                */
-/*   Updated: 2019/08/12 14:29:46 by rkuijper      ########   odam.nl         */
+/*   Updated: 2019/08/14 12:13:53 by rkuijper      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,11 +14,8 @@
 #include <term.h>
 
 /*
-**
-**	This is not using any ncurses functionality, since that didn't wanna work...
-**
+**	Not finished yet, can be better....
 */
-
 int			input_parse_ctrl_k(t_inputdata *data, t_vshdata *vshdata)
 {
 	unsigned i;
@@ -31,7 +28,7 @@ int			input_parse_ctrl_k(t_inputdata *data, t_vshdata *vshdata)
 			vshdata->line[i] = '\0';
 			i++;
 		}
-		ft_printf("\e[2%dP", data->len_cur - data->index);
+		ft_printf("\e[1%dP", data->len_cur - data->index);
 		data->len_cur -= (data->len_cur - data->index);
 	}
 	return (FUNCT_SUCCESS);

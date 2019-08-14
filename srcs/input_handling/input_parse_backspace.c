@@ -6,12 +6,13 @@
 /*   By: rkuijper <rkuijper@student.codam.nl>         +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2019/05/16 13:43:07 by rkuijper       #+#    #+#                */
-/*   Updated: 2019/08/12 14:21:46 by rkuijper      ########   odam.nl         */
+/*   Updated: 2019/08/14 11:24:41 by rkuijper      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "vsh.h"
 #include <term.h>
+#include <sys/ioctl.h>
 
 /*
 **	Backspaces are handled saving the cursor position and then clearing the
@@ -19,52 +20,39 @@
 **	cursor position.
 */
 
+static void	ft_iputstr(char *str, int linepos, int maxcol)
+{
+	int		i;
+
+	i = 0;
+	while (str[i] != '\0')
+	{
+		ft_putchar(str[i]);
+		if (linepos == maxcol)
+		{
+			linepos = 0;
+			ft_putchar('\n');
+		}
+		else
+			linepos++;
+		i++;
+	}
+}
+
 int		input_handle_backspace(t_inputdata *data, t_vshdata *vshdata)
 {
-	char		*tc_clear_lines_str;
+	struct winsize	ws;
 
+	ioctl(STDIN_FILENO, TIOCGWINSZ, &ws);
 	if (data->index > 0)
 	{
 		input_clear_char_at(&vshdata->line, data->index - 1);
 		data->len_cur--;
-		tc_clear_lines_str = tgetstr("dc", NULL);
-		if (tc_clear_lines_str == NULL)
-		{
-			ft_eprintf("ERROR\n");
-			return (FUNCT_ERROR);
-		}
 		curs_move_left(data);
-		tputs(tc_clear_lines_str, 1, &ft_tputchar);
+		ft_putstr("\e[s");
+		ft_iputstr(vshdata->line + data->index, get_cursor_linepos(), ws.ws_col);
+		ft_putchar(' ');
+		ft_putstr("\e[u");
 	}
 	return (FUNCT_SUCCESS);
 }
-
-/*
-void		input_handle_backspace(t_inputdata *data, t_vshdata *vshdata)
-{
-	char		*tc_clear_lines_str;
-	unsigned	saved_index;
-
-	if (data->index > 0)
-	{
-		input_clear_char_at(&vshdata->line, data->index - 1);
-		ft_putstr("\e[s"); //save cursor pos
-		saved_index = data->index; //save index
-		
-		curs_go_home(data, vshdata);
-		ft_printf("\e[%iD", vshdata->prompt_len);
-		tc_clear_lines_str = tgetstr("cd", NULL);
-		if (tc_clear_lines_str == NULL)
-		{
-			ft_eprintf("ERROR\n"); // DEBUG PRINT
-			return ; // do fatal shit
-		}
-		tputs(tc_clear_lines_str, 1, &ft_tputchar);
-		shell_display_prompt(vshdata);
-		ft_putstr(vshdata->line);
-		ft_putstr("\e[u"); //recover cursor pos
-		data->index = saved_index; // recover index
-		curs_move_left(data);
-	}
-}
-*/
