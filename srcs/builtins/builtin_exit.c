@@ -6,7 +6,7 @@
 /*   By: omulder <omulder@student.codam.nl>           +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2019/04/11 20:15:24 by jbrinksm       #+#    #+#                */
-/*   Updated: 2019/08/13 15:55:21 by mavan-he      ########   odam.nl         */
+/*   Updated: 2019/08/14 15:26:58 by tde-jong      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -29,7 +29,7 @@ void		builtin_exit(char **args, t_vshdata *vshdata)
 	{
 		if (ft_aisint(args[1]) == true)
 			reset_exit(ft_atoi(args[1]), vshdata->term);
-		ft_printf("vsh: exit: %s: numeric argument required\n", args[1]);
+		ft_eprintf("vsh: exit: %s: numeric argument required\n", args[1]);
 		reset_exit(EXIT_WRONG_USE, vshdata->term);
 	}
 	else if (args[1] != NULL && args[2] != NULL)
