@@ -6,7 +6,7 @@
 /*   By: omulder <omulder@student.codam.nl>           +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2019/04/18 16:37:32 by omulder        #+#    #+#                */
-/*   Updated: 2019/08/07 13:42:59 by tde-jong      ########   odam.nl         */
+/*   Updated: 2019/08/15 14:49:40 by omulder       ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -200,25 +200,24 @@ TestSuite(shell_quote_checker);
 Test(shell_quote_checker, basic)
 {
 	char		*line;
-	int			status;
 	t_vshdata	vshdata;
 
 	vshdata.history_file = "/tmp/.vsh_history";
 	history_get_file_content(&vshdata);
 	line = strdup("lala");
-	shell_close_unclosed_quotes(&vshdata, &line, &status);
+	shell_close_unclosed_quotes(&vshdata);
 	cr_expect_str_eq(line, "lala");
 	ft_strdel(&line);
 	line = strdup("lala''");
-	shell_close_unclosed_quotes(&vshdata, &line, &status);
+	shell_close_unclosed_quotes(&vshdata);
 	cr_expect_str_eq(line, "lala''");
 	ft_strdel(&line);
 	line = strdup("lala\"\"");
-	shell_close_unclosed_quotes(&vshdata, &line, &status);
+	shell_close_unclosed_quotes(&vshdata);
 	cr_expect_str_eq(line, "lala\"\"");
 	ft_strdel(&line);
 	line = strdup("lala'\"'");
-	shell_close_unclosed_quotes(&vshdata, &line, &status);
+	shell_close_unclosed_quotes(&vshdata);
 	cr_expect_str_eq(line, "lala'\"'");
 	ft_strdel(&line);
 }

@@ -6,7 +6,7 @@
 /*   By: omulder <omulder@student.codam.nl>           +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2019/05/16 13:39:59 by rkuijper       #+#    #+#                */
-/*   Updated: 2019/08/15 13:04:43 by rkuijper      ########   odam.nl         */
+/*   Updated: 2019/08/15 14:53:26 by omulder       ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -91,7 +91,6 @@ void		curs_move_left(t_inputdata *data)
 	struct winsize	ws; //WILL BE OSCARS DATA
 
 	ioctl(STDIN_FILENO, TIOCGWINSZ, &ws); //WILL BE OSCARS DATA
-	ft_eprintf("L BEF LINEPOS: %i/%i\n", get_cursor_linepos(), ws.ws_col); // DEBUG PRINT
 	if (data->index > 0)
 	{
 		// Needs to account for newline characters.
@@ -104,5 +103,4 @@ void		curs_move_left(t_inputdata *data)
 			ft_putstr(CURS_LEFT);
 		data->index--;
 	}
-	ft_eprintf("L AFT LINEPOS: %i/%i\n", get_cursor_linepos(), ws.ws_col); // DEBUG PRINT
 }

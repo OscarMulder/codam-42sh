@@ -6,7 +6,7 @@
 /*   By: omulder <omulder@student.codam.nl>           +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2019/04/17 14:03:16 by jbrinksm       #+#    #+#                */
-/*   Updated: 2019/08/15 14:22:39 by omulder       ########   odam.nl         */
+/*   Updated: 2019/08/15 14:53:12 by omulder       ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -84,7 +84,6 @@ static char	*get_cursor_pos(void)
 		ft_strdel(&buf);
 		return (NULL);
 	}
-	ft_eprintf("Cursor pos response: %s\n", buf + 1);
 	return (buf);
 }
 
@@ -190,7 +189,6 @@ int			input_read_ansi(t_inputdata *data, t_vshdata *vshdata)
 			curs_move_down(data, vshdata);
 		else
 		{
-			ft_eprintf(">%s< TERMCAP NOT FOUND\n", &termcapbuf[1]); // DEBUG PRINT
 			ft_strdel(&termcapbuf);
 			return (FUNCT_FAILURE);
 		}
@@ -202,6 +200,10 @@ int			input_read_ansi(t_inputdata *data, t_vshdata *vshdata)
 
 /*
 **	Handles non-ansi single-byte special chars.
+**
+**	NOTES ON CONSISTENCY:
+**	- Most of the function called return a value, which we don't use
+**	- Some functions check the value of data->c again, which isn't needed?
 */
 
 int			input_read_special(t_inputdata *data, t_vshdata *vshdata)
@@ -278,7 +280,6 @@ int			input_read(t_vshdata *vshdata /*will need ws.ws_col backup and cursor back
 	while (true)
 	{
 		// get and compare new ws.ws_col
-		// ft_eprintf("BEF: index: >%i<\n", data->index);
 		if (read(STDIN_FILENO, &data->c, 1) == -1)
 			return (ft_free_return(data, FUNCT_ERROR));
 		if (input_parse_ctrl_c(data, vshdata) == FUNCT_SUCCESS)
@@ -293,7 +294,6 @@ int			input_read(t_vshdata *vshdata /*will need ws.ws_col backup and cursor back
 					break ;
 			}
 		}
-		ft_eprintf("AFT: index: %i/%i\n", data->index, data->len_cur); // DEBUG PRINT
 	}
 	return (ft_free_return(data, FUNCT_SUCCESS));
 }
