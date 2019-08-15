@@ -6,7 +6,7 @@
 /*   By: jbrinksm <jbrinksm@student.codam.nl>         +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2019/05/31 07:47:19 by jbrinksm       #+#    #+#                */
-/*   Updated: 2019/08/07 11:19:51 by jbrinksm      ########   odam.nl         */
+/*   Updated: 2019/08/15 15:03:08 by omulder       ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -66,7 +66,7 @@ int		shell_close_unclosed_quotes(t_vshdata *vshdata)
 		vshdata->line = ft_strjoinfree_all(line_tmp, vshdata->line);
 		if (vshdata->line == NULL)
 		{
-			ft_eprintf("vsh: failed to allocate enough memory\n");
+			ft_eprintf(E_ALLOC_STR);
 			return (FUNCT_ERROR);
 		}
 		quote = shell_quote_checker_find_quote(vshdata->line);
