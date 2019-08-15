@@ -6,7 +6,7 @@
 /*   By: mavan-he <mavan-he@student.codam.nl>         +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2019/07/29 12:42:44 by mavan-he       #+#    #+#                */
-/*   Updated: 2019/08/13 14:55:55 by tde-jong      ########   odam.nl         */
+/*   Updated: 2019/08/15 14:25:31 by omulder       ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,6 +15,8 @@
 int		shell_init_vshdata(t_vshdata *vshdata)
 {
 	ft_bzero(vshdata, sizeof(t_vshdata));
+	vshdata->line = NULL;
+	vshdata->aliaslst = NULL;
 	vshdata->envlst = env_getlst();
 	if (vshdata->envlst == NULL)
 		return (err_ret(E_ALLOC_STR));

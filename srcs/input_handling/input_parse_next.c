@@ -6,47 +6,95 @@
 /*   By: omulder <omulder@student.codam.nl>           +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2019/05/16 13:41:00 by rkuijper       #+#    #+#                */
-/*   Updated: 2019/07/31 13:26:32 by omulder       ########   odam.nl         */
+/*   Updated: 2019/08/15 10:46:21 by rkuijper      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "vsh.h"
+#include <sys/ioctl.h>
 
-static void	parse_next_move_word(unsigned *index, char **line)
+/*
+**	Algorithm that moves the cursor (and index) to the beginning of the next
+**	word (or end of the line if there is none).
+*/
+
+void		curs_move_next_word(t_inputdata *data, t_vshdata *vshdata)
 {
-	unsigned i;
+	size_t	i;
 
-	i = *index + 1;
-	if (*index == ft_strlen(*line))
+	if (data->index == data->len_cur)
 		return ;
-	while ((*line)[i])
-	{
-		if (input_is_word_start(*line, i - 1, i))
-			break ;
+	i = 0;
+	while (ft_isprint(vshdata->line[data->index + i]) == true
+		&& ft_isblank(vshdata->line[data->index + i]) == false)
 		i++;
-	}
-	ft_printf("%.*s", i - *index, *line + *index);
-	*index = i;
+	while (ft_isblank(vshdata->line[data->index + i]) == true)
+		i++;
+	if ((data->index + i == data->len_cur) // end of line
+		|| (ft_isprint(vshdata->line[data->index + i]) == true
+		&& ft_isblank(vshdata->line[data->index + i]) == false))
+		curs_move_n_right(data, vshdata, i);
 }
 
-int			input_parse_next(t_inputdata *data, char **line)
+/*
+**	`ws` will be taken from `data` after Oscar is done.
+**
+**	Calculations to move cursor (and index) n times to the right
+**	(or up if necessary) on the current ws.
+**	If used after some weird screen clearing, make sure to compensate
+**	for the automatic `index` change if necessary.
+*/
+
+void		curs_move_n_right(t_inputdata *data, t_vshdata *vshdata, size_t n)
 {
-	if (((data->input_state == INPUT_BRACE ||
-	data->input_state == INPUT_D_BRACE) && data->c == 'C') ||
-	(data->input_state == INPUT_ESC && data->c == 'f'))
+	struct winsize	ws; //WILL BE OSCARS DATA
+	int				linepos;
+	int				down;
+	int				x_offset;
+
+	(void)vshdata;
+	if (n == 0 || data->len_cur == data->index)
+		return ;
+	if (n > data->len_cur - data->index)
+		n = data->len_cur - data->index;
+	ioctl(STDIN_FILENO, TIOCGWINSZ, &ws); //WILL BE OSCARS DATA
+	linepos = get_cursor_linepos();
+	down = ((linepos - 1) + n) / ws.ws_col;
+	x_offset = (((linepos - 1) + n) % ws.ws_col) - (linepos - 1);
+	if (down > 0)
+		ft_printf("\e[%iB", down);
+	if (x_offset > 0)
+		ft_printf("\e[%iC", x_offset);
+	else if (x_offset < 0)
+		ft_printf("\e[%iD", x_offset * -1);
+	data->index += n;
+}
+
+/*
+**	`ws` will be taken from data after Oscar is done.
+**
+**	Moves the cursor (and index) one to the right (or down if necessary)
+**	If used after some weird screen clearing, make sure to compensate
+**	for the automatic `index` change if necessary.
+*/
+
+void		curs_move_right(t_inputdata *data)
+{
+	struct winsize	ws; //WILL BE OSCARS DATA
+
+	ioctl(STDIN_FILENO, TIOCGWINSZ, &ws); //WILL BE OSCARS DATA
+	ft_eprintf("R BEF LINEPOS: %i/%i\n", get_cursor_linepos(), ws.ws_col); // DEBUG PRINT
+	if (data->index < data->len_cur)
 	{
-		if (data->input_state == INPUT_BRACE)
+		// Needs to account for newline characters.
+		if (get_cursor_linepos() == ws.ws_col)
 		{
-			if (data->index < ft_strlen(*line))
-			{
-				ft_putchar((*line)[data->index]);
-				data->index += 1;
-			}
+			ft_putstr("\e[B");
+			ft_printf("\e[%iD", ws.ws_col - 1);
 		}
 		else
-			parse_next_move_word(&data->index, line);
-		data->input_state = INPUT_NONE;
-		return (FUNCT_SUCCESS);
+			ft_putstr(CURS_RIGHT);
+		(data->index)++;
 	}
-	return (FUNCT_FAILURE);
+	ft_eprintf("R AFT LINEPOS: %i/%i\n", get_cursor_linepos(), ws.ws_col); // DEBUG PRINT
 }

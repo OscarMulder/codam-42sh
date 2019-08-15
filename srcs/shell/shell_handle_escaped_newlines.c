@@ -6,7 +6,7 @@
 /*   By: jbrinksm <jbrinksm@student.codam.nl>         +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2019/07/31 14:18:35 by jbrinksm       #+#    #+#                */
-/*   Updated: 2019/07/31 15:26:31 by jbrinksm      ########   odam.nl         */
+/*   Updated: 2019/08/07 11:18:46 by jbrinksm      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -29,21 +29,24 @@ static bool	remove_last_escaped_newline(char *line)
 	return (false);
 }
 
-int			shell_handle_escaped_newlines(t_vshdata *vshdata, char **line,
-			int *status)
+int			shell_handle_escaped_newlines(t_vshdata *vshdata)
 {
 	int		ret;
-	char	*extra_line;
+	char	*line_tmp;
 
-	ret = remove_last_escaped_newline(*line);
+	ret = remove_last_escaped_newline(vshdata->line);
 	if (ret == false)
 		return (FUNCT_FAILURE);
 	while (ret != false)
 	{
 		ft_putstr("\nlinecont> ");
-		input_read(vshdata, &extra_line, status);
-		*line = ft_strjoinfree_all(*line, extra_line);
-		ret = remove_last_escaped_newline(*line);
+		line_tmp = vshdata->line;
+		vshdata->line = NULL;
+		input_read(vshdata);
+		vshdata->line = ft_strjoinfree_all(line_tmp, vshdata->line);
+		if (vshdata->line == NULL)
+			return (FUNCT_ERROR); // print error func PLZ
+		ret = remove_last_escaped_newline(vshdata->line);
 	}
 	return (FUNCT_SUCCESS);
 }

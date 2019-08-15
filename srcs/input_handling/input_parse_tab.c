@@ -1,31 +1,18 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        ::::::::            */
-/*   term_set_attributes.c                              :+:    :+:            */
+/*   input_parse_tab.c                                  :+:    :+:            */
 /*                                                     +:+                    */
 /*   By: omulder <omulder@student.codam.nl>           +#+                     */
 /*                                                   +#+                      */
-/*   Created: 2019/04/18 18:11:05 by jbrinksm       #+#    #+#                */
-/*   Updated: 2019/08/07 16:42:35 by jbrinksm      ########   odam.nl         */
+/*   Created: 2019/08/15 13:57:43 by omulder        #+#    #+#                */
+/*   Updated: 2019/08/15 14:22:57 by omulder       ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "vsh.h"
-#include <termios.h>
-#include <unistd.h>
 
-int		term_set_attributes(t_term *term_p)
+int		input_parse_tab(t_inputdata *data, t_vshdata *vshdata)
 {
-	int	ret;
-
-	term_p->termios_p->c_lflag &= ~(ECHO | ICANON | ISIG);
-	term_p->termios_p->c_cc[VMIN] = 1;
-	term_p->termios_p->c_cc[VTIME] = 0;
-	ret = tcsetattr(STDIN_FILENO, TCSANOW, term_p->termios_p);
-	if (ret == -1)
-	{
-		ft_eprintf("Couldn't set terminal attributes.\n");
-		return (FUNCT_FAILURE);
-	}
 	return (FUNCT_SUCCESS);
 }

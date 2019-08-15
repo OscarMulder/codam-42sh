@@ -6,26 +6,34 @@
 /*   By: omulder <omulder@student.codam.nl>           +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2019/05/16 13:44:53 by rkuijper       #+#    #+#                */
-/*   Updated: 2019/07/31 16:12:01 by omulder       ########   odam.nl         */
+/*   Updated: 2019/08/15 12:18:35 by rkuijper      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "vsh.h"
+#include <term.h>
+#include <sys/ioctl.h>
 
-int	input_parse_delete(t_inputdata *data, char **line)
+/*
+**	Real line gets updated, then the cursor position is saved (DOESNT WORK WITH RESIZING)
+**	Lines will be cleared and everything will be reprinted (sadly).
+*/
+
+int			input_handle_delete(t_inputdata *data, t_vshdata *vshdata)
 {
-	if (data->input_state == INPUT_THREE && data->c == '~')
+	struct winsize	ws;
+	
+	ioctl(STDIN_FILENO, TIOCGWINSZ, &ws);
+	if (data->index < data->len_cur)
 	{
-		if (data->index < ft_strlen(*line))
-		{
-			input_clear_char_at(line, data->index);
-			ft_printf("%s ", *line + data->index);
-			ft_printf("\e[%dD", ft_strlen(*line + data->index) + 1);
-		}
-		else
-			ft_putchar('\a');
-		data->input_state = INPUT_NONE;
-		return (FUNCT_SUCCESS);
+		input_clear_char_at(&vshdata->line, data->index);
+		data->len_cur--;
+		// The following is highly illegal and needs to be better.
+		// The space is currently the only thing 'removing' the deleted char
+		// so this functionality doesn't account for removing a newline char.
+		ft_printf("\e[s%s \e[u", vshdata->line + data->index);
 	}
-	return (FUNCT_FAILURE);
+	else
+		ft_putchar('\a');
+	return (FUNCT_SUCCESS);
 }

@@ -6,47 +6,32 @@
 /*   By: rkuijper <rkuijper@student.codam.nl>         +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2019/05/17 11:50:51 by rkuijper       #+#    #+#                */
-/*   Updated: 2019/07/28 17:08:00 by omulder       ########   odam.nl         */
+/*   Updated: 2019/08/12 14:31:33 by rkuijper      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "vsh.h"
 #include <sys/ioctl.h>
-#include <unistd.h>
 
-static void	parse_ctrl_line_down(unsigned *index, char **line)
+/*
+**	Moves the cursor (and index) down or sets it at end if it would otherwise
+**	get out of bounds.
+*/
+
+void		curs_move_down(t_inputdata *data, t_vshdata *vshdata)
 {
-	struct winsize	ws;
-	unsigned		len;
+	struct winsize	ws; //WILL BE OSCARS DATA
+	size_t			linelen;
 
-	len = ft_strlen(*line);
-	ioctl(STDIN_FILENO, TIOCGWINSZ, &ws);
-	if (*index + ws.ws_col < len)
-	{
-		ft_printf("\e[B");
-		*index += ws.ws_col;
-	}
+	ioctl(STDIN_FILENO, TIOCGWINSZ, &ws); //WILL BE OSCARS DATA
+	linelen = data->len_cur;
+	if (data->index == linelen)
+		return ;
+	else if (linelen - data->index < ws.ws_col)
+		curs_go_end(data, vshdata);
 	else
 	{
-		ft_printf("%s", *line + *index);
-		*index = len;
+		ft_printf(CURS_DOWN);
+		data->index += ws.ws_col;
 	}
-}
-
-int			input_parse_ctrl_down(t_inputdata *data, char **line)
-{
-	if ((data->input_state == INPUT_BRACE
-	|| data->input_state == INPUT_D_BRACE) && data->c == 'B')
-	{
-		if (data->input_state == INPUT_BRACE)
-		{
-			if (history_change_line(data, line, ARROW_DOWN) == FUNCT_ERROR)
-				return (FUNCT_ERROR);
-		}
-		else
-			parse_ctrl_line_down(&data->index, line);
-		data->input_state = INPUT_NONE;
-		return (FUNCT_SUCCESS);
-	}
-	return (FUNCT_FAILURE);
 }

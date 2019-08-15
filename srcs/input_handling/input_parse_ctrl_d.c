@@ -6,27 +6,24 @@
 /*   By: omulder <omulder@student.codam.nl>           +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2019/05/16 13:46:55 by rkuijper       #+#    #+#                */
-/*   Updated: 2019/07/31 13:00:06 by omulder       ########   odam.nl         */
+/*   Updated: 2019/08/15 10:52:14 by rkuijper      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "vsh.h"
 
-int	input_parse_ctrl_d(t_inputdata *data, t_vshdata *vshdata, char **line)
-{
-	unsigned	len;
+/*
+**	Simply exits when line is empty, otherwise functions as `delete`.
+*/
 
-	if (data->c == '\4')
+int	input_parse_ctrl_d(t_inputdata *data, t_vshdata *vshdata)
+{
+	if (data->c == INPUT_CTRL_D)
 	{
-		len = ft_strlen(*line);
-		if (len == 0)
+		if (data->len_cur == 0)
 			builtin_exit(NULL, vshdata);
-		if (data->index < len)
-		{
-			input_clear_char_at(line, data->index);
-			ft_printf("%s ", *line + data->index);
-			ft_printf("\e[%dD", ft_strlen(*line + data->index) + 1);
-		}
+		else
+			input_handle_delete(data, vshdata);
 		return (FUNCT_SUCCESS);
 	}
 	return (FUNCT_FAILURE);
