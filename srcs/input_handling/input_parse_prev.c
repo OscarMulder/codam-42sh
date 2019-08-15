@@ -6,7 +6,7 @@
 /*   By: omulder <omulder@student.codam.nl>           +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2019/05/16 13:39:59 by rkuijper       #+#    #+#                */
-/*   Updated: 2019/08/12 14:32:39 by rkuijper      ########   odam.nl         */
+/*   Updated: 2019/08/15 10:46:05 by rkuijper      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -92,6 +92,7 @@ void		curs_move_left(t_inputdata *data)
 	ft_eprintf("L BEF LINEPOS: %i/%i\n", get_cursor_linepos(), ws.ws_col); // DEBUG PRINT
 	if (data->index > 0)
 	{
+		// Needs to account for newline characters.
 		if (get_cursor_linepos() == 1)
 		{
 			ft_putstr("\e[A");

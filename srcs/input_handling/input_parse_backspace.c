@@ -6,7 +6,7 @@
 /*   By: rkuijper <rkuijper@student.codam.nl>         +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2019/05/16 13:43:07 by rkuijper       #+#    #+#                */
-/*   Updated: 2019/08/14 11:24:41 by rkuijper      ########   odam.nl         */
+/*   Updated: 2019/08/15 10:37:12 by rkuijper      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -20,25 +20,6 @@
 **	cursor position.
 */
 
-static void	ft_iputstr(char *str, int linepos, int maxcol)
-{
-	int		i;
-
-	i = 0;
-	while (str[i] != '\0')
-	{
-		ft_putchar(str[i]);
-		if (linepos == maxcol)
-		{
-			linepos = 0;
-			ft_putchar('\n');
-		}
-		else
-			linepos++;
-		i++;
-	}
-}
-
 int		input_handle_backspace(t_inputdata *data, t_vshdata *vshdata)
 {
 	struct winsize	ws;
@@ -49,10 +30,7 @@ int		input_handle_backspace(t_inputdata *data, t_vshdata *vshdata)
 		input_clear_char_at(&vshdata->line, data->index - 1);
 		data->len_cur--;
 		curs_move_left(data);
-		ft_putstr("\e[s");
-		ft_iputstr(vshdata->line + data->index, get_cursor_linepos(), ws.ws_col);
-		ft_putchar(' ');
-		ft_putstr("\e[u");
+		ft_printf("\e[s%s \e[u", vshdata->line + data->index);
 	}
 	return (FUNCT_SUCCESS);
 }

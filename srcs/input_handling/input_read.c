@@ -6,7 +6,7 @@
 /*   By: omulder <omulder@student.codam.nl>           +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2019/04/17 14:03:16 by jbrinksm       #+#    #+#                */
-/*   Updated: 2019/08/14 10:13:45 by rkuijper      ########   odam.nl         */
+/*   Updated: 2019/08/15 10:12:18 by rkuijper      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -170,7 +170,7 @@ int			input_read_ansi(t_inputdata *data, t_vshdata *vshdata)
 		else if (ft_strequ(termcapbuf, TC_RIGHT_ARROW) == true)
 			curs_move_right(data);
 		else if (ft_strequ(termcapbuf, TC_HOME) == true)
-			curs_go_home(data, vshdata);
+			curs_go_home(data);
 		else if (ft_strequ(termcapbuf, TC_END) == true)
 			curs_go_end(data, vshdata);
 		else if (ft_strequ(termcapbuf, TC_DELETE) == true)

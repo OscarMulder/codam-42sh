@@ -6,7 +6,7 @@
 /*   By: omulder <omulder@student.codam.nl>           +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2019/05/16 13:37:33 by rkuijper       #+#    #+#                */
-/*   Updated: 2019/08/12 11:09:23 by rkuijper      ########   odam.nl         */
+/*   Updated: 2019/08/15 10:11:48 by rkuijper      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,9 +17,8 @@
 **	Calculates steps to home and then uses curs_move_n_left.
 */
 
-int			curs_go_home(t_inputdata *data, t_vshdata *vshdata)
+int			curs_go_home(t_inputdata *data)
 {
-	(void)vshdata;
 	curs_move_n_left(data, data->index);
 	return (FUNCT_SUCCESS);
 }

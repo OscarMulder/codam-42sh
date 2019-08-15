@@ -6,7 +6,7 @@
 /*   By: omulder <omulder@student.codam.nl>           +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2019/05/16 13:33:54 by rkuijper       #+#    #+#                */
-/*   Updated: 2019/08/14 12:05:11 by rkuijper      ########   odam.nl         */
+/*   Updated: 2019/08/15 11:32:16 by rkuijper      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -101,21 +101,45 @@ int			ft_tputchar(int c)
 	return (1);
 }
 
+static void	ft_iputstr(char *str, int linepos, int maxcol)
+{
+	int		i;
+
+	i = 0;
+	while (str[i] != '\0')
+	{
+		ft_putchar(str[i]);
+		if (linepos == maxcol)
+		{
+			linepos = 0;
+			ft_putchar('\n');
+		}
+		else
+			linepos++;
+		i++;
+	}
+}
+
 /*
 **	`ws` will be taken from data when Oscars resize function is finished.
 **
 **	A the string will be edited and reprinted from the point of insertion.
 */
+#include <sys/ioctl.h>
 
 int			input_parse_char(t_inputdata *data, t_vshdata *vshdata)
 {
+	struct winsize ws;
+	
+	ioctl(STDIN_FILENO, TIOCGWINSZ, &ws);
 	if (ft_isprint(data->c))
 	{
 		if (add_char_at(data, &vshdata->line) == FUNCT_ERROR)
 			return (FUNCT_ERROR);
-		ft_printf("\e[s%s\e[u", vshdata->line + data->index);
-		ft_putchar(data->c);
-		data->index++;
+		ft_putstr("\e[s");
+		ft_iputstr(vshdata->line + data->index, get_cursor_linepos(), ws.ws_col);
+		ft_putstr("\e[u");
+		curs_move_right(data);
 	}
 	else if (data->c == '\n')
 	{

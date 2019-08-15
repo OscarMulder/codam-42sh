@@ -6,7 +6,7 @@
 /*   By: omulder <omulder@student.codam.nl>           +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2019/06/02 14:28:54 by mavan-he       #+#    #+#                */
-/*   Updated: 2019/08/14 10:42:19 by rkuijper      ########   odam.nl         */
+/*   Updated: 2019/08/15 10:25:07 by rkuijper      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -23,7 +23,7 @@ static void	history_clear_line(t_inputdata *data, t_vshdata *vshdata)
 {
 	char	*tc_clear_lines_str;
 
-	curs_go_home(data, vshdata);
+	curs_go_home(data);
 	ft_printf("\e[%iD", vshdata->prompt_len);
 	tc_clear_lines_str = tgetstr("cd", NULL);
 	if (tc_clear_lines_str == NULL)
