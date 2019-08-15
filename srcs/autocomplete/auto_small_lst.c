@@ -6,7 +6,7 @@
 /*   By: mavan-he <mavan-he@student.codam.nl>         +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2019/08/13 17:40:10 by mavan-he       #+#    #+#                */
-/*   Updated: 2019/08/15 10:44:25 by omulder       ########   odam.nl         */
+/*   Updated: 2019/08/15 10:51:20 by omulder       ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -45,7 +45,7 @@ int		auto_anything_to_add(int i, t_list *matchlst, char **to_add)
 		return (FUNCT_FAILURE);
 	if (*to_add == NULL)
 	{
-		ft_eprintf("vsh: failed to allocate enough memory\n");
+		ft_eprintf(E_ALLOC_STR);
 		return (FUNCT_ERROR);
 	}
 	return (FUNCT_SUCCESS);

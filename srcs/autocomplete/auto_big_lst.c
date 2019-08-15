@@ -6,7 +6,7 @@
 /*   By: mavan-he <mavan-he@student.codam.nl>         +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2019/08/13 20:07:40 by mavan-he       #+#    #+#                */
-/*   Updated: 2019/08/15 10:11:16 by omulder       ########   odam.nl         */
+/*   Updated: 2019/08/15 10:50:33 by omulder       ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -24,7 +24,7 @@ int		auto_big_lst(t_list *matchlst, int lst_len)
 		ret = read(STDIN_FILENO, &c, 1);
 		if (ret == -1)
 		{
-			ft_eprintf("vsh: error reading input\n");
+			ft_eprintf(E_READ_STR);
 			return (FUNCT_ERROR);
 		}
 		else if (ret == 1)

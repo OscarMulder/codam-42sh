@@ -6,7 +6,7 @@
 /*   By: mavan-he <mavan-he@student.codam.nl>         +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2019/08/12 20:55:01 by mavan-he       #+#    #+#                */
-/*   Updated: 2019/08/13 17:53:07 by mavan-he      ########   odam.nl         */
+/*   Updated: 2019/08/15 10:49:55 by omulder       ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -25,7 +25,7 @@ int		auto_add_match_toline(char *match, char *to_add, char **line, int *i)
 	new_line = ft_strnew(line_len - match_len + to_add_len);
 	if (new_line == NULL)
 	{
-		ft_eprintf("vsh: failed to allocate enough memory\n");
+		ft_eprintf(E_ALLOC_STR);
 		return (FUNCT_ERROR);
 	}
 	ft_strncpy(new_line, *line, *i - match_len);
