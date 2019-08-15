@@ -6,7 +6,7 @@
 /*   By: omulder <omulder@student.codam.nl>           +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2019/04/10 20:29:42 by jbrinksm       #+#    #+#                */
-/*   Updated: 2019/08/15 10:43:22 by omulder       ########   odam.nl         */
+/*   Updated: 2019/08/15 10:51:42 by omulder       ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -35,6 +35,7 @@
 # define E_ALIAS_OPEN_STR "vsh: Failed to open alias file\n"
 # define E_ALIAS_READ_STR "vsh: Failed to read alias file\n"
 # define E_ACCESS_STR "vsh: Failed to read alias file\n"
+# define E_READ_STR "vsh: error reading input\n"
 # define E_ALLOC 420
 # define E_DUP 100
 # define E_OPEN 101
