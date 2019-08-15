@@ -6,7 +6,7 @@
 /*   By: omulder <omulder@student.codam.nl>           +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2019/05/16 13:44:53 by rkuijper       #+#    #+#                */
-/*   Updated: 2019/08/15 10:36:31 by rkuijper      ########   odam.nl         */
+/*   Updated: 2019/08/15 12:18:35 by rkuijper      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -33,5 +33,7 @@ int			input_handle_delete(t_inputdata *data, t_vshdata *vshdata)
 		// so this functionality doesn't account for removing a newline char.
 		ft_printf("\e[s%s \e[u", vshdata->line + data->index);
 	}
+	else
+		ft_putchar('\a');
 	return (FUNCT_SUCCESS);
 }

@@ -6,7 +6,7 @@
 /*   By: omulder <omulder@student.codam.nl>           +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2019/04/17 14:03:16 by jbrinksm       #+#    #+#                */
-/*   Updated: 2019/08/15 10:12:18 by rkuijper      ########   odam.nl         */
+/*   Updated: 2019/08/15 13:09:33 by rkuijper      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -84,6 +84,7 @@ static char	*get_cursor_pos(void)
 		ft_strdel(&buf);
 		return (NULL);
 	}
+	ft_eprintf("Cursor pos response: %s\n", buf + 1);
 	return (buf);
 }
 
