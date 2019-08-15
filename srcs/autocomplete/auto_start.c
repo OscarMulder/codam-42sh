@@ -6,7 +6,7 @@
 /*   By: mavan-he <mavan-he@student.codam.nl>         +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2019/08/12 14:09:10 by mavan-he       #+#    #+#                */
-/*   Updated: 2019/08/15 15:41:51 by omulder       ########   odam.nl         */
+/*   Updated: 2019/08/15 16:10:40 by omulder       ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -95,7 +95,7 @@ int		auto_start(t_vshdata *vshdata, t_inputdata *data)
 		state = FUNCT_ERROR;
 	else
 		state = auto_handle_matchlst(vshdata, data, match, &matchlst);
-	if (state == FUNCT_SUCCESS)
+	if (state == FUNCT_SUCCESS || state == FUNCT_FAILURE)
 	{
 		shell_display_prompt(vshdata);
 		ft_printf(vshdata->line);
