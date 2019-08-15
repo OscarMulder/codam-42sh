@@ -6,7 +6,7 @@
 /*   By: mavan-he <mavan-he@student.codam.nl>         +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2019/08/11 12:28:38 by mavan-he       #+#    #+#                */
-/*   Updated: 2019/08/15 12:42:35 by omulder       ########   odam.nl         */
+/*   Updated: 2019/08/15 12:56:01 by omulder       ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -35,6 +35,36 @@ static int	is_dir(char *path, int l)
 	return (S_ISDIR(buf.st_mode));
 }
 
+static int	check_and_add_match(t_list **matchlst, char *match, char *name,
+char *path)
+{
+	char	*tmp;
+
+	if (!(ft_strequ(match, "") == true &&
+	(ft_strequ(name, ".") == true ||
+	ft_strequ(name, "..") == true)))
+	{
+		tmp = ft_strjoinfree_s1(ft_strjoin(path, "/"), name);
+		if (is_dir(tmp, true))
+		{
+			ft_strdel(&tmp);
+			tmp = ft_strjoin(name, "/");
+			if (auto_add_tolst(matchlst, tmp) == FUNCT_ERROR)
+			{
+				ft_strdel(&tmp);
+				return (FUNCT_ERROR);
+			}
+		}
+		else
+		{
+			if (auto_add_tolst(matchlst, name) == FUNCT_ERROR)
+				return (FUNCT_ERROR);
+		}
+		ft_strdel(&tmp);
+	}
+	return (FUNCT_SUCCESS);
+}
+
 static int	check_dir(DIR *d, char *match, t_list **matchlst, char *path)
 {
 	struct dirent	*dir;
@@ -46,17 +76,9 @@ static int	check_dir(DIR *d, char *match, t_list **matchlst, char *path)
 	{
 		if (ft_strnequ(match, dir->d_name, match_len) == true)
 		{
-			if (!(ft_strequ(match, "") == true &&
-			(ft_strequ(dir->d_name, ".") == true ||
-			ft_strequ(dir->d_name, "..") == true)))
-			{
-				if (is_dir(ft_strjoinfree_s1(ft_strjoin(path, "/"), dir->d_name), true)) // LEAKS THE SHIT
-					if (auto_add_tolst(matchlst, ft_strjoin(dir->d_name, "/")) == FUNCT_ERROR) // LEAKS
-						return (FUNCT_ERROR);
-				else
-					if (auto_add_tolst(matchlst, dir->d_name) == FUNCT_ERROR)
-						return (FUNCT_ERROR);
-			}
+			if (check_and_add_match(matchlst, match, dir->d_name, path)
+			== FUNCT_ERROR)
+				return (FUNCT_ERROR);
 		}
 		dir = readdir(d);
 	}
