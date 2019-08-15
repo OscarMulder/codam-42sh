@@ -6,7 +6,7 @@
 /*   By: mavan-he <mavan-he@student.codam.nl>         +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2019/08/12 14:09:10 by mavan-he       #+#    #+#                */
-/*   Updated: 2019/08/15 10:04:54 by omulder       ########   odam.nl         */
+/*   Updated: 2019/08/15 15:41:51 by omulder       ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -67,7 +67,7 @@ char	*auto_get_match_str(char *line, int i)
 	return (match);
 }
 
-int		auto_start(t_vshdata *vshdata, int *i)
+int		auto_start(t_vshdata *vshdata, t_inputdata *data)
 {
 	int		state;
 	char	*match;
@@ -75,26 +75,35 @@ int		auto_start(t_vshdata *vshdata, int *i)
 
 	if (vshdata->line == NULL)
 		return (FUNCT_ERROR);
-	state = auto_find_state(vshdata->line, *i);
-	#ifndef DEBUG
+	state = auto_find_state(vshdata->line, (int)data->index);
+	#ifdef DEBUG
 	ft_eprintf("\n<<<<< State = %d >>>>>>\n", state);
 	#endif
 	match = NULL;
 	matchlst = NULL;
 	if (state == STATE_CMD)
-		match = auto_get_match_str(vshdata->line, *i);
+		match = auto_get_match_str(vshdata->line, (int)data->index);
 	else if (state == STATE_VAR)
-		match = auto_get_match_str(vshdata->line, *i);
+		match = auto_get_match_str(vshdata->line, (int)data->index);
 	else if (state == STATE_FILE)
-		match = auto_get_file_str(vshdata->line, *i);
-	#ifndef DEBUG
+		match = auto_get_file_str(vshdata->line, (int)data->index);
+	#ifdef DEBUG
 	ft_eprintf("<<<<< Match = %s >>>>>>\n", match);
 	#endif
 	if (match == NULL ||
 		auto_find_matches(vshdata, &match, &matchlst, state) == FUNCT_ERROR)
 		state = FUNCT_ERROR;
 	else
-		state = auto_handle_matchlst(vshdata, i, match, &matchlst);
+		state = auto_handle_matchlst(vshdata, data, match, &matchlst);
+	if (state == FUNCT_SUCCESS)
+	{
+		shell_display_prompt(vshdata);
+		ft_printf(vshdata->line);
+	}
+	// else if (state == AUTO_STATE_LINE)
+	// {
+
+	// }
 	ft_strdel(&match);
 	ft_lstdel(&matchlst, &auto_lstdel);
 	return (state);

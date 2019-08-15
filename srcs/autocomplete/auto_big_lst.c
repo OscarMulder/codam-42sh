@@ -6,7 +6,7 @@
 /*   By: mavan-he <mavan-he@student.codam.nl>         +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2019/08/13 20:07:40 by mavan-he       #+#    #+#                */
-/*   Updated: 2019/08/15 10:50:33 by omulder       ########   odam.nl         */
+/*   Updated: 2019/08/15 15:31:11 by omulder       ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,7 +17,7 @@ int		auto_big_lst(t_list *matchlst, int lst_len)
 	char	c;
 	int		ret;
 
-	ft_printf("Display all %d possibilities? (y or n)", lst_len);
+	ft_printf("\nDisplay all %d possibilities? (y or n)", lst_len);
 	c = 0;
 	while (c != 'y' && c != 'n')
 	{

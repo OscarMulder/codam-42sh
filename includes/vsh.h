@@ -6,13 +6,13 @@
 /*   By: omulder <omulder@student.codam.nl>           +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2019/04/10 20:29:42 by jbrinksm       #+#    #+#                */
-/*   Updated: 2019/08/15 14:35:16 by omulder       ########   odam.nl         */
+/*   Updated: 2019/08/15 15:56:52 by omulder       ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
 #ifndef VSH_H
 # define VSH_H
-# define DEBUG
+// # define DEBUG
 # include <sys/stat.h>
 # include <fcntl.h>
 
@@ -186,6 +186,10 @@
 # define ARROW_DOWN	    2
 # define HISTFILENAME	".vsh_history"
 # define HIST_SEPARATE	-1
+
+
+#define AUTO_STATE_LINE	(1 << 2)
+
 
 /*
 **===============================personal headers===============================
@@ -461,6 +465,7 @@ typedef struct	s_inputdata
 	int			len_max;
 	unsigned	len_cur;
 	t_history	**history;
+	int			tab_pressed;
 }				t_inputdata;
 
 int				input_read(t_vshdata *vshdata);
@@ -728,12 +733,12 @@ int				auto_match_builtins(char *match, t_list **matchlst);
 int				auto_get_filelst(char *match, char *path, t_list **matchlst);
 int				auto_get_varlst(char *match, int match_len, t_envlst *envlst, t_list **matchlst);
 int				auto_find_state(char *line, int i);
-int				auto_start(t_vshdata *vshdata, int *i);
-int				auto_add_match_toline(char *match, char *to_add, char **line, int *i);
+int				auto_start(t_vshdata *vshdata, t_inputdata *data);
+int				auto_add_match_toline(char *match, char *to_add, char **line, t_inputdata *data);
 int				auto_find_matches(t_vshdata *vshdata, char **match, t_list **matchlst, int state);
 void			auto_lstdel(void *str, size_t size);
-int				auto_handle_matchlst(t_vshdata *vshdata, int *i, char *match, t_list **matchlst);
-int				auto_small_lst(char *match, t_list *matchlst, t_vshdata *vshdata, int *i);
+int				auto_handle_matchlst(t_vshdata *vshdata, t_inputdata *data, char *match, t_list **matchlst);
+int				auto_small_lst(char *match, t_list *matchlst, t_vshdata *vshdata, t_inputdata *data);
 void			auto_lst_print(t_list *matchlst, int lst_len);
 int				auto_big_lst(t_list *matchlst, int lst_len);
 int				auto_lenname(t_list *matchlst, int length);

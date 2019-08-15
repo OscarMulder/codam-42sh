@@ -6,7 +6,7 @@
 /*   By: omulder <omulder@student.codam.nl>           +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2019/05/16 13:39:59 by rkuijper       #+#    #+#                */
-/*   Updated: 2019/08/15 14:53:26 by omulder       ########   odam.nl         */
+/*   Updated: 2019/08/15 15:35:37 by omulder       ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -67,7 +67,9 @@ void		curs_move_n_left(t_inputdata *data, size_t n)
 		n = data->index;
 	up = ((ws.ws_col - linepos) + n) / ws.ws_col;
 	x_offset = (ws.ws_col - linepos) - (((ws.ws_col - linepos) + n) % ws.ws_col);
+	#ifdef DEBUG
 	ft_eprintf("Move left: (%d - %d) - ((%d - %d) + %d) %% %d = %d\n", ws.ws_col, linepos, ws.ws_col, linepos, n, ws.ws_col, x_offset);
+	#endif
 	if (up > 0)
 		ft_printf("\e[%iA", up);
 	if (x_offset > 0)
@@ -75,7 +77,9 @@ void		curs_move_n_left(t_inputdata *data, size_t n)
 	else if (x_offset < 0)
 		ft_printf("\e[%iD", x_offset * -1);
 	data->index -= n;
+	#ifdef DEBUG
 	ft_eprintf("Moving Cursor Left: n[%u] up[%d] x[%d] new_i[%d]\n", n, up, x_offset, data->index);
+	#endif
 }
 
 /*
