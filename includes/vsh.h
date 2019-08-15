@@ -6,7 +6,7 @@
 /*   By: omulder <omulder@student.codam.nl>           +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2019/04/10 20:29:42 by jbrinksm       #+#    #+#                */
-/*   Updated: 2019/08/15 14:25:12 by omulder       ########   odam.nl         */
+/*   Updated: 2019/08/15 14:27:11 by omulder       ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -449,6 +449,7 @@ void			term_free_struct(t_term **term_p);
 # define INPUT_CTRL_C '\3'
 # define INPUT_CTRL_D '\4'
 # define INPUT_CTRL_K '\v'
+# define INPUT_TAB '\t'
 
 typedef struct	s_inputdata
 {
