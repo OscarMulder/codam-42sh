@@ -6,7 +6,7 @@
 /*   By: mavan-he <mavan-he@student.codam.nl>         +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2019/08/12 14:09:10 by mavan-he       #+#    #+#                */
-/*   Updated: 2019/08/13 17:38:18 by mavan-he      ########   odam.nl         */
+/*   Updated: 2019/08/15 10:04:54 by omulder       ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -29,13 +29,13 @@ char	*auto_get_file_str(char *line, int i)
 	{
 		if (tools_isidentifierchar(line[i]) == false &&
 			line[i] != '/' && line[i] != '.')
-			break;
+			break ;
 		i--;
 	}
 	match = ft_strnew(i_cursor - i);
 	if (match == NULL)
 	{
-		ft_eprintf("vsh: failed to allocate enough memory\n");
+		ft_eprintf(E_ALLOC_STR);
 		return (NULL);
 	}
 	ft_strncpy(match, &line[i + 1], (i_cursor - i) - 1);
@@ -53,13 +53,13 @@ char	*auto_get_match_str(char *line, int i)
 	while (i >= 0)
 	{
 		if (tools_isidentifierchar(line[i]) == false)
-			break;
+			break ;
 		i--;
 	}
 	match = ft_strnew(i_cursor - i);
 	if (match == NULL)
 	{
-		ft_eprintf("vsh: failed to allocate enough memory\n");
+		ft_eprintf(E_ALLOC_STR);
 		return (NULL);
 	}
 	ft_strncpy(match, &line[i + 1], (i_cursor - i) - 1);
@@ -73,8 +73,12 @@ int		auto_start(t_vshdata *vshdata, int *i)
 	char	*match;
 	t_list	*matchlst;
 
+	if (vshdata->line == NULL)
+		return (FUNCT_ERROR);
 	state = auto_find_state(vshdata->line, *i);
-	ft_printf("\n<<<<< State = %d >>>>>>\n", state); // Debugging
+	#ifndef DEBUG
+	ft_eprintf("\n<<<<< State = %d >>>>>>\n", state);
+	#endif
 	match = NULL;
 	matchlst = NULL;
 	if (state == STATE_CMD)
@@ -83,7 +87,9 @@ int		auto_start(t_vshdata *vshdata, int *i)
 		match = auto_get_match_str(vshdata->line, *i);
 	else if (state == STATE_FILE)
 		match = auto_get_file_str(vshdata->line, *i);
-	ft_printf("<<<<< Match = %s >>>>>>\n", match); // Debugging
+	#ifndef DEBUG
+	ft_eprintf("<<<<< Match = %s >>>>>>\n", match);
+	#endif
 	if (match == NULL ||
 		auto_find_matches(vshdata, &match, &matchlst, state) == FUNCT_ERROR)
 		state = FUNCT_ERROR;

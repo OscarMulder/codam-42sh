@@ -6,7 +6,7 @@
 /*   By: mavan-he <mavan-he@student.codam.nl>         +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2019/08/12 20:20:16 by mavan-he       #+#    #+#                */
-/*   Updated: 2019/08/13 20:35:25 by mavan-he      ########   odam.nl         */
+/*   Updated: 2019/08/15 10:06:01 by omulder       ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,7 +19,7 @@ static int	cut_path_from_match(char **match, int i)
 	new_match = ft_strdup(&(*match)[i]);
 	if (new_match == NULL)
 	{
-		ft_eprintf("vsh: failed to allocate enough memory\n");
+		ft_eprintf(E_ALLOC_STR);
 		return (FUNCT_ERROR);
 	}
 	ft_strdel(match);
@@ -39,7 +39,7 @@ int			auto_find_filelst(char **match, t_list **matchlst)
 	while (i >= 0)
 	{
 		if (tools_isidentifierchar((*match)[i]) == false && (*match)[i] != '.')
-			break;
+			break ;
 		i--;
 	}
  	if (i < 0)
@@ -48,7 +48,9 @@ int			auto_find_filelst(char **match, t_list **matchlst)
 		path = ft_strndup((*match), match_len - (match_len - (i + 1)));
 	if (path == NULL || cut_path_from_match(match, i + 1) == FUNCT_ERROR)
 		return (FUNCT_ERROR);
-	ft_printf("<<<<< Path = %s : New Match = %s >>>>>>\n", path, *match); // debugging
+	#ifdef DEBUG
+	ft_eprintf("<<<<< Path = %s : New Match = %s >>>>>>\n", path, *match); // debugging
+	#endif
 	ret = auto_get_filelst(*match, path, matchlst);
 	ft_strdel(&path);
 	return (ret);

@@ -6,7 +6,7 @@
 /*   By: omulder <omulder@student.codam.nl>           +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2019/04/10 20:29:42 by jbrinksm       #+#    #+#                */
-/*   Updated: 2019/08/13 20:39:02 by mavan-he      ########   odam.nl         */
+/*   Updated: 2019/08/15 10:43:22 by omulder       ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -362,6 +362,23 @@ typedef struct	s_ast
 }				t_ast;
 
 /*
+**----------------------------------autocomplete--------------------------------
+*/
+
+typedef struct	s_print
+{
+	int	row;
+	int	length;
+	int	coli;
+	int	total;
+	int	printed;
+	int	extra;
+	int	col;
+	int	left;
+
+}				t_print;
+
+/*
 **----------------------------------pipes---------------------------------------
 */
 
@@ -671,8 +688,13 @@ int				auto_find_matches(t_vshdata *vshdata, char **match, t_list **matchlst, in
 void			auto_lstdel(void *str, size_t size);
 int				auto_handle_matchlst(t_vshdata *vshdata, int *i, char *match, t_list **matchlst);
 int				auto_small_lst(char *match, t_list *matchlst, t_vshdata *vshdata, int *i);
-void			auto_lst_print(t_list *matchlst);
+void			auto_lst_print(t_list *matchlst, int lst_len);
 int				auto_big_lst(t_list *matchlst, int lst_len);
+int				auto_lenname(t_list *matchlst, int length);
+int				auto_lst_count(t_list *lst);
+void			auto_sort_n(t_list **matchlst);
+void			auto_swap_lstitem(t_list **flst, t_list *smal, t_list *prev);
+
 
 /*
 **----------------------------------debugging-----------------------------------

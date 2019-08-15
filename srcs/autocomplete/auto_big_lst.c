@@ -6,7 +6,7 @@
 /*   By: mavan-he <mavan-he@student.codam.nl>         +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2019/08/13 20:07:40 by mavan-he       #+#    #+#                */
-/*   Updated: 2019/08/14 15:47:10 by mavan-he      ########   odam.nl         */
+/*   Updated: 2019/08/15 10:11:16 by omulder       ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,21 +14,25 @@
 
 int		auto_big_lst(t_list *matchlst, int lst_len)
 {
-	char c;
+	char	c;
+	int		ret;
 
 	ft_printf("Display all %d possibilities? (y or n)", lst_len);
 	c = 0;
 	while (c != 'y' && c != 'n')
 	{
-		if (read(STDIN_FILENO, &c, 1) == -1)
+		ret = read(STDIN_FILENO, &c, 1);
+		if (ret == -1)
 		{
 			ft_eprintf("vsh: error reading input\n");
 			return (FUNCT_ERROR);
 		}
+		else if (ret == 1)
+			ft_putchar('\a');
 	}
 	ft_putchar('\n');
 	if (c == 'y')
-		auto_lst_print(matchlst);
+		auto_lst_print(matchlst, lst_len);
 	else if (c == 'n')
 		return (FUNCT_FAILURE);
 	return (FUNCT_SUCCESS);
