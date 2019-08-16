@@ -6,7 +6,7 @@
 /*   By: mavan-he <mavan-he@student.codam.nl>         +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2019/08/13 11:00:12 by mavan-he       #+#    #+#                */
-/*   Updated: 2019/08/15 15:41:11 by omulder       ########   odam.nl         */
+/*   Updated: 2019/08/16 04:48:56 by mavan-he      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,7 +18,10 @@ int		auto_handle_matchlst(t_vshdata *vshdata, t_inputdata *data,
 	int		lst_len;
 
 	if (*matchlst == NULL)
-		return (FUNCT_FAILURE);
+	{
+		ft_putchar('\a');
+		return (AUTO_STATE_LINE);
+	}
 	lst_len = ft_lstlen(*matchlst);
 	if (lst_len == 1)
 		return (auto_add_match_toline(
