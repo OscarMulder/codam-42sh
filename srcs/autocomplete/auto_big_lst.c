@@ -6,13 +6,13 @@
 /*   By: mavan-he <mavan-he@student.codam.nl>         +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2019/08/13 20:07:40 by mavan-he       #+#    #+#                */
-/*   Updated: 2019/08/15 15:31:11 by omulder       ########   odam.nl         */
+/*   Updated: 2019/08/16 19:29:53 by mavan-he      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "vsh.h"
 
-int		auto_big_lst(t_list *matchlst, int lst_len)
+int		auto_big_lst(t_list **matchlst, int lst_len)
 {
 	char	c;
 	int		ret;

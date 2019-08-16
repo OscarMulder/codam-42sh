@@ -6,7 +6,7 @@
 /*   By: mavan-he <mavan-he@student.codam.nl>         +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2019/08/13 19:53:22 by mavan-he       #+#    #+#                */
-/*   Updated: 2019/08/15 10:44:43 by omulder       ########   odam.nl         */
+/*   Updated: 2019/08/16 19:30:55 by mavan-he      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -78,14 +78,14 @@ static t_print		init_vars(t_list *matchlst, int lst_len)
 	return (a);
 }
 
-void				auto_lst_print(t_list *matchlst, int lst_len)
+void				auto_lst_print(t_list **matchlst, int lst_len)
 {
 	t_list		*ptr;
 	t_print		a;
 
-	auto_sort_n(&matchlst);
-	ptr = matchlst;
-	a = init_vars(matchlst, lst_len);
+	auto_sort_n(matchlst);
+	ptr = *matchlst;
+	a = init_vars(*matchlst, lst_len);
 	while (a.printed < a.total)
 	{
 		if (a.coli == a.col && a.extra == (a.row - 1))
@@ -101,7 +101,7 @@ void				auto_lst_print(t_list *matchlst, int lst_len)
 		else
 			ft_printf("%-*s", a.length, ptr->content);
 		a.coli++;
-		ptr = set_ptr(ptr, matchlst, a.extra, a.row);
+		ptr = set_ptr(ptr, *matchlst, a.extra, a.row);
 		a.printed++;
 	}
 }

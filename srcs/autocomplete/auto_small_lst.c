@@ -6,7 +6,7 @@
 /*   By: mavan-he <mavan-he@student.codam.nl>         +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2019/08/13 17:40:10 by mavan-he       #+#    #+#                */
-/*   Updated: 2019/08/16 12:18:18 by omulder       ########   odam.nl         */
+/*   Updated: 2019/08/16 19:38:03 by mavan-he      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -51,22 +51,26 @@ int		auto_anything_to_add(int i, t_list *matchlst, char **to_add)
 	return (FUNCT_SUCCESS);
 }
 
-int		auto_small_lst(char *match, t_list *matchlst,
+int		auto_small_lst(char *match, t_list **matchlst,
 		t_vshdata *vshdata, t_inputdata *data)
 {
-	char *to_add;
+	char	*to_add;
+	int		ret;
 
 	to_add = NULL;
-	if (auto_anything_to_add(ft_strlen(match), matchlst, &to_add)
+	if (auto_anything_to_add(ft_strlen(match), *matchlst, &to_add)
 		== FUNCT_ERROR)
 		return (FUNCT_ERROR);
 	if (to_add != NULL)
-		return (auto_add_match_toline(match, to_add, vshdata,
-		data));
+	{
+		ret = auto_add_match_toline(match, to_add, vshdata, data);
+		ft_strdel(&to_add);
+		return (ret);
+	}
 	else
 	{
 		ft_putchar('\n');
-		auto_lst_print(matchlst, auto_lst_count(matchlst));
+		auto_lst_print(matchlst, auto_lst_count(*matchlst));
 	}
 	return (FUNCT_SUCCESS);
 }
