@@ -6,7 +6,7 @@
 /*   By: mavan-he <mavan-he@student.codam.nl>         +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2019/08/12 20:55:01 by mavan-he       #+#    #+#                */
-/*   Updated: 2019/08/16 12:38:34 by omulder       ########   odam.nl         */
+/*   Updated: 2019/08/16 19:08:11 by mavan-he      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -34,7 +34,7 @@ t_inputdata *data)
 	ft_strcat(new_line, to_add);
 	ft_strcat(new_line, &(vshdata->line)[data->index]);
 	#ifdef DEBUG
-	ft_eprintf("----------\nOld line: %s\nNew line: %s\n", *line, new_line); // debugging
+	ft_eprintf("----------\nOld line: %s\nNew line: %s\n", vshdata->line, new_line); // debugging
 	ft_eprintf("Orignal index: %d :", data->index); // debugging
 	#endif
 	ft_strdel(&(vshdata->line));
