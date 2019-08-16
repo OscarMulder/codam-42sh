@@ -6,7 +6,7 @@
 /*   By: jbrinksm <jbrinksm@student.codam.nl>         +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2019/04/11 20:16:38 by jbrinksm       #+#    #+#                */
-/*   Updated: 2019/08/16 04:31:29 by mavan-he      ########   odam.nl         */
+/*   Updated: 2019/08/16 04:39:05 by mavan-he      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,11 +14,11 @@
 
 void	shell_display_prompt(t_vshdata *vshdata)
 {
-	char *cwd;
+//	char *cwd;
 //	char *lastdir;
 	char *arrow;
 
-	cwd = env_getvalue("PWD", vshdata->envlst);
+//	cwd = env_getvalue("PWD", vshdata->envlst);
 	if (g_state->exit_code == EXIT_SUCCESS)
 		arrow = YEL "> ";
 	else

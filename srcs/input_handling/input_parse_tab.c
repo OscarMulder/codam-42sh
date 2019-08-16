@@ -6,7 +6,7 @@
 /*   By: omulder <omulder@student.codam.nl>           +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2019/08/15 13:57:43 by omulder        #+#    #+#                */
-/*   Updated: 2019/08/15 15:52:50 by omulder       ########   odam.nl         */
+/*   Updated: 2019/08/16 04:35:14 by mavan-he      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,7 +14,7 @@
 
 int		input_parse_tab(t_inputdata *data, t_vshdata *vshdata)
 {
-	auto_start(vshdata, data);
+	auto_start(vshdata, data); // doe iets met return ?
 	#ifdef DEBUG
 	ft_eprintf("LINE: %s", vshdata->line);
 	#endif
