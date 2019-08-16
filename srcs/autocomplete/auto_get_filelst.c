@@ -6,7 +6,7 @@
 /*   By: mavan-he <mavan-he@student.codam.nl>         +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2019/08/11 12:28:38 by mavan-he       #+#    #+#                */
-/*   Updated: 2019/08/15 12:56:01 by omulder       ########   odam.nl         */
+/*   Updated: 2019/08/16 04:59:26 by mavan-he      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -57,10 +57,10 @@ char *path)
 		}
 		else
 		{
+			ft_strdel(&tmp);
 			if (auto_add_tolst(matchlst, name) == FUNCT_ERROR)
 				return (FUNCT_ERROR);
 		}
-		ft_strdel(&tmp);
 	}
 	return (FUNCT_SUCCESS);
 }
