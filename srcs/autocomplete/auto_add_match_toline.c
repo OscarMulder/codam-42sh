@@ -6,7 +6,7 @@
 /*   By: mavan-he <mavan-he@student.codam.nl>         +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2019/08/12 20:55:01 by mavan-he       #+#    #+#                */
-/*   Updated: 2019/08/16 12:27:03 by omulder       ########   odam.nl         */
+/*   Updated: 2019/08/16 12:38:34 by omulder       ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -39,13 +39,15 @@ t_inputdata *data)
 	#endif
 	ft_strdel(&(vshdata->line));
 	vshdata->line = new_line;
-	data->index = data->index - match_len + to_add_len;
+	data->index = ft_strlen(vshdata->line);
 	data->len_cur = ft_strlen(vshdata->line);
 	#ifdef DEBUG
 	ft_eprintf(" New index: %d\n ---------\n", data->index); // debugging
 	#endif
-	auto_clear_line(data, vshdata);
-	ft_putstr(vshdata->line);
-	ft_strdel(&to_add);
+
+	// auto_clear_line(data, vshdata);
+	// ft_putstr(vshdata->line);
+	ft_printf("%s", &(to_add[match_len]));
+	// ft_strdel(&to_add);
 	return (AUTO_STATE_LINE);
 }
