@@ -6,7 +6,7 @@
 /*   By: jbrinksm <jbrinksm@student.codam.nl>         +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2019/04/11 20:16:38 by jbrinksm       #+#    #+#                */
-/*   Updated: 2019/08/07 11:12:59 by jbrinksm      ########   odam.nl         */
+/*   Updated: 2019/08/16 04:31:29 by mavan-he      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,7 +15,7 @@
 void	shell_display_prompt(t_vshdata *vshdata)
 {
 	char *cwd;
-	char *lastdir;
+//	char *lastdir;
 	char *arrow;
 
 	cwd = env_getvalue("PWD", vshdata->envlst);
@@ -23,7 +23,7 @@ void	shell_display_prompt(t_vshdata *vshdata)
 		arrow = YEL "> ";
 	else
 		arrow = RED "> ";
-	lastdir = shell_getcurrentdir(cwd);
+//	lastdir = shell_getcurrentdir(cwd);
 	vshdata->prompt_len = 6;
 	// if (lastdir == NULL)
 		ft_printf(RED "vsh %s" RESET, arrow);
