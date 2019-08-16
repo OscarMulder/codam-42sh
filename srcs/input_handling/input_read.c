@@ -6,7 +6,7 @@
 /*   By: omulder <omulder@student.codam.nl>           +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2019/04/17 14:03:16 by jbrinksm       #+#    #+#                */
-/*   Updated: 2019/08/15 13:09:33 by rkuijper      ########   odam.nl         */
+/*   Updated: 2019/08/16 13:16:55 by rkuijper      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -30,8 +30,8 @@ void		input_clear_char_at(char **line, unsigned index)
 static int	find_start(t_history **history)
 {
 	int i;
-	int largest;
 	int start;
+	int largest;
 
 	i = 0;
 	start = 0;
@@ -99,11 +99,12 @@ int		get_cursor_linepos(void)
 {
 	char	*response;
 	int		i;
+	int		res;
 
+	i = 0;
 	response = get_cursor_pos();
 	if (response == NULL)
 		return (-1);
-	i = 0;
 	while (response[i] != '\0' && response[i] != ';')
 		i++;
 	if (response[i] == '\0' || response[i + 1] == '\0'
@@ -112,7 +113,9 @@ int		get_cursor_linepos(void)
 		ft_strdel(&response);
 		return (-1);
 	}
-	return ((short)ft_atoi(&response[i + 1]) /*needs unsigned atoi and short  ret */);
+	res = (short)ft_atoi(&response[i + 1]);
+	ft_strdel(&response);
+	return (res /*needs unsigned atoi and short  ret */);
 }
 
 /*
@@ -126,6 +129,7 @@ int		get_cursor_rowpos(void)
 {
 	char	*response;
 	int		i;
+	int		res;
 
 	response = get_cursor_pos();
 	if (response == NULL)
@@ -139,7 +143,9 @@ int		get_cursor_rowpos(void)
 		ft_strdel(&response);
 		return (-1);
 	}
-	return ((short)ft_atoi(&response[i + 1]) /*needs unsigned atoi and short  ret */);
+	res = (short)ft_atoi(&response[i + 1]);
+	ft_strdel(&response);
+	return (res /*needs unsigned atoi and short  ret */);
 }
 
 /*
@@ -150,22 +156,13 @@ int		get_cursor_rowpos(void)
 
 int			input_read_ansi(t_inputdata *data, t_vshdata *vshdata)
 {
-	char	*termcapbuf;
+	char	termcapbuf[TERMCAPBUFFSIZE];
 
 	if (data->c == '\e')
 	{
-		termcapbuf = ft_strnew(12);
-		if (termcapbuf == NULL)
-		{
-			// do fatal shit
-			return (FUNCT_ERROR);
-		}
-		*termcapbuf = '\e';
+		termcapbuf[0] = '\e';
 		if (read(STDIN_FILENO, &termcapbuf[1], TERMCAPBUFFSIZE - 1) == -1)
-		{
-			ft_strdel(&termcapbuf);
 			return (FUNCT_ERROR);
-		}
 		if (ft_strequ(termcapbuf, TC_LEFT_ARROW) == true)
 			curs_move_left(data);
 		else if (ft_strequ(termcapbuf, TC_RIGHT_ARROW) == true)
@@ -191,10 +188,8 @@ int			input_read_ansi(t_inputdata *data, t_vshdata *vshdata)
 		else
 		{
 			ft_eprintf(">%s< TERMCAP NOT FOUND\n", &termcapbuf[1]); // DEBUG PRINT
-			ft_strdel(&termcapbuf);
 			return (FUNCT_FAILURE);
 		}
-		ft_strdel(&termcapbuf);
 		return (FUNCT_SUCCESS);
 	}
 	return (FUNCT_FAILURE);

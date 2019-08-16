@@ -6,7 +6,7 @@
 /*   By: omulder <omulder@student.codam.nl>           +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2019/05/16 13:33:54 by rkuijper       #+#    #+#                */
-/*   Updated: 2019/08/15 13:12:03 by rkuijper      ########   odam.nl         */
+/*   Updated: 2019/08/16 13:46:33 by rkuijper      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -106,19 +106,71 @@ int			ft_tputchar(int c)
 **
 **	A the string will be edited and reprinted from the point of insertion.
 */
+
+static int	ft_iputstr(char *str, int linepos, int maxcol)
+{
+	int	i;
+	int j;
+	int res;
+
+	i = 0;
+	j = 0;
+	res = 0;
+	while (str[i] != '\0')
+	{
+		if (linepos == maxcol)
+		{
+			write(1, &str[j], i - j + 1);
+			ft_putchar('\n');
+			linepos = 0;
+			j = i + 1;
+			res++;
+		}
+		else
+			linepos++;
+		i++;
+	}
+	if (i != j)
+		write(1, &str[j], i - j);
+	return (res);
+}
+
 #include <sys/ioctl.h>
 
 int			input_parse_char(t_inputdata *data, t_vshdata *vshdata)
 {
+	struct winsize	ws;
+	int				old_row;
+	int				newline_amt;
+
+	ioctl(STDIN_FILENO, TIOCGWINSZ, &ws);
 	if (ft_isprint(data->c))
 	{
 		if (add_char_at(data, &vshdata->line) == FUNCT_ERROR)
 			return (FUNCT_ERROR);
-		ft_printf("\e[s%s\e[u", vshdata->line + data->index);
-		//amt = ft_iputstr(vshdata->line + data->index, get_cursor_linepos(), ws.ws_col);
-		//if (amt > 1)
-		//	ft_printf("\e[%d;5A", amt);
+		// Broken...
+		old_row = get_cursor_rowpos();
+		ft_putstr("\e[s");
+		newline_amt = ft_iputstr(vshdata->line + data->index, get_cursor_linepos(), ws.ws_col);
+		if (newline_amt > 0)
+		{
+			if (get_cursor_rowpos() != old_row)
+				newline_amt = 0;
+		}
+		ft_putstr("\e[u");
+		if (newline_amt != 0)
+			ft_putstr("\e[A");
 		curs_move_right(data);
+		
+		// Both options have their issues. I really don't know anymore,
+		// They're both basically broken... Just like I am right now.
+
+		// Borkne...
+		/*old_index = data->index;
+		pos = get_cursor_linepos();
+		ft_iputstr(vshdata->line + data->index, pos, ws.ws_col);
+		data->index = data->len_cur;
+		curs_move_n_left(data, data->index - old_index - 1);*/
 	}
 	else if (data->c == '\n')
 	{
