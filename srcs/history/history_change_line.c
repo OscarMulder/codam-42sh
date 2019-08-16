@@ -6,7 +6,7 @@
 /*   By: omulder <omulder@student.codam.nl>           +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2019/06/02 14:28:54 by mavan-he       #+#    #+#                */
-/*   Updated: 2019/08/15 10:25:07 by rkuijper      ########   odam.nl         */
+/*   Updated: 2019/08/16 04:13:24 by mavan-he      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -83,6 +83,7 @@ int			history_change_line(t_inputdata *data, t_vshdata *vshdata,
 			ft_bzero(vshdata->line, data->len_max);
 	}
 	ft_putstr(vshdata->line);
-	data->index = data->len_cur = ft_strlen(vshdata->line);
+	data->index = ft_strlen(vshdata->line);
+	data->len_cur = data->index;
 	return (FUNCT_SUCCESS);
 }
