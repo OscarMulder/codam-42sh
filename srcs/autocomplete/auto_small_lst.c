@@ -6,7 +6,7 @@
 /*   By: mavan-he <mavan-he@student.codam.nl>         +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2019/08/13 17:40:10 by mavan-he       #+#    #+#                */
-/*   Updated: 2019/08/15 15:32:13 by omulder       ########   odam.nl         */
+/*   Updated: 2019/08/16 12:18:18 by omulder       ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -61,7 +61,7 @@ int		auto_small_lst(char *match, t_list *matchlst,
 		== FUNCT_ERROR)
 		return (FUNCT_ERROR);
 	if (to_add != NULL)
-		return (auto_add_match_toline(match, to_add, &vshdata->line,
+		return (auto_add_match_toline(match, to_add, vshdata,
 		data));
 	else
 	{

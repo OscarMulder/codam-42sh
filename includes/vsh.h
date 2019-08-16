@@ -6,7 +6,7 @@
 /*   By: omulder <omulder@student.codam.nl>           +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2019/04/10 20:29:42 by jbrinksm       #+#    #+#                */
-/*   Updated: 2019/08/15 15:56:52 by omulder       ########   odam.nl         */
+/*   Updated: 2019/08/16 12:26:30 by omulder       ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -36,6 +36,7 @@
 # define E_ALIAS_READ_STR "vsh: Failed to read alias file\n"
 # define E_ACCESS_STR "vsh: Failed to read alias file\n"
 # define E_READ_STR "vsh: error reading input\n"
+# define E_TERM_NF "vsh: error getting termcap info\n"
 # define E_ALLOC 420
 # define E_DUP 100
 # define E_OPEN 101
@@ -734,7 +735,7 @@ int				auto_get_filelst(char *match, char *path, t_list **matchlst);
 int				auto_get_varlst(char *match, int match_len, t_envlst *envlst, t_list **matchlst);
 int				auto_find_state(char *line, int i);
 int				auto_start(t_vshdata *vshdata, t_inputdata *data);
-int				auto_add_match_toline(char *match, char *to_add, char **line, t_inputdata *data);
+int				auto_add_match_toline(char *match, char *to_add, t_vshdata *vshdata, t_inputdata *data);
 int				auto_find_matches(t_vshdata *vshdata, char **match, t_list **matchlst, int state);
 void			auto_lstdel(void *str, size_t size);
 int				auto_handle_matchlst(t_vshdata *vshdata, t_inputdata *data, char *match, t_list **matchlst);
@@ -745,6 +746,7 @@ int				auto_lenname(t_list *matchlst, int length);
 int				auto_lst_count(t_list *lst);
 void			auto_sort_n(t_list **matchlst);
 void			auto_swap_lstitem(t_list **flst, t_list *smal, t_list *prev);
+void			auto_clear_line(t_inputdata *data, t_vshdata *vshdata);
 
 
 /*
