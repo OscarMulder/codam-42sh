@@ -6,7 +6,7 @@
 /*   By: omulder <omulder@student.codam.nl>           +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2019/04/17 14:03:16 by jbrinksm       #+#    #+#                */
-/*   Updated: 2019/08/15 14:53:12 by omulder       ########   odam.nl         */
+/*   Updated: 2019/08/17 14:44:17 by mavan-he      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -98,6 +98,7 @@ int		get_cursor_linepos(void)
 {
 	char	*response;
 	int		i;
+	short	ret;
 
 	response = get_cursor_pos();
 	if (response == NULL)
@@ -111,7 +112,9 @@ int		get_cursor_linepos(void)
 		ft_strdel(&response);
 		return (-1);
 	}
-	return ((short)ft_atoi(&response[i + 1]) /*needs unsigned atoi and short  ret */);
+	ret = (short)ft_atoi(&response[i + 1]);  /*needs unsigned atoi and short  ret */
+	ft_strdel(&response);
+	return (ret);
 }
 
 /*
