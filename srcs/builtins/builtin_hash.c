@@ -6,7 +6,7 @@
 /*   By: mavan-he <mavan-he@student.codam.nl>         +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2019/08/18 13:09:06 by mavan-he       #+#    #+#                */
-/*   Updated: 2019/08/18 14:58:08 by mavan-he      ########   odam.nl         */
+/*   Updated: 2019/08/18 17:47:44 by mavan-he      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -24,8 +24,8 @@ static int	set_flag(char *arg, int *flags)
 		else
 		{
 			g_state->exit_code = EXIT_WRONG_USE;
-			ft_printf("vsh: hash: -%c: invalid option\n", arg[i]);
-			ft_putendl("hash: usage: hash [-r] [utility ...]");
+			ft_eprintf("vsh: hash: -%c: invalid option\n", arg[i]);
+			ft_eprintf("hash: usage: hash [-r] [utility ...]\n");
 			return (FUNCT_FAILURE);
 		}
 		i++;
@@ -65,7 +65,9 @@ static int	add_to_ht(char *cmd, t_vshdata *vshdata)
 		ft_eprintf("vsh: hash: %s: not found\n", cmd);
 		return (FUNCT_FAILURE);
 	}
-	// add bin_path to hash table
+	if (hash_ht_insert(vshdata, cmd, bin_path, HASH_NO_HIT) == FUNCT_ERROR)
+		return (FUNCT_ERROR);
+	return (FUNCT_SUCCESS);
 }
 
 void		builtin_hash(char **args, t_vshdata *vshdata)
@@ -73,9 +75,13 @@ void		builtin_hash(char **args, t_vshdata *vshdata)
 	int		flag;
 	int		argc;
 
-	(void)vshdata;
 	flag = 0;
 	argc = 1;
+	if (args[argc] == NULL)
+	{
+		hash_print(vshdata->ht);
+		return ;
+	}
 	if (check_flag(args, &flag, &argc) != FUNCT_SUCCESS)
 		return ;
 	if (flag & HASH_LR)
