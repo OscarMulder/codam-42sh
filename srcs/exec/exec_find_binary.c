@@ -6,7 +6,7 @@
 /*   By: tde-jong <tde-jong@student.codam.nl>         +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2019/06/05 15:16:46 by tde-jong       #+#    #+#                */
-/*   Updated: 2019/08/07 16:19:59 by tde-jong      ########   odam.nl         */
+/*   Updated: 2019/08/18 12:41:12 by mavan-he      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -107,5 +107,6 @@ int			exec_find_binary(char *filename, t_envlst *envlst, char **binary)
 		ft_eprintf("vsh: %s: Command not found.\n", filename);
 		return (err_ret_exit(NULL, EXIT_NOTFOUND));
 	}
+	// add filename / binary to hashtable here
 	return (FUNCT_SUCCESS);
 }

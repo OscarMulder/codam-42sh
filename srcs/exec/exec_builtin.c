@@ -6,7 +6,7 @@
 /*   By: omulder <omulder@student.codam.nl>           +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2019/05/29 16:59:41 by omulder        #+#    #+#                */
-/*   Updated: 2019/08/06 16:28:51 by tde-jong      ########   odam.nl         */
+/*   Updated: 2019/08/18 14:35:16 by mavan-he      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -34,6 +34,8 @@ bool	exec_builtin(char **args, t_vshdata *vshdata)
 		builtin_alias(args, &vshdata->aliaslst);
 	else if (ft_strequ(args[0], "unalias"))
 		builtin_unalias(args, &vshdata->aliaslst);
+	else if (ft_strequ(args[0], "hash"))
+		builtin_hash(args, vshdata);
 	else
 		return (false);
 	return (true);

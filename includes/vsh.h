@@ -6,7 +6,7 @@
 /*   By: omulder <omulder@student.codam.nl>           +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2019/04/10 20:29:42 by jbrinksm       #+#    #+#                */
-/*   Updated: 2019/08/17 16:32:12 by mavan-he      ########   odam.nl         */
+/*   Updated: 2019/08/18 14:33:17 by mavan-he      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -86,6 +86,14 @@
 # define UNALIAS_FLAG_LA	(2 << 0)
 # define ALIASFILENAME		".vsh_alias"
 # define ALIAS_MAX	500
+
+
+/*
+**-----------------------------------hash--------------------------------------
+*/
+
+# define HT_SIZE			100
+# define HASH_LR			(1 << 0)
 
 /*
 **-----------------------------------builtin------------------------------------
@@ -252,6 +260,18 @@ typedef struct	s_aliaslst
 }				t_aliaslst;
 
 /*
+**------------------------------------hashtable----------------------------------
+*/
+
+typedef struct	s_ht
+{
+	char			*path;
+	int				key;
+	int				count;
+	struct s_ht		*next;
+}				t_ht;
+
+/*
 **-----------------------------------term---------------------------------------
 */
 
@@ -276,6 +296,7 @@ typedef struct	s_vshdata
 	int			stdfds[3];
 	char		*history_file;
 	char		*alias_file;
+	t_ht		*ht[HT_SIZE];
 }				t_vshdata;
 
 /*
@@ -524,6 +545,7 @@ bool			parser_cmd_suffix(t_tokenlst **token_lst, t_ast **cmd,
 **----------------------------------builtins------------------------------------
 */
 
+void			builtin_hash(char **args, t_vshdata *vshdata);
 void			builtin_exit(char **args, t_vshdata *vshdata);
 void			builtin_echo(char **args);
 char			builtin_echo_set_flags(char **args, int *arg_i);
