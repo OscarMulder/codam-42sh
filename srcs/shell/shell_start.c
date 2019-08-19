@@ -48,7 +48,7 @@ int		shell_start(t_vshdata *vshdata)
 	line = NULL;
 	token_lst = NULL;
 	ast = NULL;
-	env_add_extern_value(vshdata->envlst, "OLDPWD", "");
+	env_add_extern_value(vshdata, "OLDPWD", "");
 	while (status != CTRLD)
 	{
 		ft_strdel(&line);

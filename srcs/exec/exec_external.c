@@ -82,8 +82,7 @@ void			exec_external(char **args, t_vshdata *vshdata)
 		ft_strnequ(args[0], "../", 3) == 0)
 	{
 		ft_strdel(&binary);
-		if (exec_find_binary(args[0], vshdata->envlst, &binary)
-		== FUNCT_SUCCESS)
+		if (exec_find_binary(args[0], vshdata, &binary) == FUNCT_SUCCESS)
 			exec_bin(binary, args, vshenviron, vshdata->term->termios_p);
 	}
 	else
