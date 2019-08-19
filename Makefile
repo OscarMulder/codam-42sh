@@ -6,7 +6,7 @@
 #    By: omulder <omulder@student.codam.nl>           +#+                      #
 #                                                    +#+                       #
 #    Created: 2019/04/10 20:30:07 by jbrinksm       #+#    #+#                 #
-#    Updated: 2019/08/19 11:26:04 by mavan-he      ########   odam.nl          #
+#    Updated: 2019/08/19 12:19:11 by mavan-he      ########   odam.nl          #
 #                                                                              #
 # **************************************************************************** #
 
@@ -58,7 +58,7 @@ exec_quote_remove expan_handle_variables expan_handle_dollar \
 exec_create_files \
 expan_handle_bracketed_var expan_tilde_expansion exec_validate_binary \
 redir_pipe redir redir_tools redir_tools2 \
-hash_ht_insert hash_print hash_reset hash_init \
+hash_ht_insert hash_print hash_reset hash_init hash_check \
 print_errors
 TESTS = unit_test builtin_assign_test
 OBJECTS := $(SRCS:%=%.o)
