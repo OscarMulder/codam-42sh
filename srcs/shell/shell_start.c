@@ -6,7 +6,7 @@
 /*   By: omulder <omulder@student.codam.nl>           +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2019/04/18 16:44:50 by omulder        #+#    #+#                */
-/*   Updated: 2019/08/19 10:57:09 by mavan-he      ########   odam.nl         */
+/*   Updated: 2019/08/19 20:45:58 by omulder       ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -43,7 +43,7 @@ int		shell_start(t_vshdata *vshdata)
 
 	token_lst = NULL;
 	ast = NULL;
-	env_add_extern_value(vshdata->envlst, "OLDPWD", "");
+	env_add_extern_value(vshdata, "OLDPWD", "");
 	while (true)
 	{
 		ft_strdel(&vshdata->line);
