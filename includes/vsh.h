@@ -6,7 +6,7 @@
 /*   By: omulder <omulder@student.codam.nl>           +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2019/04/10 20:29:42 by jbrinksm       #+#    #+#                */
-/*   Updated: 2019/08/19 13:24:01 by rkuijper      ########   odam.nl         */
+/*   Updated: 2019/08/19 14:21:30 by rkuijper      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -265,7 +265,18 @@ typedef struct	s_vshdata
 	char		*alias_file;
 	char		*line;
 	int			prompt_len;
+	int			cur_prompt_type;
+	char		*prompt_name;
+	char		*prompt_seperator;
+	char		*prompt_addition;
 }				t_vshdata;
+
+typedef enum	e_prompt_type
+{
+	REGULAR_PROMPT,
+	QUOTE_PROMPT,
+	DQUOTE_PROMPT
+}				t_prompt_type;
 
 /*
 **-----------------------------------term---------------------------------------
@@ -482,7 +493,7 @@ int				input_parse_ctrl_k(t_inputdata *data, t_vshdata *vshdata);
 **----------------------------------shell---------------------------------------
 */
 
-void			shell_display_prompt(t_vshdata *vshdata);
+void			shell_display_prompt(t_vshdata *vshdata, int prompt_type);
 int				shell_dless_read_till_stop(char **heredoc, char *stop,
 					t_vshdata *vshdata);
 int				shell_dless_set_tk_val(t_tokenlst *probe, char **heredoc,
@@ -496,6 +507,7 @@ char			*shell_getcurrentdir(char *cwd);
 int				shell_close_quote_and_esc(t_vshdata *vshdata);
 char			shell_quote_checker_find_quote(char *line);
 int				shell_handle_escaped_newlines(t_vshdata *vshdata);
+void			shell_get_valid_prompt(t_vshdata *vshdata, int prompt_type);
 
 /*
 **----------------------------------lexer---------------------------------------

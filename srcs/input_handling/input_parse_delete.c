@@ -6,7 +6,7 @@
 /*   By: omulder <omulder@student.codam.nl>           +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2019/05/16 13:44:53 by rkuijper       #+#    #+#                */
-/*   Updated: 2019/08/19 11:43:34 by rkuijper      ########   odam.nl         */
+/*   Updated: 2019/08/19 14:18:49 by jbrinksm      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -35,9 +35,10 @@ int			input_handle_delete(t_inputdata *data, t_vshdata *vshdata)
 		return (FUNCT_ERROR); // do fatal shit
 	}
 	tputs(tc_clear_lines_str, 20, &ft_tputchar);
-	shell_display_prompt(vshdata);
+	shell_display_prompt(vshdata, vshdata->cur_prompt_type);
 	ft_putstr(vshdata->line);
 	ft_putstr("\e[u"); //recover cursor pos
 	data->index = saved_index; // recover index
+	data->len_cur--;
 	return (FUNCT_SUCCESS);
 }
