@@ -6,13 +6,12 @@
 /*   By: rkuijper <rkuijper@student.codam.nl>         +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2019/05/16 13:43:07 by rkuijper       #+#    #+#                */
-/*   Updated: 2019/08/15 10:37:12 by rkuijper      ########   odam.nl         */
+/*   Updated: 2019/08/19 11:45:00 by rkuijper      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "vsh.h"
 #include <term.h>
-#include <sys/ioctl.h>
 
 /*
 **	Backspaces are handled saving the cursor position and then clearing the
@@ -20,17 +19,30 @@
 **	cursor position.
 */
 
-int		input_handle_backspace(t_inputdata *data, t_vshdata *vshdata)
+void		input_handle_backspace(t_inputdata *data, t_vshdata *vshdata)
 {
-	struct winsize	ws;
+	char		*tc_clear_lines_str;
+	unsigned	saved_index;
 
-	ioctl(STDIN_FILENO, TIOCGWINSZ, &ws);
 	if (data->index > 0)
 	{
 		input_clear_char_at(&vshdata->line, data->index - 1);
-		data->len_cur--;
+		ft_putstr("\e[s"); //save cursor pos
+		saved_index = data->index; //save index
+		
+		curs_go_home(data);
+		ft_printf("\e[%iD", vshdata->prompt_len);
+		tc_clear_lines_str = tgetstr("cd", NULL);
+		if (tc_clear_lines_str == NULL)
+		{
+			ft_eprintf("ERROR\n"); // DEBUG PRINT
+			return ; // do fatal shit
+		}
+		tputs(tc_clear_lines_str, 1, &ft_tputchar);
+		shell_display_prompt(vshdata);
+		ft_putstr(vshdata->line);
+		ft_putstr("\e[u"); //recover cursor pos
+		data->index = saved_index; // recover index
 		curs_move_left(data);
-		ft_printf("\e[s%s \e[u", vshdata->line + data->index);
 	}
-	return (FUNCT_SUCCESS);
 }

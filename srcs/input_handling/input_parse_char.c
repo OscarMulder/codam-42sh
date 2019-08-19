@@ -6,7 +6,7 @@
 /*   By: omulder <omulder@student.codam.nl>           +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2019/05/16 13:33:54 by rkuijper       #+#    #+#                */
-/*   Updated: 2019/08/16 13:46:33 by rkuijper      ########   odam.nl         */
+/*   Updated: 2019/08/19 10:47:14 by rkuijper      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -140,8 +140,8 @@ static int	ft_iputstr(char *str, int linepos, int maxcol)
 int			input_parse_char(t_inputdata *data, t_vshdata *vshdata)
 {
 	struct winsize	ws;
-	int				old_row;
-	int				newline_amt;
+	int				old_index;
+	int				pos;
 
 	ioctl(STDIN_FILENO, TIOCGWINSZ, &ws);
 	if (ft_isprint(data->c))
@@ -149,7 +149,7 @@ int			input_parse_char(t_inputdata *data, t_vshdata *vshdata)
 		if (add_char_at(data, &vshdata->line) == FUNCT_ERROR)
 			return (FUNCT_ERROR);
 		// Broken...
-		old_row = get_cursor_rowpos();
+		/*old_row = get_cursor_rowpos();
 		ft_putstr("\e[s");
 		newline_amt = ft_iputstr(vshdata->line + data->index, get_cursor_linepos(), ws.ws_col);
 		if (newline_amt > 0)
@@ -160,17 +160,17 @@ int			input_parse_char(t_inputdata *data, t_vshdata *vshdata)
 		ft_putstr("\e[u");
 		if (newline_amt != 0)
 			ft_putstr("\e[A");
-		curs_move_right(data);
+		curs_move_right(data);*/
 		
 		// Both options have their issues. I really don't know anymore,
 		// They're both basically broken... Just like I am right now.
 
 		// Borkne...
-		/*old_index = data->index;
+		old_index = data->index;
 		pos = get_cursor_linepos();
 		ft_iputstr(vshdata->line + data->index, pos, ws.ws_col);
 		data->index = data->len_cur;
-		curs_move_n_left(data, data->index - old_index - 1);*/
+		curs_move_n_left(data, data->index - old_index - 1);
 	}
 	else if (data->c == '\n')
 	{

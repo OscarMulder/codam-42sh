@@ -6,13 +6,12 @@
 /*   By: omulder <omulder@student.codam.nl>           +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2019/05/16 13:44:53 by rkuijper       #+#    #+#                */
-/*   Updated: 2019/08/15 12:18:35 by rkuijper      ########   odam.nl         */
+/*   Updated: 2019/08/19 11:43:34 by rkuijper      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "vsh.h"
 #include <term.h>
-#include <sys/ioctl.h>
 
 /*
 **	Real line gets updated, then the cursor position is saved (DOESNT WORK WITH RESIZING)
@@ -21,19 +20,24 @@
 
 int			input_handle_delete(t_inputdata *data, t_vshdata *vshdata)
 {
-	struct winsize	ws;
-	
-	ioctl(STDIN_FILENO, TIOCGWINSZ, &ws);
-	if (data->index < data->len_cur)
+	char		*tc_clear_lines_str;
+	unsigned	saved_index;
+
+	input_clear_char_at(&vshdata->line, data->index);
+	ft_putstr("\e[s"); //save cursor pos
+	saved_index = data->index; //save index
+	curs_go_home(data);
+	ft_printf("\e[%iD", vshdata->prompt_len);
+	tc_clear_lines_str = tgoto(tgetstr("dc", NULL), 0, 1);
+	if (tc_clear_lines_str == NULL)
 	{
-		input_clear_char_at(&vshdata->line, data->index);
-		data->len_cur--;
-		// The following is highly illegal and needs to be better.
-		// The space is currently the only thing 'removing' the deleted char
-		// so this functionality doesn't account for removing a newline char.
-		ft_printf("\e[s%s \e[u", vshdata->line + data->index);
+		ft_eprintf("ERROR\n"); // DEBUG PRINT
+		return (FUNCT_ERROR); // do fatal shit
 	}
-	else
-		ft_putchar('\a');
+	tputs(tc_clear_lines_str, 20, &ft_tputchar);
+	shell_display_prompt(vshdata);
+	ft_putstr(vshdata->line);
+	ft_putstr("\e[u"); //recover cursor pos
+	data->index = saved_index; // recover index
 	return (FUNCT_SUCCESS);
 }

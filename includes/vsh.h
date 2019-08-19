@@ -6,7 +6,7 @@
 /*   By: omulder <omulder@student.codam.nl>           +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2019/04/10 20:29:42 by jbrinksm       #+#    #+#                */
-/*   Updated: 2019/08/15 11:27:41 by rkuijper      ########   odam.nl         */
+/*   Updated: 2019/08/19 11:45:08 by rkuijper      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -443,7 +443,7 @@ int				get_cursor_rowpos(void); //row
 int				ft_tputchar(int c);
 int				tools_isprintnotblank(int i);
 
-int				input_handle_backspace(t_inputdata *data, t_vshdata *vshdata);
+void			input_handle_backspace(t_inputdata *data, t_vshdata *vshdata);
 int				input_handle_delete(t_inputdata *data, t_vshdata *vshdata);
 
 void			curs_move_left(t_inputdata *data);
