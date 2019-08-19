@@ -6,7 +6,7 @@
 /*   By: omulder <omulder@student.codam.nl>           +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2019/04/17 14:03:16 by jbrinksm       #+#    #+#                */
-/*   Updated: 2019/08/16 13:16:55 by rkuijper      ########   odam.nl         */
+/*   Updated: 2019/08/19 10:41:02 by rkuijper      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -158,6 +158,7 @@ int			input_read_ansi(t_inputdata *data, t_vshdata *vshdata)
 {
 	char	termcapbuf[TERMCAPBUFFSIZE];
 
+	ft_bzero(termcapbuf, TERMCAPBUFFSIZE);
 	if (data->c == '\e')
 	{
 		termcapbuf[0] = '\e';
