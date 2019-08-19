@@ -6,7 +6,7 @@
 /*   By: rkuijper <rkuijper@student.codam.nl>         +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2019/05/16 13:43:07 by rkuijper       #+#    #+#                */
-/*   Updated: 2019/08/19 11:45:00 by rkuijper      ########   odam.nl         */
+/*   Updated: 2019/08/19 14:11:07 by jbrinksm      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -39,7 +39,7 @@ void		input_handle_backspace(t_inputdata *data, t_vshdata *vshdata)
 			return ; // do fatal shit
 		}
 		tputs(tc_clear_lines_str, 1, &ft_tputchar);
-		shell_display_prompt(vshdata);
+		shell_display_prompt(vshdata, vshdata->cur_prompt_type);
 		ft_putstr(vshdata->line);
 		ft_putstr("\e[u"); //recover cursor pos
 		data->index = saved_index; // recover index
