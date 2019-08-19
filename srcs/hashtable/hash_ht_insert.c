@@ -6,18 +6,28 @@
 /*   By: mavan-he <mavan-he@student.codam.nl>         +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2019/08/18 15:18:11 by mavan-he       #+#    #+#                */
-/*   Updated: 2019/08/19 11:52:29 by mavan-he      ########   odam.nl         */
+/*   Updated: 2019/08/19 16:46:27 by tde-jong      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "vsh.h"
 
+/*
+** hash_create_hash uses djb2 by Dan Bernstein
+*/
+
 unsigned int	hash_create_hash(char *key)
 {
-	unsigned int hash;
+	unsigned long hash;
 
-	hash = key[0] % HT_SIZE;
-	return (hash);
+	hash = 5381;
+	while (*key != '\0')
+	{
+		hash = (hash * 33) ^ *key;
+		key++;
+	}
+	hash = hash % HT_SIZE;
+	return ((unsigned int)hash);
 }
 
 static int		hash_new(t_ht **ht, char *key, char *path, int hit)
