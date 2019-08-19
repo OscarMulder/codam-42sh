@@ -6,7 +6,7 @@
 /*   By: omulder <omulder@student.codam.nl>           +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2019/05/16 13:39:59 by rkuijper       #+#    #+#                */
-/*   Updated: 2019/08/19 11:11:09 by rkuijper      ########   odam.nl         */
+/*   Updated: 2019/08/19 13:34:21 by rkuijper      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -56,18 +56,15 @@ void		curs_move_n_left(t_inputdata *data, size_t n)
 {
 	struct winsize	ws;
 	int				up;
-	int				linepos;
 	int				x_offset;
 
 	ioctl(STDIN_FILENO, TIOCGWINSZ, &ws); //WILL BE OSCARS DATA
-	linepos = get_cursor_linepos();
 	if (n <= 0 || data->index == 0)
 		return ;
 	if (n > data->index)
 		n = data->index;
-	up = ((ws.ws_col - linepos) + n) / ws.ws_col;
-	x_offset = (ws.ws_col - linepos) - (((ws.ws_col - linepos) + n) % ws.ws_col);
-	//ft_eprintf("Move left: (%d - %d) - ((%d - %d) + %d) %% %d = %d\n", ws.ws_col, linepos, ws.ws_col, linepos, n, ws.ws_col, x_offset);
+	up = ((ws.ws_col - data->coords.x) + n) / ws.ws_col;
+	x_offset = (ws.ws_col - data->coords.x) - (((ws.ws_col - data->coords.x) + n) % ws.ws_col);
 	if (up > 0)
 		ft_printf("\e[%iA", up);
 	if (x_offset > 0)
@@ -75,7 +72,9 @@ void		curs_move_n_left(t_inputdata *data, size_t n)
 	else if (x_offset < 0)
 		ft_printf("\e[%iD", x_offset * -1);
 	data->index -= n;
-	//ft_eprintf("Moving Cursor Left: n[%u] up[%d] x[%d] new_i[%d]\n", n, up, x_offset, data->index);
+	data->coords.y -= up;
+	data->coords.x += x_offset;
+	ft_eprintf("New coords: [%d:%d]\n", data->coords.x, data->coords.y);
 }
 
 /*

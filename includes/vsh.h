@@ -6,7 +6,7 @@
 /*   By: omulder <omulder@student.codam.nl>           +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2019/04/10 20:29:42 by jbrinksm       #+#    #+#                */
-/*   Updated: 2019/08/19 11:45:08 by rkuijper      ########   odam.nl         */
+/*   Updated: 2019/08/19 13:24:01 by rkuijper      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -421,6 +421,13 @@ void			term_free_struct(t_term **term_p);
 # define INPUT_CTRL_D '\4'
 # define INPUT_CTRL_K '\v'
 
+typedef struct	s_point
+{
+	int			x;
+	int			y;
+}				t_point;
+
+
 typedef struct	s_inputdata
 {
 	char		c;
@@ -431,6 +438,7 @@ typedef struct	s_inputdata
 	int			len_max;
 	unsigned	len_cur;
 	t_history	**history;
+	t_point		coords;
 }				t_inputdata;
 
 int				input_read(t_vshdata *vshdata);
@@ -449,7 +457,7 @@ int				input_handle_delete(t_inputdata *data, t_vshdata *vshdata);
 void			curs_move_left(t_inputdata *data);
 void			curs_move_n_left(t_inputdata *data, size_t n);
 
-void			curs_move_right(t_inputdata *data);
+void			curs_move_right(t_inputdata *data, t_vshdata *vshdata);
 void			curs_move_n_right(t_inputdata *data, t_vshdata *vshdata, size_t n);
 
 void			curs_move_up(t_inputdata *data, t_vshdata *vshdata);

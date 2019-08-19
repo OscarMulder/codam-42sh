@@ -6,7 +6,7 @@
 /*   By: omulder <omulder@student.codam.nl>           +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2019/04/17 14:03:16 by jbrinksm       #+#    #+#                */
-/*   Updated: 2019/08/19 11:44:13 by rkuijper      ########   odam.nl         */
+/*   Updated: 2019/08/19 13:24:27 by rkuijper      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -57,12 +57,13 @@ t_inputdata	*init_inputdata(t_vshdata *vshdata)
 		return (NULL);
 	new->c = 0;
 	new->index = 0;
+	new->len_cur = 0;
+	new->len_max = 64;
+	new->coords = (t_point){ vshdata->prompt_len, 0 };
 	new->hist_index = find_start(vshdata->history);
 	new->hist_start = new->hist_index - 1;
 	new->hist_first = true;
 	new->history = vshdata->history;
-	new->len_cur = 0;
-	new->len_max = 64;
 	return (new);
 }
 
@@ -167,7 +168,7 @@ int			input_read_ansi(t_inputdata *data, t_vshdata *vshdata)
 		if (ft_strequ(termcapbuf, TC_LEFT_ARROW) == true)
 			curs_move_left(data);
 		else if (ft_strequ(termcapbuf, TC_RIGHT_ARROW) == true)
-			curs_move_right(data);
+			curs_move_right(data, vshdata);
 		else if (ft_strequ(termcapbuf, TC_HOME) == true)
 			curs_go_home(data);
 		else if (ft_strequ(termcapbuf, TC_END) == true)

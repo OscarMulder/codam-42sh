@@ -6,7 +6,7 @@
 /*   By: omulder <omulder@student.codam.nl>           +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2019/05/16 13:41:00 by rkuijper       #+#    #+#                */
-/*   Updated: 2019/08/15 10:46:21 by rkuijper      ########   odam.nl         */
+/*   Updated: 2019/08/19 14:17:36 by rkuijper      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -47,8 +47,7 @@ void		curs_move_next_word(t_inputdata *data, t_vshdata *vshdata)
 
 void		curs_move_n_right(t_inputdata *data, t_vshdata *vshdata, size_t n)
 {
-	struct winsize	ws; //WILL BE OSCARS DATA
-	int				linepos;
+	struct winsize	ws;
 	int				down;
 	int				x_offset;
 
@@ -57,10 +56,9 @@ void		curs_move_n_right(t_inputdata *data, t_vshdata *vshdata, size_t n)
 		return ;
 	if (n > data->len_cur - data->index)
 		n = data->len_cur - data->index;
-	ioctl(STDIN_FILENO, TIOCGWINSZ, &ws); //WILL BE OSCARS DATA
-	linepos = get_cursor_linepos();
-	down = ((linepos - 1) + n) / ws.ws_col;
-	x_offset = (((linepos - 1) + n) % ws.ws_col) - (linepos - 1);
+	ioctl(STDIN_FILENO, TIOCGWINSZ, &ws);
+	down = ((data->coords.x - 1) + n) / ws.ws_col;
+	x_offset = (((data->coords.x - 1) + n) % ws.ws_col) - (data->coords.x - 1);
 	if (down > 0)
 		ft_printf("\e[%iB", down);
 	if (x_offset > 0)
@@ -68,6 +66,9 @@ void		curs_move_n_right(t_inputdata *data, t_vshdata *vshdata, size_t n)
 	else if (x_offset < 0)
 		ft_printf("\e[%iD", x_offset * -1);
 	data->index += n;
+	data->coords.y += down;
+	data->coords.x += x_offset;
+	ft_eprintf("New coords: [%d:%d]\n", data->coords.x, data->coords.y);
 }
 
 /*
@@ -78,23 +79,8 @@ void		curs_move_n_right(t_inputdata *data, t_vshdata *vshdata, size_t n)
 **	for the automatic `index` change if necessary.
 */
 
-void		curs_move_right(t_inputdata *data)
+void		curs_move_right(t_inputdata *data, t_vshdata *vshdata)
 {
-	struct winsize	ws; //WILL BE OSCARS DATA
-
-	ioctl(STDIN_FILENO, TIOCGWINSZ, &ws); //WILL BE OSCARS DATA
-	ft_eprintf("R BEF LINEPOS: %i/%i\n", get_cursor_linepos(), ws.ws_col); // DEBUG PRINT
 	if (data->index < data->len_cur)
-	{
-		// Needs to account for newline characters.
-		if (get_cursor_linepos() == ws.ws_col)
-		{
-			ft_putstr("\e[B");
-			ft_printf("\e[%iD", ws.ws_col - 1);
-		}
-		else
-			ft_putstr(CURS_RIGHT);
-		(data->index)++;
-	}
-	ft_eprintf("R AFT LINEPOS: %i/%i\n", get_cursor_linepos(), ws.ws_col); // DEBUG PRINT
+		curs_move_n_right(data, vshdata, 1);
 }
