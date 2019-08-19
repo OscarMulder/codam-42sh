@@ -6,7 +6,7 @@
 /*   By: omulder <omulder@student.codam.nl>           +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2019/04/10 20:29:42 by jbrinksm       #+#    #+#                */
-/*   Updated: 2019/08/19 11:25:51 by mavan-he      ########   odam.nl         */
+/*   Updated: 2019/08/19 11:42:36 by mavan-he      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -93,6 +93,8 @@
 */
 
 # define HT_SIZE			100
+# define HT_EMPTY			0
+# define HT_HAS_CONTENT		1
 # define HASH_LR			(1 << 0)
 # define HASH_HIT			1
 # define HASH_NO_HIT		0
@@ -299,6 +301,7 @@ typedef struct	s_vshdata
 	char		*history_file;
 	char		*alias_file;
 	t_ht		*ht[HT_SIZE];
+	char		ht_flag;
 }				t_vshdata;
 
 /*
@@ -668,8 +671,8 @@ int				history_index_change_up(t_inputdata *data);
 
 int				hash_ht_insert(t_vshdata *vshdata, char *key, char *path, int count);
 void			hash_print(t_ht **ht);
-void			hash_reset(t_ht **ht);
-void			hash_init(t_ht **ht);
+void			hash_reset(t_vshdata *vshdata);
+void			hash_init(t_vshdata *vshdata);
 
 /*
 **--------------------------------error_handling--------------------------------

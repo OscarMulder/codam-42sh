@@ -6,7 +6,7 @@
 /*   By: omulder <omulder@student.codam.nl>           +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2019/04/18 16:37:32 by omulder        #+#    #+#                */
-/*   Updated: 2019/08/19 11:14:50 by mavan-he      ########   odam.nl         */
+/*   Updated: 2019/08/19 11:46:12 by mavan-he      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -671,6 +671,7 @@ Test(exec_find_bin, basic)
 	vshdata.envlst->var = "PATH=./";
 	vshdata.envlst->type = ENV_EXTERN;
 	vshdata.envlst->next = NULL;
+	hash_init(&vshdata);
 	str = ft_strdup("vsh");
 	exec_find_binary(str, &vshdata, &bin);
 	cr_expect_str_eq(bin, ".//vsh");
@@ -688,6 +689,7 @@ Test(exec_find_bin, basic2)
 	vshdata.envlst->var = "PATH=/bin:./";
 	vshdata.envlst->type = ENV_EXTERN;
 	vshdata.envlst->next = NULL;
+	hash_init(&vshdata);
 	bin = NULL;
 	str = ft_strdup("ls");
 	exec_find_binary(str, &vshdata, &bin);
@@ -706,6 +708,7 @@ Test(exec_find_bin, advanced)
 	vshdata.envlst->var = "PATH=/Users/travis/.rvm/gems/ruby-2.4.2/bin:/Users/travis/.rvm/gems/ruby-2.4.2@global/bin:/Users/travis/.rvm/rubies/ruby-2.4.2/bin:/Users/travis/.rvm/bin:/Users/travis/bin:/Users/travis/.local/bin:/Users/travis/.nvm/versions/node/v6.11.4/bin:/bin:/usr/local/bin:/usr/bin:/usr/sbin:/sbin:/opt/X11/bin";
 	vshdata.envlst->type = ENV_EXTERN;
 	vshdata.envlst->next = NULL;
+	hash_init(&vshdata);
 	bin = NULL;
 	str = ft_strdup("ls");
 	exec_find_binary(str, &vshdata, &bin);

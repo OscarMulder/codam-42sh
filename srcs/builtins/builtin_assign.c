@@ -6,7 +6,7 @@
 /*   By: omulder <omulder@student.codam.nl>           +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2019/06/05 09:09:49 by jbrinksm       #+#    #+#                */
-/*   Updated: 2019/08/19 10:55:16 by mavan-he      ########   odam.nl         */
+/*   Updated: 2019/08/19 11:44:06 by mavan-he      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -81,6 +81,6 @@ int			builtin_assign(char *arg, t_vshdata *vshdata, int env_type)
 		}
 	}
 	if (ft_strnequ(var, "PATH", 4) == true && var[4] == '=')
-		hash_reset(vshdata->ht);
+		hash_reset(vshdata);
 	return (FUNCT_SUCCESS);
 }

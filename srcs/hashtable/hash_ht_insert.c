@@ -6,7 +6,7 @@
 /*   By: mavan-he <mavan-he@student.codam.nl>         +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2019/08/18 15:18:11 by mavan-he       #+#    #+#                */
-/*   Updated: 2019/08/19 10:38:56 by mavan-he      ########   odam.nl         */
+/*   Updated: 2019/08/19 11:38:06 by mavan-he      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -57,6 +57,7 @@ int			hash_ht_insert(t_vshdata *vshdata, char *key, char *path, int hit)
 	t_ht			*probe;
 
 	hash = hash_create_hash(key);
+	vshdata->ht_flag = HT_HAS_CONTENT;
 	if (vshdata->ht[hash] == NULL)
 		return (hash_new(&vshdata->ht[hash], key, path, hit));
 	else

@@ -6,7 +6,7 @@
 /*   By: mavan-he <mavan-he@student.codam.nl>         +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2019/08/19 10:39:06 by mavan-he       #+#    #+#                */
-/*   Updated: 2019/08/19 11:23:18 by mavan-he      ########   odam.nl         */
+/*   Updated: 2019/08/19 11:41:35 by mavan-he      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -22,18 +22,19 @@ static void	del_hash_lst(t_ht *del)
 	ft_memdel((void**)&del);
 }
 
-void		hash_reset(t_ht **ht)
+void		hash_reset(t_vshdata *vshdata)
 {
 	int i;
 
 	i = 0;
 	while (i < HT_SIZE)
 	{
-		if (ht[i] != NULL)
+		if (vshdata->ht[i] != NULL)
 		{
-			del_hash_lst(ht[i]);
-			ht[i] = NULL;
+			del_hash_lst(vshdata->ht[i]);
+			vshdata->ht[i] = NULL;
 		}
 		i++;
 	}
+	vshdata->ht_flag = HT_EMPTY;
 }

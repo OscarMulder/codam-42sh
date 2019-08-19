@@ -6,7 +6,7 @@
 /*   By: jbrinksm <jbrinksm@student.codam.nl>         +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2019/06/07 16:55:26 by jbrinksm       #+#    #+#                */
-/*   Updated: 2019/08/19 11:26:28 by mavan-he      ########   odam.nl         */
+/*   Updated: 2019/08/19 11:43:51 by mavan-he      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -27,7 +27,7 @@ Test(builtin_assign, basic_change_existingvar_1)
 	t_vshdata	vshdata;
 
 	g_state = (t_state*)ft_memalloc(sizeof(t_state));
-	hash_init(vshdata.ht);
+	hash_init(&vshdata);
 	vshdata.envlst = env_getlst();
 	cr_assert(vshdata.envlst != NULL);
 	g_state->exit_code = 0;
