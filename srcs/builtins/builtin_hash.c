@@ -6,7 +6,7 @@
 /*   By: mavan-he <mavan-he@student.codam.nl>         +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2019/08/18 13:09:06 by mavan-he       #+#    #+#                */
-/*   Updated: 2019/08/18 17:47:44 by mavan-he      ########   odam.nl         */
+/*   Updated: 2019/08/19 11:07:14 by mavan-he      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -85,7 +85,7 @@ void		builtin_hash(char **args, t_vshdata *vshdata)
 	if (check_flag(args, &flag, &argc) != FUNCT_SUCCESS)
 		return ;
 	if (flag & HASH_LR)
-		; //clear hash table
+		hash_reset(vshdata->ht);
 	while (args[argc] != NULL)
 	{
 		if (add_to_ht(args[argc], vshdata) == FUNCT_ERROR)

@@ -6,7 +6,7 @@
 /*   By: omulder <omulder@student.codam.nl>           +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2019/04/18 16:37:32 by omulder        #+#    #+#                */
-/*   Updated: 2019/08/18 17:52:43 by mavan-he      ########   odam.nl         */
+/*   Updated: 2019/08/19 11:14:50 by mavan-he      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -760,7 +760,7 @@ TestSuite(builtin_export);
 
 Test(builtin_export, basic_test)
 {
-	t_envlst    *envlst;
+	t_vshdata	vshdata;
 	char		*args[3];
 
 	g_state = (t_state*)ft_memalloc(sizeof(t_state));
@@ -769,19 +769,19 @@ Test(builtin_export, basic_test)
 	args[0] = "export";
 	args[1] = "key=value";
 	args[2] = NULL;
-	envlst = env_getlst();
-	builtin_export(args, envlst);
-	while (envlst != NULL && ft_strnequ(envlst->var, "key", 3) == 0)
-		envlst = envlst->next;
-	cr_assert(envlst != NULL);
+	vshdata.envlst = env_getlst();
+	builtin_export(args, &vshdata);
+	while (vshdata.envlst != NULL && ft_strnequ(vshdata.envlst->var, "key", 3) == 0)
+		vshdata.envlst = vshdata.envlst->next;
+	cr_assert(vshdata.envlst != NULL);
 	cr_expect_str_eq(ft_itoa(g_state->exit_code), ft_itoa(EXIT_SUCCESS));
-	cr_expect_str_eq(ft_itoa(envlst->type), ft_itoa(ENV_EXTERN));
-	cr_expect_str_eq(envlst->var, "key=value");
+	cr_expect_str_eq(ft_itoa(vshdata.envlst->type), ft_itoa(ENV_EXTERN));
+	cr_expect_str_eq(vshdata.envlst->var, "key=value");
 }
 
 Test(builtin_export, basic_test_n_option)
 {
-	t_envlst    *envlst;
+	t_vshdata	vshdata;
 	char		*args[4];
 
 	g_state = (t_state*)ft_memalloc(sizeof(t_state));
@@ -790,24 +790,24 @@ Test(builtin_export, basic_test_n_option)
 	args[0] = "export";
 	args[1] = "key=value";
 	args[2] = NULL;
-	envlst = env_getlst();
-	builtin_export(args, envlst);
+	vshdata.envlst = env_getlst();
+	builtin_export(args, &vshdata);
 	args[0] = "export";
 	args[1] = "-n";
 	args[2] = "key=value";
 	args[3] = NULL;
-	builtin_export(args, envlst);
-	while (envlst != NULL && ft_strnequ(envlst->var, "key", 3) == 0)
-		envlst = envlst->next;
-	cr_assert(envlst != NULL);
+	builtin_export(args, &vshdata);
+	while (vshdata.envlst != NULL && ft_strnequ(vshdata.envlst->var, "key", 3) == 0)
+		vshdata.envlst = vshdata.envlst->next;
+	cr_assert(vshdata.envlst != NULL);
 	cr_expect_str_eq(ft_itoa(g_state->exit_code), ft_itoa(EXIT_SUCCESS));
-	cr_expect_str_eq(ft_itoa(envlst->type), ft_itoa(ENV_LOCAL));
-	cr_expect_str_eq(envlst->var, "key=value");
+	cr_expect_str_eq(ft_itoa(vshdata.envlst->type), ft_itoa(ENV_LOCAL));
+	cr_expect_str_eq(vshdata.envlst->var, "key=value");
 }
 
 Test(builtin_export, basic_output_error_test, .init=redirect_all_stdout)
 {
-	t_envlst    *envlst;
+	t_vshdata	vshdata;
 	char		*args[3];
 
 	g_state = (t_state*)ft_memalloc(sizeof(t_state));
@@ -816,16 +816,16 @@ Test(builtin_export, basic_output_error_test, .init=redirect_all_stdout)
 	args[0] = "export";
 	args[1] = "key*=value";
 	args[2] = NULL;
-	envlst = env_getlst();
-	builtin_export(args, envlst);
+	vshdata.envlst = env_getlst();
+	builtin_export(args, &vshdata);
 	cr_expect(g_state->exit_code == EXIT_WRONG_USE);
 	cr_expect_stderr_eq_str("vsh: export: 'key*=value': not a valid identifier\n");
 }
 
 Test(builtin_export, basic_output_error_test2, .init=redirect_all_stdout)
 {
-	t_envlst    *envlst;
 	char		*args[3];
+	t_vshdata	vshdata;
 
 	g_state = (t_state*)ft_memalloc(sizeof(t_state));
 	
@@ -833,8 +833,8 @@ Test(builtin_export, basic_output_error_test2, .init=redirect_all_stdout)
 	args[0] = "export";
 	args[1] = "-h";
 	args[2] = NULL;
-	envlst = env_getlst();
-	builtin_export(args, envlst);
+	vshdata.envlst = env_getlst();
+	builtin_export(args, &vshdata);
 	cr_expect(g_state->exit_code == EXIT_WRONG_USE);
 }
 

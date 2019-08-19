@@ -6,7 +6,7 @@
 /*   By: omulder <omulder@student.codam.nl>           +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2019/04/10 20:29:42 by jbrinksm       #+#    #+#                */
-/*   Updated: 2019/08/18 17:41:30 by mavan-he      ########   odam.nl         */
+/*   Updated: 2019/08/19 11:25:51 by mavan-he      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -405,7 +405,7 @@ void		env_lstdel(t_envlst **envlst);
 void   		env_remove_tmp(t_envlst *env);
 void		env_sort(t_envlst *head);
 void		env_lstadd_to_sortlst(t_envlst *envlst, t_envlst *new);
-int			env_add_extern_value(t_envlst *envlst, char *name, char *value);
+int			env_add_extern_value(t_vshdata *vshdata, char *name, char *value);
 
 /*
 **----------------------------------terminal------------------------------------
@@ -551,11 +551,11 @@ void			builtin_hash(char **args, t_vshdata *vshdata);
 void			builtin_exit(char **args, t_vshdata *vshdata);
 void			builtin_echo(char **args);
 char			builtin_echo_set_flags(char **args, int *arg_i);
-void			builtin_export(char **args, t_envlst *envlst);
+void			builtin_export(char **args, t_vshdata *vshdata);
 void			builtin_export_var_to_type(char *varname, t_envlst *envlst, int type);
 void			builtin_export_print(t_envlst *envlst, int flags);
-void			builtin_export_args(char **args, t_envlst *envlst, int i);
-int				builtin_assign(char *arg, t_envlst *envlst, int env_type);
+void			builtin_export_args(char **args, t_vshdata *vshdata, int i);
+int				builtin_assign(char *arg, t_vshdata *vshdata, int env_type);
 int				builtin_assign_addexist(t_envlst *envlst, char *var, int env_type);
 int				builtin_assign_addnew(t_envlst *envlst, char *var, int env_type);
 void			builtin_set(char **args, t_envlst *envlst);
@@ -566,9 +566,9 @@ void			builtin_alias_delnode(t_aliaslst **node);
 void			builtin_alias_lstdel(t_aliaslst **lst);
 void			builtin_unalias(char **args, t_aliaslst **aliaslst);
 void			builtin_type(char **args, t_envlst *envlst, t_aliaslst *aliaslst);
-int				builtin_cd(char **args, t_envlst *envlst);
+int				builtin_cd(char **args, t_vshdata *vshdata);
 void			builtin_cd_create_newpath(char **newpath, char *argpath);
-int				builtin_cd_change_dir(char *argpath, t_envlst *envlst,
+int				builtin_cd_change_dir(char *argpath, t_vshdata *vshdata,
 					char cd_flag, int print);
 char			*builtin_cd_create_newpath_wrap(char *currpath, char *argpath);
 int				cd_print_usage(void);
@@ -668,6 +668,8 @@ int				history_index_change_up(t_inputdata *data);
 
 int				hash_ht_insert(t_vshdata *vshdata, char *key, char *path, int count);
 void			hash_print(t_ht **ht);
+void			hash_reset(t_ht **ht);
+void			hash_init(t_ht **ht);
 
 /*
 **--------------------------------error_handling--------------------------------

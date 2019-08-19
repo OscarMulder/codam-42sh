@@ -6,7 +6,7 @@
 /*   By: mavan-he <mavan-he@student.codam.nl>         +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2019/08/18 15:18:11 by mavan-he       #+#    #+#                */
-/*   Updated: 2019/08/18 17:41:53 by mavan-he      ########   odam.nl         */
+/*   Updated: 2019/08/19 10:38:56 by mavan-he      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -21,18 +21,18 @@ unsigned int	hash_create_hash(char *key)
 	return (hash);
 }
 
-int			hash_new(t_ht **ht, char *key, char *path, int hit)
+static int	hash_new(t_ht **ht, char *key, char *path, int hit)
 {
 	t_ht *new;
 
 	new = (t_ht*)ft_memalloc(sizeof(t_ht));
 	if (new == NULL)
-		return (FUNCT_ERROR); // print error
+		return (err_ret_exit(E_ALLOC_STR, EXIT_FAILURE));
 	new->key = ft_strdup(key);
 	if (new->key == NULL)
 	{
 		free(new);
-		return (FUNCT_ERROR); // print error
+		return (err_ret_exit(E_ALLOC_STR, EXIT_FAILURE));
 	}
 	new->path = path;
 	new->hits = hit;
@@ -40,7 +40,7 @@ int			hash_new(t_ht **ht, char *key, char *path, int hit)
 	return (FUNCT_SUCCESS);
 }
 
-int			hash_exist(t_ht *ht, char *path, int hit)
+static int	hash_exist(t_ht *ht, char *path, int hit)
 {
 	if (hit == HASH_HIT)
 		ht->hits += hit;
