@@ -6,7 +6,7 @@
 /*   By: rkuijper <rkuijper@student.codam.nl>         +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2019/05/16 13:43:07 by rkuijper       #+#    #+#                */
-/*   Updated: 2019/08/19 14:11:07 by jbrinksm      ########   odam.nl         */
+/*   Updated: 2019/08/19 14:23:07 by jbrinksm      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -43,6 +43,7 @@ void		input_handle_backspace(t_inputdata *data, t_vshdata *vshdata)
 		ft_putstr(vshdata->line);
 		ft_putstr("\e[u"); //recover cursor pos
 		data->index = saved_index; // recover index
+		data->len_cur--;
 		curs_move_left(data);
 	}
 }
