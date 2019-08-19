@@ -6,7 +6,7 @@
 /*   By: mavan-he <mavan-he@student.codam.nl>         +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2019/07/26 20:29:50 by mavan-he       #+#    #+#                */
-/*   Updated: 2019/08/02 15:13:39 by mavan-he      ########   odam.nl         */
+/*   Updated: 2019/08/19 18:14:32 by omulder       ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -65,6 +65,10 @@ static void	alias_combine_tokenlsts(t_tokenlst *probe, t_tokenlst *new_tokenlst)
 	probe->next = new_tokenlst;
 }
 
+/*
+**	int status had the comment: This may or may not need to get fixed
+*/
+
 int			alias_error(char **line, t_tokenlst **tokenlst, char ***expanded)
 {
 	ft_eprintf("vsh: alias: failed to allocate enough memory\n");
@@ -84,7 +88,7 @@ int			alias_replace(t_vshdata *vshdata, t_tokenlst *probe, char *alias,
 	char		*alias_equal;
 	char		**new_expanded;
 	t_tokenlst	*new_tokenlst;
-	int			status; // This may or may not need to get fixed
+	int			status;
 
 	status = 1;
 	alias_equal = ft_strchr(alias, '=');

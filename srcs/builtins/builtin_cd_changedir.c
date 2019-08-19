@@ -6,7 +6,7 @@
 /*   By: jbrinksm <jbrinksm@student.codam.nl>         +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2019/08/02 15:03:51 by jbrinksm       #+#    #+#                */
-/*   Updated: 2019/08/02 17:47:44 by jbrinksm      ########   odam.nl         */
+/*   Updated: 2019/08/19 18:32:08 by omulder       ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -23,14 +23,13 @@ static int	return_and_free(int ret, char **newpath, char **currpath)
 **	Updates OLDPWD and PWD.
 */
 
-static int		cd_post_process_var(char *currpath, char *newpath,
+static int	cd_post_process_var(char *currpath, char *newpath,
 t_envlst *envlst, char cd_flag)
 {
 	if (newpath == NULL)
 		return (cd_alloc_error());
 	if (env_add_extern_value(envlst, "OLDPWD", currpath) == FUNCT_ERROR)
 		return (cd_alloc_error());
-
 	if (cd_flag == BUILTIN_CD_UP)
 	{
 		ft_strdel(&newpath);
