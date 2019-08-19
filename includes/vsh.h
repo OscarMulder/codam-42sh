@@ -6,7 +6,7 @@
 /*   By: omulder <omulder@student.codam.nl>           +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2019/04/10 20:29:42 by jbrinksm       #+#    #+#                */
-/*   Updated: 2019/08/16 19:29:25 by mavan-he      ########   odam.nl         */
+/*   Updated: 2019/08/19 14:16:56 by omulder       ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -98,6 +98,18 @@
 # define ALIASFILENAME		".vsh_alias"
 # define ALIAS_MAX	500
 
+
+/*
+**-----------------------------------hash--------------------------------------
+*/
+
+# define HT_SIZE			100
+# define HT_EMPTY			0
+# define HT_HAS_CONTENT		1
+# define HASH_LR			(1 << 0)
+# define HASH_HIT			1
+# define HASH_NO_HIT		0
+
 /*
 **-----------------------------------builtin------------------------------------
 */
@@ -143,6 +155,7 @@
 
 
 # define ENV_MASK 0xF8
+# define ENV_TMP_OVERWRITE (1 << 4)
 # define ENV_SPECIAL (1 << 3)
 # define ENV_EXTERN (1 << 2)
 # define ENV_LOCAL (1 << 1)
@@ -266,6 +279,18 @@ typedef struct	s_aliaslst
 }				t_aliaslst;
 
 /*
+**------------------------------------hashtable----------------------------------
+*/
+
+typedef struct	s_ht
+{
+	char			*key;
+	char			*path;
+	int				hits;
+	struct s_ht		*next;
+}				t_ht;
+
+/*
 **-----------------------------------term---------------------------------------
 */
 
@@ -292,6 +317,8 @@ typedef struct	s_vshdata
 	char		*alias_file;
 	char		*line;
 	int			prompt_len;
+	t_ht		*ht[HT_SIZE];
+	char		ht_flag;
 }				t_vshdata;
 
 /*
@@ -415,7 +442,7 @@ void		env_lstdel(t_envlst **envlst);
 void   		env_remove_tmp(t_envlst *env);
 void		env_sort(t_envlst *head);
 void		env_lstadd_to_sortlst(t_envlst *envlst, t_envlst *new);
-int			env_add_extern_value(t_envlst *envlst, char *name, char *value);
+int			env_add_extern_value(t_vshdata *vshdata, char *name, char *value);
 
 /*
 **----------------------------------terminal------------------------------------
@@ -599,14 +626,15 @@ bool			parser_cmd_suffix(t_tokenlst **token_lst, t_ast **cmd,
 **----------------------------------builtins------------------------------------
 */
 
+void			builtin_hash(char **args, t_vshdata *vshdata);
 void			builtin_exit(char **args, t_vshdata *vshdata);
 void			builtin_echo(char **args);
 char			builtin_echo_set_flags(char **args, int *arg_i);
-void			builtin_export(char **args, t_envlst *envlst);
+void			builtin_export(char **args, t_vshdata *vshdata);
 void			builtin_export_var_to_type(char *varname, t_envlst *envlst, int type);
 void			builtin_export_print(t_envlst *envlst, int flags);
-void			builtin_export_args(char **args, t_envlst *envlst, int i);
-int				builtin_assign(char *arg, t_envlst *envlst, int env_type);
+void			builtin_export_args(char **args, t_vshdata *vshdata, int i);
+int				builtin_assign(char *arg, t_vshdata *vshdata, int env_type);
 int				builtin_assign_addexist(t_envlst *envlst, char *var, int env_type);
 int				builtin_assign_addnew(t_envlst *envlst, char *var, int env_type);
 void			builtin_set(char **args, t_envlst *envlst);
@@ -617,9 +645,9 @@ void			builtin_alias_delnode(t_aliaslst **node);
 void			builtin_alias_lstdel(t_aliaslst **lst);
 void			builtin_unalias(char **args, t_aliaslst **aliaslst);
 void			builtin_type(char **args, t_envlst *envlst, t_aliaslst *aliaslst);
-int				builtin_cd(char **args, t_envlst *envlst);
+int				builtin_cd(char **args, t_vshdata *vshdata);
 void			builtin_cd_create_newpath(char **newpath, char *argpath);
-int				builtin_cd_change_dir(char *argpath, t_envlst *envlst,
+int				builtin_cd_change_dir(char *argpath, t_vshdata *vshdata,
 					char cd_flag, int print);
 char			*builtin_cd_create_newpath_wrap(char *currpath, char *argpath);
 int				cd_print_usage(void);
@@ -660,7 +688,7 @@ int				exec_command(t_ast *ast, t_vshdata *vshdata, t_pipes pipes);
 void			exec_cmd(char **args, t_vshdata *vshdata);
 bool			exec_builtin(char **args, t_vshdata *vshdata);
 void			exec_external(char **args, t_vshdata *vshdata);
-int				exec_find_binary(char *filename, t_envlst *envlst, char **binary);
+int				exec_find_binary(char *filename, t_vshdata *vshdata, char **binary);
 int				find_binary(char *filename, t_envlst *envlst, char **binary);
 void			exec_quote_remove(t_ast *node);
 int				exec_validate_binary(char *binary);
@@ -714,6 +742,17 @@ int				history_change_line(t_inputdata *data, t_vshdata *vshdata,
 					char arrow);
 int				history_index_change_down(t_inputdata *data);
 int				history_index_change_up(t_inputdata *data);
+
+/*
+**--------------------------------hashtable-------------------------------------
+*/
+
+int				hash_ht_insert(t_vshdata *vshdata, char *key, char *path, int count);
+void			hash_print(t_ht **ht);
+void			hash_reset(t_vshdata *vshdata);
+void			hash_init(t_vshdata *vshdata);
+unsigned int	hash_create_hash(char *key);
+int				hash_check(t_vshdata *vshdata, char *key, char **binary);
 
 /*
 **--------------------------------error_handling--------------------------------
