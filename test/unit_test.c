@@ -6,7 +6,7 @@
 /*   By: omulder <omulder@student.codam.nl>           +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2019/04/18 16:37:32 by omulder        #+#    #+#                */
-/*   Updated: 2019/08/19 11:46:12 by mavan-he      ########   odam.nl         */
+/*   Updated: 2019/08/19 12:36:50 by mavan-he      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -729,6 +729,7 @@ Test(exec_find_bin, nopath, .init=redirect_all_stdout)
 	vshdata.envlst->var = "PATH=";
 	vshdata.envlst->type = ENV_EXTERN;
 	vshdata.envlst->next = NULL;
+	hash_init(&vshdata);
 	bin = NULL;
 	str = ft_strdup("ls");
 	exec_find_binary(str, &vshdata, &bin);
@@ -748,6 +749,7 @@ Test(exec_find_bin, execnonexistent, .init=redirect_all_stdout)
 	g_state->exit_code = 0;
 
 	vshdata.envlst = env_getlst();
+	hash_init(&vshdata);
 	str = ft_strdup("idontexist\n");
 	lst = NULL;
 	ast = NULL;
