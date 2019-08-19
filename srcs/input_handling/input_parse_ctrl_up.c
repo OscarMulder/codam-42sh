@@ -6,7 +6,7 @@
 /*   By: omulder <omulder@student.codam.nl>           +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2019/05/16 15:03:17 by rkuijper       #+#    #+#                */
-/*   Updated: 2019/08/15 11:25:18 by rkuijper      ########   odam.nl         */
+/*   Updated: 2019/08/19 14:42:45 by rkuijper      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -21,11 +21,9 @@
 void		curs_move_up(t_inputdata *data, t_vshdata *vshdata)
 {
 	struct winsize	ws; //WILL BE OSCARS DATA
-	size_t			linepos;
 
 	(void)vshdata;
 	ioctl(STDIN_FILENO, TIOCGWINSZ, &ws); //WILL BE OSCARS DATA
-	linepos = get_cursor_linepos();
 	if (data->index == 0)
 		return ;
 	else if (data->index < ws.ws_col)
@@ -34,5 +32,6 @@ void		curs_move_up(t_inputdata *data, t_vshdata *vshdata)
 	{
 		ft_printf(CURS_UP);
 		data->index -= ws.ws_col;
+		data->coords.y--;
 	}
 }
