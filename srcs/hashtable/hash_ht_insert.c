@@ -6,12 +6,11 @@
 /*   By: mavan-he <mavan-he@student.codam.nl>         +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2019/08/18 15:18:11 by mavan-he       #+#    #+#                */
-/*   Updated: 2019/08/19 11:38:06 by mavan-he      ########   odam.nl         */
+/*   Updated: 2019/08/19 11:52:29 by mavan-he      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "vsh.h"
-
 
 unsigned int	hash_create_hash(char *key)
 {
@@ -21,7 +20,7 @@ unsigned int	hash_create_hash(char *key)
 	return (hash);
 }
 
-static int	hash_new(t_ht **ht, char *key, char *path, int hit)
+static int		hash_new(t_ht **ht, char *key, char *path, int hit)
 {
 	t_ht *new;
 
@@ -40,7 +39,7 @@ static int	hash_new(t_ht **ht, char *key, char *path, int hit)
 	return (FUNCT_SUCCESS);
 }
 
-static int	hash_exist(t_ht *ht, char *path, int hit)
+static int		hash_exist(t_ht *ht, char *path, int hit)
 {
 	if (hit == HASH_HIT)
 		ht->hits += hit;
@@ -51,7 +50,8 @@ static int	hash_exist(t_ht *ht, char *path, int hit)
 	return (FUNCT_SUCCESS);
 }
 
-int			hash_ht_insert(t_vshdata *vshdata, char *key, char *path, int hit)
+int				hash_ht_insert(t_vshdata *vshdata,
+				char *key, char *path, int hit)
 {
 	unsigned int	hash;
 	t_ht			*probe;
