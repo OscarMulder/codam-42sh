@@ -6,7 +6,7 @@
 /*   By: omulder <omulder@student.codam.nl>           +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2019/04/10 20:29:42 by jbrinksm       #+#    #+#                */
-/*   Updated: 2019/08/22 12:03:31 by omulder       ########   odam.nl         */
+/*   Updated: 2019/08/22 13:17:09 by omulder       ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -32,6 +32,7 @@
 # define U_EXPORT			"export: usage: export [-n] [name[=value] ...] or export -p"
 # define U_HASH				"hash: usage: hash [-r] [utility ...]\n"
 # define U_UNALIAS			"unalias: usage: unalias [-a] name [name ...]\n"
+# define U_SET				"set: usage: set\n"
 # define E_SYNTAX_P			SHELL ": syntax error near unexpected token '%s'\n"
 # define E_P_NOT_VAL_HERE	SHELL ": '%s' is not a valid heredoc delimiter\n"
 # define E_P_BAD_FD			SHELL ": %s: bad file descriptor\n"
