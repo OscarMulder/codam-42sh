@@ -6,7 +6,7 @@
 /*   By: omulder <omulder@student.codam.nl>           +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2019/07/31 17:54:03 by omulder        #+#    #+#                */
-/*   Updated: 2019/08/02 17:57:39 by jbrinksm      ########   odam.nl         */
+/*   Updated: 2019/08/22 12:04:05 by tde-jong      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -38,7 +38,12 @@ int		cd_change_dir_error(char *usedpath, char *argpath, char **newpath,
 		ft_eprintf("could not get current working directory parsing: %s\n",
 			argpath);
 	else if (access(usedpath, F_OK) == -1)
-		ft_eprintf("no such file or directory: %s\n", argpath);
+	{
+		if (ft_islink(usedpath) == true)
+			ft_eprintf("too many levels of symbolic links: %s\n", argpath);
+		else
+			ft_eprintf("no such file or directory: %s\n", argpath);
+	}
 	else if (access(usedpath, R_OK) == -1)
 		ft_eprintf("permission denied: %s\n", argpath);
 	else
