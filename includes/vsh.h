@@ -6,7 +6,7 @@
 /*   By: omulder <omulder@student.codam.nl>           +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2019/04/10 20:29:42 by jbrinksm       #+#    #+#                */
-/*   Updated: 2019/08/22 11:19:55 by omulder       ########   odam.nl         */
+/*   Updated: 2019/08/22 11:40:58 by omulder       ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -32,36 +32,51 @@
 # define U_EXPORT			"export: usage: export [-n] [name[=value] ...] or export -p"
 # define U_HASH				"hash: usage: hash [-r] [utility ...]\n"
 # define U_UNALIAS			"unalias: usage: unalias [-a] name [name ...]\n"
+# define E_SYNTAX_P			SHELL ": syntax error near unexpected token '%s'\n"
+# define E_P_NOT_VAL_HERE	SHELL ": '%s' is not a valid heredoc delimiter\n"
 # define E_P_BAD_FD			SHELL ": %s: bad file descriptor\n"
 # define E_FAIL_DUP_FD		SHELL ": failed to duplicate file descriptor\n"
 # define E_FD_CLOSE			SHELL ": failed to close file descriptor\n"
 # define E_NO_PERM_NO_SUCH	SHELL ": no perm / no such file or directory\n"
+# define E_NO_SUCH_P		SHELL ": no such file or directory: %s\n"
+# define E_P_IS_DIR			SHELL ": %s: is a directory\n"
+# define E_P_BAD_SUBS		SHELL ": %.*s: bad substitution\n"
+# define E_P_CMD_NOT_FOUND	SHELL ": %s: command not found.\n"
+# define E_FAIL_OPEN_P		SHELL ": failed to open/create %s\n"
+# define E_FAIL_EXEC_P		SHELL ": failed to execute %s\n"
+# define E_NO_PIPE			SHELL ": unable to create pipe"
 # define E_P_BAD_REDIR		SHELL ": %s: bad redirect\n"
 # define E_N_P_INV_OPT		SHELL ": %s: -%c: invalid option\n"
 # define E_ALLOC_STR		SHELL ": failed to allocate enough memory\n"
 # define E_N_ALLOC_STR		SHELL ": %s: failed to allocate enough memory\n"
-# define E_N_PER_DEN		SHELL ": %s: Permission denied\n"
-# define E_N_PER_DEN_P		SHELL ": %s: Permission denied: %s\n"
+# define E_N_PER_DEN		SHELL ": %s: permission denied\n"
+# define E_N_PER_DEN_P		SHELL ": %s: permission denied: %s\n"
 # define E_N_P_NOT_FOUND	SHELL ": %s: %s: not found\n"
 # define E_N_P_NUM_REQ		SHELL ": %s: %s: numeric argument required\n"
 # define E_N_TOO_MANY		SHELL ": %s: too many arguments\n"
 # define E_N_P_NOT_VAL_ID	SHELL ": %s: '%s': not a valid identifier\n
+# define E_N_FAIL_HOME		SHELL ": %s: failed to get home directory\n"
 # define E_NOT_CUR_DIR		SHELL ": cannot get current working directory\n"
 # define E_NOT_RESET		SHELL ": could not reset terminal settings\n"
 # define E_STAT_STR			SHELL ": could not get stat info of file\n"
+# define E_STAT_P			SHELL ": could not get stat info of %s\n"
 # define E_ALLOC_STR		SHELL ": failed to allocate enough memory\n"
-# define E_FORK_STR			SHELL ": Fork Failed\n"
-# define E_HOME_NOTSET_STR 	SHELL ": Environment value HOME not set\n"
-# define E_HIST_READ_STR 	SHELL ": Failed to read history file\n"
-# define E_HIST_OPEN_STR 	SHELL ": Failed to open / create history file\n"
-# define E_ALIAS_OPEN_STR 	SHELL ": Failed to open alias file\n"
-# define E_ALIAS_READ_STR	SHELL ": Failed to read alias file\n"
+# define E_FORK_STR			SHELL ": fork Failed\n"
+# define E_HOME_NOTSET_STR 	SHELL ": environment value HOME not set\n"
+# define E_HIST_READ_STR 	SHELL ": failed to read history file\n"
+# define E_HIST_OPEN_STR 	SHELL ": failed to open / create history file\n"
+# define E_ALIAS_OPEN_STR 	SHELL ": failed to open alias file\n"
+# define E_ALIAS_READ_STR	SHELL ": failed to read alias file\n"
 # define E_ALIAS_INV_NAME	SHELL ": alias: `%.*s': invalid alias name\n"
 # define E_CD_CNG_DIR		SHELL ": cd: could not get current working directory parsing: %s\n"
 # define E_CD_NO_SUCH		SHELL ": cd: no such file or directory: %s\n"
 # define E_CD_NOT_DIR		SHELL ": cd: not a directory: %s\n"
 # define E_CD_P_NOT_SET		SHELL ": cd: %s: not set\n"
-# define E_ALLOC 420
+# define E_TERM_CNT_GET		SHELL ": couldn't get terminal attributes.\n"
+# define E_TERM_NOT_SET		SHELL ": term environment variable not set.\n"
+# define E_TERM_DB_NOT_F	SHELL ": terminfo database could not be found.\n"
+# define E_TERM_NO_SUCH		SHELL ": no such TERM entry in the database\n
+# define E_ALLOC 42
 # define E_DUP 100
 # define E_OPEN 101
 # define E_BADFD 102
