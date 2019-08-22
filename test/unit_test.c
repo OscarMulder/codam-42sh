@@ -6,7 +6,7 @@
 /*   By: omulder <omulder@student.codam.nl>           +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2019/04/18 16:37:32 by omulder        #+#    #+#                */
-/*   Updated: 2019/08/19 12:36:50 by mavan-he      ########   odam.nl         */
+/*   Updated: 2019/08/22 13:09:02 by omulder       ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -302,7 +302,7 @@ Test(lexer_error, one_item)
 	lst = NULL;
 	lexer_tokenlstaddback(&lst, START, NULL, 0);
 	lexer_error(NULL);
-	cr_expect_stderr_eq_str("vsh: lexer: malloc error\n");
+	cr_expect_stderr_eq_str("vsh: lexer: failed to allocate enough memory\n");
 }
 
 Test(lexer_error, long_list)
@@ -339,7 +339,7 @@ Test(lexer_error, long_list)
 	lexer_tokenlstaddback(&lst, PIPE, NULL, 0);
 	lexer_tokenlstaddback(&lst, END, NULL, 0);
 	lexer_error(NULL);
-	cr_expect_stderr_eq_str("vsh: lexer: malloc error\n");
+	cr_expect_stderr_eq_str("vsh: lexer: failed to allocate enough memory\n");
 }
 
 Test(lexer_error, all_items)
@@ -366,7 +366,7 @@ Test(lexer_error, all_items)
 	lexer_tokenlstaddback(&lst, NEWLINE, NULL, 0);
 	lexer_tokenlstaddback(&lst, END,  NULL, 0);
 	lexer_error(NULL);
-	cr_expect_stderr_eq_str("vsh: lexer: malloc error\n");
+	cr_expect_stderr_eq_str("vsh: lexer: failed to allocate enough memory\n");
 }
 
 /*
@@ -399,7 +399,7 @@ Test(lexer_tokenlstaddback, invalid_values)
 	lexer_tokenlstaddback(&lst, START, NULL, 0);
 	lexer_tokenlstaddback(&lst, ERROR, ft_strdup("testword"), 0);
 	lexer_error(NULL);
-	cr_expect_stderr_eq_str("vsh: lexer: malloc error\n");
+	cr_expect_stderr_eq_str("vsh: lexer: failed to allocate enough memory\n");
 }
 
 /*
@@ -754,7 +754,7 @@ Test(exec_find_bin, execnonexistent, .init=redirect_all_stdout)
 	cr_expect(parser_start(&lst, &ast) == FUNCT_SUCCESS);
 	exec_complete_command(ast, &vshdata);
 	cr_expect(g_state->exit_code == EXIT_NOTFOUND);
-	cr_expect_stderr_eq_str("vsh: idontexist: Command not found.\n");
+	cr_expect_stderr_eq_str("vsh: idontexist: command not found.\n");
 	parser_astdel(&ast);
 }
 

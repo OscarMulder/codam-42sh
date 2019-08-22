@@ -6,7 +6,7 @@
 /*   By: omulder <omulder@student.codam.nl>           +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2019/05/31 10:47:19 by tde-jong       #+#    #+#                */
-/*   Updated: 2019/08/18 16:17:10 by mavan-he      ########   odam.nl         */
+/*   Updated: 2019/08/22 11:25:02 by omulder       ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -34,7 +34,8 @@ void			signal_print_newline(int signum)
 	ft_putchar('\n');
 }
 
-static void		exec_bin(char *binary, char **args, char **vshenviron, t_termios *termios_p)
+static void		exec_bin(char *binary, char **args, char **vshenviron,
+t_termios *termios_p)
 {
 	pid_t	pid;
 	int		status;
@@ -50,7 +51,7 @@ static void		exec_bin(char *binary, char **args, char **vshenviron, t_termios *t
 	else
 	{
 		execve(binary, args, vshenviron);
-		ft_eprintf("vsh: failed to execute %s\n", binary);
+		ft_eprintf(E_FAIL_EXEC_P, binary);
 		exit(EXIT_FAILURE);
 	}
 	waitpid(pid, &status, WUNTRACED);
@@ -73,7 +74,7 @@ void			exec_external(char **args, t_vshdata *vshdata)
 	{
 		ft_strdel(&binary);
 		free(vshenviron);
-		ft_eprintf("vsh: failed to allocate enough memory!\n");
+		ft_eprintf(E_ALLOC_STR);
 		g_state->exit_code = EXIT_FAILURE;
 		return ;
 	}
