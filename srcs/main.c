@@ -6,7 +6,7 @@
 /*   By: jbrinksm <jbrinksm@student.codam.nl>         +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2019/04/10 20:29:49 by jbrinksm       #+#    #+#                */
-/*   Updated: 2019/08/22 15:26:05 by tde-jong      ########   odam.nl         */
+/*   Updated: 2019/08/22 15:36:57 by tde-jong      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -22,8 +22,7 @@ int		main(void)
 
 	if (isatty(STDIN_FILENO) != 1)
 	{
-		ft_eprintf("STDIN is not an open file descriptor referring to a "
-					"terminal\n");
+		ft_eprintf(E_STDIN_NOT_TTY);
 		return (EXIT_FAILURE);
 	}
 	g_state = (t_state*)ft_memalloc(sizeof(t_state));
