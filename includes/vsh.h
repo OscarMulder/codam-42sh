@@ -6,7 +6,7 @@
 /*   By: omulder <omulder@student.codam.nl>           +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2019/04/10 20:29:42 by jbrinksm       #+#    #+#                */
-/*   Updated: 2019/08/22 11:55:39 by omulder       ########   odam.nl         */
+/*   Updated: 2019/08/22 12:03:31 by omulder       ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -75,7 +75,7 @@
 # define E_TERM_CNT_GET		SHELL ": couldn't get terminal attributes.\n"
 # define E_TERM_NOT_SET		SHELL ": term environment variable not set.\n"
 # define E_TERM_DB_NOT_F	SHELL ": terminfo database could not be found.\n"
-# define E_TERM_NO_SUCH		SHELL ": no such TERM entry in the database\n
+# define E_TERM_NO_SUCH		SHELL ": no such TERM entry in the database\n"
 # define E_ALLOC 42
 # define E_DUP 100
 # define E_OPEN 101
