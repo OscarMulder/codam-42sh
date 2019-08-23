@@ -6,11 +6,7 @@
 #    By: omulder <omulder@student.codam.nl>           +#+                      #
 #                                                    +#+                       #
 #    Created: 2019/04/10 20:30:07 by jbrinksm       #+#    #+#                 #
-<<<<<<< HEAD
-#    Updated: 2019/08/23 13:07:55 by rkuijper      ########   odam.nl          #
-=======
-#    Updated: 2019/08/23 13:41:48 by jbrinksm      ########   odam.nl          #
->>>>>>> d3df5fc4c6f28686ffdf15ae27bc1195e1c0ea97
+#    Updated: 2019/08/23 14:54:48 by rkuijper      ########   odam.nl          #
 #                                                                              #
 # **************************************************************************** #
 
