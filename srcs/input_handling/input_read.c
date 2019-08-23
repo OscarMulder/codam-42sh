@@ -6,7 +6,7 @@
 /*   By: omulder <omulder@student.codam.nl>           +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2019/04/17 14:03:16 by jbrinksm       #+#    #+#                */
-/*   Updated: 2019/08/23 13:50:24 by jbrinksm      ########   odam.nl         */
+/*   Updated: 2019/08/23 14:27:12 by jbrinksm      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -64,6 +64,7 @@ t_inputdata	*init_inputdata(t_vshdata *vshdata)
 	new->hist_start = new->hist_index - 1;
 	new->hist_first = true;
 	new->history = vshdata->history;
+	new->cur_ws_col = -1;
 	return (new);
 }
 
@@ -178,9 +179,31 @@ int			input_read_special(t_inputdata *data, t_vshdata *vshdata)
 **	GL & HF
 */
 
+static int	input_resize_window_check(t_vshdata *vshdata, t_inputdata *data)
+{
+	struct winsize	new;
+	t_point			new_coords;
+
+	(void)vshdata;
+	new_coords.x = 1;
+	new_coords.y = 1;
+	ioctl(STDIN_FILENO, TIOCGWINSZ, &new);
+	if (data->cur_ws_col == -1)
+		data->cur_ws_col = new.ws_col;
+	else if (data->cur_ws_col != new.ws_col)
+	{
+		ft_eprintf("old x: %i - y: %i - col: %i\n", data->coords.x, data->coords.y, data->cur_ws_col);
+		new_coords.x = 1 + (data->coords.x % new.ws_col);
+		ft_eprintf("new x: %i - y: %i - col: %i\n", new_coords.x, new_coords.y, new.ws_col);
+		data->cur_ws_col = new.ws_col;
+	}
+	return (FUNCT_SUCCESS);
+}
+
 int			input_read(t_vshdata *vshdata /*will need ws.ws_col backup and cursor backup x and y*/)
 {
 	t_inputdata *data;
+	int			ret;
 
 	data = init_inputdata(vshdata);
 	if (data == NULL)
@@ -190,10 +213,12 @@ int			input_read(t_vshdata *vshdata /*will need ws.ws_col backup and cursor back
 		return (ft_free_return(data, FUNCT_ERROR));
 	while (true)
 	{
-		// get and compare new ws.ws_col
-		// ft_eprintf("BEF: index: >%i<\n", data->index);
-		if (read(STDIN_FILENO, &data->c, 1) == -1)
+		input_resize_window_check(vshdata, data);
+		ret = read(STDIN_FILENO, &data->c, 1);
+		if (ret == -1)
 			return (ft_free_return(data, FUNCT_ERROR));
+		else if (ret == 0)
+			continue ;
 		if (input_parse_ctrl_c(data, vshdata) == FUNCT_SUCCESS)
 			return (ft_free_return(data, NEW_PROMPT));
 		else if (input_read_ansi(data, vshdata) == FUNCT_FAILURE)

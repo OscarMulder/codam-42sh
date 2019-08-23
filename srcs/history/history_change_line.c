@@ -6,7 +6,7 @@
 /*   By: omulder <omulder@student.codam.nl>           +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2019/06/02 14:28:54 by mavan-he       #+#    #+#                */
-/*   Updated: 2019/08/23 11:58:16 by rkuijper      ########   odam.nl         */
+/*   Updated: 2019/08/23 14:31:07 by jbrinksm      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -23,7 +23,7 @@ static void	history_clear_line(t_inputdata *data, t_vshdata *vshdata)
 {
 	char	*tc_clear_lines_str;
 
-	(void)vshdata;
+	(void)vshdata; // remove tis bitch
 	curs_go_home(data);
 	tc_clear_lines_str = tgetstr("cd", NULL);
 	if (tc_clear_lines_str == NULL)
@@ -39,18 +39,21 @@ static int	malloc_and_copy(t_inputdata *data, char **line, char *str)
 	int len;
 
 	len = ft_strlen(str);
+	ft_eprintf("len: [%i] line: [%s] str: [%s] strlen: [%i]\n", data->len_max, *line, str, len);
 	if (len < data->len_max)
 	{
 		ft_bzero(*line, data->len_max);
 	}
 	else
 	{
-		data->len_max *= 2;
+		while (len > data->len_max)
+			data->len_max *= 2;
 		ft_strdel(&(*line));
 		*line = ft_strnew(data->len_max);
 		if (*line == NULL)
 			return (FUNCT_ERROR);
 	}
+	ft_eprintf("len: [%i] line: [%s] str: [%s] strlen: [%i]\n", data->len_max, *line, str, len);
 	ft_strcpy(*line, str);
 	return (FUNCT_SUCCESS);
 }

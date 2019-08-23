@@ -6,7 +6,7 @@
 /*   By: omulder <omulder@student.codam.nl>           +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2019/04/10 20:29:42 by jbrinksm       #+#    #+#                */
-/*   Updated: 2019/08/23 13:39:33 by jbrinksm      ########   odam.nl         */
+/*   Updated: 2019/08/23 13:53:53 by jbrinksm      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -523,6 +523,7 @@ typedef struct	s_inputdata
 	unsigned	len_cur;
 	t_history	**history;
 	t_point		coords;
+	int			cur_ws_col;
 }				t_inputdata;
 
 int				input_read(t_vshdata *vshdata);
