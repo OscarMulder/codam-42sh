@@ -6,7 +6,7 @@
 /*   By: omulder <omulder@student.codam.nl>           +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2019/06/02 14:28:54 by mavan-he       #+#    #+#                */
-/*   Updated: 2019/08/19 14:11:51 by jbrinksm      ########   odam.nl         */
+/*   Updated: 2019/08/23 11:58:16 by rkuijper      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -23,8 +23,8 @@ static void	history_clear_line(t_inputdata *data, t_vshdata *vshdata)
 {
 	char	*tc_clear_lines_str;
 
+	(void)vshdata;
 	curs_go_home(data);
-	ft_printf("\e[%iD", vshdata->prompt_len);
 	tc_clear_lines_str = tgetstr("cd", NULL);
 	if (tc_clear_lines_str == NULL)
 	{
@@ -32,7 +32,6 @@ static void	history_clear_line(t_inputdata *data, t_vshdata *vshdata)
 		return ; // do fatal shit
 	}
 	tputs(tc_clear_lines_str, 1, &ft_tputchar);
-	shell_display_prompt(vshdata, vshdata->cur_prompt_type);
 }
 
 static int	malloc_and_copy(t_inputdata *data, char **line, char *str)
@@ -82,7 +81,7 @@ int			history_change_line(t_inputdata *data, t_vshdata *vshdata,
 		else
 			ft_bzero(vshdata->line, data->len_max);
 	}
-	ft_putstr(vshdata->line);
+	input_print_str(data, vshdata->line);
 	data->index = data->len_cur = ft_strlen(vshdata->line);
 	return (FUNCT_SUCCESS);
 }

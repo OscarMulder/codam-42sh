@@ -6,7 +6,7 @@
 /*   By: omulder <omulder@student.codam.nl>           +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2019/05/16 13:33:54 by rkuijper       #+#    #+#                */
-/*   Updated: 2019/08/19 14:41:23 by rkuijper      ########   odam.nl         */
+/*   Updated: 2019/08/23 11:56:34 by rkuijper      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -101,55 +101,16 @@ int			ft_tputchar(int c)
 	return (1);
 }
 
-/*
-**	`ws` will be taken from data when Oscars resize function is finished.
-**
-**	A the string will be edited and reprinted from the point of insertion.
-*/
-
-static int	ft_iputstr(t_inputdata *data, char *str, int maxcol)
-{
-	int	i;
-	int j;
-	int res;
-
-	i = 0;
-	j = 0;
-	res = 0;
-	while (str[i] != '\0')
-	{
-		if (data->coords.x == maxcol)
-		{
-			write(1, &str[j], i - j);
-			ft_putchar('\n');
-			data->coords.y++;
-			data->coords.x = 0;
-			j = i;
-			res++;
-		}
-		else
-			data->coords.x++;
-		i++;
-	}
-	if (i != j)
-		write(1, &str[j], i - j);
-	return (res);
-}
-
-#include <sys/ioctl.h>
-
 int			input_parse_char(t_inputdata *data, t_vshdata *vshdata)
 {
-	struct winsize	ws;
 	int				old_index;
 
-	ioctl(STDIN_FILENO, TIOCGWINSZ, &ws);
 	if (ft_isprint(data->c))
 	{
 		if (add_char_at(data, &vshdata->line) == FUNCT_ERROR)
 			return (FUNCT_ERROR);
 		old_index = data->index;
-		ft_iputstr(data, vshdata->line + data->index, ws.ws_col);
+		input_print_str(data, vshdata->line + data->index);
 		data->index = data->len_cur;
 		curs_move_n_left(data, data->index - old_index - 1);
 	}

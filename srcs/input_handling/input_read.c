@@ -6,7 +6,7 @@
 /*   By: omulder <omulder@student.codam.nl>           +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2019/04/17 14:03:16 by jbrinksm       #+#    #+#                */
-/*   Updated: 2019/08/19 13:24:27 by rkuijper      ########   odam.nl         */
+/*   Updated: 2019/08/23 11:50:10 by rkuijper      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -59,94 +59,12 @@ t_inputdata	*init_inputdata(t_vshdata *vshdata)
 	new->index = 0;
 	new->len_cur = 0;
 	new->len_max = 64;
-	new->coords = (t_point){ vshdata->prompt_len, 0 };
+	new->coords = (t_point){ 1 + vshdata->prompt_len, 1 };
 	new->hist_index = find_start(vshdata->history);
 	new->hist_start = new->hist_index - 1;
 	new->hist_first = true;
 	new->history = vshdata->history;
 	return (new);
-}
-
-/*
-**	Sends termcap sequence which requests your cursors current location
-**	and then reads the response from STDIN.
-*/
-
-static char	*get_cursor_pos(void)
-{
-	char	*buf;
-	int		ret;
-
-	ft_putstr(TC_GETCURSORPOS);
-	buf = ft_strnew(100);
-	ret = read(STDIN_FILENO, buf, 100);
-	if (ret == -1)
-	{
-		ft_strdel(&buf);
-		return (NULL);
-	}
-	ft_eprintf("Cursor pos response: %s\n", buf + 1);
-	return (buf);
-}
-
-/*
-**	Beware: crappy function
-**
-**	Parses the response to get the current x pos or column (starts at 1).
-**	VERY DANGEROUS PLEASE IMPROVE IT.
-*/
-
-int		get_cursor_linepos(void)
-{
-	char	*response;
-	int		i;
-	int		res;
-
-	i = 0;
-	response = get_cursor_pos();
-	if (response == NULL)
-		return (-1);
-	while (response[i] != '\0' && response[i] != ';')
-		i++;
-	if (response[i] == '\0' || response[i + 1] == '\0'
-		|| ft_isdigit(response[i + 1]) == false)
-	{
-		ft_strdel(&response);
-		return (-1);
-	}
-	res = (short)ft_atoi(&response[i + 1]);
-	ft_strdel(&response);
-	return (res /*needs unsigned atoi and short  ret */);
-}
-
-/*
-**	Beware: crappy function
-**
-**	Parses the response to get the current y pos or row (starts at 1).
-**	VERY DANGEROUS PLEASE IMPROVE IT.
-*/
-
-int		get_cursor_rowpos(void)
-{
-	char	*response;
-	int		i;
-	int		res;
-
-	response = get_cursor_pos();
-	if (response == NULL)
-		return (-1);
-	i = 0;
-	while (response[i] != '\0' && response[i] != '[')
-		i++;
-	if (response[i] == '\0' || response[i + 1] == '\0'
-		|| ft_isdigit(response[i + 1]) == false)
-	{
-		ft_strdel(&response);
-		return (-1);
-	}
-	res = (short)ft_atoi(&response[i + 1]);
-	ft_strdel(&response);
-	return (res /*needs unsigned atoi and short  ret */);
 }
 
 /*
