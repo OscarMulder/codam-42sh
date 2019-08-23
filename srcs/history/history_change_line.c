@@ -6,7 +6,7 @@
 /*   By: omulder <omulder@student.codam.nl>           +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2019/06/02 14:28:54 by mavan-he       #+#    #+#                */
-/*   Updated: 2019/08/23 14:31:07 by jbrinksm      ########   odam.nl         */
+/*   Updated: 2019/08/23 14:33:15 by jbrinksm      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -39,21 +39,19 @@ static int	malloc_and_copy(t_inputdata *data, char **line, char *str)
 	int len;
 
 	len = ft_strlen(str);
-	ft_eprintf("len: [%i] line: [%s] str: [%s] strlen: [%i]\n", data->len_max, *line, str, len);
 	if (len < data->len_max)
 	{
 		ft_bzero(*line, data->len_max);
 	}
 	else
 	{
-		while (len > data->len_max)
+		while (len >= data->len_max)
 			data->len_max *= 2;
 		ft_strdel(&(*line));
 		*line = ft_strnew(data->len_max);
 		if (*line == NULL)
 			return (FUNCT_ERROR);
 	}
-	ft_eprintf("len: [%i] line: [%s] str: [%s] strlen: [%i]\n", data->len_max, *line, str, len);
 	ft_strcpy(*line, str);
 	return (FUNCT_SUCCESS);
 }

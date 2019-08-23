@@ -6,7 +6,7 @@
 /*   By: omulder <omulder@student.codam.nl>           +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2019/05/16 13:33:54 by rkuijper       #+#    #+#                */
-/*   Updated: 2019/08/23 11:56:34 by rkuijper      ########   odam.nl         */
+/*   Updated: 2019/08/23 14:33:07 by jbrinksm      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -51,7 +51,8 @@ static int	add_char_at(t_inputdata *data, char **line)
 	}
 	else
 	{
-		data->len_max *= 2;
+		while (len >= data->len_max)
+			data->len_max *= 2;
 		tmp = ft_strnew(data->len_max);
 		if (tmp == NULL)
 			return (FUNCT_ERROR);
