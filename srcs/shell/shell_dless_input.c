@@ -6,7 +6,7 @@
 /*   By: jbrinksm <jbrinksm@student.codam.nl>         +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2019/06/02 13:23:16 by jbrinksm       #+#    #+#                */
-/*   Updated: 2019/08/22 11:37:08 by omulder       ########   odam.nl         */
+/*   Updated: 2019/08/23 10:23:29 by tde-jong      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -37,7 +37,7 @@ int			shell_dless_read_till_stop(char **heredoc, char *heredoc_delim,
 			*heredoc = ft_strjoinfree_s1(*heredoc, temp);
 		ft_strdel(&temp);
 		if (*heredoc == NULL)
-			return (FUNCT_ERROR);
+			return (err_ret(E_ALLOC_STR));
 	}
 	ft_strdel(&temp);
 	return (FUNCT_SUCCESS);
@@ -58,7 +58,7 @@ int			shell_dless_set_tk_val(t_tokenlst *probe, char **heredoc,
 			probe->value = ft_strnew(0);
 	}
 	if (probe->value == NULL)
-		return (FUNCT_ERROR);
+		return (err_ret(E_ALLOC_STR));
 	return (FUNCT_SUCCESS);
 }
 
@@ -81,12 +81,6 @@ static bool	is_valid_heredoc_delim(t_tokenlst *token)
 	return (true);
 }
 
-static int	return_alloc_error(int ret)
-{
-	ft_eprintf(E_N_ALLOC_STR, "heredoc");
-	return (ret);
-}
-
 int			shell_dless_input(t_vshdata *vshdata, t_tokenlst **token_lst)
 {
 	char		*heredoc;
@@ -105,7 +99,7 @@ int			shell_dless_input(t_vshdata *vshdata, t_tokenlst **token_lst)
 			heredoc_delim = ft_strjoin(probe->value, "\n");
 			if (heredoc_delim == NULL || shell_dless_set_tk_val(probe, &heredoc,
 			heredoc_delim, vshdata) == FUNCT_ERROR)
-				return_alloc_error(FUNCT_ERROR);
+				return (FUNCT_ERROR);
 			ft_strdel(&heredoc);
 			ft_strdel(&heredoc_delim);
 		}
