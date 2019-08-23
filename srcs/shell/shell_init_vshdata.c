@@ -6,7 +6,7 @@
 /*   By: mavan-he <mavan-he@student.codam.nl>         +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2019/07/29 12:42:44 by mavan-he       #+#    #+#                */
-/*   Updated: 2019/08/19 14:09:55 by jbrinksm      ########   odam.nl         */
+/*   Updated: 2019/08/23 12:05:30 by rkuijper      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,6 +16,7 @@ int		shell_init_vshdata(t_vshdata *vshdata)
 {
 	vshdata->line = NULL;
 	vshdata->aliaslst = NULL;
+	vshdata->line_copy = NULL;
 	vshdata->prompt_name = "vsh ";
 	vshdata->prompt_seperator = "> ";
 	vshdata->prompt_addition = NULL;

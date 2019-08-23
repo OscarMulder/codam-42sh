@@ -6,7 +6,7 @@
 /*   By: omulder <omulder@student.codam.nl>           +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2019/05/16 13:33:54 by rkuijper       #+#    #+#                */
-/*   Updated: 2019/08/23 11:56:34 by rkuijper      ########   odam.nl         */
+/*   Updated: 2019/08/23 13:40:06 by rkuijper      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -41,12 +41,10 @@ static void	create_char_gap(char *line, int len, int gap_index)
 static int	add_char_at(t_inputdata *data, char **line)
 {
 	char		*tmp;
-	int			len;
 
-	len = data->len_cur;
-	if (len < data->len_max)
+	if (data->len_cur < data->len_max)
 	{
-		create_char_gap(*line, len, data->index);
+		create_char_gap(*line, data->len_cur, data->index);
 		(*line)[data->index] = data->c;
 	}
 	else
@@ -57,7 +55,7 @@ static int	add_char_at(t_inputdata *data, char **line)
 			return (FUNCT_ERROR);
 		ft_strcpy(tmp, *line);
 		ft_strdel(line);
-		create_char_gap(tmp, len, data->index);
+		create_char_gap(tmp, data->len_cur, data->index);
 		tmp[data->index] = data->c;
 		*line = tmp;
 	}
@@ -75,11 +73,9 @@ static int	add_char_at(t_inputdata *data, char **line)
 static int	add_newline(t_inputdata *data, char **line)
 {
 	char		*tmp;
-	int			len;
 
-	len = data->len_cur;
-	if (len < data->len_max)
-		(*line)[len] = '\n';
+	if (data->len_cur < data->len_max)
+		(*line)[data->len_cur] = '\n';
 	else
 	{
 		data->len_max += 1;
@@ -88,7 +84,7 @@ static int	add_newline(t_inputdata *data, char **line)
 			return (FUNCT_ERROR);
 		ft_strcpy(tmp, *line);
 		ft_strdel(line);
-		tmp[len] = '\n';
+		tmp[data->len_cur] = '\n';
 		*line = tmp;
 	}
 	data->len_cur++;

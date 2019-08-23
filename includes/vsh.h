@@ -6,7 +6,7 @@
 /*   By: omulder <omulder@student.codam.nl>           +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2019/04/10 20:29:42 by jbrinksm       #+#    #+#                */
-/*   Updated: 2019/08/23 11:55:27 by rkuijper      ########   odam.nl         */
+/*   Updated: 2019/08/23 13:39:28 by rkuijper      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -264,6 +264,7 @@ typedef struct	s_vshdata
 	char		*history_file;
 	char		*alias_file;
 	char		*line;
+	char		*line_copy;
 	int			prompt_len;
 	int			cur_prompt_type;
 	char		*prompt_name;
@@ -431,6 +432,8 @@ void			term_free_struct(t_term **term_p);
 # define INPUT_CTRL_C '\3'
 # define INPUT_CTRL_D '\4'
 # define INPUT_CTRL_K '\v'
+# define INPUT_CTRL_U 21
+# define INPUT_CTRL_Y 25
 
 typedef struct	s_point
 {
@@ -446,7 +449,7 @@ typedef struct	s_inputdata
 	int			hist_start;
 	int			hist_first;
 	unsigned	index;
-	int			len_max;
+	unsigned	len_max;
 	unsigned	len_cur;
 	t_history	**history;
 	t_point		coords;
@@ -484,6 +487,8 @@ void			curs_move_prev_word(t_inputdata *data, t_vshdata *vshdata);
 int				input_parse_ctrl_c(t_inputdata *data, t_vshdata *vshdata);
 int				input_parse_ctrl_d(t_inputdata *data, t_vshdata *vshdata);
 int				input_parse_ctrl_k(t_inputdata *data, t_vshdata *vshdata);
+int				input_parse_ctrl_u(t_inputdata *data, t_vshdata *vshdata);
+void			input_parse_ctrl_y(t_inputdata *data, t_vshdata *vshdata);
 
 /*
 **----------------------------------shell---------------------------------------

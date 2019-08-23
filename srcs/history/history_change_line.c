@@ -6,7 +6,7 @@
 /*   By: omulder <omulder@student.codam.nl>           +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2019/06/02 14:28:54 by mavan-he       #+#    #+#                */
-/*   Updated: 2019/08/23 11:58:16 by rkuijper      ########   odam.nl         */
+/*   Updated: 2019/08/23 13:41:16 by rkuijper      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,11 +19,10 @@
 **	be cleared from that line and onwards. A new prompt will be displayed.
 */
 
-static void	history_clear_line(t_inputdata *data, t_vshdata *vshdata)
+static void	history_clear_line(t_inputdata *data)
 {
 	char	*tc_clear_lines_str;
 
-	(void)vshdata;
 	curs_go_home(data);
 	tc_clear_lines_str = tgetstr("cd", NULL);
 	if (tc_clear_lines_str == NULL)
@@ -36,7 +35,7 @@ static void	history_clear_line(t_inputdata *data, t_vshdata *vshdata)
 
 static int	malloc_and_copy(t_inputdata *data, char **line, char *str)
 {
-	int len;
+	unsigned	len;
 
 	len = ft_strlen(str);
 	if (len < data->len_max)
@@ -66,7 +65,7 @@ static int	set_line(t_inputdata *data, char **line)
 int			history_change_line(t_inputdata *data, t_vshdata *vshdata,
 		char arrow)
 {
-	history_clear_line(data, vshdata);
+	history_clear_line(data);
 	if (arrow == ARROW_UP)
 	{
 		if (history_index_change_up(data))

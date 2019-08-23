@@ -6,14 +6,12 @@
 /*   By: omulder <omulder@student.codam.nl>           +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2019/04/17 14:03:16 by jbrinksm       #+#    #+#                */
-/*   Updated: 2019/08/23 11:50:10 by rkuijper      ########   odam.nl         */
+/*   Updated: 2019/08/23 14:08:15 by rkuijper      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "vsh.h"
 #include <unistd.h>
-#include <sys/ioctl.h> // REMOVE
-#include <term.h> //remove
 
 void		input_clear_char_at(char **line, unsigned index)
 {
@@ -127,56 +125,14 @@ int			input_read_special(t_inputdata *data, t_vshdata *vshdata)
 		input_parse_ctrl_d(data, vshdata);
 	else if (data->c == INPUT_CTRL_K)
 		input_parse_ctrl_k(data, vshdata);
+	else if (data->c == INPUT_CTRL_U)
+		input_parse_ctrl_u(data, vshdata);
+	else if (data->c == INPUT_CTRL_Y)
+		input_parse_ctrl_y(data, vshdata);
 	else
 		return (FUNCT_FAILURE);
 	return (FUNCT_SUCCESS);
 }
-
-/*
-**	Welcome Rob!
-**	I have left you many comments to help you understand why and how I have
-**	changed a lot (basically all) of the functions. Before you read it all,
-**	I want to let you know a handy debugging tip which is the following:
-**	1. run vsh as `./vsh 2>TAILME.log`
-**	2. Open a second terminal window and run `tail -f TAILME.log`
-**	3. Profit from all the debug messages that get displayed.
-**	4. ???
-**
-**	The new input read will loop forever until a '\n' is caught, or any other
-**	return is given.
-**
-**	In the loop:
-**
-**	First, the current screen size will be
-**	compared with the saved size. If the size changed, oscars function will
-**	make sure that everything is reprinted, and that the cursor and index
-**	will be properly recovered. (NO FUNCTIONS AFTER THIS SHOULD HAVE TO DEAL
-**	WITH CHANGES TO THE SCREEN SO THEY WILL BE ENTIRELY DEPENDANT ON PROPER
-**	RESIZE HANDLING)
-**
-**	Then, one char is read, if this char is a `\e`, input_read_ansi is used
-**	to read the totality of the escape sequence into a buffer. If the escape
-**	sequence is supported, we run the corresponding function, otherwise it
-**	should be ignored.
-**
-**	If the char has any other special meaning like INPUT_BACKSPACE or
-**	INPUT_CTRL_D and is handled.
-**
-**	Any other char will be parsed by input_parse_char. If it happened to be
-**	a '\n' the input reading is complete, and we break.
-**
-**
-**	PS: As you can see I got rid of your char/input state system, because it
-**	didn't need to be that complicated (:
-**
-**	PPS: Please use functions like `get_cursor_rowpos` (and maybe also ioctl),
-**	as sparingly as possible because they can REALLY make the shell lag like a
-**	bitch and also glitch out because it then can't handle the input speed.
-**	Also, try to be as efficient as possible with using termcaps for
-**	for example cursor movement. (But I think you already knew that.)
-**
-**	GL & HF
-*/
 
 int			input_read(t_vshdata *vshdata /*will need ws.ws_col backup and cursor backup x and y*/)
 {
@@ -190,8 +146,6 @@ int			input_read(t_vshdata *vshdata /*will need ws.ws_col backup and cursor back
 		return (ft_free_return(data, FUNCT_ERROR));
 	while (true)
 	{
-		// get and compare new ws.ws_col
-		// ft_eprintf("BEF: index: >%i<\n", data->index);
 		if (read(STDIN_FILENO, &data->c, 1) == -1)
 			return (ft_free_return(data, FUNCT_ERROR));
 		if (input_parse_ctrl_c(data, vshdata) == FUNCT_SUCCESS)
