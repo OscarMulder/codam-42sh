@@ -6,30 +6,74 @@
 /*   By: rkuijper <rkuijper@student.codam.nl>         +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2019/08/23 11:54:27 by rkuijper       #+#    #+#                */
-/*   Updated: 2019/08/23 11:56:15 by rkuijper      ########   odam.nl         */
+/*   Updated: 2019/08/23 12:40:23 by jbrinksm      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include <vsh.h>
 #include <sys/ioctl.h>
 
+static int	get_total_newlines(t_inputdata *data, unsigned short maxcol, char *str)
+{
+	int	total_newlines;
+	int x_copy;
+	int	i;
+
+	total_newlines = 0;
+	x_copy = data->coords.x;
+	i = 0;
+	while (str[i] != '\0')
+	{
+		x_copy++;
+		if (x_copy > maxcol)
+		{
+			total_newlines++;
+			x_copy = 1;
+		}
+		i++;
+	}
+	return (total_newlines);
+}
+
+static void	fill_strbuf(t_inputdata *data, unsigned short maxcol, char **strbuf, char *str)
+{
+	int str_i;
+	int	strbuf_i;
+
+	str_i = 0;
+	strbuf_i = 0;
+	while (str[str_i] != '\0')
+	{
+		(*strbuf)[strbuf_i] = str[str_i];
+		str_i++;
+		strbuf_i++;
+		data->coords.x++;
+		if (data->coords.x > maxcol)
+		{
+			(*strbuf)[strbuf_i] = '\n';
+			strbuf_i++;
+			data->coords.y++;
+			data->coords.x = 1;
+		}
+	}
+}
+
+// STILL NEEDS TO RETURN SHIT WHEN IT FAILS
+
 void	input_print_str(t_inputdata *data, char *str)
 {
 	int				i;
 	struct winsize	ws;
+	char			*strbuf;
+	int				total_newlines;
 
 	i = 0;
 	ioctl(STDIN_FILENO, TIOCGWINSZ, &ws);
-	while (str[i] != '\0')
-	{
-		ft_putchar(str[i]);
-		data->coords.x++;
-		if (data->coords.x > ws.ws_col)
-		{
-			ft_putchar('\n');
-			data->coords.y++;
-			data->coords.x = 1;
-		}
-		i++;
-	}
+	total_newlines = get_total_newlines(data, ws.ws_col, str);
+	strbuf = ft_strnew(ft_strlen(str) + total_newlines);
+	if (strbuf == NULL)
+		return ; // GO CRAZY <-----------------
+	fill_strbuf(data, ws.ws_col, &strbuf, str);
+	ft_putstr(strbuf);
+	ft_strdel(&strbuf);
 }
