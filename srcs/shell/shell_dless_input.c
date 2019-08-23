@@ -6,7 +6,7 @@
 /*   By: jbrinksm <jbrinksm@student.codam.nl>         +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2019/06/02 13:23:16 by jbrinksm       #+#    #+#                */
-/*   Updated: 2019/08/23 10:23:29 by tde-jong      ########   odam.nl         */
+/*   Updated: 2019/08/23 12:56:41 by tde-jong      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -26,7 +26,7 @@ int			shell_dless_read_till_stop(char **heredoc, char *heredoc_delim,
 	{
 		ft_putstr("> ");
 		if (input_read(vshdata, &temp, &status) == FUNCT_ERROR)
-			return (FUNCT_ERROR);
+			return (ft_free_return(temp, FUNCT_ERROR));
 		done = ft_strequ(temp, heredoc_delim);
 		ft_putstr("\n");
 		if (done == true)
@@ -58,7 +58,11 @@ int			shell_dless_set_tk_val(t_tokenlst *probe, char **heredoc,
 			probe->value = ft_strnew(0);
 	}
 	if (probe->value == NULL)
-		return (err_ret(E_ALLOC_STR));
+	{
+		ft_strdel(heredoc);
+		ft_strdel(&heredoc_delim);
+		return (FUNCT_ERROR);
+	}
 	return (FUNCT_SUCCESS);
 }
 
