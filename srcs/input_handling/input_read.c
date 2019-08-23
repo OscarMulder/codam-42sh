@@ -6,14 +6,12 @@
 /*   By: omulder <omulder@student.codam.nl>           +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2019/04/17 14:03:16 by jbrinksm       #+#    #+#                */
-/*   Updated: 2019/08/23 18:06:26 by jbrinksm      ########   odam.nl         */
+/*   Updated: 2019/08/23 18:12:17 by jbrinksm      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "vsh.h"
 #include <unistd.h>
-#include <sys/ioctl.h> // REMOVE
-#include <term.h> //remove
 
 void		input_clear_char_at(char **line, unsigned index)
 {
@@ -128,6 +126,10 @@ int			input_read_special(t_inputdata *data, t_vshdata *vshdata)
 		input_parse_ctrl_d(data, vshdata);
 	else if (data->c == INPUT_CTRL_K)
 		input_parse_ctrl_k(data, vshdata);
+	else if (data->c == INPUT_CTRL_U)
+		input_parse_ctrl_u(data, vshdata);
+	else if (data->c == INPUT_CTRL_Y)
+		input_parse_ctrl_y(data, vshdata);
 	else
 		return (FUNCT_FAILURE);
 	return (FUNCT_SUCCESS);
@@ -238,7 +240,6 @@ static int	input_resize_window_check(t_vshdata *vshdata, t_inputdata *data)
 int			input_read(t_vshdata *vshdata /*will need ws.ws_col backup and cursor backup x and y*/)
 {
 	t_inputdata *data;
-	int			ret;
 
 	data = init_inputdata(vshdata);
 	if (data == NULL)
@@ -248,12 +249,8 @@ int			input_read(t_vshdata *vshdata /*will need ws.ws_col backup and cursor back
 		return (ft_free_return(data, FUNCT_ERROR));
 	while (true)
 	{
-		input_resize_window_check(vshdata, data);
-		ret = read(STDIN_FILENO, &data->c, 1);
-		if (ret == -1)
+		if (read(STDIN_FILENO, &data->c, 1) == -1)
 			return (ft_free_return(data, FUNCT_ERROR));
-		else if (ret == 0)
-			continue ;
 		if (input_parse_ctrl_c(data, vshdata) == FUNCT_SUCCESS)
 			return (ft_free_return(data, NEW_PROMPT));
 		else if (input_read_ansi(data, vshdata) == FUNCT_FAILURE)
