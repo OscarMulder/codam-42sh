@@ -6,7 +6,7 @@
 /*   By: omulder <omulder@student.codam.nl>           +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2019/04/18 16:44:50 by omulder        #+#    #+#                */
-/*   Updated: 2019/08/19 14:10:59 by jbrinksm      ########   odam.nl         */
+/*   Updated: 2019/08/23 13:48:31 by jbrinksm      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -45,7 +45,7 @@ int		shell_start(t_vshdata *vshdata)
 	token_lst = NULL;
 	ast = NULL;
 	pipes = redir_init_pipestruct();
-	env_add_extern_value(vshdata->envlst, "OLDPWD", "");
+	env_add_extern_value(vshdata, "OLDPWD", "");
 	while (true)
 	{
 		ft_strdel(&vshdata->line);
@@ -59,26 +59,16 @@ int		shell_start(t_vshdata *vshdata)
 		ft_putchar('\n');
 		if (history_line_to_array(vshdata->history, &vshdata->line) == FUNCT_ERROR)
 			continue ;
-		#ifdef DEBUG
-		ft_printf("\n>>>> LINE <<<<\n%s\n\n>>>> TOKEN_LST <<<<\n", vshdata->line);
-		#endif
 		if (lexer(&vshdata->line, &token_lst) != FUNCT_SUCCESS)
 			continue ;
 		if (shell_dless_input(vshdata, &token_lst) != FUNCT_SUCCESS)
 			continue ;
 		if (alias_expansion(vshdata, &token_lst, NULL) != FUNCT_SUCCESS)
 			continue ;
-		#ifdef DEBUG
- 		lexer_tokenlstiter(token_lst, print_node);
-		#endif
 		if ((token_lst->next)->type == NEWLINE)
 			continue ;
 		if (parser_start(&token_lst, &ast) != FUNCT_SUCCESS)
 			continue ;
-		#ifdef DEBUG
-		ft_putstr("\n\n\nTREE:\n\n");
-		print_tree(ast);
-		#endif
 		exec_complete_command(ast, vshdata);
 	}
 	return (FUNCT_SUCCESS);

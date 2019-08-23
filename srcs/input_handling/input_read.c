@@ -6,7 +6,7 @@
 /*   By: omulder <omulder@student.codam.nl>           +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2019/04/17 14:03:16 by jbrinksm       #+#    #+#                */
-/*   Updated: 2019/08/23 14:08:15 by rkuijper      ########   odam.nl         */
+/*   Updated: 2019/08/23 14:53:32 by rkuijper      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -62,6 +62,7 @@ t_inputdata	*init_inputdata(t_vshdata *vshdata)
 	new->hist_start = new->hist_index - 1;
 	new->hist_first = true;
 	new->history = vshdata->history;
+	new->cur_ws_col = -1;
 	return (new);
 }
 
@@ -137,6 +138,7 @@ int			input_read_special(t_inputdata *data, t_vshdata *vshdata)
 int			input_read(t_vshdata *vshdata /*will need ws.ws_col backup and cursor backup x and y*/)
 {
 	t_inputdata *data;
+	int			ret;
 
 	data = init_inputdata(vshdata);
 	if (data == NULL)
@@ -148,6 +150,8 @@ int			input_read(t_vshdata *vshdata /*will need ws.ws_col backup and cursor back
 	{
 		if (read(STDIN_FILENO, &data->c, 1) == -1)
 			return (ft_free_return(data, FUNCT_ERROR));
+		else if (ret == 0)
+			continue ;
 		if (input_parse_ctrl_c(data, vshdata) == FUNCT_SUCCESS)
 			return (ft_free_return(data, NEW_PROMPT));
 		else if (input_read_ansi(data, vshdata) == FUNCT_FAILURE)
@@ -157,7 +161,10 @@ int			input_read(t_vshdata *vshdata /*will need ws.ws_col backup and cursor back
 				if (input_parse_char(data, vshdata) == FUNCT_ERROR)
 					return (ft_free_return(data, FUNCT_ERROR));
 				if (data->c == '\n')
+				{
+					curs_go_end(data, vshdata);
 					break ;
+				}
 			}
 		}
 		ft_eprintf("AFT: index: %i/%i\n", data->index, data->len_cur); // DEBUG PRINT

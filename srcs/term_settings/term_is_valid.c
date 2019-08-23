@@ -6,7 +6,7 @@
 /*   By: jbrinksm <jbrinksm@student.codam.nl>         +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2019/04/18 18:16:49 by jbrinksm       #+#    #+#                */
-/*   Updated: 2019/08/07 16:42:46 by jbrinksm      ########   odam.nl         */
+/*   Updated: 2019/08/23 13:39:54 by jbrinksm      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -26,14 +26,14 @@ int		term_is_valid(t_envlst *envlst)
 	term_type = env_getvalue("TERM", envlst);
 	if (term_type == NULL)
 	{
-		ft_eprintf("Term env not set.\n");
+		ft_eprintf(E_TERM_NOT_SET);
 		return (FUNCT_FAILURE);
 	}
 	ret = tgetent(NULL, term_type);
 	if (ret == -1)
-		ft_eprintf("Terminfo database could not be found.\n");
+		ft_eprintf(E_TERM_DB_NOT_F);
 	if (ret == 0)
-		ft_eprintf("No such TERM entry in the database\n");
+		ft_eprintf(E_TERM_NO_SUCH);
 	if (ret == -1 || ret == 0)
 		return (FUNCT_FAILURE);
 	return (FUNCT_SUCCESS);

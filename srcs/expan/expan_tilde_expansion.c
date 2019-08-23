@@ -1,12 +1,12 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        ::::::::            */
-/*   expan_tilde_expansion.c                             :+:    :+:            */
+/*   expan_tilde_expansion.c                            :+:    :+:            */
 /*                                                     +:+                    */
 /*   By: mavan-he <mavan-he@student.codam.nl>         +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2019/08/02 13:50:51 by mavan-he       #+#    #+#                */
-/*   Updated: 2019/08/03 11:12:33 by jbrinksm      ########   odam.nl         */
+/*   Updated: 2019/08/19 18:19:16 by omulder       ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -20,7 +20,7 @@
 static int	return_error(int ret, int error)
 {
 	if (error == E_ALLOC)
-		ft_eprintf("vsh: failed to allocate enough memory\n");
+		ft_eprintf(E_ALLOC_STR);
 	return (ret);
 }
 
@@ -56,7 +56,7 @@ int			expan_tilde_expansion(t_ast *node, int *i)
 	home = getenv("HOME");
 	if (home == NULL)
 	{
-		ft_eprintf("vsh: tilde: failed to get home directory\n");
+		ft_eprintf(E_N_FAIL_HOME, "tilde");
 		return (FUNCT_ERROR);
 	}
 	return (add_home_to_value(node, i, home));

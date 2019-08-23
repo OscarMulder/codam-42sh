@@ -6,7 +6,7 @@
 /*   By: jbrinksm <jbrinksm@student.codam.nl>         +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2019/08/02 15:03:51 by jbrinksm       #+#    #+#                */
-/*   Updated: 2019/08/02 17:47:44 by jbrinksm      ########   odam.nl         */
+/*   Updated: 2019/08/19 18:32:08 by omulder       ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -24,13 +24,12 @@ static int	return_and_free(int ret, char **newpath, char **currpath)
 */
 
 static int		cd_post_process_var(char *currpath, char *newpath,
-t_envlst *envlst, char cd_flag)
+t_vshdata *vshdata, char cd_flag)
 {
 	if (newpath == NULL)
 		return (cd_alloc_error());
-	if (env_add_extern_value(envlst, "OLDPWD", currpath) == FUNCT_ERROR)
+	if (env_add_extern_value(vshdata, "OLDPWD", currpath) == FUNCT_ERROR)
 		return (cd_alloc_error());
-
 	if (cd_flag == BUILTIN_CD_UP)
 	{
 		ft_strdel(&newpath);
@@ -38,7 +37,7 @@ t_envlst *envlst, char cd_flag)
 		if (newpath == NULL)
 			return (cd_alloc_error());
 	}
-	if (env_add_extern_value(envlst, "PWD", newpath) == FUNCT_ERROR)
+	if (env_add_extern_value(vshdata, "PWD", newpath) == FUNCT_ERROR)
 		return (cd_alloc_error());
 	return (FUNCT_SUCCESS);
 }
@@ -54,7 +53,7 @@ t_envlst *envlst, char cd_flag)
 **	Afterwards, PWD and OLDPWD are set appropriately.
 */
 
-int			builtin_cd_change_dir(char *argpath, t_envlst *envlst, char cd_flag,
+int			builtin_cd_change_dir(char *argpath, t_vshdata *vshdata, char cd_flag,
 				int print)
 {
 	char		*pwd;
@@ -62,7 +61,7 @@ int			builtin_cd_change_dir(char *argpath, t_envlst *envlst, char cd_flag,
 	char		*newpath;
 
 	newpath = NULL;
-	pwd = env_getvalue("PWD", envlst);
+	pwd = env_getvalue("PWD", vshdata->envlst);
 	if (cd_flag == BUILTIN_CD_UL && pwd != NULL)
 		currpath = ft_strdup(pwd);
 	else
@@ -79,7 +78,7 @@ int			builtin_cd_change_dir(char *argpath, t_envlst *envlst, char cd_flag,
 		ft_putendl(argpath);
 	if (newpath == NULL)
 		newpath = getcwd(NULL, 0);
-	if (cd_post_process_var(currpath, newpath, envlst, cd_flag) == FUNCT_ERROR)
+	if (cd_post_process_var(currpath, newpath, vshdata, cd_flag) == FUNCT_ERROR)
 		return (return_and_free(FUNCT_ERROR, &newpath, &currpath));
 	return (return_and_free(FUNCT_SUCCESS, &newpath, &currpath));
 }

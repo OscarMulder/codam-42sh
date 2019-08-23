@@ -6,7 +6,7 @@
 /*   By: jbrinksm <jbrinksm@student.codam.nl>         +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2019/06/02 13:23:16 by jbrinksm       #+#    #+#                */
-/*   Updated: 2019/08/07 11:17:30 by jbrinksm      ########   odam.nl         */
+/*   Updated: 2019/08/23 13:41:30 by jbrinksm      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -65,13 +65,13 @@ static bool	is_valid_heredoc_delim(t_tokenlst *token)
 	g_state->exit_code = EXIT_FAILURE;
 	if (token->type != WORD && token->type != ASSIGN)
 	{
-		ft_eprintf("vsh: syntax error near unexpected token '%s'\n",
+		ft_eprintf(E_SYNTAX_P,
 			parser_return_token_str(token->type));
 		return (false);
 	}
 	if (token->value == NULL)
 	{
-		ft_eprintf("vsh: '%s' is not a valid heredoc delimiter\n",
+		ft_eprintf(E_P_NOT_VAL_HERE,
 			token->value);
 		return (false);
 	}
@@ -81,7 +81,7 @@ static bool	is_valid_heredoc_delim(t_tokenlst *token)
 
 static int	return_alloc_error(int ret)
 {
-	ft_eprintf("vsh: failed to allocate memory for heredoc\n");
+	ft_eprintf(E_N_ALLOC_STR, "heredoc");
 	return (ret);
 }
 
