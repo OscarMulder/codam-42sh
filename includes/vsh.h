@@ -6,13 +6,13 @@
 /*   By: omulder <omulder@student.codam.nl>           +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2019/04/10 20:29:42 by jbrinksm       #+#    #+#                */
-/*   Updated: 2019/08/23 11:55:27 by rkuijper      ########   odam.nl         */
+/*   Updated: 2019/08/23 13:39:33 by jbrinksm      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
 #ifndef VSH_H
 # define VSH_H
-# define DEBUG
+// # define DEBUG
 # include <sys/stat.h>
 # include <fcntl.h>
 
@@ -20,21 +20,65 @@
 **==================================defines=====================================
 */
 
+# define SHELL				"vsh"
 # define FUNCT_FAILURE 0
 # define FUNCT_SUCCESS 1
 # define FUNCT_ERROR -1
 # define PROG_FAILURE 1
 # define PROG_SUCCESS 0
 # define NEW_PROMPT -1
-# define E_STAT_STR "vsh: could not get stat info of file\n"
-# define E_ALLOC_STR "vsh: failed to allocate enough memory\n"
-# define E_FORK_STR "vsh: Fork Failed\n"
-# define E_HOME_NOTSET_STR "vsh: Environment value HOME not set\n"
-# define E_HIST_READ_STR "vsh: Failed to read history file\n"
-# define E_HIST_OPEN_STR "vsh: Failed to open / create history file\n"
-# define E_ALIAS_OPEN_STR "vsh: Failed to open alias file\n"
-# define E_ALIAS_READ_STR "vsh: Failed to read alias file\n"
-# define E_ALLOC 420
+# define U_ALIAS			"alias: usage: alias [-p] [name[=value] ... ]\n"
+# define U_CD				"cd: usage: cd [-L|-P] [dir]\n"
+# define U_EXPORT			"export: usage: export [-n] [name[=value] ...] or export -p"
+# define U_HASH				"hash: usage: hash [-r] [utility ...]\n"
+# define U_UNALIAS			"unalias: usage: unalias [-a] name [name ...]\n"
+# define U_SET				"set: usage: set\n"
+# define E_SYNTAX_P			SHELL ": syntax error near unexpected token '%s'\n"
+# define E_P_NOT_VAL_HERE	SHELL ": '%s' is not a valid heredoc delimiter\n"
+# define E_P_BAD_FD			SHELL ": %s: bad file descriptor\n"
+# define E_FAIL_DUP_FD		SHELL ": failed to duplicate file descriptor\n"
+# define E_FD_CLOSE			SHELL ": failed to close file descriptor\n"
+# define E_NO_PERM_NO_SUCH	SHELL ": no perm / no such file or directory\n"
+# define E_NO_SUCH_P		SHELL ": no such file or directory: %s\n"
+# define E_P_IS_DIR			SHELL ": %s: is a directory\n"
+# define E_P_BAD_SUBS		SHELL ": %.*s: bad substitution\n"
+# define E_P_CMD_NOT_FOUND	SHELL ": %s: command not found.\n"
+# define E_FAIL_OPEN_P		SHELL ": failed to open/create %s\n"
+# define E_FAIL_EXEC_P		SHELL ": failed to execute %s\n"
+# define E_NO_PIPE			SHELL ": unable to create pipe"
+# define E_P_BAD_REDIR		SHELL ": %s: bad redirect\n"
+# define E_N_P_INV_OPT		SHELL ": %s: -%c: invalid option\n"
+# define E_ALLOC_STR		SHELL ": failed to allocate enough memory\n"
+# define E_N_ALLOC_STR		SHELL ": %s: failed to allocate enough memory\n"
+# define E_N_PER_DEN		SHELL ": %s: permission denied\n"
+# define E_N_PER_DEN_P		SHELL ": %s: permission denied: %s\n"
+# define E_N_P_NOT_FOUND	SHELL ": %s: %s: not found\n"
+# define E_N_P_NUM_REQ		SHELL ": %s: %s: numeric argument required\n"
+# define E_N_TOO_MANY		SHELL ": %s: too many arguments\n"
+# define E_N_P_NOT_VAL_ID	SHELL ": %s: '%s': not a valid identifier\n"
+# define E_N_FAIL_HOME		SHELL ": %s: failed to get home directory\n"
+# define E_NOT_CUR_DIR		SHELL ": cannot get current working directory\n"
+# define E_NOT_RESET		SHELL ": could not reset terminal settings\n"
+# define E_STAT_STR			SHELL ": could not get stat info of file\n"
+# define E_STAT_P			SHELL ": could not get stat info of %s\n"
+# define E_ALLOC_STR		SHELL ": failed to allocate enough memory\n"
+# define E_FORK_STR			SHELL ": fork failed\n"
+# define E_HOME_NOTSET_STR 	SHELL ": environment value HOME not set\n"
+# define E_HIST_READ_STR 	SHELL ": failed to read history file\n"
+# define E_HIST_OPEN_STR 	SHELL ": failed to open / create history file\n"
+# define E_ALIAS_OPEN_STR 	SHELL ": failed to open alias file\n"
+# define E_ALIAS_READ_STR	SHELL ": failed to read alias file\n"
+# define E_ALIAS_INV_NAME	SHELL ": alias: `%.*s': invalid alias name\n"
+# define E_CD_CNG_DIR		SHELL ": cd: could not get current working directory parsing: %s\n"
+# define E_CD_NO_SUCH		SHELL ": cd: no such file or directory: %s\n"
+# define E_CD_NOT_DIR		SHELL ": cd: not a directory: %s\n"
+# define E_CD_P_NOT_SET		SHELL ": cd: %s: not set\n"
+# define E_TERM_CNT_GET		SHELL ": couldn't get terminal attributes.\n"
+# define E_TERM_NOT_SET		SHELL ": term environment variable not set.\n"
+# define E_TERM_DB_NOT_F	SHELL ": terminfo database could not be found.\n"
+# define E_TERM_NO_SUCH		SHELL ": no such TERM entry in the database\n"
+# define E_STDIN_NOT_TTY	SHELL ": STDIN does not refer to a terminal\n"
+# define E_ALLOC 42
 # define E_DUP 100
 # define E_OPEN 101
 # define E_BADFD 102
@@ -87,6 +131,18 @@
 # define ALIASFILENAME		".vsh_alias"
 # define ALIAS_MAX	500
 
+
+/*
+**-----------------------------------hash--------------------------------------
+*/
+
+# define HT_SIZE			100
+# define HT_EMPTY			0
+# define HT_HAS_CONTENT		1
+# define HASH_LR			(1 << 0)
+# define HASH_HIT			1
+# define HASH_NO_HIT		0
+
 /*
 **-----------------------------------builtin------------------------------------
 */
@@ -132,6 +188,7 @@
 
 
 # define ENV_MASK 0xF8
+# define ENV_TMP_OVERWRITE (1 << 4)
 # define ENV_SPECIAL (1 << 3)
 # define ENV_EXTERN (1 << 2)
 # define ENV_LOCAL (1 << 1)
@@ -215,7 +272,6 @@
 typedef struct	s_state
 {
 	int				exit_code;
-	struct termios	*termios_p;
 }				t_state;
 
 t_state *g_state;
@@ -252,6 +308,30 @@ typedef struct	s_aliaslst
 }				t_aliaslst;
 
 /*
+**------------------------------------hashtable----------------------------------
+*/
+
+typedef struct	s_ht
+{
+	char			*key;
+	char			*path;
+	int				hits;
+	struct s_ht		*next;
+}				t_ht;
+
+/*
+**-----------------------------------term---------------------------------------
+*/
+
+typedef struct termios	t_termios;
+
+typedef struct	s_term
+{
+	t_termios	*old_termios_p;
+	t_termios	*termios_p;
+}				t_term;
+
+/*
 **-----------------------------------vsh_data-----------------------------------
 */
 
@@ -260,6 +340,7 @@ typedef struct	s_vshdata
 	t_envlst	*envlst;
 	t_history	**history;
 	t_aliaslst	*aliaslst;
+	t_term		*term;
 	int			stdfds[3];
 	char		*history_file;
 	char		*alias_file;
@@ -269,6 +350,8 @@ typedef struct	s_vshdata
 	char		*prompt_name;
 	char		*prompt_seperator;
 	char		*prompt_addition;
+	t_ht		*ht[HT_SIZE];
+	char		ht_flag;
 }				t_vshdata;
 
 typedef enum	e_prompt_type
@@ -277,16 +360,6 @@ typedef enum	e_prompt_type
 	QUOTE_PROMPT,
 	DQUOTE_PROMPT
 }				t_prompt_type;
-
-/*
-**-----------------------------------term---------------------------------------
-*/
-
-typedef struct	s_term
-{
-	struct termios	*old_termios_p;
-	struct termios	*termios_p;
-}				t_term;
 
 /*
 **----------------------------------lexer--------------------------------------
@@ -392,7 +465,7 @@ void		env_lstdel(t_envlst **envlst);
 void   		env_remove_tmp(t_envlst *env);
 void		env_sort(t_envlst *head);
 void		env_lstadd_to_sortlst(t_envlst *envlst, t_envlst *new);
-int			env_add_extern_value(t_envlst *envlst, char *name, char *value);
+int			env_add_extern_value(t_vshdata *vshdata, char *name, char *value);
 
 /*
 **----------------------------------terminal------------------------------------
@@ -553,6 +626,7 @@ int				alias_replace(t_vshdata *vshdata, t_tokenlst *probe, char *alias, char **
 int				alias_error(char **line, t_tokenlst **tokenlst, char ***expanded);
 int				alias_read_file(t_vshdata *vshdata);
 char			**alias_add_expanded(char **expanded, char *alias, char *alias_equal);
+char			*alias_getvalue(char *var_key, t_aliaslst *aliaslst);
 
 
 /*
@@ -577,14 +651,15 @@ bool			parser_cmd_suffix(t_tokenlst **token_lst, t_ast **cmd,
 **----------------------------------builtins------------------------------------
 */
 
+void			builtin_hash(char **args, t_vshdata *vshdata);
 void			builtin_exit(char **args, t_vshdata *vshdata);
 void			builtin_echo(char **args);
 char			builtin_echo_set_flags(char **args, int *arg_i);
-void			builtin_export(char **args, t_envlst *envlst);
+void			builtin_export(char **args, t_vshdata *vshdata);
 void			builtin_export_var_to_type(char *varname, t_envlst *envlst, int type);
 void			builtin_export_print(t_envlst *envlst, int flags);
-void			builtin_export_args(char **args, t_envlst *envlst, int i);
-int				builtin_assign(char *arg, t_envlst *envlst, int env_type);
+void			builtin_export_args(char **args, t_vshdata *vshdata, int i);
+int				builtin_assign(char *arg, t_vshdata *vshdata, int env_type);
 int				builtin_assign_addexist(t_envlst *envlst, char *var, int env_type);
 int				builtin_assign_addnew(t_envlst *envlst, char *var, int env_type);
 void			builtin_set(char **args, t_envlst *envlst);
@@ -594,9 +669,10 @@ int				builtin_alias_set(char *arg, t_aliaslst **aliaslst);
 void			builtin_alias_delnode(t_aliaslst **node);
 void			builtin_alias_lstdel(t_aliaslst **lst);
 void			builtin_unalias(char **args, t_aliaslst **aliaslst);
-int				builtin_cd(char **args, t_envlst *envlst);
+void			builtin_type(char **args, t_envlst *envlst, t_aliaslst *aliaslst);
+int				builtin_cd(char **args, t_vshdata *vshdata);
 void			builtin_cd_create_newpath(char **newpath, char *argpath);
-int				builtin_cd_change_dir(char *argpath, t_envlst *envlst,
+int				builtin_cd_change_dir(char *argpath, t_vshdata *vshdata,
 					char cd_flag, int print);
 char			*builtin_cd_create_newpath_wrap(char *currpath, char *argpath);
 int				cd_print_usage(void);
@@ -637,6 +713,7 @@ void			exec_cmd(char **args, t_vshdata *vshdata);
 bool			exec_builtin(char **args, t_vshdata *vshdata);
 void			exec_external(char **args, t_vshdata *vshdata);
 int				exec_find_binary(char *filename, t_vshdata *vshdata, char **binary);
+int				find_binary(char *filename, t_envlst *envlst, char **binary);
 void			exec_quote_remove(t_ast *node);
 int				exec_validate_binary(char *binary);
 int    			exec_create_files(t_ast *ast);
@@ -689,6 +766,17 @@ int				history_change_line(t_inputdata *data, t_vshdata *vshdata,
 					char arrow);
 int				history_index_change_down(t_inputdata *data);
 int				history_index_change_up(t_inputdata *data);
+
+/*
+**--------------------------------hashtable-------------------------------------
+*/
+
+int				hash_ht_insert(t_vshdata *vshdata, char *key, char *path, int count);
+void			hash_print(t_ht **ht);
+void			hash_reset(t_vshdata *vshdata);
+void			hash_init(t_vshdata *vshdata);
+unsigned int	hash_create_hash(char *key);
+int				hash_check(t_vshdata *vshdata, char *key, char **binary);
 
 /*
 **--------------------------------error_handling--------------------------------

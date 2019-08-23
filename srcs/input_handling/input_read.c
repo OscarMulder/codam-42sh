@@ -6,7 +6,7 @@
 /*   By: omulder <omulder@student.codam.nl>           +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2019/04/17 14:03:16 by jbrinksm       #+#    #+#                */
-/*   Updated: 2019/08/23 11:50:10 by rkuijper      ########   odam.nl         */
+/*   Updated: 2019/08/23 13:50:24 by jbrinksm      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -203,7 +203,10 @@ int			input_read(t_vshdata *vshdata /*will need ws.ws_col backup and cursor back
 				if (input_parse_char(data, vshdata) == FUNCT_ERROR)
 					return (ft_free_return(data, FUNCT_ERROR));
 				if (data->c == '\n')
+				{
+					curs_go_end(data, vshdata);
 					break ;
+				}
 			}
 		}
 		ft_eprintf("AFT: index: %i/%i\n", data->index, data->len_cur); // DEBUG PRINT
