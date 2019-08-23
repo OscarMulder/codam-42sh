@@ -6,7 +6,7 @@
 /*   By: omulder <omulder@student.codam.nl>           +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2019/04/17 14:03:16 by jbrinksm       #+#    #+#                */
-/*   Updated: 2019/08/23 14:53:32 by rkuijper      ########   odam.nl         */
+/*   Updated: 2019/08/23 14:55:57 by rkuijper      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -138,7 +138,6 @@ int			input_read_special(t_inputdata *data, t_vshdata *vshdata)
 int			input_read(t_vshdata *vshdata /*will need ws.ws_col backup and cursor backup x and y*/)
 {
 	t_inputdata *data;
-	int			ret;
 
 	data = init_inputdata(vshdata);
 	if (data == NULL)
@@ -150,8 +149,6 @@ int			input_read(t_vshdata *vshdata /*will need ws.ws_col backup and cursor back
 	{
 		if (read(STDIN_FILENO, &data->c, 1) == -1)
 			return (ft_free_return(data, FUNCT_ERROR));
-		else if (ret == 0)
-			continue ;
 		if (input_parse_ctrl_c(data, vshdata) == FUNCT_SUCCESS)
 			return (ft_free_return(data, NEW_PROMPT));
 		else if (input_read_ansi(data, vshdata) == FUNCT_FAILURE)
