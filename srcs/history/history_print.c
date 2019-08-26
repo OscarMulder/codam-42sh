@@ -6,7 +6,7 @@
 /*   By: mavan-he <mavan-he@student.codam.nl>         +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2019/05/30 20:47:41 by mavan-he       #+#    #+#                */
-/*   Updated: 2019/08/24 14:33:46 by omulder       ########   odam.nl         */
+/*   Updated: 2019/08/26 15:18:19 by omulder       ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -52,8 +52,6 @@ static char	*add_tabs_after_newlines(char *str)
 			count++;
 		i++;
 	}
-	if (count == 0)
-		return (ft_strdup(str));
 	new = ft_strnew(i + count);
 	if (new == NULL)
 		return (NULL);
