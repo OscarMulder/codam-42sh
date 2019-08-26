@@ -6,7 +6,7 @@
 /*   By: omulder <omulder@student.codam.nl>           +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2019/06/02 14:28:54 by mavan-he       #+#    #+#                */
-/*   Updated: 2019/08/23 14:52:08 by rkuijper      ########   odam.nl         */
+/*   Updated: 2019/08/23 15:09:50 by rkuijper      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,11 +19,11 @@
 **	be cleared from that line and onwards. A new prompt will be displayed.
 */
 
-static void	history_clear_line(t_inputdata *data)
+static void	history_clear_line(t_inputdata *data, t_vshdata *vshdata)
 {
 	char	*tc_clear_lines_str;
 
-	curs_go_home(data);
+	curs_go_home(data, vshdata);
 	tc_clear_lines_str = tgetstr("cd", NULL);
 	if (tc_clear_lines_str == NULL)
 	{
@@ -66,7 +66,7 @@ static int	set_line(t_inputdata *data, char **line)
 int			history_change_line(t_inputdata *data, t_vshdata *vshdata,
 		char arrow)
 {
-	history_clear_line(data);
+	history_clear_line(data, vshdata);
 	if (arrow == ARROW_UP)
 	{
 		if (history_index_change_up(data))

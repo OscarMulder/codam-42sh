@@ -6,7 +6,11 @@
 /*   By: omulder <omulder@student.codam.nl>           +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2019/04/17 14:03:16 by jbrinksm       #+#    #+#                */
+<<<<<<< HEAD
 /*   Updated: 2019/08/26 13:31:44 by jbrinksm      ########   odam.nl         */
+=======
+/*   Updated: 2019/08/26 11:47:49 by rkuijper      ########   odam.nl         */
+>>>>>>> deca367785f0d96cc0fc7c70ce71a5b52375c2fe
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -83,11 +87,11 @@ int			input_read_ansi(t_inputdata *data, t_vshdata *vshdata)
 		if (read(STDIN_FILENO, &termcapbuf[1], TERMCAPBUFFSIZE - 1) == -1)
 			return (FUNCT_ERROR);
 		if (ft_strequ(termcapbuf, TC_LEFT_ARROW) == true)
-			curs_move_left(data);
+			curs_move_left(data, vshdata);
 		else if (ft_strequ(termcapbuf, TC_RIGHT_ARROW) == true)
 			curs_move_right(data, vshdata);
 		else if (ft_strequ(termcapbuf, TC_HOME) == true)
-			curs_go_home(data);
+			curs_go_home(data, vshdata);
 		else if (ft_strequ(termcapbuf, TC_END) == true)
 			curs_go_end(data, vshdata);
 		else if (ft_strequ(termcapbuf, TC_DELETE) == true)
@@ -205,16 +209,16 @@ static int	input_resize_window_check(t_vshdata *vshdata, t_inputdata *data)
 		newlines = newlines * ((data->cur_ws_col / new.ws_col) + extra);
 		if (data->coords.x - 1 > 0)
 			ft_printf("\e[%iD", data->coords.x - 1);
+		ft_eprintf("NEWLINES: %i\n", newlines);
 		if (newlines > 0)
 			ft_printf("\e[%iA", newlines);
-		tc_clear_lines_str = tgoto(tgetstr("cd", NULL), 0, 1);
+		tc_clear_lines_str = tgetstr("cd", NULL);
 		if (tc_clear_lines_str == NULL)
 		{
 			ft_eprintf("ERROR\n"); // DEBUG PRINT
 			return (FUNCT_ERROR); // do fatal shit
 		}
 		tputs(tc_clear_lines_str, 1, &ft_tputchar);
-		sleep(1);
 		shell_display_prompt(vshdata, vshdata->cur_prompt_type);
 		sleep(1);
 		data->index = data->len_cur;

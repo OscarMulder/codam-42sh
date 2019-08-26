@@ -6,7 +6,7 @@
 /*   By: omulder <omulder@student.codam.nl>           +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2019/05/16 13:44:53 by rkuijper       #+#    #+#                */
-/*   Updated: 2019/08/19 14:36:45 by rkuijper      ########   odam.nl         */
+/*   Updated: 2019/08/26 12:47:04 by rkuijper      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -28,21 +28,18 @@ int			input_handle_delete(t_inputdata *data, t_vshdata *vshdata)
 	{
 		ft_memcpy(&saved_coord, &data->coords, sizeof(t_point));
 		input_clear_char_at(&vshdata->line, data->index);
-		ft_putstr("\e[s"); //save cursor pos
-		saved_index = data->index; //save index
-		curs_go_home(data);
+		ft_putstr("\e[s");
+		saved_index = data->index;
+		curs_go_home(data, vshdata);
 		ft_printf("\e[%iD", vshdata->prompt_len);
-		tc_clear_lines_str = tgoto(tgetstr("dc", NULL), 0, 1);
+		tc_clear_lines_str = tgetstr("cd", NULL);
 		if (tc_clear_lines_str == NULL)
-		{
-			ft_eprintf("ERROR\n"); // DEBUG PRINT
-			return (FUNCT_ERROR); // do fatal shit
-		}
-		tputs(tc_clear_lines_str, 20, &ft_tputchar);
+			return (FUNCT_ERROR);
+		tputs(tc_clear_lines_str, 1, &ft_tputchar);
 		shell_display_prompt(vshdata, vshdata->cur_prompt_type);
-		ft_putstr(vshdata->line);
-		ft_putstr("\e[u"); //recover cursor pos
-		data->index = saved_index; // recover index
+		input_print_str(data, vshdata->line);
+		ft_putstr("\e[u");
+		data->index = saved_index;
 		data->len_cur--;
 		ft_memcpy(&data->coords, &saved_coord, sizeof(t_point));
 	}

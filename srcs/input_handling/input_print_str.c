@@ -6,7 +6,7 @@
 /*   By: rkuijper <rkuijper@student.codam.nl>         +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2019/08/23 11:54:27 by rkuijper       #+#    #+#                */
-/*   Updated: 2019/08/26 13:00:41 by jbrinksm      ########   odam.nl         */
+/*   Updated: 2019/08/26 14:42:59 by jbrinksm      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -25,7 +25,7 @@ static int	get_total_newlines(t_inputdata *data, unsigned short maxcol, char *st
 	while (str[i] != '\0')
 	{
 		x_copy++;
-		if (x_copy > maxcol)
+		if (x_copy > maxcol || str[i] == '\n')
 		{
 			total_newlines++;
 			x_copy = 1;
@@ -45,6 +45,11 @@ static void	fill_strbuf(t_inputdata *data, unsigned short maxcol, char **strbuf,
 	while (str[str_i] != '\0')
 	{
 		(*strbuf)[strbuf_i] = str[str_i];
+		if (str[str_i] == '\n')
+		{
+			data->coords.x = 0;
+			data->coords.y++;
+		}
 		str_i++;
 		strbuf_i++;
 		data->coords.x++;

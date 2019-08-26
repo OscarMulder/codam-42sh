@@ -6,7 +6,7 @@
 /*   By: omulder <omulder@student.codam.nl>           +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2019/04/10 20:29:42 by jbrinksm       #+#    #+#                */
-/*   Updated: 2019/08/23 14:51:47 by rkuijper      ########   odam.nl         */
+/*   Updated: 2019/08/23 15:07:31 by rkuijper      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -543,8 +543,8 @@ int				tools_isprintnotblank(int i);
 void			input_handle_backspace(t_inputdata *data, t_vshdata *vshdata);
 int				input_handle_delete(t_inputdata *data, t_vshdata *vshdata);
 
-void			curs_move_left(t_inputdata *data);
-void			curs_move_n_left(t_inputdata *data, size_t n);
+void			curs_move_left(t_inputdata *data, t_vshdata *vshdata);
+void			curs_move_n_left(t_inputdata *data, t_vshdata *vshdata, size_t n);
 
 void			curs_move_right(t_inputdata *data, t_vshdata *vshdata);
 void			curs_move_n_right(t_inputdata *data, t_vshdata *vshdata, size_t n);
@@ -552,7 +552,7 @@ void			curs_move_n_right(t_inputdata *data, t_vshdata *vshdata, size_t n);
 void			curs_move_up(t_inputdata *data, t_vshdata *vshdata);
 void			curs_move_down(t_inputdata *data, t_vshdata *vshdata);
 
-int				curs_go_home(t_inputdata *data);
+int				curs_go_home(t_inputdata *data, t_vshdata *vshdata);
 int				curs_go_end(t_inputdata *data, t_vshdata *vshdata);
 
 void			curs_move_next_word(t_inputdata *data, t_vshdata *vshdata);

@@ -6,7 +6,7 @@
 /*   By: omulder <omulder@student.codam.nl>           +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2019/05/16 13:33:54 by rkuijper       #+#    #+#                */
-/*   Updated: 2019/08/23 14:52:39 by rkuijper      ########   odam.nl         */
+/*   Updated: 2019/08/23 15:06:00 by rkuijper      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -109,7 +109,7 @@ int			input_parse_char(t_inputdata *data, t_vshdata *vshdata)
 		old_index = data->index;
 		input_print_str(data, vshdata->line + data->index);
 		data->index = data->len_cur;
-		curs_move_n_left(data, data->index - old_index - 1);
+		curs_move_n_left(data, vshdata, data->index - old_index - 1);
 	}
 	else if (data->c == '\n')
 	{

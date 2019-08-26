@@ -6,7 +6,7 @@
 /*   By: omulder <omulder@student.codam.nl>           +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2019/05/16 13:41:00 by rkuijper       #+#    #+#                */
-/*   Updated: 2019/08/19 14:17:36 by rkuijper      ########   odam.nl         */
+/*   Updated: 2019/08/26 11:35:39 by rkuijper      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -45,30 +45,52 @@ void		curs_move_next_word(t_inputdata *data, t_vshdata *vshdata)
 **	for the automatic `index` change if necessary.
 */
 
+static void	move_right_parse_newline(t_inputdata *data, t_vshdata *vshdata)
+{
+	char *pos = ft_strrnchr(vshdata->line, '\n', data->index);
+	int len = data->index + vshdata->prompt_len;
+	if (pos != NULL)
+		len = (data->index - 1) - (pos - vshdata->line);
+	ft_putstr("\e[B");
+	if (len > 1)
+		ft_printf("\e[%iD", len);
+	data->coords.x = 1;
+	data->coords.y++;
+}
+
+static void	move_right_at_colmax(t_inputdata *data, int colmax)
+{
+	if (data->coords.x == colmax)
+	{
+		data->coords.x = 1;
+		data->coords.y++;
+		ft_printf("\e[B\e[%iD", colmax);
+	}
+	else
+	{
+		ft_putstr("\e[C");
+		data->coords.x++;
+	}
+}
+
 void		curs_move_n_right(t_inputdata *data, t_vshdata *vshdata, size_t n)
 {
 	struct winsize	ws;
-	int				down;
-	int				x_offset;
 
-	(void)vshdata;
-	if (n == 0 || data->len_cur == data->index)
+	if (n <= 0 || data->index == data->len_cur)
 		return ;
 	if (n > data->len_cur - data->index)
 		n = data->len_cur - data->index;
 	ioctl(STDIN_FILENO, TIOCGWINSZ, &ws);
-	down = ((data->coords.x - 1) + n) / ws.ws_col;
-	x_offset = (((data->coords.x - 1) + n) % ws.ws_col) - (data->coords.x - 1);
-	if (down > 0)
-		ft_printf("\e[%iB", down);
-	if (x_offset > 0)
-		ft_printf("\e[%iC", x_offset);
-	else if (x_offset < 0)
-		ft_printf("\e[%iD", x_offset * -1);
-	data->index += n;
-	data->coords.y += down;
-	data->coords.x += x_offset;
-	ft_eprintf("New coords: [%d:%d]\n", data->coords.x, data->coords.y);
+	while (n > 0)
+	{
+		if (vshdata->line[data->index] == '\n')
+			move_right_parse_newline(data, vshdata);
+		else
+			move_right_at_colmax(data, ws.ws_col);
+		n--;
+		data->index++;
+	}
 }
 
 /*
