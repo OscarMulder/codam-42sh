@@ -6,7 +6,7 @@
 /*   By: omulder <omulder@student.codam.nl>           +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2019/04/10 20:29:42 by jbrinksm       #+#    #+#                */
-/*   Updated: 2019/08/23 15:07:31 by rkuijper      ########   odam.nl         */
+/*   Updated: 2019/08/26 16:10:35 by jbrinksm      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -325,35 +325,82 @@ typedef struct	s_ht
 
 typedef struct termios	t_termios;
 
-typedef struct	s_term
-{
-	t_termios	*old_termios_p;
-	t_termios	*termios_p;
-}				t_term;
-
 /*
 **-----------------------------------vsh_data-----------------------------------
 */
 
-typedef struct	s_vshdata
+typedef struct	s_vshdataterm
 {
-	t_envlst	*envlst;
+	t_termios	*old_termios_p;
+	t_termios	*termios_p;
+}				t_vshdataterm;
+
+typedef struct	s_vshdatacurs
+{
+	t_point	coords;
+	int		cur_ws_col;
+}				t_vshdatacurs;
+
+typedef struct	s_vshdatahistory
+{
 	t_history	**history;
-	t_aliaslst	*aliaslst;
-	t_term		*term;
-	int			stdfds[3];
 	char		*history_file;
-	char		*alias_file;
+	int			hist_index;
+	int			hist_start;
+	int			hist_first;
+}				t_vshdatahistory;
+
+typedef struct	s_vshdataline
+{
 	char		*line;
 	char		*line_copy;
-	int			prompt_len;
-	int			cur_prompt_type;
-	char		*prompt_name;
-	char		*prompt_seperator;
-	char		*prompt_addition;
-	t_ht		*ht[HT_SIZE];
-	char		ht_flag;
-}				t_vshdata;
+	unsigned	index;
+	unsigned	len_max;
+	unsigned	len_cur;
+}				t_vshdataline;
+
+typedef struct	s_vshdataprompt
+{
+	char	*prompt_name;
+	char	*prompt_seperator;
+	char	*prompt_addition;
+	int		prompt_len;
+	int		cur_prompt_type;
+
+}				t_vshdataprompt;
+
+typedef struct	s_vshdatainput
+{	
+	char				c;
+}				t_vshdatainput;
+
+typedef struct	s_vshdatahashtable
+{
+	t_ht	*ht[HT_SIZE];
+	char	ht_flag;
+}				t_vshdatahashtable;
+
+typedef	struct	s_vshdataalias
+{
+	t_aliaslst	*aliaslst;
+	char		*alias_file;
+}				t_vshdataalias;
+
+#define UNINIT -1
+
+typedef struct	s_vshdata
+{
+	t_envlst			*envlst;
+	int					stdfds[3];
+	t_vshdataterm		*term;
+	t_vshdatacurs		*curs;
+	t_vshdatahistory	*history;
+	t_vshdataline		*line;
+	t_vshdataprompt		*prompt;
+	t_vshdatainput		*input;
+	t_vshdatahashtable	*hashtable;
+	t_vshdataalias		*alias;
+}					t_vshdata;
 
 typedef enum	e_prompt_type
 {
@@ -513,21 +560,6 @@ typedef struct	s_point
 	int			x;
 	int			y;
 }				t_point;
-
-
-typedef struct	s_inputdata
-{
-	char		c;
-	int			hist_index;
-	int			hist_start;
-	int			hist_first;
-	unsigned	index;
-	unsigned	len_max;
-	unsigned	len_cur;
-	t_history	**history;
-	t_point		coords;
-	int			cur_ws_col;
-}				t_inputdata;
 
 int				input_read(t_vshdata *vshdata);
 int				input_is_word_start(char *str, int i1, int i2);
