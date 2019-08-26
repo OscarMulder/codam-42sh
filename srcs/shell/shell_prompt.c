@@ -6,7 +6,7 @@
 /*   By: jbrinksm <jbrinksm@student.codam.nl>         +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2019/04/11 20:16:38 by jbrinksm       #+#    #+#                */
-/*   Updated: 2019/08/19 14:17:05 by jbrinksm      ########   odam.nl         */
+/*   Updated: 2019/08/26 15:33:07 by rkuijper      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -21,7 +21,6 @@ void	shell_get_valid_prompt(t_vshdata *vshdata, int prompt_type)
 	else
 		vshdata->prompt_name = "vsh ";
 	vshdata->prompt_seperator = "> ";
-	vshdata->prompt_addition = NULL;
 	if (vshdata->prompt_addition != NULL)
 		vshdata->prompt_len = ft_strlen(vshdata->prompt_name)
 			+ ft_strlen(vshdata->prompt_seperator)
@@ -33,20 +32,21 @@ void	shell_get_valid_prompt(t_vshdata *vshdata, int prompt_type)
 
 void	shell_display_prompt(t_vshdata *vshdata, int prompt_type)
 {
-	char *cwd;
+	char	*cwd;
 
 	cwd = env_getvalue("PWD", vshdata->envlst);
 	vshdata->prompt_addition = shell_getcurrentdir(cwd);
+	ft_eprintf("[%s]\n", vshdata->prompt_addition);
 	shell_get_valid_prompt(vshdata, prompt_type);
 	vshdata->cur_prompt_type = prompt_type;
 	if (prompt_type == REGULAR_PROMPT)
 		ft_printf(RED);
 	ft_printf("%s", vshdata->prompt_name);
-
-	// optional
 	if (vshdata->prompt_addition != NULL)
+	{
+		ft_printf(BLU);
 		ft_printf("%s ", vshdata->prompt_addition);
-
+	}
 	if (prompt_type == REGULAR_PROMPT && g_state->exit_code == EXIT_SUCCESS)
 		ft_printf(YEL);
 	else if (prompt_type == REGULAR_PROMPT)
