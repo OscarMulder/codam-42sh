@@ -6,7 +6,7 @@
 /*   By: mavan-he <mavan-he@student.codam.nl>         +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2019/05/30 20:47:41 by mavan-he       #+#    #+#                */
-/*   Updated: 2019/08/26 15:18:19 by omulder       ########   odam.nl         */
+/*   Updated: 2019/08/26 15:31:33 by omulder       ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,7 +17,7 @@
 ** Print the history
 */
 
-static char	*add_tabs(char *str, char *new)
+static int	add_tabs(char *str, char *new)
 {
 	int		i;
 	int		j;
@@ -35,14 +35,13 @@ static char	*add_tabs(char *str, char *new)
 		i++;
 		j++;
 	}
-	return (new);
+	return (true);
 }
 
-static char	*add_tabs_after_newlines(char *str)
+static int	add_tabs_after_newlines(char *str, char **new)
 {
 	int		i;
 	int		count;
-	char	*new;
 
 	i = 0;
 	count = 0;
@@ -52,51 +51,62 @@ static char	*add_tabs_after_newlines(char *str)
 			count++;
 		i++;
 	}
-	new = ft_strnew(i + count);
-	if (new == NULL)
-		return (NULL);
-	return (add_tabs(str, new));
+	if (count == 0)
+	{
+		*new = str;
+		return (false);
+	}
+	*new = ft_strnew(i + count);
+	if (*new == NULL)
+		return (false);
+	return (add_tabs(str, *new));
 }
 
-static void	find_start(t_history **history, int *smallest, int *start)
+static void	find_start(t_history **history, int *start)
 {
-	int i;
+	int		i;
+	int		smallest;
 
 	i = 0;
-	*smallest = HISTORY_MAX + 1;
+	smallest = HISTORY_MAX + 1;
 	while (i < HISTORY_MAX && history[i]->str != NULL)
 	{
-		if (history[i]->number < *smallest)
+		if (history[i]->number < smallest)
 		{
 			*start = i;
-			*smallest = history[i]->number;
+			smallest = history[i]->number;
 		}
 		i++;
 	}
 }
 
+void		print_history_line(t_history *history)
+{
+	int		ret;
+	char	*tmp;
+
+	ret = add_tabs_after_newlines(history->str, &tmp);
+	ft_printf("%d\t%s\n", history->number, tmp);
+	if (ret == true)
+		ft_strdel(&tmp);
+}
+
 void		history_print(t_history **history)
 {
 	int		i;
-	int		smallest;
 	int		start;
-	char	*tmp;
 
-	find_start(history, &smallest, &start);
+	find_start(history, &start);
 	i = start;
 	while (i < HISTORY_MAX && history[i]->str != NULL)
 	{
-		tmp = add_tabs_after_newlines(history[i]->str);
-		ft_printf("%d\t%s\n", history[i]->number, tmp);
-		ft_strdel(&tmp);
+		print_history_line(history[i]);
 		i++;
 	}
 	i = 0;
 	while (start != 0 && i < start && history[i]->str != NULL)
 	{
-		tmp = add_tabs_after_newlines(history[i]->str);
-		ft_printf("%d\t%s\n", history[i]->number, tmp);
-		ft_strdel(&tmp);
+		print_history_line(history[i]);
 		i++;
 	}
 }
