@@ -6,7 +6,7 @@
 /*   By: rkuijper <rkuijper@student.codam.nl>         +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2019/05/16 13:43:07 by rkuijper       #+#    #+#                */
-/*   Updated: 2019/08/19 14:36:21 by rkuijper      ########   odam.nl         */
+/*   Updated: 2019/08/23 15:07:56 by rkuijper      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -32,7 +32,7 @@ void		input_handle_backspace(t_inputdata *data, t_vshdata *vshdata)
 		ft_putstr("\e[s"); //save cursor pos
 		saved_index = data->index; //save index
 		
-		curs_go_home(data);
+		curs_go_home(data, vshdata);
 		ft_printf("\e[%iD", vshdata->prompt_len);
 		tc_clear_lines_str = tgetstr("cd", NULL);
 		if (tc_clear_lines_str == NULL)
@@ -47,6 +47,6 @@ void		input_handle_backspace(t_inputdata *data, t_vshdata *vshdata)
 		data->index = saved_index; // recover index
 		data->len_cur--;
 		ft_memcpy(&data->coords, &saved_coord, sizeof(t_point));
-		curs_move_left(data);
+		curs_move_left(data, vshdata);
 	}
 }

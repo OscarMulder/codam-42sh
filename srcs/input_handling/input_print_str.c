@@ -6,7 +6,7 @@
 /*   By: rkuijper <rkuijper@student.codam.nl>         +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2019/08/23 11:54:27 by rkuijper       #+#    #+#                */
-/*   Updated: 2019/08/23 12:40:23 by jbrinksm      ########   odam.nl         */
+/*   Updated: 2019/08/26 10:52:16 by rkuijper      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -25,7 +25,7 @@ static int	get_total_newlines(t_inputdata *data, unsigned short maxcol, char *st
 	while (str[i] != '\0')
 	{
 		x_copy++;
-		if (x_copy > maxcol)
+		if (x_copy > maxcol || str[i] == '\n')
 		{
 			total_newlines++;
 			x_copy = 1;
@@ -45,6 +45,11 @@ static void	fill_strbuf(t_inputdata *data, unsigned short maxcol, char **strbuf,
 	while (str[str_i] != '\0')
 	{
 		(*strbuf)[strbuf_i] = str[str_i];
+		if (str[str_i] == '\n')
+		{
+			data->coords.x = 0;
+			data->coords.y++;
+		}
 		str_i++;
 		strbuf_i++;
 		data->coords.x++;
@@ -72,7 +77,7 @@ void	input_print_str(t_inputdata *data, char *str)
 	total_newlines = get_total_newlines(data, ws.ws_col, str);
 	strbuf = ft_strnew(ft_strlen(str) + total_newlines);
 	if (strbuf == NULL)
-		return ; // GO CRAZY <-----------------
+		return ; // GO CRAZY woop woop <-----------------
 	fill_strbuf(data, ws.ws_col, &strbuf, str);
 	ft_putstr(strbuf);
 	ft_strdel(&strbuf);

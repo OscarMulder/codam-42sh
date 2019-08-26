@@ -6,7 +6,7 @@
 /*   By: rkuijper <rkuijper@student.codam.nl>         +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2019/05/16 13:48:04 by rkuijper       #+#    #+#                */
-/*   Updated: 2019/08/23 13:59:21 by rkuijper      ########   odam.nl         */
+/*   Updated: 2019/08/23 15:08:32 by rkuijper      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -23,7 +23,7 @@ int			input_parse_ctrl_k(t_inputdata *data, t_vshdata *vshdata)
 			ft_strdel(&vshdata->line_copy);
 		vshdata->line_copy = ft_strdup(&vshdata->line[data->index]);
 		ft_bzero(&vshdata->line[data->index], data->len_cur - data->index);
-		curs_go_home(data);
+		curs_go_home(data, vshdata);
 		ft_printf("\e[%iD", vshdata->prompt_len);
 		tc_clear_lines_str = tgetstr("cd", NULL);
 		if (tc_clear_lines_str == NULL)

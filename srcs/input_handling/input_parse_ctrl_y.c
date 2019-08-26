@@ -6,7 +6,7 @@
 /*   By: rkuijper <rkuijper@student.codam.nl>         +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2019/08/23 13:05:41 by rkuijper       #+#    #+#                */
-/*   Updated: 2019/08/23 14:49:11 by rkuijper      ########   odam.nl         */
+/*   Updated: 2019/08/23 15:09:17 by rkuijper      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -55,7 +55,7 @@ void		input_parse_ctrl_y(t_inputdata *data, t_vshdata *vshdata)
 		{
 			input_print_str(data, &vshdata->line[data->index]);
 			data->index = data->len_cur;
-			curs_move_n_left(data, data->index - old_index - copy_len);
+			curs_move_n_left(data, vshdata, data->index - old_index - copy_len);
 		}
 	}
 }

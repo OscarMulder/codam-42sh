@@ -6,7 +6,7 @@
 /*   By: omulder <omulder@student.codam.nl>           +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2019/05/16 13:44:53 by rkuijper       #+#    #+#                */
-/*   Updated: 2019/08/19 14:36:45 by rkuijper      ########   odam.nl         */
+/*   Updated: 2019/08/26 10:56:48 by rkuijper      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -30,9 +30,9 @@ int			input_handle_delete(t_inputdata *data, t_vshdata *vshdata)
 		input_clear_char_at(&vshdata->line, data->index);
 		ft_putstr("\e[s"); //save cursor pos
 		saved_index = data->index; //save index
-		curs_go_home(data);
+		curs_go_home(data, vshdata);
 		ft_printf("\e[%iD", vshdata->prompt_len);
-		tc_clear_lines_str = tgoto(tgetstr("dc", NULL), 0, 1);
+		tc_clear_lines_str = tgetstr("cd", NULL);
 		if (tc_clear_lines_str == NULL)
 		{
 			ft_eprintf("ERROR\n"); // DEBUG PRINT

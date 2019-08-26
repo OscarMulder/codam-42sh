@@ -6,7 +6,7 @@
 /*   By: omulder <omulder@student.codam.nl>           +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2019/04/17 14:03:16 by jbrinksm       #+#    #+#                */
-/*   Updated: 2019/08/23 14:55:57 by rkuijper      ########   odam.nl         */
+/*   Updated: 2019/08/23 15:07:41 by rkuijper      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -83,11 +83,11 @@ int			input_read_ansi(t_inputdata *data, t_vshdata *vshdata)
 		if (read(STDIN_FILENO, &termcapbuf[1], TERMCAPBUFFSIZE - 1) == -1)
 			return (FUNCT_ERROR);
 		if (ft_strequ(termcapbuf, TC_LEFT_ARROW) == true)
-			curs_move_left(data);
+			curs_move_left(data, vshdata);
 		else if (ft_strequ(termcapbuf, TC_RIGHT_ARROW) == true)
 			curs_move_right(data, vshdata);
 		else if (ft_strequ(termcapbuf, TC_HOME) == true)
-			curs_go_home(data);
+			curs_go_home(data, vshdata);
 		else if (ft_strequ(termcapbuf, TC_END) == true)
 			curs_go_end(data, vshdata);
 		else if (ft_strequ(termcapbuf, TC_DELETE) == true)

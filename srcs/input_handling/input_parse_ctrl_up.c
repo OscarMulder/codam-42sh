@@ -6,7 +6,7 @@
 /*   By: omulder <omulder@student.codam.nl>           +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2019/05/16 15:03:17 by rkuijper       #+#    #+#                */
-/*   Updated: 2019/08/19 14:42:45 by rkuijper      ########   odam.nl         */
+/*   Updated: 2019/08/23 15:09:04 by rkuijper      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -20,14 +20,13 @@
 
 void		curs_move_up(t_inputdata *data, t_vshdata *vshdata)
 {
-	struct winsize	ws; //WILL BE OSCARS DATA
+	struct winsize	ws;
 
-	(void)vshdata;
-	ioctl(STDIN_FILENO, TIOCGWINSZ, &ws); //WILL BE OSCARS DATA
+	ioctl(STDIN_FILENO, TIOCGWINSZ, &ws);
 	if (data->index == 0)
 		return ;
 	else if (data->index < ws.ws_col)
-		curs_go_home(data);
+		curs_go_home(data, vshdata);
 	else
 	{
 		ft_printf(CURS_UP);
