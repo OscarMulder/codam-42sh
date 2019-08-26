@@ -6,7 +6,7 @@
 /*   By: omulder <omulder@student.codam.nl>           +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2019/04/17 14:03:16 by jbrinksm       #+#    #+#                */
-/*   Updated: 2019/08/26 11:41:49 by rkuijper      ########   odam.nl         */
+/*   Updated: 2019/08/26 11:47:49 by rkuijper      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -193,7 +193,6 @@ static int	input_resize_window_check(t_vshdata *vshdata, t_inputdata *data)
 	unsigned		saved_index;
 	int				extra;
 
-	(void)vshdata;
 	ioctl(STDIN_FILENO, TIOCGWINSZ, &new);
 	if (data->cur_ws_col == -1)
 		data->cur_ws_col = new.ws_col;
@@ -210,30 +209,24 @@ static int	input_resize_window_check(t_vshdata *vshdata, t_inputdata *data)
 		newlines = newlines * ((data->cur_ws_col / new.ws_col) + extra);
 		if (data->coords.x - 1 > 0)
 			ft_printf("\e[%iD", data->coords.x - 1);
-		sleep (1);
 		ft_eprintf("NEWLINES: %i\n", newlines);
 		if (newlines > 0)
 			ft_printf("\e[%iA", newlines);
-		sleep (1);
-		tc_clear_lines_str = tgoto(tgetstr("cd", NULL), 0, 1);
+		tc_clear_lines_str = tgetstr("cd", NULL);
 		if (tc_clear_lines_str == NULL)
 		{
 			ft_eprintf("ERROR\n"); // DEBUG PRINT
 			return (FUNCT_ERROR); // do fatal shit
 		}
 		tputs(tc_clear_lines_str, 1, &ft_tputchar);
-		sleep(1);
 		shell_display_prompt(vshdata, vshdata->cur_prompt_type);
-		sleep(1);
 		data->index = ft_strlen(vshdata->line);
 		data->coords.x = 1 + vshdata->prompt_len;
 		data->coords.y = 1;
 		data->cur_ws_col = new.ws_col;
 		input_print_str(data, vshdata->line);
 		data->index = data->len_cur;
-		sleep(1);
 		curs_go_home(data, vshdata);
-		sleep(1);
 		curs_move_n_right(data, vshdata, saved_index);
 		ft_eprintf("new x: %i - y: %i - col: %i - nl: %i\n", new_coords.x, new_coords.y, new.ws_col, newlines);
 	}
