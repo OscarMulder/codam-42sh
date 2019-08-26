@@ -97,7 +97,7 @@ void		history_print(t_history **history)
 	while (start != 0 && i < start && history[i]->str != NULL)
 	{
 		tmp = add_tabs_after_newlines(history[i]->str);
-		ft_printf("%d\t%s\n", history[i]->number, history[i]->str);
+		ft_printf("%d\t%s\n", history[i]->number, tmp);
 		ft_strdel(&tmp);
 		i++;
 	}
