@@ -44,33 +44,33 @@ char	shell_quote_checker_find_quote(char *line)
 **	some termcaps shit.
 */
 
-int		shell_close_unclosed_quotes(t_vshdata *vshdata)
+int		shell_close_unclosed_quotes(t_vshdata *data)
 {
 	char	quote;
 	char	*line_tmp;
 
-	quote = shell_quote_checker_find_quote(vshdata->line);
+	quote = shell_quote_checker_find_quote(data->line);
 	while (quote != '\0')
 	{
-		line_tmp = vshdata->line;
-		vshdata->line = NULL;
+		line_tmp = data->line;
+		data->line = NULL;
 		ft_putchar('\n');
 		if (quote == '\'')
-			shell_display_prompt(vshdata, QUOTE_PROMPT);
+			shell_display_prompt(data, QUOTE_PROMPT);
 		else if (quote == '"')
-			shell_display_prompt(vshdata, DQUOTE_PROMPT);
-		if (input_read(vshdata) == FUNCT_ERROR)
+			shell_display_prompt(data, DQUOTE_PROMPT);
+		if (input_read(data) == FUNCT_ERROR)
 		{
 			ft_strdel(&line_tmp);
 			return (FUNCT_ERROR);
 		}
-		vshdata->line = ft_strjoinfree_all(line_tmp, vshdata->line);
-		if (vshdata->line == NULL)
+		data->line = ft_strjoinfree_all(line_tmp, data->line);
+		if (data->line == NULL)
 		{
 			ft_eprintf(E_ALLOC_STR);
 			return (FUNCT_ERROR);
 		}
-		quote = shell_quote_checker_find_quote(vshdata->line);
+		quote = shell_quote_checker_find_quote(data->line);
 	}
 	return (FUNCT_SUCCESS);
 }

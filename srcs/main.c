@@ -18,7 +18,7 @@
 
 int		main(void)
 {
-	t_vshdata	vshdata;
+	t_vshdata	data;
 
 	if (isatty(STDIN_FILENO) != 1)
 	{

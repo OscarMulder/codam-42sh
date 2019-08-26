@@ -29,24 +29,24 @@ static bool	remove_last_escaped_newline(char *line)
 	return (false);
 }
 
-int			shell_handle_escaped_newlines(t_vshdata *vshdata)
+int			shell_handle_escaped_newlines(t_vshdata *data)
 {
 	int		ret;
 	char	*line_tmp;
 
-	ret = remove_last_escaped_newline(vshdata->line);
+	ret = remove_last_escaped_newline(data->line);
 	if (ret == false)
 		return (FUNCT_FAILURE);
 	while (ret != false)
 	{
 		ft_putstr("\nlinecont> ");
-		line_tmp = vshdata->line;
-		vshdata->line = NULL;
-		input_read(vshdata);
-		vshdata->line = ft_strjoinfree_all(line_tmp, vshdata->line);
-		if (vshdata->line == NULL)
+		line_tmp = data->line;
+		data->line = NULL;
+		input_read(data);
+		data->line = ft_strjoinfree_all(line_tmp, data->line);
+		if (data->line == NULL)
 			return (FUNCT_ERROR); // print error func PLZ
-		ret = remove_last_escaped_newline(vshdata->line);
+		ret = remove_last_escaped_newline(data->line);
 	}
 	return (FUNCT_SUCCESS);
 }

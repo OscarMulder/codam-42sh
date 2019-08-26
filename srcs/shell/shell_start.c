@@ -20,23 +20,23 @@ void	lexer_tokenlstiter(t_tokenlst *lst, void (*f)(t_tokenlst *elem))
 	lexer_tokenlstiter(lst->next, f);
 }
 
-int		shell_close_quote_and_esc(t_vshdata *vshdata)
+int		shell_close_quote_and_esc(t_vshdata *data)
 {
 	int ret;
 
 	ret = FUNCT_SUCCESS;
 	while (ret == FUNCT_SUCCESS)
 	{
-		if (shell_close_unclosed_quotes(vshdata) == FUNCT_ERROR)
+		if (shell_close_unclosed_quotes(data) == FUNCT_ERROR)
 			return (FUNCT_ERROR);
-		ret = shell_handle_escaped_newlines(vshdata);
+		ret = shell_handle_escaped_newlines(data);
 		if (ret == FUNCT_ERROR)
 			return (FUNCT_ERROR);
 	}
 	return (FUNCT_SUCCESS);
 }
 
-int		shell_start(t_vshdata *vshdata)
+int		shell_start(t_vshdata *data)
 {
 	t_tokenlst	*token_lst;
 	t_ast		*ast;
@@ -45,31 +45,31 @@ int		shell_start(t_vshdata *vshdata)
 	token_lst = NULL;
 	ast = NULL;
 	pipes = redir_init_pipestruct();
-	env_add_extern_value(vshdata, "OLDPWD", "");
+	env_add_extern_value(data, "OLDPWD", "");
 	while (true)
 	{
 		ft_strdel(&vshdata->line);
 		parser_astdel(&ast);
 		lexer_tokenlstdel(&token_lst);
-		shell_display_prompt(vshdata, REGULAR_PROMPT);
-		if (input_read(vshdata) == FUNCT_ERROR)
+		shell_display_prompt(data, REGULAR_PROMPT);
+		if (input_read(data) == FUNCT_ERROR)
 			continue;
-		if (shell_close_quote_and_esc(vshdata) == FUNCT_ERROR)
+		if (shell_close_quote_and_esc(data) == FUNCT_ERROR)
 			continue ;
 		ft_putchar('\n');
-		if (history_line_to_array(vshdata->history, &vshdata->line) == FUNCT_ERROR)
+		if (history_line_to_array(data->history, &vshdata->line) == FUNCT_ERROR)
 			continue ;
 		if (lexer(&vshdata->line, &token_lst) != FUNCT_SUCCESS)
 			continue ;
-		if (shell_dless_input(vshdata, &token_lst) != FUNCT_SUCCESS)
+		if (shell_dless_input(data, &token_lst) != FUNCT_SUCCESS)
 			continue ;
-		if (alias_expansion(vshdata, &token_lst, NULL) != FUNCT_SUCCESS)
+		if (alias_expansion(data, &token_lst, NULL) != FUNCT_SUCCESS)
 			continue ;
 		if ((token_lst->next)->type == NEWLINE)
 			continue ;
 		if (parser_start(&token_lst, &ast) != FUNCT_SUCCESS)
 			continue ;
-		exec_complete_command(ast, vshdata);
+		exec_complete_command(ast, data);
 	}
 	return (FUNCT_SUCCESS);
 }

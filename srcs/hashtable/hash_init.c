@@ -12,15 +12,15 @@
 
 #include "vsh.h"
 
-void	hash_init(t_vshdata *vshdata)
+void	hash_init(t_vshdata *data)
 {
 	int i;
 
 	i = 0;
 	while (i < HT_SIZE)
 	{
-		vshdata->ht[i] = NULL;
+		data->ht[i] = NULL;
 		i++;
 	}
-	vshdata->ht_flag = HT_EMPTY;
+	data->ht_flag = HT_EMPTY;
 }

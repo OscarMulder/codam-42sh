@@ -13,12 +13,12 @@
 #include "vsh.h"
 #include <sys/ioctl.h>
 
-int			curs_go_end(t_inputdata *data, t_vshdata *vshdata)
+int			curs_go_end(t_vshdata *data)
 {
 	size_t	index_to_end;
 
 	index_to_end = data->len_cur - data->index;
 	if (index_to_end > 0)
-		curs_move_n_right(data, vshdata, index_to_end);
+		curs_move_n_right(data, data, index_to_end);
 	return (FUNCT_SUCCESS);
 }

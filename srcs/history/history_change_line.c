@@ -6,7 +6,7 @@
 /*   By: omulder <omulder@student.codam.nl>           +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2019/06/02 14:28:54 by mavan-he       #+#    #+#                */
-/*   Updated: 2019/08/23 15:09:50 by rkuijper      ########   odam.nl         */
+/*   Updated: 2019/08/26 15:59:35 by jbrinksm      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,11 +19,11 @@
 **	be cleared from that line and onwards. A new prompt will be displayed.
 */
 
-static void	history_clear_line(t_inputdata *data, t_vshdata *vshdata)
+static void	history_clear_line(t_vshdata *data)
 {
 	char	*tc_clear_lines_str;
 
-	curs_go_home(data, vshdata);
+	curs_go_home(data, data);
 	tc_clear_lines_str = tgetstr("cd", NULL);
 	if (tc_clear_lines_str == NULL)
 	{
@@ -33,7 +33,7 @@ static void	history_clear_line(t_inputdata *data, t_vshdata *vshdata)
 	tputs(tc_clear_lines_str, 1, &ft_tputchar);
 }
 
-static int	malloc_and_copy(t_inputdata *data, char **line, char *str)
+static int	malloc_and_copy(t_vshdata *data, char **line, char *str)
 {
 	unsigned	len;
 
@@ -55,7 +55,7 @@ static int	malloc_and_copy(t_inputdata *data, char **line, char *str)
 	return (FUNCT_SUCCESS);
 }
 
-static int	set_line(t_inputdata *data, char **line)
+static int	set_line(t_vshdata *data, char **line)
 {
 	if (malloc_and_copy(data, line, data->history[data->hist_index]->str)
 	== FUNCT_ERROR)
@@ -63,10 +63,10 @@ static int	set_line(t_inputdata *data, char **line)
 	return (FUNCT_SUCCESS);
 }
 
-int			history_change_line(t_inputdata *data, t_vshdata *vshdata,
+int			history_change_line(t_vshdata *data,
 		char arrow)
 {
-	history_clear_line(data, vshdata);
+	history_clear_line(data, data);
 	if (arrow == ARROW_UP)
 	{
 		if (history_index_change_up(data))
@@ -79,9 +79,9 @@ int			history_change_line(t_inputdata *data, t_vshdata *vshdata,
 		if (history_index_change_down(data))
 			set_line(data, &vshdata->line);
 		else
-			ft_bzero(vshdata->line, data->len_max);
+			ft_bzero(data->line, data->len_max);
 	}
-	input_print_str(data, vshdata->line);
-	data->index = data->len_cur = ft_strlen(vshdata->line);
+	input_print_str(data, data->line);
+	data->index = data->len_cur = ft_strlen(data->line);
 	return (FUNCT_SUCCESS);
 }

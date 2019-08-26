@@ -18,7 +18,7 @@
 **	word (or beginning of the line if there is none).
 */
 
-void		curs_move_prev_word(t_inputdata *data, t_vshdata *vshdata)
+void		curs_move_prev_word(t_vshdata *data)
 {
 	int	i;
 
@@ -26,21 +26,21 @@ void		curs_move_prev_word(t_inputdata *data, t_vshdata *vshdata)
 		return ;
 	i = 0;
 	if ((data->index > 0
-		&& tools_isprintnotblank(vshdata->line[data->index]) == true // i++ if at beginning of previous word
-		&& ft_isblank(vshdata->line[data->index - 1]) == true)
+		&& tools_isprintnotblank(data->line[data->index]) == true // i++ if at beginning of previous word
+		&& ft_isblank(data->line[data->index - 1]) == true)
 		|| (data->index > 0 && data->index == data->len_cur)) // i++ if at end of line
 		i++;
 	while (data->index - i > 0 // i++ blanks
-		&& ft_isblank(vshdata->line[data->index - i]) == true)
+		&& ft_isblank(data->line[data->index - i]) == true)
 		i++;
 	if (data->index - i == 0)
-		curs_move_n_left(data, vshdata, i);
+		curs_move_n_left(data, data, i);
 	else
 	{
 		while (data->index - i > 0
-			&& tools_isprintnotblank(vshdata->line[data->index - i - 1]))
+			&& tools_isprintnotblank(data->line[data->index - i - 1]))
 			i++;
-		curs_move_n_left(data, vshdata, i);
+		curs_move_n_left(data, data, i);
 	}
 }
 
@@ -52,12 +52,12 @@ void		curs_move_prev_word(t_inputdata *data, t_vshdata *vshdata)
 **	for the automatic `index` change if necessar
 */
 
-static void	move_left_parse_newline(t_inputdata *data, t_vshdata *vshdata)
+static void	move_left_parse_newline(t_vshdata *data)
 {
-	char *pos = ft_strrnchr(vshdata->line, '\n', data->index);
+	char *pos = ft_strrnchr(data->line, '\n', data->index);
 	int len = data->index;
 	if (pos != NULL)
-		len = (data->index - 1) - (pos - vshdata->line);
+		len = (data->index - 1) - (pos - data->line);
 	ft_putstr("\e[A");
 	if (len > 1)
 		ft_printf("\e[%iC", len);
@@ -65,12 +65,12 @@ static void	move_left_parse_newline(t_inputdata *data, t_vshdata *vshdata)
 	data->coords.y--;
 	if (data->coords.y == 1)
 	{
-		ft_printf("\e[%iC", vshdata->prompt_len);
-		data->coords.x += vshdata->prompt_len;
+		ft_printf("\e[%iC", data->prompt_len);
+		data->coords.x += data->prompt_len;
 	}
 }
 
-static void	move_left_to_colmax(t_inputdata *data, int colmax)
+static void	move_left_to_colmax(t_vshdata *data, int colmax)
 {
 	if (data->coords.x == 1)
 	{
@@ -85,7 +85,7 @@ static void	move_left_to_colmax(t_inputdata *data, int colmax)
 	}
 }
 
-void		curs_move_n_left(t_inputdata *data, t_vshdata *vshdata, size_t n)
+void		curs_move_n_left(t_vshdata *data, size_t n)
 {
 	struct winsize	ws;
 
@@ -98,8 +98,8 @@ void		curs_move_n_left(t_inputdata *data, t_vshdata *vshdata, size_t n)
 	{
 		n--;
 		data->index--;
-		if (vshdata->line[data->index] == '\n')
-			move_left_parse_newline(data, vshdata);
+		if (data->line[data->index] == '\n')
+			move_left_parse_newline(data, data);
 		else
 			move_left_to_colmax(data, ws.ws_col);
 	}
@@ -114,8 +114,8 @@ void		curs_move_n_left(t_inputdata *data, t_vshdata *vshdata, size_t n)
 **	for the automatic `index` change if necessar
 */
 
-void		curs_move_left(t_inputdata *data, t_vshdata *vshdata)
+void		curs_move_left(t_vshdata *data)
 {
 	if (data->index > 0)
-		curs_move_n_left(data, vshdata, 1);
+		curs_move_n_left(data, data, 1);
 }

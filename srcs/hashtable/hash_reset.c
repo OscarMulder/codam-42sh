@@ -22,19 +22,19 @@ static void	del_hash_lst(t_ht *del)
 	ft_memdel((void**)&del);
 }
 
-void		hash_reset(t_vshdata *vshdata)
+void		hash_reset(t_vshdata *data)
 {
 	int i;
 
 	i = 0;
 	while (i < HT_SIZE)
 	{
-		if (vshdata->ht[i] != NULL)
+		if (data->ht[i] != NULL)
 		{
-			del_hash_lst(vshdata->ht[i]);
-			vshdata->ht[i] = NULL;
+			del_hash_lst(data->ht[i]);
+			data->ht[i] = NULL;
 		}
 		i++;
 	}
-	vshdata->ht_flag = HT_EMPTY;
+	data->ht_flag = HT_EMPTY;
 }

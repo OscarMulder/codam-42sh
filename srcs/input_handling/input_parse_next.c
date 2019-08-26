@@ -18,22 +18,22 @@
 **	word (or end of the line if there is none).
 */
 
-void		curs_move_next_word(t_inputdata *data, t_vshdata *vshdata)
+void		curs_move_next_word(t_vshdata *data)
 {
 	size_t	i;
 
 	if (data->index == data->len_cur)
 		return ;
 	i = 0;
-	while (ft_isprint(vshdata->line[data->index + i]) == true
-		&& ft_isblank(vshdata->line[data->index + i]) == false)
+	while (ft_isprint(data->line[data->index + i]) == true
+		&& ft_isblank(data->line[data->index + i]) == false)
 		i++;
-	while (ft_isblank(vshdata->line[data->index + i]) == true)
+	while (ft_isblank(data->line[data->index + i]) == true)
 		i++;
 	if ((data->index + i == data->len_cur) // end of line
-		|| (ft_isprint(vshdata->line[data->index + i]) == true
-		&& ft_isblank(vshdata->line[data->index + i]) == false))
-		curs_move_n_right(data, vshdata, i);
+		|| (ft_isprint(data->line[data->index + i]) == true
+		&& ft_isblank(data->line[data->index + i]) == false))
+		curs_move_n_right(data, data, i);
 }
 
 /*
@@ -45,12 +45,12 @@ void		curs_move_next_word(t_inputdata *data, t_vshdata *vshdata)
 **	for the automatic `index` change if necessary.
 */
 
-static void	move_right_parse_newline(t_inputdata *data, t_vshdata *vshdata)
+static void	move_right_parse_newline(t_vshdata *data)
 {
-	char *pos = ft_strrnchr(vshdata->line, '\n', data->index);
-	int len = data->index + vshdata->prompt_len;
+	char *pos = ft_strrnchr(data->line, '\n', data->index);
+	int len = data->index + data->prompt_len;
 	if (pos != NULL)
-		len = (data->index - 1) - (pos - vshdata->line);
+		len = (data->index - 1) - (pos - data->line);
 	ft_putstr("\e[B");
 	if (len > 1)
 		ft_printf("\e[%iD", len);
@@ -58,7 +58,7 @@ static void	move_right_parse_newline(t_inputdata *data, t_vshdata *vshdata)
 	data->coords.y++;
 }
 
-static void	move_right_at_colmax(t_inputdata *data, int colmax)
+static void	move_right_at_colmax(t_vshdata *data, int colmax)
 {
 	if (data->coords.x == colmax)
 	{
@@ -73,7 +73,7 @@ static void	move_right_at_colmax(t_inputdata *data, int colmax)
 	}
 }
 
-void		curs_move_n_right(t_inputdata *data, t_vshdata *vshdata, size_t n)
+void		curs_move_n_right(t_vshdata *data, size_t n)
 {
 	struct winsize	ws;
 
@@ -84,8 +84,8 @@ void		curs_move_n_right(t_inputdata *data, t_vshdata *vshdata, size_t n)
 	ioctl(STDIN_FILENO, TIOCGWINSZ, &ws);
 	while (n > 0)
 	{
-		if (vshdata->line[data->index] == '\n')
-			move_right_parse_newline(data, vshdata);
+		if (data->line[data->index] == '\n')
+			move_right_parse_newline(data, data);
 		else
 			move_right_at_colmax(data, ws.ws_col);
 		n--;
@@ -101,8 +101,8 @@ void		curs_move_n_right(t_inputdata *data, t_vshdata *vshdata, size_t n)
 **	for the automatic `index` change if necessary.
 */
 
-void		curs_move_right(t_inputdata *data, t_vshdata *vshdata)
+void		curs_move_right(t_vshdata *data)
 {
 	if (data->index < data->len_cur)
-		curs_move_n_right(data, vshdata, 1);
+		curs_move_n_right(data, data, 1);
 }

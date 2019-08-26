@@ -38,7 +38,7 @@ static void	create_char_gap(char *line, int len, int gap_index)
 **	of memory allocated for `*line` is doubled first.
 */
 
-static int	add_char_at(t_inputdata *data, char **line)
+static int	add_char_at(t_vshdata *data, char **line)
 {
 	char		*tmp;
 
@@ -71,7 +71,7 @@ static int	add_char_at(t_inputdata *data, char **line)
 **	by 1 byte first.
 */
 
-static int	add_newline(t_inputdata *data, char **line)
+static int	add_newline(t_vshdata *data, char **line)
 {
 	char		*tmp;
 
@@ -98,7 +98,7 @@ int			ft_tputchar(int c)
 	return (1);
 }
 
-int			input_parse_char(t_inputdata *data, t_vshdata *vshdata)
+int			input_parse_char(t_vshdata *data)
 {
 	int				old_index;
 
@@ -107,9 +107,9 @@ int			input_parse_char(t_inputdata *data, t_vshdata *vshdata)
 		if (add_char_at(data, &vshdata->line) == FUNCT_ERROR)
 			return (FUNCT_ERROR);
 		old_index = data->index;
-		input_print_str(data, vshdata->line + data->index);
+		input_print_str(data, data->line + data->index);
 		data->index = data->len_cur;
-		curs_move_n_left(data, vshdata, data->index - old_index - 1);
+		curs_move_n_left(data, data, data->index - old_index - 1);
 	}
 	else if (data->c == '\n')
 	{

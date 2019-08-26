@@ -13,18 +13,18 @@
 #include "vsh.h"
 #include <term.h>
 
-int			input_parse_ctrl_k(t_inputdata *data, t_vshdata *vshdata)
+int			input_parse_ctrl_k(t_vshdata *data)
 {
 	char		*tc_clear_lines_str;
 	
 	if (data->index < data->len_cur)
 	{
-		if (vshdata->line_copy != NULL)
+		if (data->line_copy != NULL)
 			ft_strdel(&vshdata->line_copy);
-		vshdata->line_copy = ft_strdup(&vshdata->line[data->index]);
+		data->line_copy = ft_strdup(&vshdata->line[data->index]);
 		ft_bzero(&vshdata->line[data->index], data->len_cur - data->index);
-		curs_go_home(data, vshdata);
-		ft_printf("\e[%iD", vshdata->prompt_len);
+		curs_go_home(data, data);
+		ft_printf("\e[%iD", data->prompt_len);
 		tc_clear_lines_str = tgetstr("cd", NULL);
 		if (tc_clear_lines_str == NULL)
 		{
@@ -32,10 +32,10 @@ int			input_parse_ctrl_k(t_inputdata *data, t_vshdata *vshdata)
 			return (FUNCT_ERROR); // do fatal shit
 		}
 		tputs(tc_clear_lines_str, 20, &ft_tputchar);
-		shell_display_prompt(vshdata, vshdata->cur_prompt_type);		
-		data->len_cur = ft_strlen(vshdata->line);
+		shell_display_prompt(data, data->cur_prompt_type);		
+		data->len_cur = ft_strlen(data->line);
 		data->index = data->len_cur;
-		input_print_str(data, vshdata->line);
+		input_print_str(data, data->line);
 	}
 	return (FUNCT_SUCCESS);
 }

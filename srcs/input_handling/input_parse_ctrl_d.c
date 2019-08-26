@@ -16,14 +16,14 @@
 **	Simply exits when line is empty, otherwise functions as `delete`.
 */
 
-int	input_parse_ctrl_d(t_inputdata *data, t_vshdata *vshdata)
+int	input_parse_ctrl_d(t_vshdata *data)
 {
 	if (data->c == INPUT_CTRL_D)
 	{
 		if (data->len_cur == 0)
-			builtin_exit(NULL, vshdata);
+			builtin_exit(NULL, data);
 		else
-			input_handle_delete(data, vshdata);
+			input_handle_delete(data, data);
 		return (FUNCT_SUCCESS);
 	}
 	return (FUNCT_FAILURE);

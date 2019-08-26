@@ -14,40 +14,40 @@
 #include <unistd.h>
 
 int			shell_dless_read_till_stop(char **heredoc, char *heredoc_delim,
-			t_vshdata *vshdata)
+			t_vshdata *data)
 {
 	char	*line_tmp;
 
-	line_tmp = vshdata->line;
-	vshdata->line = NULL;
+	line_tmp = data->line;
+	data->line = NULL;
 	while (true)
 	{
 		ft_putstr("> ");
-		if (input_read(vshdata) == FUNCT_ERROR)
+		if (input_read(data) == FUNCT_ERROR)
 			return (FUNCT_ERROR);
 		ft_putstr("\n");
-		if (ft_strequ(vshdata->line, heredoc_delim) == true)
+		if (ft_strequ(data->line, heredoc_delim) == true)
 			break ;
 		if (*heredoc == NULL)
-			*heredoc = ft_strdup(vshdata->line);
+			*heredoc = ft_strdup(data->line);
 		else
-			*heredoc = ft_strjoinfree_s1(*heredoc, vshdata->line);
+			*heredoc = ft_strjoinfree_s1(*heredoc, data->line);
 		ft_strdel(&vshdata->line);
 		if (*heredoc == NULL)
 			return (FUNCT_ERROR);
 	}
 	ft_strdel(&vshdata->line);
-	vshdata->line = line_tmp;
+	data->line = line_tmp;
 	return (FUNCT_SUCCESS);
 }
 
 int			shell_dless_set_tk_val(t_tokenlst *probe, char **heredoc,
-			char *heredoc_delim, t_vshdata *vshdata)
+			char *heredoc_delim, t_vshdata *data)
 {
 	int	ret;
 
 	ft_strdel(&(probe->value));
-	ret = shell_dless_read_till_stop(heredoc, heredoc_delim, vshdata);
+	ret = shell_dless_read_till_stop(heredoc, heredoc_delim, data);
 	if (ret == FUNCT_SUCCESS)
 	{
 		if (*heredoc != NULL)
@@ -85,7 +85,7 @@ static int	return_alloc_error(int ret)
 	return (ret);
 }
 
-int			shell_dless_input(t_vshdata *vshdata, t_tokenlst **token_lst)
+int			shell_dless_input(t_vshdata *data, t_tokenlst **token_lst)
 {
 	char		*heredoc;
 	t_tokenlst	*probe;
@@ -102,7 +102,7 @@ int			shell_dless_input(t_vshdata *vshdata, t_tokenlst **token_lst)
 				return (FUNCT_ERROR);
 			heredoc_delim = ft_strjoin(probe->value, "\n");
 			if (heredoc_delim == NULL || shell_dless_set_tk_val(probe, &heredoc,
-			heredoc_delim, vshdata) == FUNCT_ERROR)
+			heredoc_delim, data) == FUNCT_ERROR)
 				return_alloc_error(FUNCT_ERROR);
 			ft_strdel(&heredoc);
 			ft_strdel(&heredoc_delim);

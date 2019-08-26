@@ -19,7 +19,7 @@
 **	cursor position.
 */
 
-void		input_handle_backspace(t_inputdata *data, t_vshdata *vshdata)
+void		input_handle_backspace(t_vshdata *data)
 {
 	char		*tc_clear_lines_str;
 	int			len_left;
@@ -30,16 +30,16 @@ void		input_handle_backspace(t_inputdata *data, t_vshdata *vshdata)
 		saved_index = data->index;
 		len_left = data->len_cur - data->index;
 		data->len_cur--;
-		curs_go_home(data, vshdata);
+		curs_go_home(data, data);
 		input_clear_char_at(&vshdata->line, saved_index - 1);
-		ft_printf("\e[%iD", vshdata->prompt_len);
+		ft_printf("\e[%iD", data->prompt_len);
 		tc_clear_lines_str = tgetstr("cd", NULL);
 		if (tc_clear_lines_str == NULL)
 			return ;
 		tputs(tc_clear_lines_str, 1, &ft_tputchar);
-		shell_display_prompt(vshdata, vshdata->cur_prompt_type);
-		input_print_str(data, vshdata->line);
+		shell_display_prompt(data, data->cur_prompt_type);
+		input_print_str(data, data->line);
 		data->index = data->len_cur;
-		curs_move_n_left(data, vshdata, len_left);
+		curs_move_n_left(data, data, len_left);
 	}
 }

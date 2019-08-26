@@ -60,19 +60,19 @@ static int		hash_exist(t_ht *ht, char *path, int hit)
 	return (FUNCT_SUCCESS);
 }
 
-int				hash_ht_insert(t_vshdata *vshdata,
+int				hash_ht_insert(t_vshdata *data,
 				char *key, char *path, int hit)
 {
 	unsigned int	hash;
 	t_ht			*probe;
 
 	hash = hash_create_hash(key);
-	vshdata->ht_flag = HT_HAS_CONTENT;
-	if (vshdata->ht[hash] == NULL)
+	data->ht_flag = HT_HAS_CONTENT;
+	if (data->ht[hash] == NULL)
 		return (hash_new(&vshdata->ht[hash], key, path, hit));
 	else
 	{
-		probe = vshdata->ht[hash];
+		probe = data->ht[hash];
 		while (probe != NULL)
 		{
 			if (ft_strequ(probe->key, key) == true)

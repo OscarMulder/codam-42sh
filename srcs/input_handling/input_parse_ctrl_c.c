@@ -17,11 +17,11 @@
 **	Moves past the commandline and then displays a new prompt.
 */
 
-int	input_parse_ctrl_c(t_inputdata *data, t_vshdata *vshdata)
+int	input_parse_ctrl_c(t_vshdata *data)
 {
 	if (data->c == INPUT_CTRL_C)
 	{
-		curs_go_end(data, vshdata);
+		curs_go_end(data, data);
 		ft_putchar('\n');
 		return (FUNCT_SUCCESS);
 	}

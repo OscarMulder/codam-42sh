@@ -12,30 +12,30 @@
 
 #include "vsh.h"
 
-bool	exec_builtin(char **args, t_vshdata *vshdata)
+bool	exec_builtin(char **args, t_vshdata *data)
 {
 	if (ft_strequ(args[0], "echo"))
 		builtin_echo(args);
 	else if (ft_strequ(args[0], "exit"))
-		builtin_exit(args, vshdata);
+		builtin_exit(args, data);
 	else if (ft_strequ(args[0], "cd"))
-		builtin_cd(args, vshdata);
+		builtin_cd(args, data);
 	else if (ft_strequ(args[0], "export"))
-		builtin_export(args, vshdata);
+		builtin_export(args, data);
 	else if (ft_strequ(args[0], "set"))
-		builtin_set(args, vshdata->envlst);
+		builtin_set(args, data->envlst);
 	else if (ft_strequ(args[0], "unset"))
-		builtin_unset(args, vshdata->envlst);
+		builtin_unset(args, data->envlst);
 	else if (ft_strequ(args[0], "history"))
-		history_print(vshdata->history);
+		history_print(data->history);
 	else if (ft_strequ(args[0], "type"))
-		builtin_type(args, vshdata->envlst, vshdata->aliaslst);
+		builtin_type(args, data->envlst, data->aliaslst);
 	else if (ft_strequ(args[0], "alias"))
 		builtin_alias(args, &vshdata->aliaslst);
 	else if (ft_strequ(args[0], "unalias"))
 		builtin_unalias(args, &vshdata->aliaslst);
 	else if (ft_strequ(args[0], "hash"))
-		builtin_hash(args, vshdata);
+		builtin_hash(args, data);
 	else
 		return (false);
 	return (true);

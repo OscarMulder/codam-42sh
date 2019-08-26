@@ -12,7 +12,7 @@
 
 #include "vsh.h"
 
-static int	index_history_first(t_inputdata *data)
+static int	index_history_first(t_vshdata *data)
 {
 	if (data->history[data->hist_index - 1]->str != NULL)
 	{
@@ -23,7 +23,7 @@ static int	index_history_first(t_inputdata *data)
 	return (FUNCT_FAILURE);
 }
 
-int			history_index_change_up(t_inputdata *data)
+int			history_index_change_up(t_vshdata *data)
 {
 	if (data->hist_first)
 		return (index_history_first(data));
@@ -49,7 +49,7 @@ int			history_index_change_up(t_inputdata *data)
 	}
 }
 
-int			history_index_change_down(t_inputdata *data)
+int			history_index_change_down(t_vshdata *data)
 {
 	if (data->hist_first)
 		return (FUNCT_FAILURE);

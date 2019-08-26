@@ -18,21 +18,21 @@
 **	collide with the prompt.
 */
 
-static unsigned	get_cur_line_index(t_inputdata *data, t_vshdata *vshdata)
+static unsigned	get_cur_line_index(t_vshdata *data)
 {
 	int i;
 
 	i = data->index - 1;
 	while (i > 0)
 	{
-		if (vshdata->line[i] == '\n')
+		if (data->line[i] == '\n')
 			return (data->index - i - 1);
 		i--;
 	}
 	return (data->index);
 }
 
-static void	move_up_handle_newline(t_inputdata *data, t_vshdata *vshdata)
+static void	move_up_handle_newline(t_vshdata *data)
 {
 	unsigned	i;
 	int			j;
@@ -40,11 +40,11 @@ static void	move_up_handle_newline(t_inputdata *data, t_vshdata *vshdata)
 
 	i = data->index;
 	j = -1;
-	l = get_cur_line_index(data, vshdata);
+	l = get_cur_line_index(data, data);
 	ft_eprintf("Line index: %d\n", l);
 	while (i > 0)
 	{
-		if (vshdata->line[i] == '\n')
+		if (data->line[i] == '\n')
 		{
 			if (j == -1)
 				j = 0;
@@ -58,10 +58,10 @@ static void	move_up_handle_newline(t_inputdata *data, t_vshdata *vshdata)
 	}
 	if (j != -1)
 		i += l + (j == 1 ? 1 : 0);
-	curs_move_n_left(data, vshdata, data->index - i);
+	curs_move_n_left(data, data, data->index - i);
 }
 
-void		curs_move_up(t_inputdata *data, t_vshdata *vshdata)
+void		curs_move_up(t_vshdata *data)
 {
 	struct winsize	ws;
 	char			*newline_str;
@@ -69,11 +69,11 @@ void		curs_move_up(t_inputdata *data, t_vshdata *vshdata)
 	ioctl(STDIN_FILENO, TIOCGWINSZ, &ws);
 	if (data->index == 0)
 		return ;
-	newline_str = ft_strrnchr(vshdata->line, '\n', data->index);
+	newline_str = ft_strrnchr(data->line, '\n', data->index);
 	if (newline_str != NULL)
-		move_up_handle_newline(data, vshdata);
+		move_up_handle_newline(data, data);
 	else if (data->index < ws.ws_col)
-		curs_go_home(data, vshdata);
+		curs_go_home(data, data);
 	else
 	{
 		ft_printf(CURS_UP);

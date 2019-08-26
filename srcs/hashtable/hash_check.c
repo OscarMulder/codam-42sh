@@ -26,15 +26,15 @@ static char	*check_lst(t_ht *ht_lst, char *key)
 	return (NULL);
 }
 
-int			hash_check(t_vshdata *vshdata, char *key, char **binary)
+int			hash_check(t_vshdata *data, char *key, char **binary)
 {
 	int		hash;
 	char	*bin_dup;
 
 	hash = hash_create_hash(key);
-	if (vshdata->ht[hash] == NULL)
+	if (data->ht[hash] == NULL)
 		return (FUNCT_FAILURE);
-	bin_dup = check_lst(vshdata->ht[hash], key);
+	bin_dup = check_lst(data->ht[hash], key);
 	if (bin_dup == NULL)
 		return (FUNCT_FAILURE);
 	*binary = ft_strdup(bin_dup);

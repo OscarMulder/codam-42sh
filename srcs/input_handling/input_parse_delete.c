@@ -18,7 +18,7 @@
 **	Lines will be cleared and everything will be reprinted (sadly).
 */
 
-int			input_handle_delete(t_inputdata *data, t_vshdata *vshdata)
+int			input_handle_delete(t_vshdata *data)
 {
 	char		*tc_clear_lines_str;
 	unsigned	saved_index;
@@ -30,14 +30,14 @@ int			input_handle_delete(t_inputdata *data, t_vshdata *vshdata)
 		input_clear_char_at(&vshdata->line, data->index);
 		ft_putstr("\e[s");
 		saved_index = data->index;
-		curs_go_home(data, vshdata);
-		ft_printf("\e[%iD", vshdata->prompt_len);
+		curs_go_home(data, data);
+		ft_printf("\e[%iD", data->prompt_len);
 		tc_clear_lines_str = tgetstr("cd", NULL);
 		if (tc_clear_lines_str == NULL)
 			return (FUNCT_ERROR);
 		tputs(tc_clear_lines_str, 1, &ft_tputchar);
-		shell_display_prompt(vshdata, vshdata->cur_prompt_type);
-		input_print_str(data, vshdata->line);
+		shell_display_prompt(data, data->cur_prompt_type);
+		input_print_str(data, data->line);
 		ft_putstr("\e[u");
 		data->index = saved_index;
 		data->len_cur--;

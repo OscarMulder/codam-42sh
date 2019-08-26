@@ -52,18 +52,18 @@ static char	*alias_find_value(char *key, t_aliaslst *aliaslst, char **expanded)
 	return (NULL);
 }
 
-int			alias_expansion_checker(t_vshdata *vshdata, t_tokenlst *probe,
+int			alias_expansion_checker(t_vshdata *data, t_tokenlst *probe,
 			char **expanded)
 {
 	t_tokenlst	*new_probe;
 	char		*alias;
 
-	alias = alias_find_value(probe->next->value, vshdata->aliaslst, expanded);
+	alias = alias_find_value(probe->next->value, data->aliaslst, expanded);
 	if (alias != NULL)
 	{
 		if (alias_space_check(alias) == true)
 		{
-			if (alias_expansion(vshdata, &probe->next, expanded) == FUNCT_ERROR)
+			if (alias_expansion(data, &probe->next, expanded) == FUNCT_ERROR)
 				return (FUNCT_ERROR);
 		}
 		else
@@ -72,17 +72,17 @@ int			alias_expansion_checker(t_vshdata *vshdata, t_tokenlst *probe,
 			while (new_probe->next->type != END &&
 				is_cmd_seperator(new_probe->next->type) == false)
 				new_probe = new_probe->next;
-			if (alias_expansion(vshdata, &new_probe, expanded) == FUNCT_ERROR)
+			if (alias_expansion(data, &new_probe, expanded) == FUNCT_ERROR)
 				return (FUNCT_ERROR);
 		}
-		if (alias_replace(vshdata, probe, alias, expanded) == FUNCT_ERROR)
+		if (alias_replace(data, probe, alias, expanded) == FUNCT_ERROR)
 			return (FUNCT_ERROR);
 		return (FUNCT_SUCCESS);
 	}
 	return (FUNCT_FAILURE);
 }
 
-int			alias_expansion(t_vshdata *vshdata, t_tokenlst **tokenlst,
+int			alias_expansion(t_vshdata *data, t_tokenlst **tokenlst,
 			char **expanded)
 {
 	t_tokenlst	*probe;
@@ -94,7 +94,7 @@ int			alias_expansion(t_vshdata *vshdata, t_tokenlst **tokenlst,
 		if (probe->next->type == WORD &&
 			(probe->flags & T_FLAG_HASSPECIAL) == false)
 		{
-			ret = alias_expansion_checker(vshdata, probe, expanded);
+			ret = alias_expansion_checker(data, probe, expanded);
 			if (ret == FUNCT_ERROR)
 				return (FUNCT_ERROR);
 			if (ret == FUNCT_SUCCESS)

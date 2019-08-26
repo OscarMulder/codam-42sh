@@ -13,7 +13,7 @@
 #include <vsh.h>
 #include <sys/ioctl.h>
 
-static int	get_total_newlines(t_inputdata *data, unsigned short maxcol, char *str)
+static int	get_total_newlines(t_vshdata *data, unsigned short maxcol, char *str)
 {
 	int	total_newlines;
 	int x_copy;
@@ -35,7 +35,7 @@ static int	get_total_newlines(t_inputdata *data, unsigned short maxcol, char *st
 	return (total_newlines);
 }
 
-static void	fill_strbuf(t_inputdata *data, unsigned short maxcol, char **strbuf, char *str)
+static void	fill_strbuf(t_vshdata *data, unsigned short maxcol, char **strbuf, char *str)
 {
 	int str_i;
 	int	strbuf_i;
@@ -66,7 +66,7 @@ static void	fill_strbuf(t_inputdata *data, unsigned short maxcol, char **strbuf,
 
 // STILL NEEDS TO RETURN SHIT WHEN IT FAILS
 
-void	input_print_str(t_inputdata *data, char *str)
+void	input_print_str(t_vshdata *data, char *str)
 {
 	int				i;
 	char			*strbuf;

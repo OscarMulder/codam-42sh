@@ -14,7 +14,7 @@
 #include <unistd.h>
 #include <fcntl.h>
 
-static int	get_line_in_alias(int fd, t_vshdata *vshdata)
+static int	get_line_in_alias(int fd, t_vshdata *data)
 {
 	int			ret;
 	char		*line;
@@ -36,25 +36,25 @@ static int	get_line_in_alias(int fd, t_vshdata *vshdata)
 	return (ret);
 }
 
-int			alias_read_file(t_vshdata *vshdata)
+int			alias_read_file(t_vshdata *data)
 {
 	int		fd;
 	int		ret;
 
-	if (access(vshdata->alias_file, F_OK) != 0)
+	if (access(data->alias_file, F_OK) != 0)
 		return (FUNCT_FAILURE);
-	if (access(vshdata->alias_file, R_OK) != 0)
+	if (access(data->alias_file, R_OK) != 0)
 	{
-		ft_eprintf(E_N_PER_DEN_P, "alias", vshdata->alias_file);
+		ft_eprintf(E_N_PER_DEN_P, "alias", data->alias_file);
 		return (FUNCT_FAILURE);
 	}
-	fd = open(vshdata->alias_file, O_RDONLY);
+	fd = open(data->alias_file, O_RDONLY);
 	if (fd == -1)
 		return (err_ret(E_ALIAS_OPEN_STR));
 	ret = 1;
 	while (ret > 0)
 	{
-		ret = get_line_in_alias(fd, vshdata);
+		ret = get_line_in_alias(fd, data);
 		if (ret == FUNCT_ERROR)
 			return (FUNCT_ERROR);
 	}

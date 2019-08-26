@@ -17,8 +17,8 @@
 **	Calculates steps to home and then uses curs_move_n_left.
 */
 
-int			curs_go_home(t_inputdata *data, t_vshdata *vshdata)
+int			curs_go_home(t_vshdata *data)
 {
-	curs_move_n_left(data, vshdata, data->index);
+	curs_move_n_left(data, data, data->index);
 	return (FUNCT_SUCCESS);
 }
