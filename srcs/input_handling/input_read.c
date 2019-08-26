@@ -6,7 +6,7 @@
 /*   By: omulder <omulder@student.codam.nl>           +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2019/04/17 14:03:16 by jbrinksm       #+#    #+#                */
-/*   Updated: 2019/08/26 11:27:14 by jbrinksm      ########   odam.nl         */
+/*   Updated: 2019/08/26 13:31:44 by jbrinksm      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -187,22 +187,17 @@ int			input_read_special(t_inputdata *data, t_vshdata *vshdata)
 static int	input_resize_window_check(t_vshdata *vshdata, t_inputdata *data)
 {
 	struct winsize	new;
-	t_point			new_coords;
 	int				newlines;
 	char			*tc_clear_lines_str;
 	unsigned		saved_index;
 	int				extra;
 
-	(void)vshdata;
 	ioctl(STDIN_FILENO, TIOCGWINSZ, &new);
 	if (data->cur_ws_col == -1)
 		data->cur_ws_col = new.ws_col;
 	else if (data->cur_ws_col != new.ws_col)
 	{
 		saved_index = data->index; //save index
-		ft_eprintf("old x: %i - y: %i - col: %i\n", data->coords.x, data->coords.y, data->cur_ws_col);
-		new_coords.x = 1 + ((data->coords.y - 1) * data->cur_ws_col + (data->coords.x - 1)) % new.ws_col;
-		new_coords.y = 1 + ((data->coords.y - 1) * data->cur_ws_col + (data->coords.x - 1)) / new.ws_col;
 		newlines = data->coords.y - 1;
 		extra = 0;
 		if (data->cur_ws_col % new.ws_col > 0)
@@ -210,11 +205,8 @@ static int	input_resize_window_check(t_vshdata *vshdata, t_inputdata *data)
 		newlines = newlines * ((data->cur_ws_col / new.ws_col) + extra);
 		if (data->coords.x - 1 > 0)
 			ft_printf("\e[%iD", data->coords.x - 1);
-		sleep (1);
-		ft_eprintf("NEWLINES: %i\n", newlines);
 		if (newlines > 0)
 			ft_printf("\e[%iA", newlines);
-		sleep (1);
 		tc_clear_lines_str = tgoto(tgetstr("cd", NULL), 0, 1);
 		if (tc_clear_lines_str == NULL)
 		{
@@ -225,17 +217,15 @@ static int	input_resize_window_check(t_vshdata *vshdata, t_inputdata *data)
 		sleep(1);
 		shell_display_prompt(vshdata, vshdata->cur_prompt_type);
 		sleep(1);
-		data->index = ft_strlen(vshdata->line);
-		data->coords.x = 1 + vshdata->prompt_len;
-		data->coords.y = 1;
+		data->index = data->len_cur;
+		data->coords.x = 1 + (vshdata->prompt_len + 1) % data->cur_ws_col; // + vshdata->prompt_len;
+		data->coords.y = 1 + (vshdata->prompt_len + 1) / data->cur_ws_col;
+		ft_eprintf("x: %i y: %i len: %i\n", data->coords.x, data->coords.y, vshdata->prompt_len);
 		data->cur_ws_col = new.ws_col;
 		input_print_str(data, vshdata->line);
 		data->index = data->len_cur;
-		sleep(1);
 		curs_go_home(data);
-		sleep(1);
 		curs_move_n_right(data, vshdata, saved_index);
-		ft_eprintf("new x: %i - y: %i - col: %i - nl: %i\n", new_coords.x, new_coords.y, new.ws_col, newlines);
 	}
 	return (FUNCT_SUCCESS);
 }
