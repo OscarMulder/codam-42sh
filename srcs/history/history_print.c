@@ -6,7 +6,7 @@
 /*   By: mavan-he <mavan-he@student.codam.nl>         +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2019/05/30 20:47:41 by mavan-he       #+#    #+#                */
-/*   Updated: 2019/08/26 15:31:33 by omulder       ########   odam.nl         */
+/*   Updated: 2019/08/26 15:33:31 by omulder       ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -41,22 +41,22 @@ static int	add_tabs(char *str, char *new)
 static int	add_tabs_after_newlines(char *str, char **new)
 {
 	int		i;
-	int		count;
+	int		tab_count;
 
 	i = 0;
-	count = 0;
+	tab_count = 0;
 	while (str[i] != '\0')
 	{
 		if (str[i] == '\n' && str[i + 1] != '\0')
-			count++;
+			tab_count++;
 		i++;
 	}
-	if (count == 0)
+	if (tab_count == 0)
 	{
 		*new = str;
 		return (false);
 	}
-	*new = ft_strnew(i + count);
+	*new = ft_strnew(i + tab_count);
 	if (*new == NULL)
 		return (false);
 	return (add_tabs(str, *new));
