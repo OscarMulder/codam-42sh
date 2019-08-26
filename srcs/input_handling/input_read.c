@@ -6,7 +6,7 @@
 /*   By: omulder <omulder@student.codam.nl>           +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2019/04/17 14:03:16 by jbrinksm       #+#    #+#                */
-/*   Updated: 2019/08/23 15:07:41 by rkuijper      ########   odam.nl         */
+/*   Updated: 2019/08/26 11:41:49 by rkuijper      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -135,6 +135,111 @@ int			input_read_special(t_inputdata *data, t_vshdata *vshdata)
 	return (FUNCT_SUCCESS);
 }
 
+/*
+**	Welcome Rob!
+**	I have left you many comments to help you understand why and how I have
+**	changed a lot (basically all) of the functions. Before you read it all,
+**	I want to let you know a handy debugging tip which is the following:
+**	1. run vsh as `./vsh 2>TAILME.log`
+**	2. Open a second terminal window and run `tail -f TAILME.log`
+**	3. Profit from all the debug messages that get displayed.
+**	4. ???
+**
+**	The new input read will loop forever until a '\n' is caught, or any other
+**	return is given.
+**
+**	In the loop:
+**
+**	First, the current screen size will be
+**	compared with the saved size. If the size changed, oscars function will
+**	make sure that everything is reprinted, and that the cursor and index
+**	will be properly recovered. (NO FUNCTIONS AFTER THIS SHOULD HAVE TO DEAL
+**	WITH CHANGES TO THE SCREEN SO THEY WILL BE ENTIRELY DEPENDANT ON PROPER
+**	RESIZE HANDLING)
+**
+**	Then, one char is read, if this char is a `\e`, input_read_ansi is used
+**	to read the totality of the escape sequence into a buffer. If the escape
+**	sequence is supported, we run the corresponding function, otherwise it
+**	should be ignored.
+**
+**	If the char has any other special meaning like INPUT_BACKSPACE or
+**	INPUT_CTRL_D and is handled.
+**
+**	Any other char will be parsed by input_parse_char. If it happened to be
+**	a '\n' the input reading is complete, and we break.
+**
+**
+**	PS: As you can see I got rid of your char/input state system, because it
+**	didn't need to be that complicated (:
+**
+**	PPS: Please use functions like `get_cursor_rowpos` (and maybe also ioctl),
+**	as sparingly as possible because they can REALLY make the shell lag like a
+**	bitch and also glitch out because it then can't handle the input speed.
+**	Also, try to be as efficient as possible with using termcaps for
+**	for example cursor movement. (But I think you already knew that.)
+**
+**	GL & HF
+*/
+
+#include <sys/ioctl.h>
+#include <term.h>
+
+static int	input_resize_window_check(t_vshdata *vshdata, t_inputdata *data)
+{
+	struct winsize	new;
+	t_point			new_coords;
+	int				newlines;
+	char			*tc_clear_lines_str;
+	unsigned		saved_index;
+	int				extra;
+
+	(void)vshdata;
+	ioctl(STDIN_FILENO, TIOCGWINSZ, &new);
+	if (data->cur_ws_col == -1)
+		data->cur_ws_col = new.ws_col;
+	else if (data->cur_ws_col != new.ws_col)
+	{
+		saved_index = data->index; //save index
+		ft_eprintf("old x: %i - y: %i - col: %i\n", data->coords.x, data->coords.y, data->cur_ws_col);
+		new_coords.x = 1 + ((data->coords.y - 1) * data->cur_ws_col + (data->coords.x - 1)) % new.ws_col;
+		new_coords.y = 1 + ((data->coords.y - 1) * data->cur_ws_col + (data->coords.x - 1)) / new.ws_col;
+		newlines = data->coords.y - 1;
+		extra = 0;
+		if (data->cur_ws_col % new.ws_col > 0)
+			extra = 1;
+		newlines = newlines * ((data->cur_ws_col / new.ws_col) + extra);
+		if (data->coords.x - 1 > 0)
+			ft_printf("\e[%iD", data->coords.x - 1);
+		sleep (1);
+		ft_eprintf("NEWLINES: %i\n", newlines);
+		if (newlines > 0)
+			ft_printf("\e[%iA", newlines);
+		sleep (1);
+		tc_clear_lines_str = tgoto(tgetstr("cd", NULL), 0, 1);
+		if (tc_clear_lines_str == NULL)
+		{
+			ft_eprintf("ERROR\n"); // DEBUG PRINT
+			return (FUNCT_ERROR); // do fatal shit
+		}
+		tputs(tc_clear_lines_str, 1, &ft_tputchar);
+		sleep(1);
+		shell_display_prompt(vshdata, vshdata->cur_prompt_type);
+		sleep(1);
+		data->index = ft_strlen(vshdata->line);
+		data->coords.x = 1 + vshdata->prompt_len;
+		data->coords.y = 1;
+		data->cur_ws_col = new.ws_col;
+		input_print_str(data, vshdata->line);
+		data->index = data->len_cur;
+		sleep(1);
+		curs_go_home(data, vshdata);
+		sleep(1);
+		curs_move_n_right(data, vshdata, saved_index);
+		ft_eprintf("new x: %i - y: %i - col: %i - nl: %i\n", new_coords.x, new_coords.y, new.ws_col, newlines);
+	}
+	return (FUNCT_SUCCESS);
+}
+
 int			input_read(t_vshdata *vshdata /*will need ws.ws_col backup and cursor backup x and y*/)
 {
 	t_inputdata *data;
@@ -147,6 +252,7 @@ int			input_read(t_vshdata *vshdata /*will need ws.ws_col backup and cursor back
 		return (ft_free_return(data, FUNCT_ERROR));
 	while (true)
 	{
+		input_resize_window_check(vshdata, data);
 		if (read(STDIN_FILENO, &data->c, 1) == -1)
 			return (ft_free_return(data, FUNCT_ERROR));
 		if (input_parse_ctrl_c(data, vshdata) == FUNCT_SUCCESS)
@@ -164,7 +270,7 @@ int			input_read(t_vshdata *vshdata /*will need ws.ws_col backup and cursor back
 				}
 			}
 		}
-		ft_eprintf("AFT: index: %i/%i\n", data->index, data->len_cur); // DEBUG PRINT
+		data->c = '\0';
 	}
 	return (ft_free_return(data, FUNCT_SUCCESS));
 }
