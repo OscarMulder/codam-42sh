@@ -6,7 +6,7 @@
 /*   By: omulder <omulder@student.codam.nl>           +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2019/04/17 14:03:16 by jbrinksm       #+#    #+#                */
-/*   Updated: 2019/08/23 18:12:17 by jbrinksm      ########   odam.nl         */
+/*   Updated: 2019/08/26 11:27:14 by jbrinksm      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -181,6 +181,9 @@ int			input_read_special(t_inputdata *data, t_vshdata *vshdata)
 **	GL & HF
 */
 
+#include <sys/ioctl.h>
+#include <term.h>
+
 static int	input_resize_window_check(t_vshdata *vshdata, t_inputdata *data)
 {
 	struct winsize	new;
@@ -249,6 +252,7 @@ int			input_read(t_vshdata *vshdata /*will need ws.ws_col backup and cursor back
 		return (ft_free_return(data, FUNCT_ERROR));
 	while (true)
 	{
+		input_resize_window_check(vshdata, data);
 		if (read(STDIN_FILENO, &data->c, 1) == -1)
 			return (ft_free_return(data, FUNCT_ERROR));
 		if (input_parse_ctrl_c(data, vshdata) == FUNCT_SUCCESS)
@@ -266,7 +270,7 @@ int			input_read(t_vshdata *vshdata /*will need ws.ws_col backup and cursor back
 				}
 			}
 		}
-		ft_eprintf("AFT: index: %i/%i\n", data->index, data->len_cur); // DEBUG PRINT
+		data->c = '\0';
 	}
 	return (ft_free_return(data, FUNCT_SUCCESS));
 }
