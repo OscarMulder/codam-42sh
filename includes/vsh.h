@@ -6,7 +6,7 @@
 /*   By: omulder <omulder@student.codam.nl>           +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2019/04/10 20:29:42 by jbrinksm       #+#    #+#                */
-/*   Updated: 2019/08/26 16:10:35 by jbrinksm      ########   odam.nl         */
+/*   Updated: 2019/08/26 16:47:00 by tde-jong      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -21,6 +21,8 @@
 */
 
 # define SHELL				"vsh"
+# define PROMPT_NAME		"vsh"
+# define PROMPT_SEPERATOR	"> "
 # define FUNCT_FAILURE 0
 # define FUNCT_SUCCESS 1
 # define FUNCT_ERROR -1
