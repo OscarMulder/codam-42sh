@@ -61,16 +61,16 @@ int			history_to_file(t_vshdata *data)
 {
 	int		fd;
 
-	if (data->history == NULL || data->history_file == NULL)
+	if (data->history->history == NULL || data->history->history_file == NULL)
 		return (FUNCT_ERROR);
-	fd = open(data->history_file,
+	fd = open(data->history->history_file,
 	O_RDWR | O_CREAT | O_TRUNC, S_IRUSR | S_IWUSR);
 	if (fd == -1)
 	{
 		ft_eprintf(E_HIST_OPEN_STR);
 		return (FUNCT_ERROR);
 	}
-	history_print_to_fd(fd, data->history);
+	history_print_to_fd(fd, data->history->history);
 	close(fd);
 	return (FUNCT_SUCCESS);
 }

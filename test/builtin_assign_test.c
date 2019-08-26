@@ -27,11 +27,11 @@ Test(builtin_assign, basic_change_existingvar_1)
 	t_vshdata	data;
 
 	g_state = (t_state*)ft_memalloc(sizeof(t_state));
-	hash_init(&vshdata);
+	hash_init(&data);
 	data.envlst = env_getlst();
 	cr_assert(data.envlst != NULL);
 	g_state->exit_code = 0;
-	builtin_assign("PATH=nothing", &vshdata, ENV_EXTERN);
+	builtin_assign("PATH=nothing", &data, ENV_EXTERN);
 	while (data.envlst != NULL && ft_strnequ(data.envlst->var, "PATH", 4) == 0)
 		data.envlst = data.envlst->next;
 	cr_assert(data.envlst != NULL);
@@ -49,7 +49,7 @@ Test(builtin_assign, basic_add_newvar_1)
 	data.envlst = env_getlst();
 	cr_assert(data.envlst != NULL);
 	g_state->exit_code = 0;
-	builtin_assign("NeWvAr=blabla", &vshdata, ENV_LOCAL);
+	builtin_assign("NeWvAr=blabla", &data, ENV_LOCAL);
 	while (data.envlst != NULL && ft_strnequ(data.envlst->var, "NeWvAr", 6) == 0)
 		data.envlst = data.envlst->next;
 	cr_assert(data.envlst != NULL);
@@ -67,7 +67,7 @@ Test(builtin_assign, basic_change_existingvar_2)
 	data.envlst = env_getlst();
 	cr_assert(data.envlst != NULL);
 	g_state->exit_code = 0;
-	builtin_assign("SHELL=jbrinksm", &vshdata, ENV_EXTERN);
+	builtin_assign("SHELL=jbrinksm", &data, ENV_EXTERN);
 	while (data.envlst != NULL && ft_strnequ(data.envlst->var, "SHELL", 4) == 0)
 		data.envlst = data.envlst->next;
 	cr_assert(data.envlst != NULL);
@@ -85,7 +85,7 @@ Test(builtin_assign, test_failed_exitcode_1)
 	data.envlst = env_getlst();
 	cr_assert(data.envlst != NULL);
 	g_state->exit_code = 0;
-	builtin_assign(NULL, &vshdata, ENV_LOCAL);
+	builtin_assign(NULL, &data, ENV_LOCAL);
 	cr_assert(data.envlst != NULL);
 	cr_expect_str_eq(ft_itoa(g_state->exit_code), ft_itoa(EXIT_FAILURE));
 }

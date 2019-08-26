@@ -6,7 +6,7 @@
 /*   By: mavan-he <mavan-he@student.codam.nl>         +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2019/08/18 13:09:06 by mavan-he       #+#    #+#                */
-/*   Updated: 2019/08/22 11:56:49 by omulder       ########   odam.nl         */
+/*   Updated: 2019/08/26 18:40:20 by jbrinksm      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -79,10 +79,10 @@ void		builtin_hash(char **args, t_vshdata *data)
 	argc = 1;
 	if (args[argc] == NULL)
 	{
-		if (data->ht_flag == HT_EMPTY)
+		if (data->hashtable->ht_flag == HT_EMPTY)
 			ft_printf("hash: hash table empty\n");
 		else
-			hash_print(data->ht);
+			hash_print(data->hashtable->ht);
 		return ;
 	}
 	if (check_flag(args, &flag, &argc) != FUNCT_SUCCESS)

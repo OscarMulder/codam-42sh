@@ -18,26 +18,26 @@ int			shell_dless_read_till_stop(char **heredoc, char *heredoc_delim,
 {
 	char	*line_tmp;
 
-	line_tmp = data->line;
-	data->line = NULL;
+	line_tmp = data->line->line;
+	data->line->line = NULL;
 	while (true)
 	{
 		ft_putstr("> ");
 		if (input_read(data) == FUNCT_ERROR)
 			return (FUNCT_ERROR);
 		ft_putstr("\n");
-		if (ft_strequ(data->line, heredoc_delim) == true)
+		if (ft_strequ(data->line->line, heredoc_delim) == true)
 			break ;
 		if (*heredoc == NULL)
-			*heredoc = ft_strdup(data->line);
+			*heredoc = ft_strdup(data->line->line);
 		else
-			*heredoc = ft_strjoinfree_s1(*heredoc, data->line);
-		ft_strdel(&vshdata->line);
+			*heredoc = ft_strjoinfree_s1(*heredoc, data->line->line);
+		ft_strdel(&data->line->line);
 		if (*heredoc == NULL)
 			return (FUNCT_ERROR);
 	}
-	ft_strdel(&vshdata->line);
-	data->line = line_tmp;
+	ft_strdel(&data->line->line);
+	data->line->line = line_tmp;
 	return (FUNCT_SUCCESS);
 }
 

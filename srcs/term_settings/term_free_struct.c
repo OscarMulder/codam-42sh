@@ -12,7 +12,7 @@
 
 #include "vsh.h"
 
-void	term_free_struct(t_term **term_p)
+void	term_free_struct(t_vshdataterm**term_p)
 {
 	if (term_p != NULL && *term_p != NULL)
 	{

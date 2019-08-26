@@ -34,19 +34,19 @@ int			shell_handle_escaped_newlines(t_vshdata *data)
 	int		ret;
 	char	*line_tmp;
 
-	ret = remove_last_escaped_newline(data->line);
+	ret = remove_last_escaped_newline(data->line->line);
 	if (ret == false)
 		return (FUNCT_FAILURE);
 	while (ret != false)
 	{
 		ft_putstr("\nlinecont> ");
-		line_tmp = data->line;
-		data->line = NULL;
+		line_tmp = data->line->line;
+		data->line->line = NULL;
 		input_read(data);
-		data->line = ft_strjoinfree_all(line_tmp, data->line);
-		if (data->line == NULL)
+		data->line->line = ft_strjoinfree_all(line_tmp, data->line->line);
+		if (data->line->line == NULL)
 			return (FUNCT_ERROR); // print error func PLZ
-		ret = remove_last_escaped_newline(data->line);
+		ret = remove_last_escaped_newline(data->line->line);
 	}
 	return (FUNCT_SUCCESS);
 }

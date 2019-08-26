@@ -6,7 +6,7 @@
 /*   By: omulder <omulder@student.codam.nl>           +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2019/04/18 16:44:50 by omulder        #+#    #+#                */
-/*   Updated: 2019/08/23 13:48:31 by jbrinksm      ########   odam.nl         */
+/*   Updated: 2019/08/26 19:19:26 by jbrinksm      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -46,9 +46,10 @@ int		shell_start(t_vshdata *data)
 	ast = NULL;
 	pipes = redir_init_pipestruct();
 	env_add_extern_value(data, "OLDPWD", "");
+	input_resize_window_check(data);
 	while (true)
 	{
-		ft_strdel(&vshdata->line);
+		ft_strdel(&data->line->line);
 		parser_astdel(&ast);
 		lexer_tokenlstdel(&token_lst);
 		shell_display_prompt(data, REGULAR_PROMPT);
@@ -57,9 +58,9 @@ int		shell_start(t_vshdata *data)
 		if (shell_close_quote_and_esc(data) == FUNCT_ERROR)
 			continue ;
 		ft_putchar('\n');
-		if (history_line_to_array(data->history, &vshdata->line) == FUNCT_ERROR)
+		if (history_line_to_array(data->history->history, &data->line->line) == FUNCT_ERROR)
 			continue ;
-		if (lexer(&vshdata->line, &token_lst) != FUNCT_SUCCESS)
+		if (lexer(&data->line->line, &token_lst) != FUNCT_SUCCESS)
 			continue ;
 		if (shell_dless_input(data, &token_lst) != FUNCT_SUCCESS)
 			continue ;

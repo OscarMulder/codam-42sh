@@ -6,7 +6,7 @@
 /*   By: mavan-he <mavan-he@student.codam.nl>         +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2019/07/25 17:24:39 by mavan-he       #+#    #+#                */
-/*   Updated: 2019/08/02 12:29:41 by mavan-he      ########   odam.nl         */
+/*   Updated: 2019/08/26 18:40:47 by jbrinksm      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -58,7 +58,7 @@ int			alias_expansion_checker(t_vshdata *data, t_tokenlst *probe,
 	t_tokenlst	*new_probe;
 	char		*alias;
 
-	alias = alias_find_value(probe->next->value, data->aliaslst, expanded);
+	alias = alias_find_value(probe->next->value, data->alias->aliaslst, expanded);
 	if (alias != NULL)
 	{
 		if (alias_space_check(alias) == true)

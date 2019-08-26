@@ -59,7 +59,7 @@ TestSuite(term_init_struct);
 
 Test(term_init_struct, basic)
 {
-	t_term	*term_p;
+	t_vshdataterm	*term_p;
 
 	term_p = term_init_struct();
 	cr_assert(term_p != NULL);
@@ -75,7 +75,7 @@ TestSuite(term_free_struct);
 
 Test(term_free_struct, basic)
 {
-	t_term	*term_p;
+	t_vshdataterm	*term_p;
 
 	term_p = term_init_struct();
 
@@ -94,7 +94,7 @@ TestSuite(term_get_attributes);
 
 Test(term_get_attributes, basic)
 {
-	t_term	*term_p;
+	t_vshdataterm	*term_p;
 
 	term_p = term_init_struct();
 
@@ -108,7 +108,7 @@ Test(term_get_attributes, basic)
 
 Test(term_get_attributes, invalid_fd, .init=redirect_all_stdout)
 {
-	t_term	*term_p;
+	t_vshdataterm	*term_p;
 
 	cr_expect_eq(term_get_attributes(STDIN_FILENO, NULL), FUNCT_FAILURE);
 	term_p = term_init_struct();
@@ -204,21 +204,21 @@ Test(shell_quote_checker, basic)
 	t_vshdata	data;
 
 	data.history_file = "/tmp/.vsh_history";
-	history_get_file_content(&vshdata);
+	history_get_file_content(&data);
 	line = strdup("lala");
-	shell_close_unclosed_quotes(&vshdata, &line, &status);
+	shell_close_unclosed_quotes(&data, &line, &status);
 	cr_expect_str_eq(line, "lala");
 	ft_strdel(&line);
 	line = strdup("lala''");
-	shell_close_unclosed_quotes(&vshdata, &line, &status);
+	shell_close_unclosed_quotes(&data, &line, &status);
 	cr_expect_str_eq(line, "lala''");
 	ft_strdel(&line);
 	line = strdup("lala\"\"");
-	shell_close_unclosed_quotes(&vshdata, &line, &status);
+	shell_close_unclosed_quotes(&data, &line, &status);
 	cr_expect_str_eq(line, "lala\"\"");
 	ft_strdel(&line);
 	line = strdup("lala'\"'");
-	shell_close_unclosed_quotes(&vshdata, &line, &status);
+	shell_close_unclosed_quotes(&data, &line, &status);
 	cr_expect_str_eq(line, "lala'\"'");
 	ft_strdel(&line);
 }
@@ -510,7 +510,7 @@ Test(history_check, history_to_file)
 	history_line_to_array(data.history, &str1);
 	history_line_to_array(data.history, &str2);
 	history_line_to_array(data.history, &str3);
-	cr_expect(history_to_file(&vshdata) == FUNCT_SUCCESS);
+	cr_expect(history_to_file(&data) == FUNCT_SUCCESS);
 	fd = open(data.history_file, O_RDONLY);
 	cr_expect(fd > 0);
 	ft_bzero(buf, 22);
@@ -539,8 +539,8 @@ Test(history_check, get_file_content)
 	history_line_to_array(data.history, &str1);
 	history_line_to_array(data.history, &str2);
 	history_line_to_array(data.history, &str3);
-	history_to_file(&vshdata);
-	cr_expect(history_get_file_content(&vshdata) == FUNCT_SUCCESS);
+	history_to_file(&data);
+	cr_expect(history_get_file_content(&data) == FUNCT_SUCCESS);
 	cr_expect_str_eq(data.history[0]->str, "check1");
 	cr_expect_str_eq(data.history[1]->str, "check2");
 	cr_expect_str_eq(data.history[2]->str, "check3");
@@ -597,8 +597,8 @@ Test(history_check, print_history, .init=redirect_all_stdout)
 	history_line_to_array(data.history, &str1);
 	history_line_to_array(data.history, &str2);
 	history_line_to_array(data.history, &str3);
-	history_to_file(&vshdata);
-	cr_expect(history_get_file_content(&vshdata) == FUNCT_SUCCESS);
+	history_to_file(&data);
+	cr_expect(history_get_file_content(&data) == FUNCT_SUCCESS);
 	fflush(NULL);
 	history_print(data.history);
 	cr_expect_stdout_eq_str("    1  check1\n    2  check2\n    3  check3\n");
@@ -627,7 +627,7 @@ Test(exec_echo, basic, .init=redirect_all_stdout)
 	data.envlst = env_getlst();
 	cr_expect(lexer(&(str), &lst) == FUNCT_SUCCESS);
 	cr_expect(parser_start(&lst, &ast) == FUNCT_SUCCESS);
-	exec_complete_command(ast, &vshdata);
+	exec_complete_command(ast, &data);
 	cr_expect(g_state->exit_code == 0);
 	cr_expect_stdout_eq_str("hoi\n");
 	parser_astdel(&ast);
@@ -649,7 +649,7 @@ Test(exec_echo, basic2, .init=redirect_all_stdout)
 	data.envlst = env_getlst();
 	cr_expect(lexer(&(str), &lst) == FUNCT_SUCCESS);
 	cr_expect(parser_start(&lst, &ast) == FUNCT_SUCCESS);
-	exec_complete_command(ast, &vshdata);
+	exec_complete_command(ast, &data);
 	cr_expect(g_state->exit_code == 0);
 	cr_expect_stdout_eq_str("Hi, this is a string\n");
 	parser_astdel(&ast);
@@ -671,9 +671,9 @@ Test(exec_find_bin, basic)
 	data.envlst->var = "PATH=./";
 	data.envlst->type = ENV_EXTERN;
 	data.envlst->next = NULL;
-	hash_init(&vshdata);
+	hash_init(&data);
 	str = ft_strdup("vsh");
-	exec_find_binary(str, &vshdata, &bin);
+	exec_find_binary(str, &data, &bin);
 	cr_expect_str_eq(bin, ".//vsh");
 	ft_strdel(&bin);
 	ft_strdel(&str);
@@ -689,10 +689,10 @@ Test(exec_find_bin, basic2)
 	data.envlst->var = "PATH=/bin:./";
 	data.envlst->type = ENV_EXTERN;
 	data.envlst->next = NULL;
-	hash_init(&vshdata);
+	hash_init(&data);
 	bin = NULL;
 	str = ft_strdup("ls");
-	exec_find_binary(str, &vshdata, &bin);
+	exec_find_binary(str, &data, &bin);
 	cr_expect_str_eq(bin, "/bin/ls");
 	ft_strdel(&bin);
 	ft_strdel(&str);
@@ -708,10 +708,10 @@ Test(exec_find_bin, advanced)
 	data.envlst->var = "PATH=/Users/travis/.rvm/gems/ruby-2.4.2/bin:/Users/travis/.rvm/gems/ruby-2.4.2@global/bin:/Users/travis/.rvm/rubies/ruby-2.4.2/bin:/Users/travis/.rvm/bin:/Users/travis/bin:/Users/travis/.local/bin:/Users/travis/.nvm/versions/node/v6.11.4/bin:/bin:/usr/local/bin:/usr/bin:/usr/sbin:/sbin:/opt/X11/bin";
 	data.envlst->type = ENV_EXTERN;
 	data.envlst->next = NULL;
-	hash_init(&vshdata);
+	hash_init(&data);
 	bin = NULL;
 	str = ft_strdup("ls");
-	exec_find_binary(str, &vshdata, &bin);
+	exec_find_binary(str, &data, &bin);
 	cr_expect_str_eq(bin, "/bin/ls");
 	ft_strdel(&bin);
 	ft_strdel(&str);
@@ -729,10 +729,10 @@ Test(exec_find_bin, nopath, .init=redirect_all_stdout)
 	data.envlst->var = "PATH=";
 	data.envlst->type = ENV_EXTERN;
 	data.envlst->next = NULL;
-	hash_init(&vshdata);
+	hash_init(&data);
 	bin = NULL;
 	str = ft_strdup("ls");
-	exec_find_binary(str, &vshdata, &bin);
+	exec_find_binary(str, &data, &bin);
 	cr_expect(bin == NULL);
 	ft_strdel(&bin);
 	ft_strdel(&str);
@@ -749,13 +749,13 @@ Test(exec_find_bin, execnonexistent, .init=redirect_all_stdout)
 	g_state->exit_code = 0;
 
 	data.envlst = env_getlst();
-	hash_init(&vshdata);
+	hash_init(&data);
 	str = ft_strdup("idontexist\n");
 	lst = NULL;
 	ast = NULL;
 	cr_expect(lexer(&(str), &lst) == FUNCT_SUCCESS);
 	cr_expect(parser_start(&lst, &ast) == FUNCT_SUCCESS);
-	exec_complete_command(ast, &vshdata);
+	exec_complete_command(ast, &data);
 	cr_expect(g_state->exit_code == EXIT_NOTFOUND);
 	cr_expect_stderr_eq_str("vsh: idontexist: command not found.\n");
 	parser_astdel(&ast);
@@ -775,7 +775,7 @@ Test(builtin_export, basic_test)
 	args[1] = "key=value";
 	args[2] = NULL;
 	data.envlst = env_getlst();
-	builtin_export(args, &vshdata);
+	builtin_export(args, &data);
 	while (data.envlst != NULL && ft_strnequ(data.envlst->var, "key", 3) == 0)
 		data.envlst = data.envlst->next;
 	cr_assert(data.envlst != NULL);
@@ -796,12 +796,12 @@ Test(builtin_export, basic_test_n_option)
 	args[1] = "key=value";
 	args[2] = NULL;
 	data.envlst = env_getlst();
-	builtin_export(args, &vshdata);
+	builtin_export(args, &data);
 	args[0] = "export";
 	args[1] = "-n";
 	args[2] = "key=value";
 	args[3] = NULL;
-	builtin_export(args, &vshdata);
+	builtin_export(args, &data);
 	while (data.envlst != NULL && ft_strnequ(data.envlst->var, "key", 3) == 0)
 		data.envlst = data.envlst->next;
 	cr_assert(data.envlst != NULL);
@@ -822,7 +822,7 @@ Test(builtin_export, basic_output_error_test, .init=redirect_all_stdout)
 	args[1] = "key*=value";
 	args[2] = NULL;
 	data.envlst = env_getlst();
-	builtin_export(args, &vshdata);
+	builtin_export(args, &data);
 	cr_expect(g_state->exit_code == EXIT_WRONG_USE);
 	cr_expect_stderr_eq_str("vsh: export: 'key*=value': not a valid identifier\n");
 }
@@ -839,7 +839,7 @@ Test(builtin_export, basic_output_error_test2, .init=redirect_all_stdout)
 	args[1] = "-h";
 	args[2] = NULL;
 	data.envlst = env_getlst();
-	builtin_export(args, &vshdata);
+	builtin_export(args, &data);
 	cr_expect(g_state->exit_code == EXIT_WRONG_USE);
 }
 
@@ -967,7 +967,7 @@ Test(alias, basic_test)
 	line = ft_strdup("alias echo='echo hoi ; echo dit ' ; alias hoi=ditte ; alias dit=dat\n");
 	data.aliaslst = NULL;
 	data.envlst = env_getlst();
-	redir_save_stdfds(&vshdata);
+	redir_save_stdfds(&data);
 	cr_assert(data.envlst != NULL);
 	token_lst = NULL;
 	ast = NULL;
@@ -975,13 +975,13 @@ Test(alias, basic_test)
 	cr_assert(token_lst != NULL);
 	cr_expect(parser_start(&token_lst, &ast) == FUNCT_SUCCESS);
 	cr_assert(ast != NULL);
-	cr_expect(exec_complete_command(ast, &vshdata) == FUNCT_SUCCESS);
+	cr_expect(exec_complete_command(ast, &data) == FUNCT_SUCCESS);
 	cr_expect_str_eq(data.aliaslst->var, "dit=dat");
 	line = ft_strdup("echo\n");
 	cr_assert(line != NULL);
 	cr_expect(lexer(&line, &token_lst) == FUNCT_SUCCESS);
 	cr_assert(token_lst != NULL);
-	cr_expect(alias_expansion(&vshdata, &token_lst, NULL) == FUNCT_SUCCESS);
+	cr_expect(alias_expansion(&data, &token_lst, NULL) == FUNCT_SUCCESS);
 	cr_assert(token_lst != NULL);
 	cr_expect_str_eq(token_lst->next->next->value, "hoi");
 	cr_expect_str_eq(token_lst->next->next->next->next->value, "echo");
@@ -1002,14 +1002,14 @@ Test(alias, multi_line_test)
 	args[0] = "alias";
 	args[1] = ft_strdup("echo=echo hoi\necho doei\n\n");
 	args[2] = NULL;
-	builtin_alias(args, &vshdata.aliaslst);
+	builtin_alias(args, &data.aliaslst);
 	cr_assert(g_state->exit_code == EXIT_SUCCESS);
 	line = ft_strdup("echo\n");
 	cr_assert(line != NULL);
 	token_lst = NULL;
 	cr_expect(lexer(&line, &token_lst) == FUNCT_SUCCESS);
 	cr_assert(token_lst != NULL);
-	cr_expect(alias_expansion(&vshdata, &token_lst, NULL) == FUNCT_SUCCESS);
+	cr_expect(alias_expansion(&data, &token_lst, NULL) == FUNCT_SUCCESS);
 	cr_expect_str_eq(token_lst->next->next->value, "hoi");
 	cr_expect(token_lst->next->next->next->type == SEMICOL);
 }
@@ -1035,7 +1035,7 @@ Test(alias_file, basic_file_test)
 	cr_assert(fd != -1);
 	write(fd, "test=alias\n", 11);
 	close(fd);
-	alias_read_file(&vshdata);
+	alias_read_file(&data);
 	cr_expect_str_eq(data.aliaslst->var, "test=alias");
 	remove(data.alias_file);
 }
@@ -1054,7 +1054,7 @@ Test(replace_var, basic_test, .init=redirect_all_stdout)
 	line = ft_strdup("dit=dat ; hier=daar\n");
 	data.aliaslst = NULL;
 	data.envlst = env_getlst();
-	redir_save_stdfds(&vshdata);
+	redir_save_stdfds(&data);
 	cr_assert(data.envlst != NULL);
 	token_lst = NULL;
 	ast = NULL;
@@ -1062,7 +1062,7 @@ Test(replace_var, basic_test, .init=redirect_all_stdout)
 	cr_assert(token_lst != NULL);
 	cr_expect(parser_start(&token_lst, &ast) == FUNCT_SUCCESS);
 	cr_assert(ast != NULL);
-	cr_expect(exec_complete_command(ast, &vshdata) == FUNCT_SUCCESS);
+	cr_expect(exec_complete_command(ast, &data) == FUNCT_SUCCESS);
 	cr_expect_str_eq(env_getvalue("dit", data.envlst), "dat");
 	line = ft_strdup("echo $dit \"${hier}\"\n");
 	cr_assert(line != NULL);
@@ -1070,7 +1070,7 @@ Test(replace_var, basic_test, .init=redirect_all_stdout)
 	cr_assert(token_lst != NULL);
 	cr_expect(parser_start(&token_lst, &ast) == FUNCT_SUCCESS);
 	cr_assert(ast != NULL);
-	cr_expect(exec_complete_command(ast, &vshdata) == FUNCT_SUCCESS);
+	cr_expect(exec_complete_command(ast, &data) == FUNCT_SUCCESS);
 	cr_expect_stdout_eq_str("dat daar\n");
 }
 

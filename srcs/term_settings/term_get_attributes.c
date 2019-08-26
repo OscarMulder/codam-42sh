@@ -17,7 +17,7 @@
 **	Insert: check if it is a valid terminal file_d
 */
 
-int		term_get_attributes(int fd, t_term *term_p)
+int		term_get_attributes(int fd, t_vshdataterm*term_p)
 {
 	int	ret;
 

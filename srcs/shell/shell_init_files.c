@@ -19,11 +19,11 @@ int		shell_init_files(t_vshdata *data)
 	homedir = env_getvalue("HOME", data->envlst);
 	if (homedir == NULL)
 		return (err_ret(E_HOME_NOTSET_STR));
-	data->history_file =
+	data->history->history_file =
 	ft_strjoinfree_s2(homedir, ft_strjoin("/", HISTFILENAME));
-	data->alias_file =
+	data->alias->alias_file =
 	ft_strjoinfree_s2(homedir, ft_strjoin("/", ALIASFILENAME));
-	if (data->history_file == NULL || data->alias_file == NULL)
+	if (data->history->history_file == NULL || data->alias->alias_file == NULL)
 		return (err_ret(E_ALLOC_STR));
 	return (FUNCT_SUCCESS);
 }

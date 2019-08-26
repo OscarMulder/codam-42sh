@@ -6,7 +6,7 @@
 /*   By: omulder <omulder@student.codam.nl>           +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2019/05/29 16:59:41 by omulder        #+#    #+#                */
-/*   Updated: 2019/08/19 11:04:46 by mavan-he      ########   odam.nl         */
+/*   Updated: 2019/08/26 18:40:47 by jbrinksm      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -27,13 +27,13 @@ bool	exec_builtin(char **args, t_vshdata *data)
 	else if (ft_strequ(args[0], "unset"))
 		builtin_unset(args, data->envlst);
 	else if (ft_strequ(args[0], "history"))
-		history_print(data->history);
+		history_print(data->history->history);
 	else if (ft_strequ(args[0], "type"))
-		builtin_type(args, data->envlst, data->aliaslst);
+		builtin_type(args, data->envlst, data->alias->aliaslst);
 	else if (ft_strequ(args[0], "alias"))
-		builtin_alias(args, &vshdata->aliaslst);
+		builtin_alias(args, &data->alias->aliaslst);
 	else if (ft_strequ(args[0], "unalias"))
-		builtin_unalias(args, &vshdata->aliaslst);
+		builtin_unalias(args, &data->alias->aliaslst);
 	else if (ft_strequ(args[0], "hash"))
 		builtin_hash(args, data);
 	else

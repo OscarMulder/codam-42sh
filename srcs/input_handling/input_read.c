@@ -6,7 +6,7 @@
 /*   By: omulder <omulder@student.codam.nl>           +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2019/04/17 14:03:16 by jbrinksm       #+#    #+#                */
-/*   Updated: 2019/08/26 15:32:53 by rkuijper      ########   odam.nl         */
+/*   Updated: 2019/08/26 19:58:37 by jbrinksm      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -25,47 +25,6 @@ void		input_clear_char_at(char **line, unsigned index)
 	}
 }
 
-static int	find_start(t_history **history)
-{
-	int i;
-	int start;
-	int largest;
-
-	i = 0;
-	start = 0;
-	largest = -1;
-	while (i < HISTORY_MAX && history[i]->str != NULL)
-	{
-		if (history[i]->number > largest)
-		{
-			start = i;
-			largest = history[i]->number;
-		}
-		i++;
-	}
-	return (start + 1);
-}
-
-t_vshdata	*init_vshdata(t_vshdata *data)
-{
-	t_vshdata	*new;
-
-	new = (t_vshdata*)ft_memalloc(sizeof(t_vshdata));
-	if (new == NULL)
-		return (NULL);
-	new->c = 0;
-	new->index = 0;
-	new->len_cur = 0;
-	new->len_max = 64;
-	new->coords = (t_point){ 1 + data->prompt_len, 1 };
-	new->hist_index = find_start(data->history);
-	new->hist_start = new->hist_index - 1;
-	new->hist_first = true;
-	new->history = data->history;
-	new->cur_ws_col = -1;
-	return (new);
-}
-
 /*
 **	Is called after reading '\e'. The complete sequence is dumped into a buf.
 **	If we support the escape sequence, it is handled by any of the functions
@@ -77,33 +36,33 @@ int			input_read_ansi(t_vshdata *data)
 	char	termcapbuf[TERMCAPBUFFSIZE];
 
 	ft_bzero(termcapbuf, TERMCAPBUFFSIZE);
-	if (data->c == '\e')
+	if (data->input->c == '\e')
 	{
 		termcapbuf[0] = '\e';
 		if (read(STDIN_FILENO, &termcapbuf[1], TERMCAPBUFFSIZE - 1) == -1)
 			return (FUNCT_ERROR);
 		if (ft_strequ(termcapbuf, TC_LEFT_ARROW) == true)
-			curs_move_left(data, data);
+			curs_move_left(data);
 		else if (ft_strequ(termcapbuf, TC_RIGHT_ARROW) == true)
-			curs_move_right(data, data);
+			curs_move_right(data);
 		else if (ft_strequ(termcapbuf, TC_HOME) == true)
-			curs_go_home(data, data);
+			curs_go_home(data);
 		else if (ft_strequ(termcapbuf, TC_END) == true)
-			curs_go_end(data, data);
+			curs_go_end(data);
 		else if (ft_strequ(termcapbuf, TC_DELETE) == true)
-			input_handle_delete(data, data);
+			input_handle_delete(data);
 		else if (ft_strequ(termcapbuf, TC_UP_ARROW) == true)
-			history_change_line(data, data, ARROW_UP);
+			history_change_line(data, ARROW_UP);
 		else if (ft_strequ(termcapbuf, TC_DOWN_ARROW) == true)
-			history_change_line(data, data, ARROW_DOWN);
+			history_change_line(data, ARROW_DOWN);
 		else if (ft_strequ(termcapbuf, TC_CTRL_RIGHT_ARROW) == true)
-			curs_move_next_word(data, data);
+			curs_move_next_word(data);
 		else if (ft_strequ(termcapbuf, TC_CTRL_LEFT_ARROW) == true)
-			curs_move_prev_word(data, data);
+			curs_move_prev_word(data);
 		else if (ft_strequ(termcapbuf, TC_CTRL_UP_ARROW) == true)
-			curs_move_up(data, data);
+			curs_move_up(data);
 		else if (ft_strequ(termcapbuf, TC_CTRL_DOWN_ARROW) == true)
-			curs_move_down(data, data);
+			curs_move_down(data);
 		else
 		{
 			ft_eprintf(">%s< TERMCAP NOT FOUND\n", &termcapbuf[1]); // DEBUG PRINT
@@ -120,16 +79,16 @@ int			input_read_ansi(t_vshdata *data)
 
 int			input_read_special(t_vshdata *data)
 {
-	if (data->c == INPUT_BACKSPACE)
-		input_handle_backspace(data, data);
-	else if (data->c == INPUT_CTRL_D)
-		input_parse_ctrl_d(data, data);
-	else if (data->c == INPUT_CTRL_K)
-		input_parse_ctrl_k(data, data);
-	else if (data->c == INPUT_CTRL_U)
-		input_parse_ctrl_u(data, data);
-	else if (data->c == INPUT_CTRL_Y)
-		input_parse_ctrl_y(data, data);
+	if (data->input->c == INPUT_BACKSPACE)
+		input_handle_backspace(data);
+	else if (data->input->c == INPUT_CTRL_D)
+		input_parse_ctrl_d(data);
+	else if (data->input->c == INPUT_CTRL_K)
+		input_parse_ctrl_k(data);
+	else if (data->input->c == INPUT_CTRL_U)
+		input_parse_ctrl_u(data);
+	else if (data->input->c == INPUT_CTRL_Y)
+		input_parse_ctrl_y(data);
 	else
 		return (FUNCT_FAILURE);
 	return (FUNCT_SUCCESS);
@@ -184,7 +143,7 @@ int			input_read_special(t_vshdata *data)
 #include <sys/ioctl.h>
 #include <term.h>
 
-static int	input_resize_window_check(t_vshdata *data, t_vshdata *data)
+int		input_resize_window_check(t_vshdata *data)
 {
 	struct winsize	new;
 	int				newlines;
@@ -193,18 +152,18 @@ static int	input_resize_window_check(t_vshdata *data, t_vshdata *data)
 	int				extra;
 
 	ioctl(STDIN_FILENO, TIOCGWINSZ, &new);
-	if (data->cur_ws_col == -1)
-		data->cur_ws_col = new.ws_col;
-	else if (data->cur_ws_col != new.ws_col)
+	if (data->curs->cur_ws_col == -1)
+		data->curs->cur_ws_col = new.ws_col;
+	else if (data->curs->cur_ws_col != new.ws_col)
 	{
-		saved_index = data->index; //save index
-		newlines = data->coords.y - 1;
+		saved_index = data->line->index; //save index
+		newlines = data->curs->coords.y - 1;
 		extra = 0;
-		if (data->cur_ws_col % new.ws_col > 0)
+		if (data->curs->cur_ws_col % new.ws_col > 0)
 			extra = 1;
-		newlines = newlines * ((data->cur_ws_col / new.ws_col) + extra);
-		if (data->coords.x - 1 > 0)
-			ft_printf("\e[%iD", data->coords.x - 1);
+		newlines = newlines * ((data->curs->cur_ws_col / new.ws_col) + extra);
+		if (data->curs->coords.x - 1 > 0)
+			ft_printf("\e[%iD", data->curs->coords.x - 1);
 		ft_eprintf("NEWLINES: %i\n", newlines);
 		if (newlines > 0)
 			ft_printf("\e[%iA", newlines);
@@ -215,52 +174,58 @@ static int	input_resize_window_check(t_vshdata *data, t_vshdata *data)
 			return (FUNCT_ERROR); // do fatal shit
 		}
 		tputs(tc_clear_lines_str, 1, &ft_tputchar);
-		shell_display_prompt(data, data->cur_prompt_type);
+		shell_display_prompt(data, data->prompt->cur_prompt_type);
 		sleep(1);
-		data->index = data->len_cur;
-		data->coords.x = 1 + (data->prompt_len + 1) % data->cur_ws_col; // + data->prompt_len;
-		data->coords.y = 1 + (data->prompt_len + 1) / data->cur_ws_col;
-		ft_eprintf("x: %i y: %i len: %i\n", data->coords.x, data->coords.y, data->prompt_len);
-		data->cur_ws_col = new.ws_col;
-		input_print_str(data, data->line);
-		data->index = data->len_cur;
-		curs_go_home(data, data);
-		curs_move_n_right(data, data, saved_index);
+		data->line->index = data->line->len_cur;
+		data->curs->coords.x = 1 + (data->prompt->prompt_len + 1) % data->curs->cur_ws_col; // + data->prompt->prompt_len;
+		data->curs->coords.y = 1 + (data->prompt->prompt_len + 1) / data->curs->cur_ws_col;
+		ft_eprintf("x: %i y: %i len: %i\n", data->curs->coords.x, data->curs->coords.y, data->prompt->prompt_len);
+		data->curs->cur_ws_col = new.ws_col;
+		input_print_str(data, data->line->line);
+		data->line->index = data->line->len_cur;
+		curs_go_home(data);
+		curs_move_n_right(data, saved_index);
 	}
 	return (FUNCT_SUCCESS);
 }
 
-int			input_read(t_vshdata *data /*will need ws.ws_col backup and cursor backup x and y*/)
+static int	reset_input_read_return(t_vshdata *data, int ret)
 {
-	t_vshdata *data;
+	data->input->c = '\0';
+	data->line->len_cur = 0;
+	//probably more shit?
+	return (ret);
+}
 
-	data = init_vshdata(data);
+int			input_read(t_vshdata *data)
+{
 	if (data == NULL)
 		return (FUNCT_ERROR);
-	data->line = ft_strnew(data->len_max);
-	if (data->line == NULL)
-		return (ft_free_return(data, FUNCT_ERROR));
+	data->line->line = ft_strnew(data->line->len_max);
+	if (data->line->line == NULL)
+		return (reset_input_read_return(data, FUNCT_ERROR));
 	while (true)
 	{
-		input_resize_window_check(data, data);
-		if (read(STDIN_FILENO, &data->c, 1) == -1)
-			return (ft_free_return(data, FUNCT_ERROR));
-		if (input_parse_ctrl_c(data, data) == FUNCT_SUCCESS)
-			return (ft_free_return(data, NEW_PROMPT));
-		else if (input_read_ansi(data, data) == FUNCT_FAILURE)
+		input_resize_window_check(data);
+		if (read(STDIN_FILENO, &data->input->c, 1) == -1)
+			return (reset_input_read_return(data, FUNCT_ERROR));
+		ft_eprintf("%i %i [%s]\n", data->line->index, data->line->len_cur, data->line->line);
+		if (input_parse_ctrl_c(data) == FUNCT_SUCCESS)
+			return (reset_input_read_return(data, NEW_PROMPT));
+		else if (input_read_ansi(data) == FUNCT_FAILURE)
 		{
-			if (input_read_special(data, data) == FUNCT_FAILURE)
+			if (input_read_special(data) == FUNCT_FAILURE)
 			{
-				if (input_parse_char(data, data) == FUNCT_ERROR)
-					return (ft_free_return(data, FUNCT_ERROR));
-				if (data->c == '\n')
+				if (input_parse_char(data) == FUNCT_ERROR)
+					return (reset_input_read_return(data, FUNCT_ERROR));
+				if (data->input->c == '\n')
 				{
-					curs_go_end(data, data);
+					curs_go_end(data);
 					break ;
 				}
 			}
 		}
-		data->c = '\0';
+		data->input->c = '\0';
 	}
-	return (ft_free_return(data, FUNCT_SUCCESS));
+	return (reset_input_read_return(data, FUNCT_SUCCESS));
 }

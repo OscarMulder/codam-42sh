@@ -18,7 +18,7 @@
 **	We will need to implement errno return values for this function.
 */
 
-int		term_reset(t_term *term_p)
+int		term_reset(t_vshdataterm*term_p)
 {
 	int	ret;
 

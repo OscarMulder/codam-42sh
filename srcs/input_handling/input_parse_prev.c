@@ -6,7 +6,7 @@
 /*   By: omulder <omulder@student.codam.nl>           +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2019/05/16 13:39:59 by rkuijper       #+#    #+#                */
-/*   Updated: 2019/08/26 12:55:46 by rkuijper      ########   odam.nl         */
+/*   Updated: 2019/08/26 18:20:16 by jbrinksm      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -22,25 +22,25 @@ void		curs_move_prev_word(t_vshdata *data)
 {
 	int	i;
 
-	if (data->index == 0)
+	if (data->line->index == 0)
 		return ;
 	i = 0;
-	if ((data->index > 0
-		&& tools_isprintnotblank(data->line[data->index]) == true // i++ if at beginning of previous word
-		&& ft_isblank(data->line[data->index - 1]) == true)
-		|| (data->index > 0 && data->index == data->len_cur)) // i++ if at end of line
+	if ((data->line->index > 0
+		&& tools_isprintnotblank(data->line->line[data->line->index]) == true // i++ if at beginning of previous word
+		&& ft_isblank(data->line->line[data->line->index - 1]) == true)
+		|| (data->line->index > 0 && data->line->index == data->line->len_cur)) // i++ if at end of line
 		i++;
-	while (data->index - i > 0 // i++ blanks
-		&& ft_isblank(data->line[data->index - i]) == true)
+	while (data->line->index - i > 0 // i++ blanks
+		&& ft_isblank(data->line->line[data->line->index - i]) == true)
 		i++;
-	if (data->index - i == 0)
-		curs_move_n_left(data, data, i);
+	if (data->line->index - i == 0)
+		curs_move_n_left(data, i);
 	else
 	{
-		while (data->index - i > 0
-			&& tools_isprintnotblank(data->line[data->index - i - 1]))
+		while (data->line->index - i > 0
+			&& tools_isprintnotblank(data->line->line[data->line->index - i - 1]))
 			i++;
-		curs_move_n_left(data, data, i);
+		curs_move_n_left(data, i);
 	}
 }
 
@@ -54,34 +54,34 @@ void		curs_move_prev_word(t_vshdata *data)
 
 static void	move_left_parse_newline(t_vshdata *data)
 {
-	char *pos = ft_strrnchr(data->line, '\n', data->index);
-	int len = data->index;
+	char *pos = ft_strrnchr(data->line->line, '\n', data->line->index);
+	int len = data->line->index;
 	if (pos != NULL)
-		len = (data->index - 1) - (pos - data->line);
+		len = (data->line->index - 1) - (pos - data->line->line);
 	ft_putstr("\e[A");
 	if (len > 1)
 		ft_printf("\e[%iC", len);
-	data->coords.x = len == 1 ? len : len + 1;
-	data->coords.y--;
-	if (data->coords.y == 1)
+	data->curs->coords.x = len == 1 ? len : len + 1;
+	data->curs->coords.y--;
+	if (data->curs->coords.y == 1)
 	{
-		ft_printf("\e[%iC", data->prompt_len);
-		data->coords.x += data->prompt_len;
+		ft_printf("\e[%iC", data->prompt->prompt_len);
+		data->curs->coords.x += data->prompt->prompt_len;
 	}
 }
 
 static void	move_left_to_colmax(t_vshdata *data, int colmax)
 {
-	if (data->coords.x == 1)
+	if (data->curs->coords.x == 1)
 	{
-		data->coords.x = colmax;
-		data->coords.y--;
-		ft_printf("\e[A\e[%iC", data->coords.x);
+		data->curs->coords.x = colmax;
+		data->curs->coords.y--;
+		ft_printf("\e[A\e[%iC", data->curs->coords.x);
 	}
 	else
 	{
 		ft_putstr("\e[D");
-		data->coords.x--;
+		data->curs->coords.x--;
 	}
 }
 
@@ -89,21 +89,21 @@ void		curs_move_n_left(t_vshdata *data, size_t n)
 {
 	struct winsize	ws;
 
-	if (n <= 0 || data->index == 0)
+	if (n <= 0 || data->line->index == 0)
 		return ;
-	if (n > data->index)
-		n = data->index;
+	if (n > data->line->index)
+		n = data->line->index;
 	ioctl(STDIN_FILENO, TIOCGWINSZ, &ws);
 	while (n > 0)
 	{
 		n--;
-		data->index--;
-		if (data->line[data->index] == '\n')
-			move_left_parse_newline(data, data);
+		data->line->index--;
+		if (data->line->line[data->line->index] == '\n')
+			move_left_parse_newline(data);
 		else
 			move_left_to_colmax(data, ws.ws_col);
 	}
-	ft_eprintf("New cursor coordinates: [%d:%d]\n", data->coords.x, data->coords.y);
+	ft_eprintf("New cursor coordinates: [%d:%d]\n", data->curs->coords.x, data->curs->coords.y);
 }
 
 /*
@@ -116,6 +116,6 @@ void		curs_move_n_left(t_vshdata *data, size_t n)
 
 void		curs_move_left(t_vshdata *data)
 {
-	if (data->index > 0)
-		curs_move_n_left(data, data, 1);
+	if (data->line->index > 0)
+		curs_move_n_left(data, 1);
 }

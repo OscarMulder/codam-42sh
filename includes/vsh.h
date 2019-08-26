@@ -6,7 +6,7 @@
 /*   By: omulder <omulder@student.codam.nl>           +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2019/04/10 20:29:42 by jbrinksm       #+#    #+#                */
-/*   Updated: 2019/08/26 17:07:20 by omulder       ########   odam.nl         */
+/*   Updated: 2019/08/26 19:20:28 by jbrinksm      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -331,6 +331,12 @@ typedef struct termios	t_termios;
 **-----------------------------------vsh_data-----------------------------------
 */
 
+typedef struct	s_point
+{
+	int			x;
+	int			y;
+}				t_point;
+
 typedef struct	s_vshdataterm
 {
 	t_termios	*old_termios_p;
@@ -521,13 +527,13 @@ int			env_add_extern_value(t_vshdata *data, char *name, char *value);
 **----------------------------------terminal------------------------------------
 */
 
-t_term			*term_prepare(t_envlst *lst);
+t_vshdataterm			*term_prepare(t_envlst *lst);
 int				term_is_valid(t_envlst *envlst);
-t_term			*term_init_struct(void);
-int				term_get_attributes(int fd, t_term *term_p);
-int				term_set_attributes(t_term *term_p);
-int				term_reset(t_term *term_p);
-void			term_free_struct(t_term **term_p);
+t_vshdataterm			*term_init_struct(void);
+int				term_get_attributes(int fd, t_vshdataterm*term_p);
+int				term_set_attributes(t_vshdataterm*term_p);
+int				term_reset(t_vshdataterm*term_p);
+void			term_free_struct(t_vshdataterm**term_p);
 
 /*
 **-----------------------------------input--------------------------------------
@@ -556,12 +562,6 @@ void			term_free_struct(t_term **term_p);
 # define INPUT_CTRL_K '\v'
 # define INPUT_CTRL_U 21
 # define INPUT_CTRL_Y 25
-
-typedef struct	s_point
-{
-	int			x;
-	int			y;
-}				t_point;
 
 int				input_read(t_vshdata *data);
 int				input_is_word_start(char *str, int i1, int i2);
@@ -597,6 +597,9 @@ int				input_parse_ctrl_d(t_vshdata *data);
 int				input_parse_ctrl_k(t_vshdata *data);
 int				input_parse_ctrl_u(t_vshdata *data);
 void			input_parse_ctrl_y(t_vshdata *data);
+
+
+int				input_resize_window_check(t_vshdata *data);
 
 /*
 **----------------------------------shell---------------------------------------

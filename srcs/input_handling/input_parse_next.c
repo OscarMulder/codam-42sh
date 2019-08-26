@@ -6,7 +6,7 @@
 /*   By: omulder <omulder@student.codam.nl>           +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2019/05/16 13:41:00 by rkuijper       #+#    #+#                */
-/*   Updated: 2019/08/26 11:35:39 by rkuijper      ########   odam.nl         */
+/*   Updated: 2019/08/26 18:20:16 by jbrinksm      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -22,18 +22,18 @@ void		curs_move_next_word(t_vshdata *data)
 {
 	size_t	i;
 
-	if (data->index == data->len_cur)
+	if (data->line->index == data->line->len_cur)
 		return ;
 	i = 0;
-	while (ft_isprint(data->line[data->index + i]) == true
-		&& ft_isblank(data->line[data->index + i]) == false)
+	while (ft_isprint(data->line->line[data->line->index + i]) == true
+		&& ft_isblank(data->line->line[data->line->index + i]) == false)
 		i++;
-	while (ft_isblank(data->line[data->index + i]) == true)
+	while (ft_isblank(data->line->line[data->line->index + i]) == true)
 		i++;
-	if ((data->index + i == data->len_cur) // end of line
-		|| (ft_isprint(data->line[data->index + i]) == true
-		&& ft_isblank(data->line[data->index + i]) == false))
-		curs_move_n_right(data, data, i);
+	if ((data->line->index + i == data->line->len_cur) // end of line
+		|| (ft_isprint(data->line->line[data->line->index + i]) == true
+		&& ft_isblank(data->line->line[data->line->index + i]) == false))
+		curs_move_n_right(data, i);
 }
 
 /*
@@ -47,29 +47,29 @@ void		curs_move_next_word(t_vshdata *data)
 
 static void	move_right_parse_newline(t_vshdata *data)
 {
-	char *pos = ft_strrnchr(data->line, '\n', data->index);
-	int len = data->index + data->prompt_len;
+	char *pos = ft_strrnchr(data->line->line, '\n', data->line->index);
+	int len = data->line->index + data->prompt->prompt_len;
 	if (pos != NULL)
-		len = (data->index - 1) - (pos - data->line);
+		len = (data->line->index - 1) - (pos - data->line->line);
 	ft_putstr("\e[B");
 	if (len > 1)
 		ft_printf("\e[%iD", len);
-	data->coords.x = 1;
-	data->coords.y++;
+	data->curs->coords.x = 1;
+	data->curs->coords.y++;
 }
 
 static void	move_right_at_colmax(t_vshdata *data, int colmax)
 {
-	if (data->coords.x == colmax)
+	if (data->curs->coords.x == colmax)
 	{
-		data->coords.x = 1;
-		data->coords.y++;
+		data->curs->coords.x = 1;
+		data->curs->coords.y++;
 		ft_printf("\e[B\e[%iD", colmax);
 	}
 	else
 	{
 		ft_putstr("\e[C");
-		data->coords.x++;
+		data->curs->coords.x++;
 	}
 }
 
@@ -77,19 +77,19 @@ void		curs_move_n_right(t_vshdata *data, size_t n)
 {
 	struct winsize	ws;
 
-	if (n <= 0 || data->index == data->len_cur)
+	if (n <= 0 || data->line->index == data->line->len_cur)
 		return ;
-	if (n > data->len_cur - data->index)
-		n = data->len_cur - data->index;
+	if (n > data->line->len_cur - data->line->index)
+		n = data->line->len_cur - data->line->index;
 	ioctl(STDIN_FILENO, TIOCGWINSZ, &ws);
 	while (n > 0)
 	{
-		if (data->line[data->index] == '\n')
-			move_right_parse_newline(data, data);
+		if (data->line->line[data->line->index] == '\n')
+			move_right_parse_newline(data);
 		else
 			move_right_at_colmax(data, ws.ws_col);
 		n--;
-		data->index++;
+		data->line->index++;
 	}
 }
 
@@ -103,6 +103,6 @@ void		curs_move_n_right(t_vshdata *data, size_t n)
 
 void		curs_move_right(t_vshdata *data)
 {
-	if (data->index < data->len_cur)
-		curs_move_n_right(data, data, 1);
+	if (data->line->index < data->line->len_cur)
+		curs_move_n_right(data, 1);
 }

@@ -6,7 +6,7 @@
 /*   By: rkuijper <rkuijper@student.codam.nl>         +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2019/05/16 13:43:07 by rkuijper       #+#    #+#                */
-/*   Updated: 2019/08/26 13:24:21 by rkuijper      ########   odam.nl         */
+/*   Updated: 2019/08/26 18:34:01 by jbrinksm      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -25,21 +25,21 @@ void		input_handle_backspace(t_vshdata *data)
 	int			len_left;
 	int			saved_index;
 
-	if (data->index > 0)
+	if (data->line->index > 0)
 	{
-		saved_index = data->index;
-		len_left = data->len_cur - data->index;
-		data->len_cur--;
-		curs_go_home(data, data);
-		input_clear_char_at(&vshdata->line, saved_index - 1);
-		ft_printf("\e[%iD", data->prompt_len);
+		saved_index = data->line->index;
+		len_left = data->line->len_cur - data->line->index;
+		data->line->len_cur--;
+		curs_go_home(data);
+		input_clear_char_at(&data->line->line, saved_index - 1);
+		ft_printf("\e[%iD", data->prompt->prompt_len);
 		tc_clear_lines_str = tgetstr("cd", NULL);
 		if (tc_clear_lines_str == NULL)
 			return ;
 		tputs(tc_clear_lines_str, 1, &ft_tputchar);
-		shell_display_prompt(data, data->cur_prompt_type);
-		input_print_str(data, data->line);
-		data->index = data->len_cur;
-		curs_move_n_left(data, data, len_left);
+		shell_display_prompt(data, data->prompt->cur_prompt_type);
+		input_print_str(data, data->line->line);
+		data->line->index = data->line->len_cur;
+		curs_move_n_left(data, len_left);
 	}
 }

@@ -6,7 +6,7 @@
 /*   By: omulder <omulder@student.codam.nl>           +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2019/05/16 13:33:54 by rkuijper       #+#    #+#                */
-/*   Updated: 2019/08/23 15:06:00 by rkuijper      ########   odam.nl         */
+/*   Updated: 2019/08/26 18:28:26 by jbrinksm      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -42,25 +42,25 @@ static int	add_char_at(t_vshdata *data, char **line)
 {
 	char		*tmp;
 
-	if (data->len_cur < data->len_max)
+	if (data->line->len_cur < data->line->len_max)
 	{
-		create_char_gap(*line, data->len_cur, data->index);
-		(*line)[data->index] = data->c;
+		create_char_gap(*line, data->line->len_cur, data->line->index);
+		(*line)[data->line->index] = data->input->c;
 	}
 	else
 	{
-		while (data->len_cur >= data->len_max)
-			data->len_max *= 2;
-		tmp = ft_strnew(data->len_max);
+		while (data->line->len_cur >= data->line->len_max)
+			data->line->len_max *= 2;
+		tmp = ft_strnew(data->line->len_max);
 		if (tmp == NULL)
 			return (FUNCT_ERROR);
 		ft_strcpy(tmp, *line);
 		ft_strdel(line);
-		create_char_gap(tmp, data->len_cur, data->index);
-		tmp[data->index] = data->c;
+		create_char_gap(tmp, data->line->len_cur, data->line->index);
+		tmp[data->line->index] = data->input->c;
 		*line = tmp;
 	}
-	data->len_cur++;
+	data->line->len_cur++;
 	return (FUNCT_SUCCESS);
 }
 
@@ -75,20 +75,20 @@ static int	add_newline(t_vshdata *data, char **line)
 {
 	char		*tmp;
 
-	if (data->len_cur < data->len_max)
-		(*line)[data->len_cur] = '\n';
+	if (data->line->len_cur < data->line->len_max)
+		(*line)[data->line->len_cur] = '\n';
 	else
 	{
-		data->len_max += 1;
-		tmp = ft_strnew(data->len_max);
+		data->line->len_max += 1;
+		tmp = ft_strnew(data->line->len_max);
 		if (tmp == NULL)
 			return (FUNCT_ERROR);
 		ft_strcpy(tmp, *line);
 		ft_strdel(line);
-		tmp[data->len_cur] = '\n';
+		tmp[data->line->len_cur] = '\n';
 		*line = tmp;
 	}
-	data->len_cur++;
+	data->line->len_cur++;
 	return (FUNCT_SUCCESS);
 }
 
@@ -102,18 +102,18 @@ int			input_parse_char(t_vshdata *data)
 {
 	int				old_index;
 
-	if (ft_isprint(data->c))
+	if (ft_isprint(data->input->c))
 	{
-		if (add_char_at(data, &vshdata->line) == FUNCT_ERROR)
+		if (add_char_at(data, &data->line->line) == FUNCT_ERROR)
 			return (FUNCT_ERROR);
-		old_index = data->index;
-		input_print_str(data, data->line + data->index);
-		data->index = data->len_cur;
-		curs_move_n_left(data, data, data->index - old_index - 1);
+		old_index = data->line->index;
+		input_print_str(data, data->line->line + data->line->index);
+		data->line->index = data->line->len_cur;
+		curs_move_n_left(data, data->line->index - old_index - 1);
 	}
-	else if (data->c == '\n')
+	else if (data->input->c == '\n')
 	{
-		if (add_newline(data, &vshdata->line) == FUNCT_ERROR)
+		if (add_newline(data, &data->line->line) == FUNCT_ERROR)
 			return (FUNCT_ERROR);
 	}
 	return (FUNCT_SUCCESS);

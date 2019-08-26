@@ -6,7 +6,7 @@
 /*   By: mavan-he <mavan-he@student.codam.nl>         +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2019/08/19 12:05:52 by mavan-he       #+#    #+#                */
-/*   Updated: 2019/08/19 12:23:51 by mavan-he      ########   odam.nl         */
+/*   Updated: 2019/08/26 18:40:20 by jbrinksm      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -32,9 +32,9 @@ int			hash_check(t_vshdata *data, char *key, char **binary)
 	char	*bin_dup;
 
 	hash = hash_create_hash(key);
-	if (data->ht[hash] == NULL)
+	if (data->hashtable->ht[hash] == NULL)
 		return (FUNCT_FAILURE);
-	bin_dup = check_lst(data->ht[hash], key);
+	bin_dup = check_lst(data->hashtable->ht[hash], key);
 	if (bin_dup == NULL)
 		return (FUNCT_FAILURE);
 	*binary = ft_strdup(bin_dup);

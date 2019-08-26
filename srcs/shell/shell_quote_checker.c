@@ -49,11 +49,11 @@ int		shell_close_unclosed_quotes(t_vshdata *data)
 	char	quote;
 	char	*line_tmp;
 
-	quote = shell_quote_checker_find_quote(data->line);
+	quote = shell_quote_checker_find_quote(data->line->line);
 	while (quote != '\0')
 	{
-		line_tmp = data->line;
-		data->line = NULL;
+		line_tmp = data->line->line;
+		data->line->line = NULL;
 		ft_putchar('\n');
 		if (quote == '\'')
 			shell_display_prompt(data, QUOTE_PROMPT);
@@ -64,13 +64,13 @@ int		shell_close_unclosed_quotes(t_vshdata *data)
 			ft_strdel(&line_tmp);
 			return (FUNCT_ERROR);
 		}
-		data->line = ft_strjoinfree_all(line_tmp, data->line);
-		if (data->line == NULL)
+		data->line->line = ft_strjoinfree_all(line_tmp, data->line->line);
+		if (data->line->line == NULL)
 		{
 			ft_eprintf(E_ALLOC_STR);
 			return (FUNCT_ERROR);
 		}
-		quote = shell_quote_checker_find_quote(data->line);
+		quote = shell_quote_checker_find_quote(data->line->line);
 	}
 	return (FUNCT_SUCCESS);
 }

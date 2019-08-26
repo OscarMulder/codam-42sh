@@ -6,7 +6,7 @@
 /*   By: rkuijper <rkuijper@student.codam.nl>         +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2019/08/23 11:54:27 by rkuijper       #+#    #+#                */
-/*   Updated: 2019/08/26 14:42:59 by jbrinksm      ########   odam.nl         */
+/*   Updated: 2019/08/26 19:38:08 by jbrinksm      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -20,7 +20,7 @@ static int	get_total_newlines(t_vshdata *data, unsigned short maxcol, char *str)
 	int	i;
 
 	total_newlines = 0;
-	x_copy = data->coords.x;
+	x_copy = data->curs->coords.x;
 	i = 0;
 	while (str[i] != '\0')
 	{
@@ -47,19 +47,19 @@ static void	fill_strbuf(t_vshdata *data, unsigned short maxcol, char **strbuf, c
 		(*strbuf)[strbuf_i] = str[str_i];
 		if (str[str_i] == '\n')
 		{
-			data->coords.x = 0;
-			data->coords.y++;
+			data->curs->coords.x = 0;
+			data->curs->coords.y++;
 		}
 		str_i++;
 		strbuf_i++;
-		data->coords.x++;
-		ft_eprintf("%i %i\n", data->coords.x, maxcol);
-		if (data->coords.x > maxcol)
+		data->curs->coords.x++;
+		ft_eprintf("%i %i\n", data->curs->coords.x, maxcol);
+		if (data->curs->coords.x > maxcol)
 		{
-			(*strbuf)[strbuf_i] = '\n';
+			// (*strbuf)[strbuf_i] = '\n';
 			strbuf_i++;
-			data->coords.y++;
-			data->coords.x = 1;
+			data->curs->coords.y++;
+			data->curs->coords.x = 1;
 		}
 	}
 }
@@ -73,11 +73,11 @@ void	input_print_str(t_vshdata *data, char *str)
 	int				total_newlines;
 
 	i = 0;
-	total_newlines = get_total_newlines(data, data->cur_ws_col, str);
+	total_newlines = get_total_newlines(data, data->curs->cur_ws_col, str);
 	strbuf = ft_strnew(ft_strlen(str) + total_newlines);
 	if (strbuf == NULL)
 		return ; // GO CRAZY <-----------------
-	fill_strbuf(data, data->cur_ws_col, &strbuf, str);
+	fill_strbuf(data, data->curs->cur_ws_col, &strbuf, str);
 	ft_putstr(strbuf);
 	ft_strdel(&strbuf);
 }

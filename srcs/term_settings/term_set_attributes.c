@@ -14,7 +14,7 @@
 #include <termios.h>
 #include <unistd.h>
 
-int		term_set_attributes(t_term *term_p)
+int		term_set_attributes(t_vshdataterm*term_p)
 {
 	int	ret;
 

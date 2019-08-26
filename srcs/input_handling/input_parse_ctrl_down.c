@@ -6,7 +6,7 @@
 /*   By: rkuijper <rkuijper@student.codam.nl>         +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2019/05/17 11:50:51 by rkuijper       #+#    #+#                */
-/*   Updated: 2019/08/26 15:22:23 by rkuijper      ########   odam.nl         */
+/*   Updated: 2019/08/26 18:20:16 by jbrinksm      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -22,14 +22,14 @@ static unsigned	get_cur_line_index(t_vshdata *data)
 {
 	int i;
 
-	i = data->index - 1;
+	i = data->line->index - 1;
 	while (i > 0)
 	{
-		if (data->line[i] == '\n')
-			return (data->index - i - 1);
+		if (data->line->line[i] == '\n')
+			return (data->line->index - i - 1);
 		i--;
 	}
-	return (data->index);
+	return (data->line->index);
 }
 
 static void	move_down_handle_newline(t_vshdata *data)
@@ -38,12 +38,12 @@ static void	move_down_handle_newline(t_vshdata *data)
 	int			j;
 	unsigned	l;
 
-	i = data->index;
+	i = data->line->index;
 	j = -1;
-	l = get_cur_line_index(data, data);
-	while (data->line[i] != '\0')
+	l = get_cur_line_index(data);
+	while (data->line->line[i] != '\0')
 	{
-		if (data->line[i] == '\n')
+		if (data->line->line[i] == '\n')
 		{
 			if (j == -1)
 				j = 0;
@@ -58,7 +58,7 @@ static void	move_down_handle_newline(t_vshdata *data)
 		}
 		i++;
 	}
-	curs_move_n_right(data, data, i - data->index);
+	curs_move_n_right(data, i - data->line->index);
 }
 
 void		curs_move_down(t_vshdata *data)
@@ -67,17 +67,17 @@ void		curs_move_down(t_vshdata *data)
 	char			*newline_str;
 
 	ioctl(STDIN_FILENO, TIOCGWINSZ, &ws);
-	if (data->index == data->len_cur)
+	if (data->line->index == data->line->len_cur)
 		return ;
-	newline_str = ft_strchr(data->line + data->index, '\n');
+	newline_str = ft_strchr(data->line->line + data->line->index, '\n');
 	if (newline_str != NULL)
-		move_down_handle_newline(data, data);
-	else if (data->len_cur - data->index < ws.ws_col)
-		curs_go_end(data, data);
+		move_down_handle_newline(data);
+	else if (data->line->len_cur - data->line->index < ws.ws_col)
+		curs_go_end(data);
 	else
 	{
 		ft_printf(CURS_DOWN);
-		data->index += ws.ws_col;
-		data->coords.y++;
+		data->line->index += ws.ws_col;
+		data->curs->coords.y++;
 	}
 }

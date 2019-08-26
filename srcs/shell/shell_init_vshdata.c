@@ -6,11 +6,32 @@
 /*   By: mavan-he <mavan-he@student.codam.nl>         +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2019/07/29 12:42:44 by mavan-he       #+#    #+#                */
-/*   Updated: 2019/08/26 16:55:07 by omulder       ########   odam.nl         */
+/*   Updated: 2019/08/26 19:01:23 by jbrinksm      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "vsh.h"
+
+static int	find_start(t_history **history)
+{
+	int i;
+	int start;
+	int largest;
+
+	i = 0;
+	start = 0;
+	largest = -1;
+	while (i < HISTORY_MAX && history[i]->str != NULL)
+	{
+		if (history[i]->number > largest)
+		{
+			start = i;
+			largest = history[i]->number;
+		}
+		i++;
+	}
+	return (start + 1);
+}
 
 t_vshdatacurs	*shell_init_vshdatacurs(void)
 {
@@ -77,11 +98,20 @@ t_vshdatahistory	*shell_init_vshdatahistory(void)
 	history = ft_memalloc(sizeof(t_vshdatahistory));
 	if (history == NULL)
 		return (NULL);
-	history->hist_index = find_start(history->history);
 	history->hist_start = history->hist_index - 1;
 	history->hist_first = true;
-	history->history = history->history;
 	return (history);
+}
+
+t_vshdataalias	*shell_init_vshdataalias(void)
+{
+	t_vshdataalias	*alias;
+
+	alias = ft_memalloc(sizeof(t_vshdataalias));
+	if (alias == NULL)
+		return (NULL);
+	alias->alias_file = ALIASFILENAME;
+	return (alias);
 }
 
 int		shell_init_vshdata(t_vshdata *data)
@@ -97,6 +127,7 @@ int		shell_init_vshdata(t_vshdata *data)
 	data->prompt = shell_init_vshdataprompt();
 	data->input = shell_init_vshdatainput();
 	data->hashtable = shell_init_vshdatahashtable();
+	data->alias = shell_init_vshdataalias();
 	if (data->term == NULL || data->curs == NULL
 		|| data->history == NULL || data->line == NULL
 		|| data->prompt == NULL || data->input == NULL
@@ -106,5 +137,6 @@ int		shell_init_vshdata(t_vshdata *data)
 		|| history_get_file_content(data) == FUNCT_ERROR
 		|| alias_read_file(data) == FUNCT_ERROR)
 		return (FUNCT_ERROR);
+	data->history->hist_index = find_start(data->history->history);
 	return (FUNCT_SUCCESS);
 }

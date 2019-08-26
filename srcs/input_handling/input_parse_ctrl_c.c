@@ -19,9 +19,9 @@
 
 int	input_parse_ctrl_c(t_vshdata *data)
 {
-	if (data->c == INPUT_CTRL_C)
+	if (data->input->c == INPUT_CTRL_C)
 	{
-		curs_go_end(data, data);
+		curs_go_end(data);
 		ft_putchar('\n');
 		return (FUNCT_SUCCESS);
 	}

@@ -6,7 +6,7 @@
 /*   By: mavan-he <mavan-he@student.codam.nl>         +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2019/08/19 11:23:37 by mavan-he       #+#    #+#                */
-/*   Updated: 2019/08/19 11:42:49 by mavan-he      ########   odam.nl         */
+/*   Updated: 2019/08/26 18:40:20 by jbrinksm      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,8 +19,8 @@ void	hash_init(t_vshdata *data)
 	i = 0;
 	while (i < HT_SIZE)
 	{
-		data->ht[i] = NULL;
+		data->hashtable->ht[i] = NULL;
 		i++;
 	}
-	data->ht_flag = HT_EMPTY;
+	data->hashtable->ht_flag = HT_EMPTY;
 }

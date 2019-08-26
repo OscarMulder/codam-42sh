@@ -13,7 +13,7 @@
 #include "vsh.h"
 #include <unistd.h>
 
-static t_term	*term_return(t_term *term_p, int return_value)
+static t_vshdataterm	*term_return(t_vshdataterm*term_p, int return_value)
 {
 	if (return_value == FUNCT_FAILURE)
 	{
@@ -27,9 +27,9 @@ static t_term	*term_return(t_term *term_p, int return_value)
 **	TODO: Add specific alloc error for term_p
 */
 
-t_term			*term_prepare(t_envlst *envlst)
+t_vshdataterm			*term_prepare(t_envlst *envlst)
 {
-	t_term	*term_p;
+	t_vshdataterm	*term_p;
 
 	term_p = term_init_struct();
 	if (term_p == NULL)

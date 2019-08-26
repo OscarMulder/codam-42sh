@@ -6,7 +6,7 @@
 /*   By: omulder <omulder@student.codam.nl>           +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2019/05/16 13:37:33 by rkuijper       #+#    #+#                */
-/*   Updated: 2019/08/23 15:06:19 by rkuijper      ########   odam.nl         */
+/*   Updated: 2019/08/26 18:19:38 by jbrinksm      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,6 +19,6 @@
 
 int			curs_go_home(t_vshdata *data)
 {
-	curs_move_n_left(data, data, data->index);
+	curs_move_n_left(data, data->line->index);
 	return (FUNCT_SUCCESS);
 }
