@@ -6,11 +6,7 @@
 /*   By: omulder <omulder@student.codam.nl>           +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2019/04/17 14:03:16 by jbrinksm       #+#    #+#                */
-<<<<<<< HEAD
-/*   Updated: 2019/08/26 13:31:44 by jbrinksm      ########   odam.nl         */
-=======
-/*   Updated: 2019/08/26 11:47:49 by rkuijper      ########   odam.nl         */
->>>>>>> deca367785f0d96cc0fc7c70ce71a5b52375c2fe
+/*   Updated: 2019/08/26 15:32:53 by rkuijper      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -228,7 +224,7 @@ static int	input_resize_window_check(t_vshdata *vshdata, t_inputdata *data)
 		data->cur_ws_col = new.ws_col;
 		input_print_str(data, vshdata->line);
 		data->index = data->len_cur;
-		curs_go_home(data);
+		curs_go_home(data, vshdata);
 		curs_move_n_right(data, vshdata, saved_index);
 	}
 	return (FUNCT_SUCCESS);
