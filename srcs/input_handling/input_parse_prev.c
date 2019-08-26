@@ -6,7 +6,7 @@
 /*   By: omulder <omulder@student.codam.nl>           +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2019/05/16 13:39:59 by rkuijper       #+#    #+#                */
-/*   Updated: 2019/08/26 11:40:42 by rkuijper      ########   odam.nl         */
+/*   Updated: 2019/08/26 12:55:46 by rkuijper      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -103,6 +103,7 @@ void		curs_move_n_left(t_inputdata *data, t_vshdata *vshdata, size_t n)
 		else
 			move_left_to_colmax(data, ws.ws_col);
 	}
+	ft_eprintf("New cursor coordinates: [%d:%d]\n", data->coords.x, data->coords.y);
 }
 
 /*
