@@ -6,7 +6,7 @@
 /*   By: omulder <omulder@student.codam.nl>           +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2019/04/17 14:03:16 by jbrinksm       #+#    #+#                */
-/*   Updated: 2019/08/27 10:54:47 by omulder       ########   odam.nl         */
+/*   Updated: 2019/08/27 16:24:14 by jbrinksm      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -200,7 +200,12 @@ int		input_resize_window_check(t_vshdata *data)
 static int	reset_input_read_return(t_vshdata *data, int ret)
 {
 	data->input->c = '\0';
+	data->line->index = 0;
+	data->line->len_max = 64;
 	data->line->len_cur = 0;
+	data->curs->coords.x = 1;
+	data->curs->coords.y = 1;
+	data->curs->cur_ws_col = -1;
 	//probably more shit?
 	return (ret);
 }
