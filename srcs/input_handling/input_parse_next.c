@@ -6,7 +6,7 @@
 /*   By: omulder <omulder@student.codam.nl>           +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2019/05/16 13:41:00 by rkuijper       #+#    #+#                */
-/*   Updated: 2019/08/26 18:20:16 by jbrinksm      ########   odam.nl         */
+/*   Updated: 2019/08/27 18:47:25 by jbrinksm      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -84,8 +84,10 @@ void		curs_move_n_right(t_vshdata *data, size_t n)
 	ioctl(STDIN_FILENO, TIOCGWINSZ, &ws);
 	while (n > 0)
 	{
-		if (data->line->line[data->line->index] == '\n')
+		if (data->line->line[data->line->index] == '\n' && data->line->index != data->line->len_cur - 1) // LET ME KNOW IF THIS IS FINE @ROB -Jorn
+		{
 			move_right_parse_newline(data);
+		}
 		else
 			move_right_at_colmax(data, ws.ws_col);
 		n--;

@@ -6,7 +6,7 @@
 /*   By: omulder <omulder@student.codam.nl>           +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2019/04/17 14:03:16 by jbrinksm       #+#    #+#                */
-/*   Updated: 2019/08/27 16:24:14 by jbrinksm      ########   odam.nl         */
+/*   Updated: 2019/08/27 19:01:57 by jbrinksm      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -166,9 +166,6 @@ int		input_resize_window_check(t_vshdata *data)
 		newlines = newlines * ((data->curs->cur_ws_col / new.ws_col) + extra);
 		if (data->curs->coords.x - 1 > 0)
 			ft_printf("\e[%iD", data->curs->coords.x - 1);
-		#ifdef DEBUG
-		ft_eprintf("NEWLINES: %i\n", newlines);
-		#endif
 		if (newlines > 0)
 			ft_printf("\e[%iA", newlines);
 		tc_clear_lines_str = tgetstr("cd", NULL);
@@ -180,15 +177,11 @@ int		input_resize_window_check(t_vshdata *data)
 			return (FUNCT_ERROR); // do fatal shit
 		}
 		tputs(tc_clear_lines_str, 1, &ft_tputchar);
-		shell_display_prompt(data, data->prompt->cur_prompt_type);
-		sleep(1);
-		data->line->index = data->line->len_cur;
-		data->curs->coords.x = 1 + (data->prompt->prompt_len + 1) % data->curs->cur_ws_col; // + data->prompt->prompt_len;
-		data->curs->coords.y = 1 + (data->prompt->prompt_len + 1) / data->curs->cur_ws_col;
-		#ifdef DEBUG
-		ft_eprintf("x: %i y: %i len: %i\n", data->curs->coords.x, data->curs->coords.y, data->prompt->prompt_len);
-		#endif
+		data->curs->coords.x = 1;
+		data->curs->coords.y = 1;
 		data->curs->cur_ws_col = new.ws_col;
+		shell_display_prompt(data, data->prompt->cur_prompt_type);
+		data->line->index = data->line->len_cur;
 		input_print_str(data, data->line->line);
 		data->line->index = data->line->len_cur;
 		curs_go_home(data);
@@ -205,7 +198,6 @@ static int	reset_input_read_return(t_vshdata *data, int ret)
 	data->line->len_cur = 0;
 	data->curs->coords.x = 1;
 	data->curs->coords.y = 1;
-	data->curs->cur_ws_col = -1;
 	//probably more shit?
 	return (ret);
 }
@@ -222,9 +214,6 @@ int			input_read(t_vshdata *data)
 		input_resize_window_check(data);
 		if (read(STDIN_FILENO, &data->input->c, 1) == -1)
 			return (reset_input_read_return(data, FUNCT_ERROR));
-		#ifdef DEBUG
-		ft_eprintf("%i %i [%s]\n", data->line->index, data->line->len_cur, data->line->line);
-		#endif
 		if (input_parse_ctrl_c(data) == FUNCT_SUCCESS)
 			return (reset_input_read_return(data, NEW_PROMPT));
 		else if (input_read_ansi(data) == FUNCT_FAILURE)

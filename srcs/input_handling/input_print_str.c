@@ -6,7 +6,7 @@
 /*   By: rkuijper <rkuijper@student.codam.nl>         +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2019/08/23 11:54:27 by rkuijper       #+#    #+#                */
-/*   Updated: 2019/08/27 10:56:29 by omulder       ########   odam.nl         */
+/*   Updated: 2019/08/27 19:01:16 by jbrinksm      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -47,18 +47,15 @@ static void	fill_strbuf(t_vshdata *data, unsigned short maxcol, char **strbuf, c
 		(*strbuf)[strbuf_i] = str[str_i];
 		if (str[str_i] == '\n')
 		{
-			data->curs->coords.x = 0;
+			data->curs->coords.x = 1;
 			data->curs->coords.y++;
 		}
 		str_i++;
 		strbuf_i++;
 		data->curs->coords.x++;
-		#ifdef DEBUG
-		ft_eprintf("%i %i\n", data->curs->coords.x, maxcol);
-		#endif
 		if (data->curs->coords.x > maxcol)
 		{
-			// (*strbuf)[strbuf_i] = '\n';
+			(*strbuf)[strbuf_i] = '\n';
 			strbuf_i++;
 			data->curs->coords.y++;
 			data->curs->coords.x = 1;

@@ -6,7 +6,7 @@
 /*   By: rkuijper <rkuijper@student.codam.nl>         +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2019/05/16 13:48:04 by rkuijper       #+#    #+#                */
-/*   Updated: 2019/08/26 18:34:34 by jbrinksm      ########   odam.nl         */
+/*   Updated: 2019/08/27 18:58:34 by jbrinksm      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -24,7 +24,7 @@ int			input_parse_ctrl_k(t_vshdata *data)
 		data->line->line_copy = ft_strdup(&data->line->line[data->line->index]);
 		ft_bzero(&data->line->line[data->line->index], data->line->len_cur - data->line->index);
 		curs_go_home(data);
-		ft_printf("\e[%iD", data->prompt->prompt_len);
+		// ft_printf("\e[%iD", data->prompt->prompt_len);
 		tc_clear_lines_str = tgetstr("cd", NULL);
 		if (tc_clear_lines_str == NULL)
 		{
@@ -32,7 +32,9 @@ int			input_parse_ctrl_k(t_vshdata *data)
 			return (FUNCT_ERROR); // do fatal shit
 		}
 		tputs(tc_clear_lines_str, 20, &ft_tputchar);
-		shell_display_prompt(data, data->prompt->cur_prompt_type);		
+		// data->curs->coords.x = 1;
+		// data->curs->coords.y = 1;
+		// shell_display_prompt(data, data->prompt->cur_prompt_type);		
 		data->line->len_cur = ft_strlen(data->line->line);
 		data->line->index = data->line->len_cur;
 		input_print_str(data, data->line->line);
