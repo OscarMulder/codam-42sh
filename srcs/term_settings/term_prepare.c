@@ -6,14 +6,14 @@
 /*   By: jbrinksm <jbrinksm@student.codam.nl>         +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2019/04/11 10:10:56 by jbrinksm       #+#    #+#                */
-/*   Updated: 2019/08/19 18:31:04 by omulder       ########   odam.nl         */
+/*   Updated: 2019/08/27 11:41:53 by omulder       ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "vsh.h"
 #include <unistd.h>
 
-static t_vshdataterm	*term_return(t_vshdataterm*term_p, int return_value)
+static t_vshdataterm	*term_return(t_vshdataterm *term_p, int return_value)
 {
 	if (return_value == FUNCT_FAILURE)
 	{

@@ -6,7 +6,7 @@
 /*   By: omulder <omulder@student.codam.nl>           +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2019/04/18 18:11:05 by jbrinksm       #+#    #+#                */
-/*   Updated: 2019/08/23 17:57:52 by jbrinksm      ########   odam.nl         */
+/*   Updated: 2019/08/27 11:42:04 by omulder       ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,7 +14,7 @@
 #include <termios.h>
 #include <unistd.h>
 
-int		term_set_attributes(t_vshdataterm*term_p)
+int		term_set_attributes(t_vshdataterm *term_p)
 {
 	int	ret;
 
