@@ -6,7 +6,7 @@
 /*   By: omulder <omulder@student.codam.nl>           +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2019/04/17 14:03:16 by jbrinksm       #+#    #+#                */
-/*   Updated: 2019/08/26 19:58:37 by jbrinksm      ########   odam.nl         */
+/*   Updated: 2019/08/27 10:54:47 by omulder       ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -65,7 +65,9 @@ int			input_read_ansi(t_vshdata *data)
 			curs_move_down(data);
 		else
 		{
+			#ifdef DEBUG
 			ft_eprintf(">%s< TERMCAP NOT FOUND\n", &termcapbuf[1]); // DEBUG PRINT
+			#endif
 			return (FUNCT_FAILURE);
 		}
 		return (FUNCT_SUCCESS);
@@ -164,13 +166,17 @@ int		input_resize_window_check(t_vshdata *data)
 		newlines = newlines * ((data->curs->cur_ws_col / new.ws_col) + extra);
 		if (data->curs->coords.x - 1 > 0)
 			ft_printf("\e[%iD", data->curs->coords.x - 1);
+		#ifdef DEBUG
 		ft_eprintf("NEWLINES: %i\n", newlines);
+		#endif
 		if (newlines > 0)
 			ft_printf("\e[%iA", newlines);
 		tc_clear_lines_str = tgetstr("cd", NULL);
 		if (tc_clear_lines_str == NULL)
 		{
+			#ifdef DEBUG
 			ft_eprintf("ERROR\n"); // DEBUG PRINT
+			#endif
 			return (FUNCT_ERROR); // do fatal shit
 		}
 		tputs(tc_clear_lines_str, 1, &ft_tputchar);
@@ -179,7 +185,9 @@ int		input_resize_window_check(t_vshdata *data)
 		data->line->index = data->line->len_cur;
 		data->curs->coords.x = 1 + (data->prompt->prompt_len + 1) % data->curs->cur_ws_col; // + data->prompt->prompt_len;
 		data->curs->coords.y = 1 + (data->prompt->prompt_len + 1) / data->curs->cur_ws_col;
+		#ifdef DEBUG
 		ft_eprintf("x: %i y: %i len: %i\n", data->curs->coords.x, data->curs->coords.y, data->prompt->prompt_len);
+		#endif
 		data->curs->cur_ws_col = new.ws_col;
 		input_print_str(data, data->line->line);
 		data->line->index = data->line->len_cur;
@@ -209,7 +217,9 @@ int			input_read(t_vshdata *data)
 		input_resize_window_check(data);
 		if (read(STDIN_FILENO, &data->input->c, 1) == -1)
 			return (reset_input_read_return(data, FUNCT_ERROR));
+		#ifdef DEBUG
 		ft_eprintf("%i %i [%s]\n", data->line->index, data->line->len_cur, data->line->line);
+		#endif
 		if (input_parse_ctrl_c(data) == FUNCT_SUCCESS)
 			return (reset_input_read_return(data, NEW_PROMPT));
 		else if (input_read_ansi(data) == FUNCT_FAILURE)
