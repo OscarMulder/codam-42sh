@@ -6,7 +6,7 @@
 /*   By: mavan-he <mavan-he@student.codam.nl>         +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2019/07/29 12:42:44 by mavan-he       #+#    #+#                */
-/*   Updated: 2019/08/26 19:01:23 by jbrinksm      ########   odam.nl         */
+/*   Updated: 2019/08/28 18:31:53 by jbrinksm      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -42,6 +42,7 @@ t_vshdatacurs	*shell_init_vshdatacurs(void)
 		return (NULL);
 	curs->coords = (t_point){ 1, 1 };
 	curs->cur_ws_col = UNINIT;
+	curs->cur_ws_row = UNINIT;
 	return (curs);
 }
 
