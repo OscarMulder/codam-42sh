@@ -6,7 +6,7 @@
 /*   By: omulder <omulder@student.codam.nl>           +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2019/05/16 13:41:00 by rkuijper       #+#    #+#                */
-/*   Updated: 2019/08/28 17:12:19 by tde-jong      ########   odam.nl         */
+/*   Updated: 2019/08/28 17:18:36 by jbrinksm      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -58,7 +58,7 @@ static void	move_right_parse_newline(t_vshdata *data)
 	data->curs->coords.y++;
 }
 
-static void	move_right_at_colmax(t_vshdata *data, int colmax)
+void		curs_move_right_at_colmax(t_vshdata *data, int colmax)
 {
 	if (data->curs->coords.x == colmax)
 	{
@@ -89,7 +89,7 @@ void		curs_move_n_right(t_vshdata *data, size_t n)
 			move_right_parse_newline(data);
 		}
 		else
-			move_right_at_colmax(data, ws.ws_col);
+			curs_move_right_at_colmax(data, ws.ws_col);
 		n--;
 		data->line->index++;
 	}

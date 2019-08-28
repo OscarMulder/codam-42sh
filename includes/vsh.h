@@ -6,13 +6,13 @@
 /*   By: omulder <omulder@student.codam.nl>           +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2019/04/10 20:29:42 by jbrinksm       #+#    #+#                */
-/*   Updated: 2019/08/26 19:20:28 by jbrinksm      ########   odam.nl         */
+/*   Updated: 2019/08/28 20:31:54 by jbrinksm      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
 #ifndef VSH_H
 # define VSH_H
-// # define DEBUG
+# define DEBUG
 # include <sys/stat.h>
 # include <fcntl.h>
 
@@ -347,6 +347,7 @@ typedef struct	s_vshdatacurs
 {
 	t_point	coords;
 	int		cur_ws_col;
+	int		cur_ws_row;
 }				t_vshdatacurs;
 
 typedef struct	s_vshdatahistory
@@ -562,6 +563,7 @@ void			term_free_struct(t_vshdataterm**term_p);
 # define INPUT_CTRL_K '\v'
 # define INPUT_CTRL_U 21
 # define INPUT_CTRL_Y 25
+# define TC_MAXRESPONSESIZE 50
 
 int				input_read(t_vshdata *data);
 int				input_is_word_start(char *str, int i1, int i2);
@@ -582,6 +584,7 @@ void			curs_move_n_left(t_vshdata *data, size_t n);
 
 void			curs_move_right(t_vshdata *data);
 void			curs_move_n_right(t_vshdata *data, size_t n);
+void			curs_move_right_at_colmax(t_vshdata *data, int colmax);
 
 void			curs_move_up(t_vshdata *data);
 void			curs_move_down(t_vshdata *data);
@@ -600,6 +603,10 @@ void			input_parse_ctrl_y(t_vshdata *data);
 
 
 int				input_resize_window_check(t_vshdata *data);
+
+//TEMPORARY
+int	get_curs_row(t_vshdata *data);
+//TEMPORARY
 
 /*
 **----------------------------------shell---------------------------------------

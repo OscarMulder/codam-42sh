@@ -6,7 +6,7 @@
 /*   By: omulder <omulder@student.codam.nl>           +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2019/04/17 14:03:16 by jbrinksm       #+#    #+#                */
-/*   Updated: 2019/08/27 19:01:57 by jbrinksm      ########   odam.nl         */
+/*   Updated: 2019/08/28 20:58:00 by jbrinksm      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -153,8 +153,9 @@ int		input_resize_window_check(t_vshdata *data)
 	unsigned		saved_index;
 	int				extra;
 
-	ioctl(STDIN_FILENO, TIOCGWINSZ, &new);
-	if (data->curs->cur_ws_col == -1)
+	ioctl(STDIN_FILENO, TIOCGWINSZ, &new); // needs check
+	data->curs->cur_ws_row = new.ws_row; // resizing shouldn't matter
+	if (data->curs->cur_ws_col == UNINIT)
 		data->curs->cur_ws_col = new.ws_col;
 	else if (data->curs->cur_ws_col != new.ws_col)
 	{
@@ -163,29 +164,39 @@ int		input_resize_window_check(t_vshdata *data)
 		extra = 0;
 		if (data->curs->cur_ws_col % new.ws_col > 0)
 			extra = 1;
-		newlines = newlines * ((data->curs->cur_ws_col / new.ws_col) + extra);
+		// sleep(1);
 		if (data->curs->coords.x - 1 > 0)
 			ft_printf("\e[%iD", data->curs->coords.x - 1);
+		ft_eprintf("NEWLINES: %i\n", newlines);
+		if (data->curs->cur_ws_col > new.ws_col)
+			newlines *= ((data->curs->cur_ws_col / new.ws_col) + extra);
 		if (newlines > 0)
 			ft_printf("\e[%iA", newlines);
+		ft_eprintf("NEWLINES2: %i\n", newlines);
+		// sleep(1);
 		tc_clear_lines_str = tgetstr("cd", NULL);
 		if (tc_clear_lines_str == NULL)
 		{
 			#ifdef DEBUG
-			ft_eprintf("ERROR\n"); // DEBUG PRINT
+			ft_eprintf("ERROR\n"); // needs proper message
 			#endif
 			return (FUNCT_ERROR); // do fatal shit
 		}
 		tputs(tc_clear_lines_str, 1, &ft_tputchar);
+		// sleep(1);
 		data->curs->coords.x = 1;
 		data->curs->coords.y = 1;
 		data->curs->cur_ws_col = new.ws_col;
 		shell_display_prompt(data, data->prompt->cur_prompt_type);
+		// sleep(1);
 		data->line->index = data->line->len_cur;
 		input_print_str(data, data->line->line);
+		// sleep(1);
 		data->line->index = data->line->len_cur;
 		curs_go_home(data);
+		// sleep(1);
 		curs_move_n_right(data, saved_index);
+		// sleep(1);
 	}
 	return (FUNCT_SUCCESS);
 }
@@ -233,3 +244,96 @@ int			input_read(t_vshdata *data)
 	}
 	return (reset_input_read_return(data, FUNCT_SUCCESS));
 }
+
+/*
+int		input_resize_window_check(t_vshdata *data)
+{
+	struct winsize	new;
+	int				newlines;
+	char			*tc_clear_lines_str;
+	unsigned		saved_index;
+	int				extra;
+	// int				random_int_lmao;
+	// int				another_random_int;
+
+	ioctl(STDIN_FILENO, TIOCGWINSZ, &new); // needs check
+	data->curs->cur_ws_row = new.ws_row; // resizing shouldn't matter
+	if (data->curs->cur_ws_col == UNINIT)
+		data->curs->cur_ws_col = new.ws_col;
+	else if (data->curs->cur_ws_col != new.ws_col)
+	{
+		sleep(100);
+		saved_index = data->line->index; //save index
+		newlines = data->curs->coords.y - 1;
+		extra = 0;
+		if (data->curs->cur_ws_col % new.ws_col > 0)
+			extra = 1;
+		// sleep(1);
+		if (data->curs->coords.x - 1 > 0)
+			ft_printf("\e[%iD", data->curs->coords.x - 1);
+		ft_eprintf("NEWLINES: %i\n", newlines);
+		if (data->curs->cur_ws_col > new.ws_col)
+			newlines *= data->curs->cur_ws_col / new.ws_col + extra;
+		
+		// random_int_lmao = data->curs->cur_ws_col / new.ws_col + extra;
+		// if (data->curs->cur_ws_col > new.ws_col && random_int_lmao > 0)
+		// {
+		// 		char	*tc_scroll_up_str;
+		// 		// ft_printf("\e[%iD", data->curs->coords.x - 1);
+		// 		tc_scroll_up_str = tgetstr("sr", NULL);
+		// 		if (tc_scroll_up_str == NULL)
+		// 		{
+		// 			ft_eprintf("ERROR\n"); // needs proper message
+		// 			return (FUNCT_ERROR); // do fatal shit
+		// 		}
+		// 		while (random_int_lmao > 0)
+		// 		{
+		// 			ft_eprintf("GOES UP ONCE\n");
+		// 			another_random_int = get_curs_row(data) - 1;
+		// 			// sleep(1);
+		// 			ft_printf("\e[%iD", data->curs->coords.x - 1);
+		// 			// sleep(1);
+		// 			ft_printf("\e[%iA", another_random_int);
+		// 			// sleep(1);
+		// 			tputs(tc_scroll_up_str, 1, &ft_tputchar);
+		// 			// sleep(1);
+		// 			ft_printf("\e[%iB", another_random_int + 1);
+		// 			// sleep(1);
+		// 			ft_printf("\e[%iC", data->curs->coords.x - 1);
+		// 			// sleep(1);
+		// 			random_int_lmao--;
+		// 		}
+		// 		// ft_printf("\e[%iC", data->curs->coords.x - 1);
+		// }
+		// ft_printf("\e[%iD", data->curs->coords.x - 1);
+		if (newlines > 0)
+			ft_printf("\e[%iA", newlines);
+		// sleep(1);
+		ft_eprintf("NEWLINES2: %i\n", newlines);
+		// sleep(1);
+		tc_clear_lines_str = tgetstr("cd", NULL);
+		if (tc_clear_lines_str == NULL)
+		{
+			#ifdef DEBUG
+			ft_eprintf("ERROR\n"); // needs proper message
+			#endif
+			return (FUNCT_ERROR); // do fatal shit
+		}
+		// sleep(1);
+		tputs(tc_clear_lines_str, 1, &ft_tputchar);
+		// sleep(1);
+		data->curs->coords.x = 1;
+		data->curs->coords.y = 1;
+		data->curs->cur_ws_col = new.ws_col;
+		shell_display_prompt(data, data->prompt->cur_prompt_type);
+		// sleep(1);
+		data->line->index = data->line->len_cur;
+		input_print_str(data, data->line->line);
+		// sleep(1);
+		data->line->index = data->line->len_cur;
+		curs_go_home(data);
+		curs_move_n_right(data, saved_index);
+	}
+	return (FUNCT_SUCCESS);
+}
+ */
