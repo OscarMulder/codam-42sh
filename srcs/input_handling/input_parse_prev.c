@@ -6,7 +6,7 @@
 /*   By: omulder <omulder@student.codam.nl>           +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2019/05/16 13:39:59 by rkuijper       #+#    #+#                */
-/*   Updated: 2019/08/27 11:43:16 by omulder       ########   odam.nl         */
+/*   Updated: 2019/08/28 17:14:23 by tde-jong      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -118,6 +118,5 @@ void		curs_move_n_left(t_vshdata *data, size_t n)
 
 void		curs_move_left(t_vshdata *data)
 {
-	if (data->line->index > 0)
-		curs_move_n_left(data, 1);
+	curs_move_n_left(data, 1);
 }

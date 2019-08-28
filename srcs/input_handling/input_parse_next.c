@@ -105,6 +105,5 @@ void		curs_move_n_right(t_vshdata *data, size_t n)
 
 void		curs_move_right(t_vshdata *data)
 {
-	if (data->line->index < data->line->len_cur)
-		curs_move_n_right(data, 1);
+	curs_move_n_right(data, 1);
 }
