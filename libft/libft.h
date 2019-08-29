@@ -6,7 +6,7 @@
 /*   By: jbrinksm <jbrinksm@student.codam.nl>         +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2019/01/09 11:10:09 by omulder        #+#    #+#                */
-/*   Updated: 2019/08/23 15:44:43 by rkuijper      ########   odam.nl         */
+/*   Updated: 2019/08/29 14:53:45 by jbrinksm      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -105,5 +105,6 @@ int					ft_is_regular_file(const char *path);
 int					ft_isdir(const char *path);
 int					ft_aisint(char *n);
 char				*ft_strrnchr(const char *s, int c, int n);
+int					ft_tputchar(int c);
 
 #endif

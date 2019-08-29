@@ -6,7 +6,7 @@
 /*   By: omulder <omulder@student.codam.nl>           +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2019/05/16 13:33:54 by rkuijper       #+#    #+#                */
-/*   Updated: 2019/08/29 11:03:28 by jbrinksm      ########   odam.nl         */
+/*   Updated: 2019/08/29 14:53:55 by jbrinksm      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -90,12 +90,6 @@ static int	add_newline(t_vshdata *data, char **line)
 	}
 	data->line->len_cur++;
 	return (FUNCT_SUCCESS);
-}
-
-int			ft_tputchar(int c) // should move this somewhere else
-{
-	write(1, &c, 1);
-	return (1);
 }
 
 int			input_parse_char(t_vshdata *data)
