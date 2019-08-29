@@ -30,7 +30,7 @@ void		curs_move_next_word(t_vshdata *data)
 		i++;
 	while (ft_isblank(data->line->line[data->line->index + i]) == true)
 		i++;
-	if ((data->line->index + i == data->line->len_cur) // end of line
+	if ((data->line->index + i == data->line->len_cur)
 		|| (ft_isprint(data->line->line[data->line->index + i]) == true
 		&& ft_isblank(data->line->line[data->line->index + i]) == false))
 		curs_move_n_right(data, i);
@@ -47,8 +47,11 @@ void		curs_move_next_word(t_vshdata *data)
 
 static void	move_right_parse_newline(t_vshdata *data)
 {
-	char *pos = ft_strrnchr(data->line->line, '\n', data->line->index);
-	int len = data->line->index + data->prompt->prompt_len;
+	char	*pos;
+	int		len;
+
+	pos = ft_strrnchr(data->line->line, '\n', data->line->index);
+	len = data->line->index + data->prompt->prompt_len;
 	if (pos != NULL)
 		len = (data->line->index - 1) - (pos - data->line->line);
 	ft_putstr("\e[B");
@@ -84,10 +87,9 @@ void		curs_move_n_right(t_vshdata *data, size_t n)
 	ioctl(STDIN_FILENO, TIOCGWINSZ, &ws);
 	while (n > 0)
 	{
-		if (data->line->line[data->line->index] == '\n' && data->line->index != data->line->len_cur - 1) // LET ME KNOW IF THIS IS FINE @ROB -Jorn
-		{
+		if (data->line->line[data->line->index] == '\n'
+			&& data->line->index != data->line->len_cur - 1)
 			move_right_parse_newline(data);
-		}
 		else
 			curs_move_right_at_colmax(data, ws.ws_col);
 		n--;
