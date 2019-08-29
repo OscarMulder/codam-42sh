@@ -14,8 +14,8 @@
 #include <term.h>
 
 /*
-**	Real line gets updated, then the cursor position is saved (DOESNT WORK WITH RESIZING)
-**	Lines will be cleared and everything will be reprinted (sadly).
+**	Real line gets updated, then the cursor position is saved
+**	Lines will be cleared and everything will be reprinted
 */
 
 void		input_handle_delete(t_vshdata *data)
