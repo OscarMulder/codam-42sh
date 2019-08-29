@@ -6,7 +6,7 @@
 /*   By: omulder <omulder@student.codam.nl>           +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2019/06/02 14:28:54 by mavan-he       #+#    #+#                */
-/*   Updated: 2019/08/26 18:41:40 by jbrinksm      ########   odam.nl         */
+/*   Updated: 2019/08/29 11:18:15 by jbrinksm      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -21,16 +21,8 @@
 
 static void	history_clear_line(t_vshdata *data)
 {
-	char	*tc_clear_lines_str;
-
 	curs_go_home(data);
-	tc_clear_lines_str = tgetstr("cd", NULL);
-	if (tc_clear_lines_str == NULL)
-	{
-		ft_eprintf("ERROR\n");
-		return ; // do fatal shit
-	}
-	tputs(tc_clear_lines_str, 1, &ft_tputchar);
+	tputs(data->termcaps->tc_clear_lines_str, 1, &ft_tputchar);
 }
 
 static int	malloc_and_copy(t_vshdata *data, char **line, char *str)

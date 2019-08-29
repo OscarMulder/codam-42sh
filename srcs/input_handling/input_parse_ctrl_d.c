@@ -6,7 +6,7 @@
 /*   By: omulder <omulder@student.codam.nl>           +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2019/05/16 13:46:55 by rkuijper       #+#    #+#                */
-/*   Updated: 2019/08/26 18:20:16 by jbrinksm      ########   odam.nl         */
+/*   Updated: 2019/08/29 11:59:04 by jbrinksm      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,7 +16,7 @@
 **	Simply exits when line is empty, otherwise functions as `delete`.
 */
 
-int	input_parse_ctrl_d(t_vshdata *data)
+void	input_parse_ctrl_d(t_vshdata *data)
 {
 	if (data->input->c == INPUT_CTRL_D)
 	{
@@ -24,7 +24,5 @@ int	input_parse_ctrl_d(t_vshdata *data)
 			builtin_exit(NULL, data);
 		else
 			input_handle_delete(data);
-		return (FUNCT_SUCCESS);
 	}
-	return (FUNCT_FAILURE);
 }

@@ -6,7 +6,7 @@
 /*   By: omulder <omulder@student.codam.nl>           +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2019/05/16 13:44:53 by rkuijper       #+#    #+#                */
-/*   Updated: 2019/08/28 16:44:14 by jbrinksm      ########   odam.nl         */
+/*   Updated: 2019/08/29 12:04:14 by jbrinksm      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,9 +18,8 @@
 **	Lines will be cleared and everything will be reprinted (sadly).
 */
 
-int			input_handle_delete(t_vshdata *data)
+void		input_handle_delete(t_vshdata *data)
 {
-	char		*tc_clear_lines_str;
 	unsigned	saved_index;
 	t_point		saved_coord;
 
@@ -31,15 +30,11 @@ int			input_handle_delete(t_vshdata *data)
 		ft_putstr("\e[s");
 		saved_index = data->line->index;
 		curs_go_home(data);
-		tc_clear_lines_str = tgetstr("cd", NULL);
-		if (tc_clear_lines_str == NULL)
-			return (FUNCT_ERROR);
-		tputs(tc_clear_lines_str, 1, &ft_tputchar);
+		tputs(data->termcaps->tc_clear_lines_str, 1, &ft_tputchar);
 		input_print_str(data, data->line->line);
 		ft_putstr("\e[u");
 		data->line->index = saved_index;
 		data->line->len_cur--;
 		ft_memcpy(&data->curs->coords, &saved_coord, sizeof(t_point));
 	}
-	return (FUNCT_SUCCESS);
 }

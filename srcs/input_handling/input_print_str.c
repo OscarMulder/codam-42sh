@@ -6,7 +6,7 @@
 /*   By: rkuijper <rkuijper@student.codam.nl>         +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2019/08/23 11:54:27 by rkuijper       #+#    #+#                */
-/*   Updated: 2019/08/29 10:44:43 by jbrinksm      ########   odam.nl         */
+/*   Updated: 2019/08/29 11:21:00 by jbrinksm      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -76,7 +76,6 @@ int	get_curs_row(t_vshdata *data)
 static void	print_str(t_vshdata *data, unsigned short maxcol, char *str)
 {
 	int		i;
-	char	*tc_scroll_down_str;
 
 	i = 0;
 	while (str[i] != '\0')
@@ -94,14 +93,7 @@ static void	print_str(t_vshdata *data, unsigned short maxcol, char *str)
 			if (get_curs_row(data) == data->curs->cur_ws_row)
 			{
 				ft_printf("\e[%iD", data->curs->coords.x - 1);
-				tc_scroll_down_str = tgetstr("sf", NULL);
-				if (tc_scroll_down_str == NULL)
-				{
-					ft_eprintf("ERROR\n"); // needs proper message
-					return ; // do fatal shit
-				}
-				tputs(tc_scroll_down_str, 1, &ft_tputchar);
-				ft_strdel(&tc_scroll_down_str);
+				tputs(data->termcaps->tc_scroll_down_str, 1, &ft_tputchar);
 				ft_printf("\e[%iC", data->curs->coords.x - 1);
 			}
 			ft_printf("\e[B\e[%iD", maxcol);

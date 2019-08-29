@@ -6,7 +6,7 @@
 /*   By: omulder <omulder@student.codam.nl>           +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2019/04/10 20:29:42 by jbrinksm       #+#    #+#                */
-/*   Updated: 2019/08/28 20:31:54 by jbrinksm      ########   odam.nl         */
+/*   Updated: 2019/08/29 12:07:31 by jbrinksm      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -337,6 +337,12 @@ typedef struct	s_point
 	int			y;
 }				t_point;
 
+typedef struct	s_vshdatatermcaps
+{
+	char	*tc_clear_lines_str;
+	char	*tc_scroll_down_str;
+}				t_vshdatatermcaps;
+
 typedef struct	s_vshdataterm
 {
 	t_termios	*old_termios_p;
@@ -409,6 +415,7 @@ typedef struct	s_vshdata
 	t_vshdatainput		*input;
 	t_vshdatahashtable	*hashtable;
 	t_vshdataalias		*alias;
+	t_vshdatatermcaps	*termcaps;
 }					t_vshdata;
 
 typedef enum	e_prompt_type
@@ -577,7 +584,7 @@ int				ft_tputchar(int c);
 int				tools_isprintnotblank(int i);
 
 void			input_handle_backspace(t_vshdata *data);
-int				input_handle_delete(t_vshdata *data);
+void			input_handle_delete(t_vshdata *data);
 
 void			curs_move_left(t_vshdata *data);
 void			curs_move_n_left(t_vshdata *data, size_t n);
@@ -589,16 +596,16 @@ void			curs_move_right_at_colmax(t_vshdata *data, int colmax);
 void			curs_move_up(t_vshdata *data);
 void			curs_move_down(t_vshdata *data);
 
-int				curs_go_home(t_vshdata *data);
-int				curs_go_end(t_vshdata *data);
+void			curs_go_home(t_vshdata *data);
+void			curs_go_end(t_vshdata *data);
 
 void			curs_move_next_word(t_vshdata *data);
 void			curs_move_prev_word(t_vshdata *data);
 
 int				input_parse_ctrl_c(t_vshdata *data);
-int				input_parse_ctrl_d(t_vshdata *data);
-int				input_parse_ctrl_k(t_vshdata *data);
-int				input_parse_ctrl_u(t_vshdata *data);
+void			input_parse_ctrl_d(t_vshdata *data);
+void			input_parse_ctrl_k(t_vshdata *data);
+void			input_parse_ctrl_u(t_vshdata *data);
 void			input_parse_ctrl_y(t_vshdata *data);
 
 

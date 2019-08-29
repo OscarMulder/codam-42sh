@@ -6,7 +6,7 @@
 /*   By: jbrinksm <jbrinksm@student.codam.nl>         +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2019/08/29 10:40:21 by jbrinksm       #+#    #+#                */
-/*   Updated: 2019/08/29 11:00:20 by jbrinksm      ########   odam.nl         */
+/*   Updated: 2019/08/29 11:21:42 by jbrinksm      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,8 +14,7 @@
 #include <sys/ioctl.h>
 #include <term.h>
 
-static void	input_resize_window(t_vshdata *data, struct winsize new,
-char *tc_clear_lines_str)
+static void	input_resize_window(t_vshdata *data, struct winsize new)
 {
 	int				newlines;
 	unsigned		saved_index;
@@ -32,7 +31,7 @@ char *tc_clear_lines_str)
 		newlines *= ((data->curs->cur_ws_col / new.ws_col) + extra);
 	if (newlines > 0)
 		ft_printf("\e[%iA", newlines);
-	tputs(tc_clear_lines_str, 1, &ft_tputchar);
+	tputs(data->termcaps->tc_clear_lines_str, 1, &ft_tputchar);
 	data->curs->coords = (t_point){1, 1};
 	data->curs->cur_ws_col = new.ws_col;
 	shell_display_prompt(data, data->prompt->cur_prompt_type);
@@ -46,7 +45,6 @@ char *tc_clear_lines_str)
 int		input_resize_window_check(t_vshdata *data)
 {
 	struct winsize	new;
-	char			*tc_clear_lines_str;
 
 	if (ioctl(STDIN_FILENO, TIOCGWINSZ, &new) == -1)
 		return (FUNCT_ERROR); // orioer error message
@@ -55,14 +53,7 @@ int		input_resize_window_check(t_vshdata *data)
 		data->curs->cur_ws_col = new.ws_col;
 	else if (data->curs->cur_ws_col != new.ws_col)
 	{
-		tc_clear_lines_str = tgetstr("cd", NULL);
-		if (tc_clear_lines_str == NULL)
-		{
-			ft_eprintf("ERROR\n"); // needs proper message
-			return (FUNCT_ERROR); // do fatal shit
-		}
-		input_resize_window(data, new, tc_clear_lines_str);
-		ft_strdel(&tc_clear_lines_str);
+		input_resize_window(data, new);
 	}
 	else
 		return (FUNCT_FAILURE);

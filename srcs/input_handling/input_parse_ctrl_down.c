@@ -6,7 +6,7 @@
 /*   By: rkuijper <rkuijper@student.codam.nl>         +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2019/05/17 11:50:51 by rkuijper       #+#    #+#                */
-/*   Updated: 2019/08/26 18:20:16 by jbrinksm      ########   odam.nl         */
+/*   Updated: 2019/08/29 11:30:04 by jbrinksm      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -63,21 +63,20 @@ static void	move_down_handle_newline(t_vshdata *data)
 
 void		curs_move_down(t_vshdata *data)
 {
-	struct winsize	ws;
 	char			*newline_str;
 
-	ioctl(STDIN_FILENO, TIOCGWINSZ, &ws);
 	if (data->line->index == data->line->len_cur)
 		return ;
 	newline_str = ft_strchr(data->line->line + data->line->index, '\n');
 	if (newline_str != NULL)
 		move_down_handle_newline(data);
-	else if (data->line->len_cur - data->line->index < ws.ws_col)
+	else if (data->line->len_cur - data->line->index <
+		(unsigned)data->curs->cur_ws_col)
 		curs_go_end(data);
 	else
 	{
 		ft_printf(CURS_DOWN);
-		data->line->index += ws.ws_col;
+		data->line->index += data->curs->cur_ws_col;
 		data->curs->coords.y++;
 	}
 }

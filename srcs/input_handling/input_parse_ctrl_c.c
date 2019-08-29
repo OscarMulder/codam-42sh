@@ -6,7 +6,7 @@
 /*   By: omulder <omulder@student.codam.nl>           +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2019/07/29 13:54:20 by tde-jong       #+#    #+#                */
-/*   Updated: 2019/08/08 20:05:48 by jbrinksm      ########   odam.nl         */
+/*   Updated: 2019/08/29 12:07:06 by jbrinksm      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,7 +17,7 @@
 **	Moves past the commandline and then displays a new prompt.
 */
 
-int	input_parse_ctrl_c(t_vshdata *data)
+int		input_parse_ctrl_c(t_vshdata *data)
 {
 	if (data->input->c == INPUT_CTRL_C)
 	{

@@ -6,11 +6,12 @@
 /*   By: mavan-he <mavan-he@student.codam.nl>         +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2019/07/29 12:42:44 by mavan-he       #+#    #+#                */
-/*   Updated: 2019/08/28 18:31:53 by jbrinksm      ########   odam.nl         */
+/*   Updated: 2019/08/29 11:23:33 by jbrinksm      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "vsh.h"
+#include <term.h>
 
 static int	find_start(t_history **history)
 {
@@ -115,6 +116,29 @@ t_vshdataalias	*shell_init_vshdataalias(void)
 	return (alias);
 }
 
+t_vshdatatermcaps	*shell_init_vshdatatermcaps(void)
+{
+	t_vshdatatermcaps	*termcaps;
+
+	termcaps = ft_memalloc(sizeof(t_vshdatatermcaps));
+	if (termcaps == NULL)
+		return (NULL);
+	termcaps->tc_clear_lines_str = tgetstr("cd", NULL);
+	if (termcaps->tc_clear_lines_str == NULL)
+	{
+		ft_memdel((void**)&termcaps);
+		return (NULL);
+	}
+	termcaps->tc_scroll_down_str = tgetstr("sf", NULL);
+	if (termcaps->tc_scroll_down_str == NULL)
+	{
+		ft_strdel(&termcaps->tc_clear_lines_str);
+		ft_memdel((void**)&termcaps);
+		return (NULL);
+	}
+	return (termcaps);
+}
+
 int		shell_init_vshdata(t_vshdata *data)
 {
 	ft_bzero(data, sizeof(t_vshdata));
@@ -129,10 +153,11 @@ int		shell_init_vshdata(t_vshdata *data)
 	data->input = shell_init_vshdatainput();
 	data->hashtable = shell_init_vshdatahashtable();
 	data->alias = shell_init_vshdataalias();
+	data->termcaps = shell_init_vshdatatermcaps();
 	if (data->term == NULL || data->curs == NULL
-		|| data->history == NULL || data->line == NULL
-		|| data->prompt == NULL || data->input == NULL
-		|| data->hashtable == NULL || data->alias == NULL)
+		|| data->history == NULL || data->line == NULL || data->prompt == NULL
+		|| data->input == NULL || data->hashtable == NULL || data->alias == NULL
+		|| data->termcaps == NULL)
 		return (err_ret(E_ALLOC_STR));
 	if (shell_init_files(data) == FUNCT_ERROR
 		|| history_get_file_content(data) == FUNCT_ERROR
