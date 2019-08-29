@@ -19,7 +19,7 @@ static void	input_resize_window(t_vshdata *data, struct winsize new)
 	int				newlines;
 	unsigned		saved_index;
 	int				extra;
-	
+
 	saved_index = data->line->index;
 	newlines = data->curs->coords.y - 1;
 	extra = 0;
@@ -42,13 +42,13 @@ static void	input_resize_window(t_vshdata *data, struct winsize new)
 	curs_move_n_right(data, saved_index);
 }
 
-int		input_resize_window_check(t_vshdata *data)
+int			input_resize_window_check(t_vshdata *data)
 {
 	struct winsize	new;
 
 	if (ioctl(STDIN_FILENO, TIOCGWINSZ, &new) == -1)
-		return (FUNCT_ERROR); // orioer error message
-	data->curs->cur_ws_row = new.ws_row; // resizing shouldn't matter
+		return (FUNCT_ERROR);
+	data->curs->cur_ws_row = new.ws_row;
 	if (data->curs->cur_ws_col == UNINIT)
 		data->curs->cur_ws_col = new.ws_col;
 	else if (data->curs->cur_ws_col != new.ws_col)
