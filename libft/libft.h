@@ -6,7 +6,7 @@
 /*   By: jbrinksm <jbrinksm@student.codam.nl>         +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2019/01/09 11:10:09 by omulder        #+#    #+#                */
-/*   Updated: 2019/08/12 10:30:16 by tde-jong      ########   odam.nl         */
+/*   Updated: 2019/08/29 15:16:10 by omulder       ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -32,16 +32,16 @@ char				*ft_itoa(int n);
 char				*ft_strdup(const char *s1);
 char				*ft_strjoin(char const *s1, char const *s2);
 char				*ft_strnew(size_t size);
-char				*ft_strreplace(char *str, char *find, char *replace);
-char				*ft_strsub(char const *s, unsigned int start, size_t len);
+char				*ft_strreplace(char *str, char *find, char *replace); // not used
+char				*ft_strsub(char const *s, unsigned int start, size_t len); // only used in libft
 int					ft_atoi(const char *str);
 size_t				ft_strlen(const char *s);
 void				*ft_memalloc(size_t size);
-void				*ft_memmove(void *dst, const void *src, size_t len);
+void				*ft_memmove(void *dst, const void *src, size_t len); // not used
 void				*ft_memset(void *b, int c, size_t len);
 void				ft_memdel(void **as);
-void				ft_putstrarr(char **arr);
-void				ft_putstrarri(char **arr);
+void				ft_putstrarr(char **arr); // not used
+void				ft_putstrarri(char **arr); // not used
 void				ft_strdel(char **as);
 int					ft_isdigit(int c);
 int					ft_isspace(int c);
@@ -49,20 +49,20 @@ int					ft_intlen(int n);
 void				*ft_memcpy(void *dst, void *src, size_t n);
 void				ft_putendl(char const *s);
 void				ft_putstr(char const *s);
-void				ft_putnbr(int n);
+void				ft_putnbr(int n); // not used
 char				*ft_strcat(char *s1, const char *s2);
 char				*ft_strcpy(char *dst, const char *src);
 char				*ft_strncpy(char *dst, const char *src, size_t len);
-char				*ft_strstr(const char *haystack, const char *needle);
+char				*ft_strstr(const char *haystack, const char *needle); // not used
 void				ft_putchar(unsigned int c);
 void				ft_bzero(void *s, size_t n);
 int					ft_isblank(char c);
 char				*ft_strjoinfree(char *s1, char *s2, int i);
 int					ft_strcmp(const char *s1, const char *s2);
 int					ft_isprint(int c);
-char				*ft_strcdup(char *str, char c);
+char				*ft_strcdup(char *str, char c); // not used
 void				ft_strarrdel(char ***array_p);
-int					ft_arraylen(char **array);
+int					ft_arraylen(char **array); // not used
 int					ft_strncmp(const char *s1, const char *s2, size_t n);
 t_list				*ft_lstnew(void *content, size_t content_size);
 void				ft_lstadd(t_list **alst, t_list *new);
@@ -72,28 +72,28 @@ int					ft_strnequ(char const *s1, char const *s2, size_t n);
 void				ft_putchar_fd(char c, int fd);
 void				ft_putstr_fd(char const *s, int fd);
 void				ft_putendl_fd(char const *s, int fd);
-void				ft_putnbr_fd(int n, int fd);
-int					ft_lstlen(t_list *lst);
-char				**ft_lsttoarray(t_list *lst);
+void				ft_putnbr_fd(int n, int fd); // not used
+int					ft_lstlen(t_list *lst); // not used
+char				**ft_lsttoarray(t_list *lst); // not used
 void				ft_lstadd(t_list **alst, t_list *new);
-void				ft_lstaddback(t_list *alst, t_list *new);
+void				ft_lstaddback(t_list *alst, t_list *new); // not used
 t_list				*ft_lstnew(void *content, size_t content_size);
-void				ft_lstiter(t_list *lst, void (*f)(t_list *elem));
-void				ft_lstdelone(t_list **alst, void (*del)(void *, size_t));
-void				ft_lstdel(t_list **alst, void (*del)(void *, size_t));
+void				ft_lstiter(t_list *lst, void (*f)(t_list *elem)); // not used
+void				ft_lstdelone(t_list **alst, void (*del)(void *, size_t)); // not used
+void				ft_lstdel(t_list **alst, void (*del)(void *, size_t)); // not used
 char				*ft_strchr(const char *s, int c);
 char				**ft_strsplit(const char *s, char c);
-char				*ft_strjoinchr(char const *s1, char c);
-char				*ft_strjoinchrfree(char *s1, char c, int i);
+char				*ft_strjoinchr(char const *s1, char c); // not used
+char				*ft_strjoinchrfree(char *s1, char c, int i); // not used
 char				*ft_joinstrcstr(char *s1, char c, char *s2);
-char				*ft_joinstrcstr_free_s1(char *s1, char c, char *s2);
-char				*ft_joinstrcstr_free_s2(char *s1, char c, char *s2);
-char				*ft_joinstrcstr_free_all(char *s1, char c, char *s2);
+char				*ft_joinstrcstr_free_s1(char *s1, char c, char *s2); // not used
+char				*ft_joinstrcstr_free_s2(char *s1, char c, char *s2); // not used
+char				*ft_joinstrcstr_free_all(char *s1, char c, char *s2); // not used
 char				*ft_chartostr(char c);
 int					ft_get_next_line(const int fd, char **line);
 int					ft_get_next_line_delim(const int fd, char **line,
 						char delim);
-int					ft_strarradd(char ***arr, const char *add);
+int					ft_strarradd(char ***arr, const char *add); // not used
 char				*ft_strjoinfree_s1(char *s1, char *s2);
 char				*ft_strjoinfree_s2(char *s1, char *s2);
 char				*ft_strjoinfree_all(char *s1, char *s2);
