@@ -6,7 +6,7 @@
 /*   By: omulder <omulder@student.codam.nl>           +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2019/04/10 20:29:42 by jbrinksm       #+#    #+#                */
-/*   Updated: 2019/08/29 12:48:03 by tde-jong      ########   odam.nl         */
+/*   Updated: 2019/08/29 13:52:18 by omulder       ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -76,6 +76,7 @@
 # define E_CD_NOT_DIR		SHELL ": cd: not a directory: %s\n"
 # define E_CD_P_NOT_SET		SHELL ": cd: %s: not set\n"
 # define E_TERM_CNT_GET		SHELL ": couldn't get terminal attributes.\n"
+# define E_TERM_CNT_SET		SHELL ": couldn't set terminal attributes.\n"
 # define E_TERM_NOT_SET		SHELL ": term environment variable not set.\n"
 # define E_TERM_DB_NOT_F	SHELL ": terminfo database could not be found.\n"
 # define E_TERM_NO_SUCH		SHELL ": no such TERM entry in the database\n"

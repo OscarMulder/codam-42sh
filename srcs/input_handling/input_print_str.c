@@ -6,7 +6,7 @@
 /*   By: rkuijper <rkuijper@student.codam.nl>         +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2019/08/23 11:54:27 by rkuijper       #+#    #+#                */
-/*   Updated: 2019/08/29 11:21:00 by jbrinksm      ########   odam.nl         */
+/*   Updated: 2019/08/29 13:51:32 by omulder       ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -28,7 +28,7 @@ int	get_curs_row(t_vshdata *data)
 	ret = tcsetattr(STDIN_FILENO, TCSANOW, data->term->termios_p);
 	if (ret == -1)
 	{
-		// ft_eprintf(E_TERM_CNT_GET); <--- WRONG ERROR MESSAGE
+		ft_eprintf(E_TERM_CNT_SET);
 		return (FUNCT_ERROR);
 	}
 	buf = ft_strnew(TC_MAXRESPONSESIZE);
@@ -65,7 +65,7 @@ int	get_curs_row(t_vshdata *data)
 	ret = tcsetattr(STDIN_FILENO, TCSANOW, data->term->termios_p);
 	if (ret == -1)
 	{
-		// ft_eprintf(E_TERM_CNT_GET); <--- WRONG ERROR MESSAGE
+		ft_eprintf(E_TERM_CNT_SET);
 		return (ft_free_return(buf, FUNCT_ERROR));
 	}
 	ft_strdel(&buf);
