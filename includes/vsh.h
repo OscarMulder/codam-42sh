@@ -6,7 +6,7 @@
 /*   By: omulder <omulder@student.codam.nl>           +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2019/04/10 20:29:42 by jbrinksm       #+#    #+#                */
-/*   Updated: 2019/08/29 12:07:31 by jbrinksm      ########   odam.nl         */
+/*   Updated: 2019/08/29 12:48:03 by tde-jong      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -310,7 +310,7 @@ typedef struct	s_aliaslst
 }				t_aliaslst;
 
 /*
-**------------------------------------hashtable----------------------------------
+**------------------------------------hashtable---------------------------------
 */
 
 typedef struct	s_ht
@@ -385,7 +385,7 @@ typedef struct	s_vshdataprompt
 }				t_vshdataprompt;
 
 typedef struct	s_vshdatainput
-{	
+{
 	char				c;
 }				t_vshdatainput;
 
@@ -416,7 +416,7 @@ typedef struct	s_vshdata
 	t_vshdatahashtable	*hashtable;
 	t_vshdataalias		*alias;
 	t_vshdatatermcaps	*termcaps;
-}					t_vshdata;
+}				t_vshdata;
 
 typedef enum	e_prompt_type
 {

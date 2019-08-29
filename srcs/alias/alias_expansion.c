@@ -6,7 +6,7 @@
 /*   By: mavan-he <mavan-he@student.codam.nl>         +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2019/07/25 17:24:39 by mavan-he       #+#    #+#                */
-/*   Updated: 2019/08/26 18:40:47 by jbrinksm      ########   odam.nl         */
+/*   Updated: 2019/08/29 13:26:15 by tde-jong      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -95,10 +95,8 @@ int			alias_expansion(t_vshdata *data, t_tokenlst **tokenlst,
 			(probe->flags & T_FLAG_HASSPECIAL) == false)
 		{
 			ret = alias_expansion_checker(data, probe, expanded);
-			if (ret == FUNCT_ERROR)
-				return (FUNCT_ERROR);
-			if (ret == FUNCT_SUCCESS)
-				return (FUNCT_SUCCESS);
+			if (ret != FUNCT_FAILURE)
+				return (ret);
 		}
 		while (probe->next->type != END &&
 			is_cmd_seperator(probe->next->type) == false)
