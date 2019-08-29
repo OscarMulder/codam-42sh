@@ -6,7 +6,7 @@
 /*   By: omulder <omulder@student.codam.nl>           +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2019/04/18 16:44:50 by omulder        #+#    #+#                */
-/*   Updated: 2019/08/26 19:19:26 by jbrinksm      ########   odam.nl         */
+/*   Updated: 2019/08/29 09:09:44 by tde-jong      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -40,11 +40,9 @@ int		shell_start(t_vshdata *data)
 {
 	t_tokenlst	*token_lst;
 	t_ast		*ast;
-	t_pipes		pipes;
 
 	token_lst = NULL;
 	ast = NULL;
-	pipes = redir_init_pipestruct();
 	env_add_extern_value(data, "OLDPWD", "");
 	input_resize_window_check(data);
 	while (true)
