@@ -6,7 +6,7 @@
 /*   By: rkuijper <rkuijper@student.codam.nl>         +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2019/08/23 11:54:27 by rkuijper       #+#    #+#                */
-/*   Updated: 2019/08/28 20:31:28 by jbrinksm      ########   odam.nl         */
+/*   Updated: 2019/08/29 09:10:48 by tde-jong      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,28 +14,6 @@
 #include <sys/ioctl.h>
 #include <termios.h>
 #include <term.h>
-
-static int	get_total_newlines(t_vshdata *data, unsigned short maxcol, char *str)
-{
-	int	total_newlines;
-	int x_copy;
-	int	i;
-
-	total_newlines = 0;
-	x_copy = data->curs->coords.x;
-	i = 0;
-	while (str[i] != '\0')
-	{
-		x_copy++;
-		if (x_copy > maxcol || str[i] == '\n')
-		{
-			total_newlines++;
-			x_copy = 1;
-		}
-		i++;
-	}
-	return (total_newlines);
-}
 
 int	get_curs_row(t_vshdata *data)
 {
@@ -134,8 +112,5 @@ static void	print_str(t_vshdata *data, unsigned short maxcol, char *str)
 
 void	input_print_str(t_vshdata *data, char *str)
 {
-	int				total_newlines;
-
-	total_newlines = get_total_newlines(data, data->curs->cur_ws_col, str);
 	print_str(data, data->curs->cur_ws_col, str);
 }
