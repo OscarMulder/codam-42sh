@@ -6,7 +6,7 @@
 /*   By: omulder <omulder@student.codam.nl>           +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2019/04/10 20:29:42 by jbrinksm       #+#    #+#                */
-/*   Updated: 2019/08/29 13:52:18 by omulder       ########   odam.nl         */
+/*   Updated: 2019/08/29 14:17:50 by omulder       ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -70,7 +70,7 @@
 # define E_HIST_OPEN_STR 	SHELL ": failed to open / create history file\n"
 # define E_ALIAS_OPEN_STR 	SHELL ": failed to open alias file\n"
 # define E_ALIAS_READ_STR	SHELL ": failed to read alias file\n"
-# define E_ALIAS_INV_NAME	SHELL ": alias: `%.*s': invalid alias name\n"
+# define E_ALIAS_INV_NAME	SHELL ": alias: '%.*s': invalid alias name\n"
 # define E_CD_CNG_DIR		SHELL ": cd: could not get current working directory parsing: %s\n"
 # define E_CD_NO_SUCH		SHELL ": cd: no such file or directory: %s\n"
 # define E_CD_NOT_DIR		SHELL ": cd: not a directory: %s\n"
