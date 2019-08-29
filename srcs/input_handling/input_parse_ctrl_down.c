@@ -6,7 +6,7 @@
 /*   By: rkuijper <rkuijper@student.codam.nl>         +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2019/05/17 11:50:51 by rkuijper       #+#    #+#                */
-/*   Updated: 2019/08/29 11:30:04 by jbrinksm      ########   odam.nl         */
+/*   Updated: 2019/08/29 14:27:35 by jbrinksm      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -32,7 +32,7 @@ static unsigned	get_cur_line_index(t_vshdata *data)
 	return (data->line->index);
 }
 
-static void	move_down_handle_newline(t_vshdata *data)
+static void		move_down_handle_newline(t_vshdata *data)
 {
 	unsigned	i;
 	int			j;
@@ -61,7 +61,7 @@ static void	move_down_handle_newline(t_vshdata *data)
 	curs_move_n_right(data, i - data->line->index);
 }
 
-void		curs_move_down(t_vshdata *data)
+void			curs_move_down(t_vshdata *data)
 {
 	char			*newline_str;
 
