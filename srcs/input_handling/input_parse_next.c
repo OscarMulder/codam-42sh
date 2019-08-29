@@ -37,8 +37,6 @@ void		curs_move_next_word(t_vshdata *data)
 }
 
 /*
-**	`ws` will be taken from `data` after Oscar is done.
-**
 **	Calculations to move cursor (and index) n times to the right
 **	(or up if necessary) on the current ws.
 **	If used after some weird screen clearing, make sure to compensate
@@ -98,8 +96,6 @@ void		curs_move_n_right(t_vshdata *data, size_t n)
 }
 
 /*
-**	`ws` will be taken from data after Oscar is done.
-**
 **	Moves the cursor (and index) one to the right (or down if necessary)
 **	If used after some weird screen clearing, make sure to compensate
 **	for the automatic `index` change if necessary.
