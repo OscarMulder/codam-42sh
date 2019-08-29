@@ -6,7 +6,7 @@
 /*   By: omulder <omulder@student.codam.nl>           +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2019/05/16 15:03:17 by rkuijper       #+#    #+#                */
-/*   Updated: 2019/08/26 18:19:38 by jbrinksm      ########   odam.nl         */
+/*   Updated: 2019/08/29 14:27:59 by jbrinksm      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -32,7 +32,7 @@ static unsigned	get_cur_line_index(t_vshdata *data)
 	return (data->line->index);
 }
 
-static void	move_up_handle_newline(t_vshdata *data)
+static void		move_up_handle_newline(t_vshdata *data)
 {
 	unsigned	i;
 	int			j;
@@ -61,23 +61,21 @@ static void	move_up_handle_newline(t_vshdata *data)
 	curs_move_n_left(data, data->line->index - i);
 }
 
-void		curs_move_up(t_vshdata *data)
+void			curs_move_up(t_vshdata *data)
 {
-	struct winsize	ws;
 	char			*newline_str;
 
-	ioctl(STDIN_FILENO, TIOCGWINSZ, &ws);
 	if (data->line->index == 0)
 		return ;
 	newline_str = ft_strrnchr(data->line->line, '\n', data->line->index);
 	if (newline_str != NULL)
 		move_up_handle_newline(data);
-	else if (data->line->index < ws.ws_col)
+	else if (data->line->index < (unsigned)data->curs->cur_ws_col)
 		curs_go_home(data);
 	else
 	{
 		ft_printf(CURS_UP);
-		data->line->index -= ws.ws_col;
+		data->line->index -= data->curs->cur_ws_col;
 		data->curs->coords.y--;
 	}
 }
