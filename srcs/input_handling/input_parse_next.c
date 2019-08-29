@@ -6,7 +6,7 @@
 /*   By: omulder <omulder@student.codam.nl>           +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2019/05/16 13:41:00 by rkuijper       #+#    #+#                */
-/*   Updated: 2019/08/28 17:18:36 by jbrinksm      ########   odam.nl         */
+/*   Updated: 2019/08/29 14:25:55 by jbrinksm      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -75,13 +75,10 @@ void		curs_move_right_at_colmax(t_vshdata *data, int colmax)
 
 void		curs_move_n_right(t_vshdata *data, size_t n)
 {
-	struct winsize	ws;
-
 	if (n <= 0 || data->line->index == data->line->len_cur)
 		return ;
 	if (n > data->line->len_cur - data->line->index)
 		n = data->line->len_cur - data->line->index;
-	ioctl(STDIN_FILENO, TIOCGWINSZ, &ws);
 	while (n > 0)
 	{
 		if (data->line->line[data->line->index] == '\n' && data->line->index != data->line->len_cur - 1) // LET ME KNOW IF THIS IS FINE @ROB -Jorn
@@ -89,7 +86,7 @@ void		curs_move_n_right(t_vshdata *data, size_t n)
 			move_right_parse_newline(data);
 		}
 		else
-			curs_move_right_at_colmax(data, ws.ws_col);
+			curs_move_right_at_colmax(data, data->curs->cur_ws_col);
 		n--;
 		data->line->index++;
 	}

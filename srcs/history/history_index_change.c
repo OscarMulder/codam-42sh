@@ -6,7 +6,7 @@
 /*   By: omulder <omulder@student.codam.nl>           +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2019/07/31 15:58:58 by omulder        #+#    #+#                */
-/*   Updated: 2019/08/26 18:42:21 by jbrinksm      ########   odam.nl         */
+/*   Updated: 2019/08/29 14:36:00 by jbrinksm      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -51,6 +51,9 @@ int			history_index_change_up(t_vshdata *data)
 
 int			history_index_change_down(t_vshdata *data)
 {
+	#ifdef DEBUG
+	ft_eprintf("%i %i %i\n", data->history->hist_first, data->history->hist_index, data->history->hist_start);
+	#endif
 	if (data->history->hist_first)
 		return (FUNCT_FAILURE);
 	if (data->history->hist_index == data->history->hist_start)

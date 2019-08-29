@@ -6,12 +6,11 @@
 /*   By: omulder <omulder@student.codam.nl>           +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2019/05/16 13:39:59 by rkuijper       #+#    #+#                */
-/*   Updated: 2019/08/28 17:14:23 by tde-jong      ########   odam.nl         */
+/*   Updated: 2019/08/29 22:56:45 by jbrinksm      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "vsh.h"
-#include <sys/ioctl.h>
 
 /*
 **	Algorithm that moves the cursor (and index) to the beginning of a previous
@@ -54,8 +53,11 @@ void		curs_move_prev_word(t_vshdata *data)
 
 static void	move_left_parse_newline(t_vshdata *data)
 {
-	char *pos = ft_strrnchr(data->line->line, '\n', data->line->index);
-	int len = data->line->index;
+	char	*pos;
+	int		len;
+
+	pos = ft_strrnchr(data->line->line, '\n', data->line->index);
+	len = data->line->index;
 	if (pos != NULL)
 		len = (data->line->index - 1) - (pos - data->line->line);
 	ft_putstr("\e[A");
@@ -87,13 +89,10 @@ static void	move_left_to_colmax(t_vshdata *data, int colmax)
 
 void		curs_move_n_left(t_vshdata *data, size_t n)
 {
-	struct winsize	ws;
-
 	if (n <= 0 || data->line->index == 0)
 		return ;
 	if (n > data->line->index)
 		n = data->line->index;
-	ioctl(STDIN_FILENO, TIOCGWINSZ, &ws);
 	while (n > 0)
 	{
 		n--;
@@ -101,7 +100,7 @@ void		curs_move_n_left(t_vshdata *data, size_t n)
 		if (data->line->line[data->line->index] == '\n')
 			move_left_parse_newline(data);
 		else
-			move_left_to_colmax(data, ws.ws_col);
+			move_left_to_colmax(data, data->curs->cur_ws_col);
 	}
 	#ifdef DEBUG
 	ft_eprintf("New cursor coordinates: [%d:%d]\n", data->curs->coords.x, data->curs->coords.y);
