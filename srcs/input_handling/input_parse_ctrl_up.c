@@ -6,7 +6,7 @@
 /*   By: omulder <omulder@student.codam.nl>           +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2019/05/16 15:03:17 by rkuijper       #+#    #+#                */
-/*   Updated: 2019/08/29 14:27:59 by jbrinksm      ########   odam.nl         */
+/*   Updated: 2019/08/29 14:31:46 by jbrinksm      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -51,7 +51,7 @@ static void		move_up_handle_newline(t_vshdata *data)
 			else
 			{
 				j = 1;
-				break;
+				break ;
 			}
 		}
 		i--;
