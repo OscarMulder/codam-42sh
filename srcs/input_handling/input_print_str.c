@@ -6,7 +6,7 @@
 /*   By: rkuijper <rkuijper@student.codam.nl>         +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2019/08/23 11:54:27 by rkuijper       #+#    #+#                */
-/*   Updated: 2019/08/29 09:10:48 by tde-jong      ########   odam.nl         */
+/*   Updated: 2019/08/29 10:44:43 by jbrinksm      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -68,6 +68,7 @@ int	get_curs_row(t_vshdata *data)
 		// ft_eprintf(E_TERM_CNT_GET); <--- WRONG ERROR MESSAGE
 		return (ft_free_return(buf, FUNCT_ERROR));
 	}
+	ft_strdel(&buf);
 	return (row);
 }
 
@@ -90,7 +91,6 @@ static void	print_str(t_vshdata *data, unsigned short maxcol, char *str)
 		data->curs->coords.x++;
 		if (data->curs->coords.x > maxcol)
 		{
-			ft_eprintf("%i <-> %i\n", get_curs_row(data), data->curs->cur_ws_row);
 			if (get_curs_row(data) == data->curs->cur_ws_row)
 			{
 				ft_printf("\e[%iD", data->curs->coords.x - 1);
@@ -101,6 +101,7 @@ static void	print_str(t_vshdata *data, unsigned short maxcol, char *str)
 					return ; // do fatal shit
 				}
 				tputs(tc_scroll_down_str, 1, &ft_tputchar);
+				ft_strdel(&tc_scroll_down_str);
 				ft_printf("\e[%iC", data->curs->coords.x - 1);
 			}
 			ft_printf("\e[B\e[%iD", maxcol);

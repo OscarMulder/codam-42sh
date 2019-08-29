@@ -6,7 +6,7 @@
 /*   By: omulder <omulder@student.codam.nl>           +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2019/04/17 14:03:16 by jbrinksm       #+#    #+#                */
-/*   Updated: 2019/08/28 20:58:00 by jbrinksm      ########   odam.nl         */
+/*   Updated: 2019/08/29 10:48:08 by jbrinksm      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -96,111 +96,6 @@ int			input_read_special(t_vshdata *data)
 	return (FUNCT_SUCCESS);
 }
 
-/*
-**	Welcome Rob!
-**	I have left you many comments to help you understand why and how I have
-**	changed a lot (basically all) of the functions. Before you read it all,
-**	I want to let you know a handy debugging tip which is the following:
-**	1. run vsh as `./vsh 2>TAILME.log`
-**	2. Open a second terminal window and run `tail -f TAILME.log`
-**	3. Profit from all the debug messages that get displayed.
-**	4. ???
-**
-**	The new input read will loop forever until a '\n' is caught, or any other
-**	return is given.
-**
-**	In the loop:
-**
-**	First, the current screen size will be
-**	compared with the saved size. If the size changed, oscars function will
-**	make sure that everything is reprinted, and that the cursor and index
-**	will be properly recovered. (NO FUNCTIONS AFTER THIS SHOULD HAVE TO DEAL
-**	WITH CHANGES TO THE SCREEN SO THEY WILL BE ENTIRELY DEPENDANT ON PROPER
-**	RESIZE HANDLING)
-**
-**	Then, one char is read, if this char is a `\e`, input_read_ansi is used
-**	to read the totality of the escape sequence into a buffer. If the escape
-**	sequence is supported, we run the corresponding function, otherwise it
-**	should be ignored.
-**
-**	If the char has any other special meaning like INPUT_BACKSPACE or
-**	INPUT_CTRL_D and is handled.
-**
-**	Any other char will be parsed by input_parse_char. If it happened to be
-**	a '\n' the input reading is complete, and we break.
-**
-**
-**	PS: As you can see I got rid of your char/input state system, because it
-**	didn't need to be that complicated (:
-**
-**	PPS: Please use functions like `get_cursor_rowpos` (and maybe also ioctl),
-**	as sparingly as possible because they can REALLY make the shell lag like a
-**	bitch and also glitch out because it then can't handle the input speed.
-**	Also, try to be as efficient as possible with using termcaps for
-**	for example cursor movement. (But I think you already knew that.)
-**
-**	GL & HF
-*/
-
-#include <sys/ioctl.h>
-#include <term.h>
-
-int		input_resize_window_check(t_vshdata *data)
-{
-	struct winsize	new;
-	int				newlines;
-	char			*tc_clear_lines_str;
-	unsigned		saved_index;
-	int				extra;
-
-	ioctl(STDIN_FILENO, TIOCGWINSZ, &new); // needs check
-	data->curs->cur_ws_row = new.ws_row; // resizing shouldn't matter
-	if (data->curs->cur_ws_col == UNINIT)
-		data->curs->cur_ws_col = new.ws_col;
-	else if (data->curs->cur_ws_col != new.ws_col)
-	{
-		saved_index = data->line->index; //save index
-		newlines = data->curs->coords.y - 1;
-		extra = 0;
-		if (data->curs->cur_ws_col % new.ws_col > 0)
-			extra = 1;
-		// sleep(1);
-		if (data->curs->coords.x - 1 > 0)
-			ft_printf("\e[%iD", data->curs->coords.x - 1);
-		ft_eprintf("NEWLINES: %i\n", newlines);
-		if (data->curs->cur_ws_col > new.ws_col)
-			newlines *= ((data->curs->cur_ws_col / new.ws_col) + extra);
-		if (newlines > 0)
-			ft_printf("\e[%iA", newlines);
-		ft_eprintf("NEWLINES2: %i\n", newlines);
-		// sleep(1);
-		tc_clear_lines_str = tgetstr("cd", NULL);
-		if (tc_clear_lines_str == NULL)
-		{
-			#ifdef DEBUG
-			ft_eprintf("ERROR\n"); // needs proper message
-			#endif
-			return (FUNCT_ERROR); // do fatal shit
-		}
-		tputs(tc_clear_lines_str, 1, &ft_tputchar);
-		// sleep(1);
-		data->curs->coords.x = 1;
-		data->curs->coords.y = 1;
-		data->curs->cur_ws_col = new.ws_col;
-		shell_display_prompt(data, data->prompt->cur_prompt_type);
-		// sleep(1);
-		data->line->index = data->line->len_cur;
-		input_print_str(data, data->line->line);
-		// sleep(1);
-		data->line->index = data->line->len_cur;
-		curs_go_home(data);
-		// sleep(1);
-		curs_move_n_right(data, saved_index);
-		// sleep(1);
-	}
-	return (FUNCT_SUCCESS);
-}
-
 static int	reset_input_read_return(t_vshdata *data, int ret)
 {
 	data->input->c = '\0';
@@ -222,7 +117,8 @@ int			input_read(t_vshdata *data)
 		return (reset_input_read_return(data, FUNCT_ERROR));
 	while (true)
 	{
-		input_resize_window_check(data);
+		if (input_resize_window_check(data) == FUNCT_ERROR)
+			return (reset_input_read_return(data, FUNCT_ERROR));
 		if (read(STDIN_FILENO, &data->input->c, 1) == -1)
 			return (reset_input_read_return(data, FUNCT_ERROR));
 		if (input_parse_ctrl_c(data) == FUNCT_SUCCESS)
@@ -244,96 +140,3 @@ int			input_read(t_vshdata *data)
 	}
 	return (reset_input_read_return(data, FUNCT_SUCCESS));
 }
-
-/*
-int		input_resize_window_check(t_vshdata *data)
-{
-	struct winsize	new;
-	int				newlines;
-	char			*tc_clear_lines_str;
-	unsigned		saved_index;
-	int				extra;
-	// int				random_int_lmao;
-	// int				another_random_int;
-
-	ioctl(STDIN_FILENO, TIOCGWINSZ, &new); // needs check
-	data->curs->cur_ws_row = new.ws_row; // resizing shouldn't matter
-	if (data->curs->cur_ws_col == UNINIT)
-		data->curs->cur_ws_col = new.ws_col;
-	else if (data->curs->cur_ws_col != new.ws_col)
-	{
-		sleep(100);
-		saved_index = data->line->index; //save index
-		newlines = data->curs->coords.y - 1;
-		extra = 0;
-		if (data->curs->cur_ws_col % new.ws_col > 0)
-			extra = 1;
-		// sleep(1);
-		if (data->curs->coords.x - 1 > 0)
-			ft_printf("\e[%iD", data->curs->coords.x - 1);
-		ft_eprintf("NEWLINES: %i\n", newlines);
-		if (data->curs->cur_ws_col > new.ws_col)
-			newlines *= data->curs->cur_ws_col / new.ws_col + extra;
-		
-		// random_int_lmao = data->curs->cur_ws_col / new.ws_col + extra;
-		// if (data->curs->cur_ws_col > new.ws_col && random_int_lmao > 0)
-		// {
-		// 		char	*tc_scroll_up_str;
-		// 		// ft_printf("\e[%iD", data->curs->coords.x - 1);
-		// 		tc_scroll_up_str = tgetstr("sr", NULL);
-		// 		if (tc_scroll_up_str == NULL)
-		// 		{
-		// 			ft_eprintf("ERROR\n"); // needs proper message
-		// 			return (FUNCT_ERROR); // do fatal shit
-		// 		}
-		// 		while (random_int_lmao > 0)
-		// 		{
-		// 			ft_eprintf("GOES UP ONCE\n");
-		// 			another_random_int = get_curs_row(data) - 1;
-		// 			// sleep(1);
-		// 			ft_printf("\e[%iD", data->curs->coords.x - 1);
-		// 			// sleep(1);
-		// 			ft_printf("\e[%iA", another_random_int);
-		// 			// sleep(1);
-		// 			tputs(tc_scroll_up_str, 1, &ft_tputchar);
-		// 			// sleep(1);
-		// 			ft_printf("\e[%iB", another_random_int + 1);
-		// 			// sleep(1);
-		// 			ft_printf("\e[%iC", data->curs->coords.x - 1);
-		// 			// sleep(1);
-		// 			random_int_lmao--;
-		// 		}
-		// 		// ft_printf("\e[%iC", data->curs->coords.x - 1);
-		// }
-		// ft_printf("\e[%iD", data->curs->coords.x - 1);
-		if (newlines > 0)
-			ft_printf("\e[%iA", newlines);
-		// sleep(1);
-		ft_eprintf("NEWLINES2: %i\n", newlines);
-		// sleep(1);
-		tc_clear_lines_str = tgetstr("cd", NULL);
-		if (tc_clear_lines_str == NULL)
-		{
-			#ifdef DEBUG
-			ft_eprintf("ERROR\n"); // needs proper message
-			#endif
-			return (FUNCT_ERROR); // do fatal shit
-		}
-		// sleep(1);
-		tputs(tc_clear_lines_str, 1, &ft_tputchar);
-		// sleep(1);
-		data->curs->coords.x = 1;
-		data->curs->coords.y = 1;
-		data->curs->cur_ws_col = new.ws_col;
-		shell_display_prompt(data, data->prompt->cur_prompt_type);
-		// sleep(1);
-		data->line->index = data->line->len_cur;
-		input_print_str(data, data->line->line);
-		// sleep(1);
-		data->line->index = data->line->len_cur;
-		curs_go_home(data);
-		curs_move_n_right(data, saved_index);
-	}
-	return (FUNCT_SUCCESS);
-}
- */
