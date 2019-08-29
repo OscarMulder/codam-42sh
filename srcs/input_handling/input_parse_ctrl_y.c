@@ -6,7 +6,7 @@
 /*   By: rkuijper <rkuijper@student.codam.nl>         +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2019/08/23 13:05:41 by rkuijper       #+#    #+#                */
-/*   Updated: 2019/08/26 18:38:03 by jbrinksm      ########   odam.nl         */
+/*   Updated: 2019/08/29 14:32:43 by jbrinksm      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -46,7 +46,7 @@ void		input_parse_ctrl_y(t_vshdata *data)
 {
 	unsigned	copy_len;
 	unsigned	old_index;
-	
+
 	if (data->line->line_copy != NULL)
 	{
 		old_index = data->line->index;
