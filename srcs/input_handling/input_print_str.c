@@ -6,7 +6,7 @@
 /*   By: rkuijper <rkuijper@student.codam.nl>         +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2019/08/23 11:54:27 by rkuijper       #+#    #+#                */
-/*   Updated: 2019/08/29 13:51:32 by omulder       ########   odam.nl         */
+/*   Updated: 2019/08/29 22:35:40 by jbrinksm      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,65 +15,70 @@
 #include <termios.h>
 #include <term.h>
 
-int	get_curs_row(t_vshdata *data)
+static int	get_curs_row_return(t_vshdata *data, char **buf, char *error_str,
+	int ret)
 {
-	char	*buf;
-	int		ret;
-	int		i;
-	int		row;
+	ft_strdel(buf);
+	if (error_str != NULL)
+		ft_eprintf(error_str);
+	data->term->termios_p->c_cc[VMIN] = 0;
+	data->term->termios_p->c_cc[VTIME] = 2;
+	if (tcsetattr(STDIN_FILENO, TCSANOW, data->term->termios_p) == -1)
+	{
+		ft_eprintf(E_TERM_CNT_SET);
+		return (FUNCT_ERROR);
+	}
+	return (ret);
+}
 
-	i = 0;
+static int	prepare_term_settings(t_vshdata *data)
+{
+	int		ret;
+
 	data->term->termios_p->c_cc[VMIN] = 5;
 	data->term->termios_p->c_cc[VTIME] = 0;
 	ret = tcsetattr(STDIN_FILENO, TCSANOW, data->term->termios_p);
 	if (ret == -1)
-	{
-		ft_eprintf(E_TERM_CNT_SET);
+		return (get_curs_row_return(data, NULL, E_TERM_CNT_SET, FUNCT_ERROR));
+	return (FUNCT_SUCCESS);
+}
+
+int			get_curs_row(t_vshdata *data)
+{
+	char	*buf;
+	int		i;
+	int		row;
+
+	i = 0;
+	if (prepare_term_settings(data) == FUNCT_ERROR)
 		return (FUNCT_ERROR);
-	}
 	buf = ft_strnew(TC_MAXRESPONSESIZE);
 	if (buf == NULL)
-	{
-		data->term->termios_p->c_cc[VMIN] = 0;
-		data->term->termios_p->c_cc[VTIME] = 2;
-		ret = tcsetattr(STDIN_FILENO, TCSANOW, data->term->termios_p);
-		return (FUNCT_ERROR);
-	}
+		return (get_curs_row_return(data, &buf, E_ALLOC_STR, FUNCT_ERROR));
 	ft_putstr("\e[6n");
-	ret = read(STDIN_FILENO, buf, TC_MAXRESPONSESIZE);
-	if (ret == -1)
-	{
-		data->term->termios_p->c_cc[VMIN] = 0;
-		data->term->termios_p->c_cc[VTIME] = 2;
-		ret = tcsetattr(STDIN_FILENO, TCSANOW, data->term->termios_p);
-		return (ft_free_return(buf, FUNCT_ERROR));
-	}
+	if (read(STDIN_FILENO, buf, TC_MAXRESPONSESIZE) == -1)
+		return (get_curs_row_return(data, &buf, NULL, FUNCT_ERROR)); //perhaps error message?
 	while (buf[i] != '[' && buf[i] != '\0')
 		i++;
 	if (buf[i] == '[')
 		i++;
+	#ifdef DEBUG
+	ft_eprintf("curs: <%s>\n", &buf[1]);
+	#endif
 	if (ft_isdigit(buf[i]) == false)
-	{
-		data->term->termios_p->c_cc[VMIN] = 0;
-		data->term->termios_p->c_cc[VTIME] = 2;
-		ret = tcsetattr(STDIN_FILENO, TCSANOW, data->term->termios_p);
-		return (ft_free_return(buf, FUNCT_ERROR));
-	}
+		return (get_curs_row_return(data, &buf, NULL, FUNCT_ERROR));
 	row = ft_atoi(&buf[i]);
-	data->term->termios_p->c_cc[VMIN] = 0;
-	data->term->termios_p->c_cc[VTIME] = 2;
-	ret = tcsetattr(STDIN_FILENO, TCSANOW, data->term->termios_p);
-	if (ret == -1)
-	{
-		ft_eprintf(E_TERM_CNT_SET);
-		return (ft_free_return(buf, FUNCT_ERROR));
-	}
-	ft_strdel(&buf);
-	return (row);
+	return (get_curs_row_return(data, &buf, NULL, row));
 }
 
-// STILL NEEDS TO RETURN SHIT WHEN IT FAILS
-static void	print_str(t_vshdata *data, unsigned short maxcol, char *str)
+static void	scroll_down_terminal(t_vshdata *data)
+{
+	ft_printf("\e[%iD", data->curs->coords.x - 1);
+	tputs(data->termcaps->tc_scroll_down_str, 1, &ft_tputchar);
+	ft_printf("\e[%iC", data->curs->coords.x - 1);
+}
+
+void		input_print_str(t_vshdata *data, char *str)
 {
 	int		i;
 
@@ -88,22 +93,13 @@ static void	print_str(t_vshdata *data, unsigned short maxcol, char *str)
 		}
 		i++;
 		data->curs->coords.x++;
-		if (data->curs->coords.x > maxcol)
+		if (data->curs->coords.x > data->curs->cur_ws_col)
 		{
 			if (get_curs_row(data) == data->curs->cur_ws_row)
-			{
-				ft_printf("\e[%iD", data->curs->coords.x - 1);
-				tputs(data->termcaps->tc_scroll_down_str, 1, &ft_tputchar);
-				ft_printf("\e[%iC", data->curs->coords.x - 1);
-			}
-			ft_printf("\e[B\e[%iD", maxcol);
+				scroll_down_terminal(data);
+			ft_printf("\e[B\e[%iD", data->curs->cur_ws_col);
 			data->curs->coords.x = 1;
 			data->curs->coords.y++;
 		}
 	}
-}
-
-void	input_print_str(t_vshdata *data, char *str)
-{
-	print_str(data, data->curs->cur_ws_col, str);
 }
