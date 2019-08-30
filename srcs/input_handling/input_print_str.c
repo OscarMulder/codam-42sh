@@ -6,12 +6,11 @@
 /*   By: rkuijper <rkuijper@student.codam.nl>         +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2019/08/23 11:54:27 by rkuijper       #+#    #+#                */
-/*   Updated: 2019/08/30 14:06:17 by jbrinksm      ########   odam.nl         */
+/*   Updated: 2019/08/30 16:56:16 by jbrinksm      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include <vsh.h>
-#include <sys/ioctl.h>
 #include <termios.h>
 #include <term.h>
 

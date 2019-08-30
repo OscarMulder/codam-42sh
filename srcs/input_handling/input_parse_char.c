@@ -6,7 +6,7 @@
 /*   By: omulder <omulder@student.codam.nl>           +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2019/05/16 13:33:54 by rkuijper       #+#    #+#                */
-/*   Updated: 2019/08/29 14:53:55 by jbrinksm      ########   odam.nl         */
+/*   Updated: 2019/08/30 16:53:50 by jbrinksm      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -40,7 +40,7 @@ static void	create_char_gap(char *line, int len, int gap_index)
 
 static int	add_char_at(t_vshdata *data, char **line)
 {
-	char		*tmp;
+	char	*tmp;
 
 	if (data->line->len_cur < data->line->len_max)
 	{
@@ -73,7 +73,7 @@ static int	add_char_at(t_vshdata *data, char **line)
 
 static int	add_newline(t_vshdata *data, char **line)
 {
-	char		*tmp;
+	char	*tmp;
 
 	if (data->line->len_cur < data->line->len_max)
 		(*line)[data->line->len_cur] = '\n';
@@ -94,7 +94,7 @@ static int	add_newline(t_vshdata *data, char **line)
 
 int			input_parse_char(t_vshdata *data)
 {
-	int				old_index;
+	int	old_index;
 
 	if (ft_isprint(data->input->c))
 	{

@@ -6,12 +6,11 @@
 /*   By: rkuijper <rkuijper@student.codam.nl>         +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2019/05/16 13:39:04 by rkuijper       #+#    #+#                */
-/*   Updated: 2019/08/29 12:04:22 by jbrinksm      ########   odam.nl         */
+/*   Updated: 2019/08/30 16:54:35 by jbrinksm      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "vsh.h"
-#include <sys/ioctl.h>
 
 /*
 **	Calculates steps to end and then uses curs_move_n_right.

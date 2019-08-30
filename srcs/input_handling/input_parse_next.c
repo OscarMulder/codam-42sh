@@ -6,12 +6,11 @@
 /*   By: omulder <omulder@student.codam.nl>           +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2019/05/16 13:41:00 by rkuijper       #+#    #+#                */
-/*   Updated: 2019/08/30 14:09:37 by jbrinksm      ########   odam.nl         */
+/*   Updated: 2019/08/30 16:55:26 by jbrinksm      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "vsh.h"
-#include <sys/ioctl.h>
 
 /*
 **	Algorithm that moves the cursor (and index) to the beginning of the next

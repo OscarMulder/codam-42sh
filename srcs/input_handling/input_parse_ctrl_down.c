@@ -6,12 +6,11 @@
 /*   By: rkuijper <rkuijper@student.codam.nl>         +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2019/05/17 11:50:51 by rkuijper       #+#    #+#                */
-/*   Updated: 2019/08/29 14:27:35 by jbrinksm      ########   odam.nl         */
+/*   Updated: 2019/08/30 16:57:20 by jbrinksm      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "vsh.h"
-#include <sys/ioctl.h>
 
 /*
 **	Moves the cursor (and index) down or sets it at end if it would otherwise
