@@ -6,7 +6,7 @@
 /*   By: omulder <omulder@student.codam.nl>           +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2019/04/10 20:29:42 by jbrinksm       #+#    #+#                */
-/*   Updated: 2019/08/30 11:42:00 by jbrinksm      ########   odam.nl         */
+/*   Updated: 2019/08/30 14:06:36 by rkuijper      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -28,7 +28,7 @@
 # define FUNCT_ERROR -1
 # define PROG_FAILURE 1
 # define PROG_SUCCESS 0
-# define NEW_PROMPT -1
+# define NEW_PROMPT FUNCT_ERROR
 # define U_ALIAS			"alias: usage: alias [-p] [name[=value] ... ]\n"
 # define U_CD				"cd: usage: cd [-L|-P] [dir]\n"
 # define U_EXPORT			"export: usage: export [-n] [name[=value] ...] or export -p"
@@ -576,6 +576,7 @@ void			term_free_struct(t_vshdataterm**term_p);
 
 int				input_read(t_vshdata *data);
 int				input_read_ansi(t_vshdata *data);
+int				input_parse_special(t_vshdata *data);
 int				input_is_word_start(char *str, int i1, int i2);
 void			input_clear_char_at(char **line, unsigned index);
 int				input_parse_char(t_vshdata *data);

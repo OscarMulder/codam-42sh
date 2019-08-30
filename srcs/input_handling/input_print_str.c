@@ -6,7 +6,7 @@
 /*   By: rkuijper <rkuijper@student.codam.nl>         +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2019/08/23 11:54:27 by rkuijper       #+#    #+#                */
-/*   Updated: 2019/08/29 22:35:40 by jbrinksm      ########   odam.nl         */
+/*   Updated: 2019/08/30 14:06:17 by jbrinksm      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -57,7 +57,7 @@ int			get_curs_row(t_vshdata *data)
 		return (get_curs_row_return(data, &buf, E_ALLOC_STR, FUNCT_ERROR));
 	ft_putstr("\e[6n");
 	if (read(STDIN_FILENO, buf, TC_MAXRESPONSESIZE) == -1)
-		return (get_curs_row_return(data, &buf, NULL, FUNCT_ERROR)); //perhaps error message?
+		return (get_curs_row_return(data, &buf, NULL, FUNCT_ERROR));
 	while (buf[i] != '[' && buf[i] != '\0')
 		i++;
 	if (buf[i] == '[')

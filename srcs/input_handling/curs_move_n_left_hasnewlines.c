@@ -6,7 +6,7 @@
 /*   By: jbrinksm <jbrinksm@student.codam.nl>         +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2019/08/30 11:34:28 by jbrinksm       #+#    #+#                */
-/*   Updated: 2019/08/30 11:53:56 by rkuijper      ########   odam.nl         */
+/*   Updated: 2019/08/30 14:07:48 by jbrinksm      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -21,7 +21,9 @@ static void	move_left_parse_newline(t_vshdata *data)
 	len = data->line->index;
 	if (pos != NULL)
 		len = data->line->index - (pos - data->line->line);
+	#ifdef DEBUG
 	ft_eprintf("len: %d\n", len);
+	#endif
 	ft_putstr("\e[A");
 	if (len > 1)
 		ft_printf("\e[%iC", len - 1);

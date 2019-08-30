@@ -6,7 +6,7 @@
 /*   By: omulder <omulder@student.codam.nl>           +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2019/04/17 14:03:16 by jbrinksm       #+#    #+#                */
-/*   Updated: 2019/08/30 12:48:33 by omulder       ########   odam.nl         */
+/*   Updated: 2019/08/30 14:22:54 by omulder       ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -46,27 +46,6 @@ static int	reset_input_read_return(t_vshdata *data, int ret)
 	data->history->hist_start = data->history->hist_index - 1;
 	data->history->hist_first = true;
 	return (ret);
-}
-
-/*
-**	Handles non-ansi single-byte special chars.
-*/
-
-int			input_parse_special(t_vshdata *data)
-{
-	if (data->input->c == INPUT_BACKSPACE)
-		input_handle_backspace(data);
-	else if (data->input->c == INPUT_CTRL_D)
-		input_parse_ctrl_d(data);
-	else if (data->input->c == INPUT_CTRL_K)
-		input_parse_ctrl_k(data);
-	else if (data->input->c == INPUT_CTRL_U)
-		input_parse_ctrl_u(data);
-	else if (data->input->c == INPUT_CTRL_Y)
-		input_parse_ctrl_y(data);
-	else
-		return (FUNCT_FAILURE);
-	return (FUNCT_SUCCESS);
 }
 
 static int	input_parse(t_vshdata *data)
