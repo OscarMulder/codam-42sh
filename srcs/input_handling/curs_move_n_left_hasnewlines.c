@@ -6,7 +6,7 @@
 /*   By: jbrinksm <jbrinksm@student.codam.nl>         +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2019/08/30 11:34:28 by jbrinksm       #+#    #+#                */
-/*   Updated: 2019/08/30 11:34:32 by jbrinksm      ########   odam.nl         */
+/*   Updated: 2019/08/30 11:53:56 by rkuijper      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -20,16 +20,17 @@ static void	move_left_parse_newline(t_vshdata *data)
 	pos = ft_strrnchr(data->line->line, '\n', data->line->index);
 	len = data->line->index;
 	if (pos != NULL)
-		len = (data->line->index - 1) - (pos - data->line->line);
+		len = data->line->index - (pos - data->line->line);
+	ft_eprintf("len: %d\n", len);
 	ft_putstr("\e[A");
 	if (len > 1)
-		ft_printf("\e[%iC", len);
-	data->curs->coords.x = len == 1 ? len : len + 1;
+		ft_printf("\e[%iC", len - 1);
+	data->curs->coords.x = len;
 	data->curs->coords.y--;
 	if (data->curs->coords.y == 1)
 	{
-		ft_printf("\e[%iC", data->prompt->prompt_len);
-		data->curs->coords.x += data->prompt->prompt_len;
+		ft_printf("\e[%iC", data->prompt->prompt_len + 1);
+		data->curs->coords.x += data->prompt->prompt_len + 1;
 	}
 }
 
