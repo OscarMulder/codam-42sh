@@ -6,33 +6,12 @@
 /*   By: mavan-he <mavan-he@student.codam.nl>         +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2019/07/29 12:42:44 by mavan-he       #+#    #+#                */
-/*   Updated: 2019/08/29 11:23:33 by jbrinksm      ########   odam.nl         */
+/*   Updated: 2019/08/30 12:36:16 by omulder       ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "vsh.h"
 #include <term.h>
-
-static int	find_start(t_history **history)
-{
-	int i;
-	int start;
-	int largest;
-
-	i = 0;
-	start = 0;
-	largest = -1;
-	while (i < HISTORY_MAX && history[i]->str != NULL)
-	{
-		if (history[i]->number > largest)
-		{
-			start = i;
-			largest = history[i]->number;
-		}
-		i++;
-	}
-	return (start + 1);
-}
 
 t_vshdatacurs	*shell_init_vshdatacurs(void)
 {
@@ -100,8 +79,6 @@ t_vshdatahistory	*shell_init_vshdatahistory(void)
 	history = ft_memalloc(sizeof(t_vshdatahistory));
 	if (history == NULL)
 		return (NULL);
-	history->hist_start = history->hist_index - 1;
-	history->hist_first = true;
 	return (history);
 }
 
@@ -163,6 +140,5 @@ int		shell_init_vshdata(t_vshdata *data)
 		|| history_get_file_content(data) == FUNCT_ERROR
 		|| alias_read_file(data) == FUNCT_ERROR)
 		return (FUNCT_ERROR);
-	data->history->hist_index = find_start(data->history->history);
 	return (FUNCT_SUCCESS);
 }
