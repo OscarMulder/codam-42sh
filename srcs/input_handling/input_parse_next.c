@@ -72,8 +72,6 @@ void		curs_move_n_right(t_vshdata *data, size_t n)
 }
 
 /*
-**	`ws` will be taken from data after Oscar is done.
-**
 **	Moves the cursor (and index) one to the right (or down if necessary)
 **	If used after some weird screen clearing, make sure to compensate
 **	for the automatic `index` change if necessary.

@@ -25,19 +25,19 @@ void		curs_move_prev_word(t_vshdata *data)
 		return ;
 	i = 0;
 	if ((data->line->index > 0
-		&& tools_isprintnotblank(data->line->line[data->line->index]) == true // i++ if at beginning of previous word
+		&& tools_isprintnotblank(data->line->line[data->line->index]) == true
 		&& ft_isblank(data->line->line[data->line->index - 1]) == true)
-		|| (data->line->index > 0 && data->line->index == data->line->len_cur)) // i++ if at end of line
+		|| (data->line->index > 0 && data->line->index == data->line->len_cur))
 		i++;
-	while (data->line->index - i > 0 // i++ blanks
+	while (data->line->index - i > 0
 		&& ft_isblank(data->line->line[data->line->index - i]) == true)
 		i++;
 	if (data->line->index - i == 0)
 		curs_move_n_left(data, i);
 	else
 	{
-		while (data->line->index - i > 0
-			&& tools_isprintnotblank(data->line->line[data->line->index - i - 1]))
+		while (data->line->index - i > 0 && tools_isprintnotblank(
+				data->line->line[data->line->index - i - 1]))
 			i++;
 		curs_move_n_left(data, i);
 	}
@@ -80,8 +80,6 @@ void		curs_move_n_left(t_vshdata *data, size_t n)
 }
 
 /*
-**	`ws` will be taken from data after Oscar is done.
-**
 **	Moves the cursor (and index) one to the left (or up if necessary)
 **	If used after some weird screen clearing, make sure to compensate
 **	for the automatic `index` change if necessar
