@@ -6,7 +6,7 @@
 /*   By: omulder <omulder@student.codam.nl>           +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2019/05/16 13:39:59 by rkuijper       #+#    #+#                */
-/*   Updated: 2019/08/29 22:56:45 by jbrinksm      ########   odam.nl         */
+/*   Updated: 2019/08/30 11:41:40 by jbrinksm      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -44,64 +44,36 @@ void		curs_move_prev_word(t_vshdata *data)
 }
 
 /*
-**	`ws` will be taken from `data` after Oscar is done.
-**
-**	Calculations to move n times to the left (or up if necessar) on the current
-**	ws. If used after some weird screen clearing, make sure to compensate
-**	for the automatic `index` change if necessar
+**	...
 */
-
-static void	move_left_parse_newline(t_vshdata *data)
-{
-	char	*pos;
-	int		len;
-
-	pos = ft_strrnchr(data->line->line, '\n', data->line->index);
-	len = data->line->index;
-	if (pos != NULL)
-		len = (data->line->index - 1) - (pos - data->line->line);
-	ft_putstr("\e[A");
-	if (len > 1)
-		ft_printf("\e[%iC", len);
-	data->curs->coords.x = len == 1 ? len : len + 1;
-	data->curs->coords.y--;
-	if (data->curs->coords.y == 1)
-	{
-		ft_printf("\e[%iC", data->prompt->prompt_len);
-		data->curs->coords.x += data->prompt->prompt_len;
-	}
-}
-
-static void	move_left_to_colmax(t_vshdata *data, int colmax)
-{
-	if (data->curs->coords.x == 1)
-	{
-		data->curs->coords.x = colmax;
-		data->curs->coords.y--;
-		ft_printf("\e[A\e[%iC", data->curs->coords.x);
-	}
-	else
-	{
-		ft_putstr("\e[D");
-		data->curs->coords.x--;
-	}
-}
 
 void		curs_move_n_left(t_vshdata *data, size_t n)
 {
+	int		up;
+	int		x_offset;
+	int		curs_row_pos;
+
 	if (n <= 0 || data->line->index == 0)
 		return ;
 	if (n > data->line->index)
 		n = data->line->index;
-	while (n > 0)
+	if (ft_strchr(data->line->line, '\n') == NULL)
 	{
-		n--;
-		data->line->index--;
-		if (data->line->line[data->line->index] == '\n')
-			move_left_parse_newline(data);
-		else
-			move_left_to_colmax(data, data->curs->cur_ws_col);
+		curs_row_pos = data->curs->cur_ws_col - data->curs->coords.x;
+		up = (curs_row_pos + n) / data->curs->cur_ws_col;
+		x_offset = curs_row_pos - ((curs_row_pos + n) % data->curs->cur_ws_col);
+		if (up > 0)
+			ft_printf("\e[%iA", up);
+		if (x_offset > 0)
+			ft_printf("\e[%iC", x_offset);
+		else if (x_offset < 0)
+			ft_printf("\e[%iD", x_offset * -1);
+		data->line->index -= n;
+		data->curs->coords.y -= up;
+		data->curs->coords.x += x_offset;
 	}
+	else
+		curs_move_n_left_hasnewlines(data, n);
 	#ifdef DEBUG
 	ft_eprintf("New cursor coordinates: [%d:%d]\n", data->curs->coords.x, data->curs->coords.y);
 	#endif

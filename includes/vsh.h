@@ -6,7 +6,7 @@
 /*   By: omulder <omulder@student.codam.nl>           +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2019/04/10 20:29:42 by jbrinksm       #+#    #+#                */
-/*   Updated: 2019/08/29 14:17:50 by omulder       ########   odam.nl         */
+/*   Updated: 2019/08/30 11:42:00 by jbrinksm      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -38,6 +38,7 @@
 # define E_SYNTAX_P			SHELL ": syntax error near unexpected token '%s'\n"
 # define E_P_NOT_VAL_HERE	SHELL ": '%s' is not a valid heredoc delimiter\n"
 # define E_P_BAD_FD			SHELL ": %s: bad file descriptor\n"
+# define E_BAD_FD			SHELL ": %i: bad file descriptor\n"
 # define E_FAIL_DUP_FD		SHELL ": failed to duplicate file descriptor\n"
 # define E_FD_CLOSE			SHELL ": failed to close file descriptor\n"
 # define E_NO_PERM_NO_SUCH	SHELL ": no perm / no such file or directory\n"
@@ -574,12 +575,11 @@ void			term_free_struct(t_vshdataterm**term_p);
 # define TC_MAXRESPONSESIZE 50
 
 int				input_read(t_vshdata *data);
+int				input_read_ansi(t_vshdata *data);
 int				input_is_word_start(char *str, int i1, int i2);
 void			input_clear_char_at(char **line, unsigned index);
 int				input_parse_char(t_vshdata *data);
 void			input_print_str(t_vshdata *data, char *str);
-int				get_cursor_linepos(void); //column
-int				get_cursor_rowpos(void); //row
 
 int				ft_tputchar(int c);
 int				tools_isprintnotblank(int i);
@@ -589,9 +589,11 @@ void			input_handle_delete(t_vshdata *data);
 
 void			curs_move_left(t_vshdata *data);
 void			curs_move_n_left(t_vshdata *data, size_t n);
+void			curs_move_n_left_hasnewlines(t_vshdata *data, size_t n);
 
 void			curs_move_right(t_vshdata *data);
 void			curs_move_n_right(t_vshdata *data, size_t n);
+void			curs_move_n_right_hasnewlines(t_vshdata *data, size_t n);
 void			curs_move_right_at_colmax(t_vshdata *data, int colmax);
 
 void			curs_move_up(t_vshdata *data);
@@ -612,9 +614,7 @@ void			input_parse_ctrl_y(t_vshdata *data);
 
 int				input_resize_window_check(t_vshdata *data);
 
-//TEMPORARY
-int	get_curs_row(t_vshdata *data);
-//TEMPORARY
+int				get_curs_row(t_vshdata *data);
 
 /*
 **----------------------------------shell---------------------------------------
