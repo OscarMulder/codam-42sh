@@ -6,7 +6,7 @@
 /*   By: omulder <omulder@student.codam.nl>           +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2019/05/16 13:41:00 by rkuijper       #+#    #+#                */
-/*   Updated: 2019/08/30 11:41:37 by jbrinksm      ########   odam.nl         */
+/*   Updated: 2019/08/30 14:09:37 by jbrinksm      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -37,7 +37,9 @@ void		curs_move_next_word(t_vshdata *data)
 }
 
 /*
-**	...
+**	Calculates the end position once if there are no newlines in the part
+**	of the string the cursor will traverse. If there is a newline, it will
+**	call a function with a slower method to reposition the cursor.
 */
 
 void		curs_move_n_right(t_vshdata *data, size_t n)

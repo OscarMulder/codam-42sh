@@ -6,7 +6,7 @@
 /*   By: omulder <omulder@student.codam.nl>           +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2019/05/16 15:03:17 by rkuijper       #+#    #+#                */
-/*   Updated: 2019/08/29 14:31:46 by jbrinksm      ########   odam.nl         */
+/*   Updated: 2019/08/30 14:07:00 by jbrinksm      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -41,7 +41,9 @@ static void		move_up_handle_newline(t_vshdata *data)
 	i = data->line->index;
 	j = -1;
 	l = get_cur_line_index(data);
+	#ifdef DEBUG
 	ft_eprintf("Line index: %d\n", l);
+	#endif
 	while (i > 0)
 	{
 		if (data->line->line[i] == '\n')
