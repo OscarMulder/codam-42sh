@@ -6,7 +6,7 @@
 /*   By: omulder <omulder@student.codam.nl>           +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2019/04/17 14:03:16 by jbrinksm       #+#    #+#                */
-/*   Updated: 2019/08/30 12:33:59 by omulder       ########   odam.nl         */
+/*   Updated: 2019/08/30 12:48:33 by omulder       ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -34,13 +34,6 @@ static int	find_start(t_history **history)
 	return (start + 1);
 }
 
-static void	init_history_data(t_vshdata *data)
-{
-	data->history->hist_index = find_start(data->history->history);
-	data->history->hist_start = data->history->hist_index - 1;
-	data->history->hist_first = true;
-}
-
 static int	reset_input_read_return(t_vshdata *data, int ret)
 {
 	data->input->c = '\0';
@@ -49,6 +42,9 @@ static int	reset_input_read_return(t_vshdata *data, int ret)
 	data->line->len_cur = 0;
 	data->curs->coords.x = 1;
 	data->curs->coords.y = 1;
+	data->history->hist_index = find_start(data->history->history);
+	data->history->hist_start = data->history->hist_index - 1;
+	data->history->hist_first = true;
 	return (ret);
 }
 
@@ -95,7 +91,7 @@ int			input_read(t_vshdata *data)
 	data->line->line = ft_strnew(data->line->len_max);
 	if (data->line->line == NULL)
 		return (reset_input_read_return(data, FUNCT_ERROR));
-	init_history_data(data);
+	reset_input_read_return(data, 0);
 	while (true)
 	{
 		if (input_resize_window_check(data) == FUNCT_ERROR)
