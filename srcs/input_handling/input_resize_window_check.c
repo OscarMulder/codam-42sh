@@ -42,7 +42,7 @@ static void	input_resize_window(t_vshdata *data, struct winsize new)
 	curs_move_n_right(data, saved_index);
 }
 
-int		input_resize_window_check(t_vshdata *data)
+int			input_resize_window_check(t_vshdata *data)
 {
 	struct winsize	new;
 
