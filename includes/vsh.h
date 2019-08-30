@@ -6,7 +6,7 @@
 /*   By: omulder <omulder@student.codam.nl>           +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2019/04/10 20:29:42 by jbrinksm       #+#    #+#                */
-/*   Updated: 2019/08/30 14:06:36 by rkuijper      ########   odam.nl         */
+/*   Updated: 2019/08/30 16:05:34 by jbrinksm      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -630,12 +630,21 @@ int				shell_dless_input(t_vshdata *data, t_tokenlst **token_lst);
 int				shell_close_unclosed_quotes(t_vshdata *data);
 int				shell_init_files(t_vshdata *data);
 int				shell_start(t_vshdata *data);
-int				shell_init_vshdata(t_vshdata *data);
+t_vshdata		*shell_init_vshdata(void);
 char			*shell_getcurrentdir(char *cwd);
 int				shell_close_quote_and_esc(t_vshdata *data);
 char			shell_quote_checker_find_quote(char *line);
 int				shell_handle_escaped_newlines(t_vshdata *data);
 void			shell_get_valid_prompt(t_vshdata *data, int prompt_type);
+
+t_vshdatatermcaps	*shell_init_vshdatatermcaps(void);
+t_vshdataalias		*shell_init_vshdataalias(void);
+t_vshdatahistory	*shell_init_vshdatahistory(void);
+t_vshdatahashtable	*shell_init_vshdatahashtable(void);
+t_vshdatainput		*shell_init_vshdatainput(void);
+t_vshdataprompt		*shell_init_vshdataprompt(void);
+t_vshdataline		*shell_init_vshdataline(void);
+t_vshdatacurs		*shell_init_vshdatacurs(void);
 
 /*
 **----------------------------------lexer---------------------------------------

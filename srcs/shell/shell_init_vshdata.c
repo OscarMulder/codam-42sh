@@ -6,7 +6,7 @@
 /*   By: mavan-he <mavan-he@student.codam.nl>         +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2019/07/29 12:42:44 by mavan-he       #+#    #+#                */
-/*   Updated: 2019/08/30 12:36:16 by omulder       ########   odam.nl         */
+/*   Updated: 2019/08/30 16:02:26 by jbrinksm      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -116,12 +116,22 @@ t_vshdatatermcaps	*shell_init_vshdatatermcaps(void)
 	return (termcaps);
 }
 
-int		shell_init_vshdata(t_vshdata *data)
+t_vshdata	*shell_init_vshdata(void)
 {
-	ft_bzero(data, sizeof(t_vshdata));
+	t_vshdata *data;
+
+	data = ft_memalloc(sizeof(t_vshdata));
+	if (data == NULL)
+	{
+		ft_eprintf(E_ALLOC_STR);
+		return (NULL);
+	}
 	data->envlst = env_getlst();
 	if (data->envlst == NULL)
-		return (err_ret(E_ALLOC_STR));
+	{
+		ft_eprintf(E_ALLOC_STR);
+		return (NULL);
+	}
 	data->term = term_prepare(data->envlst);
 	data->curs = shell_init_vshdatacurs();
 	data->history = shell_init_vshdatahistory();
@@ -135,10 +145,13 @@ int		shell_init_vshdata(t_vshdata *data)
 		|| data->history == NULL || data->line == NULL || data->prompt == NULL
 		|| data->input == NULL || data->hashtable == NULL || data->alias == NULL
 		|| data->termcaps == NULL)
-		return (err_ret(E_ALLOC_STR));
+	{
+		ft_eprintf(E_ALLOC_STR);
+		return (NULL);
+	}
 	if (shell_init_files(data) == FUNCT_ERROR
 		|| history_get_file_content(data) == FUNCT_ERROR
 		|| alias_read_file(data) == FUNCT_ERROR)
-		return (FUNCT_ERROR);
-	return (FUNCT_SUCCESS);
+		return (NULL);
+	return (data);
 }
