@@ -6,7 +6,7 @@
 /*   By: jbrinksm <jbrinksm@student.codam.nl>         +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2019/06/05 10:33:08 by jbrinksm       #+#    #+#                */
-/*   Updated: 2019/07/25 16:30:38 by mavan-he      ########   odam.nl         */
+/*   Updated: 2019/08/22 11:08:34 by omulder       ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -27,12 +27,12 @@
 
 #include "vsh.h"
 
-static void	builtin_export_arg(char *arg, t_envlst *envlst, int type)
+static void	builtin_export_arg(char *arg, t_vshdata *data, int type)
 {
 	t_envlst	*probe;
 	int			arglen;
 
-	probe = envlst;
+	probe = data->envlst;
 	arglen = ft_strlen(arg);
 	if (ft_strchr(arg, '=') == NULL)
 	{
@@ -47,10 +47,10 @@ static void	builtin_export_arg(char *arg, t_envlst *envlst, int type)
 			}
 			probe = probe->next;
 		}
-		builtin_assign(arg, envlst, type);
+		builtin_assign(arg, data, type);
 	}
 	else
-		builtin_assign(arg, envlst, type);
+		builtin_assign(arg, data, type);
 }
 
 int			builtin_export_readflags(char *arg, int *flags)
@@ -66,9 +66,8 @@ int			builtin_export_readflags(char *arg, int *flags)
 			*flags |= EXP_FLAG_LP;
 		else
 		{
-			ft_printf("vsh: export: -%c: invalid option\n", arg[i]);
-			ft_putendl("export: usage: export");
-			ft_putendl(" [-n] [name[=value] ...] or export -p");
+			ft_eprintf(E_N_P_INV_OPT, "export", arg[i]);
+			ft_eprintf(U_EXPORT);
 			return (FUNCT_FAILURE);
 		}
 		i++;
@@ -103,7 +102,7 @@ int			builtin_export_getflags(char **args, int *flags, int *argc)
 	return (FUNCT_SUCCESS);
 }
 
-void		builtin_export_args(char **args, t_envlst *envlst, int flags)
+void		builtin_export_args(char **args, t_vshdata *data, int flags)
 {
 	int i;
 	int	type;
@@ -115,17 +114,17 @@ void		builtin_export_args(char **args, t_envlst *envlst, int flags)
 	while (args[i] != NULL)
 	{
 		if (tools_is_valid_identifier(args[i]) == true)
-			builtin_export_arg(args[i], envlst, type);
+			builtin_export_arg(args[i], data, type);
 		else
 		{
 			g_state->exit_code = EXIT_WRONG_USE;
-			ft_eprintf("vsh: export: '%s': not a valid identifier\n", args[i]);
+			ft_eprintf(E_N_P_NOT_VAL_ID, "export", args[i]);
 		}
 		i++;
 	}
 }
 
-void		builtin_export(char **args, t_envlst *envlst)
+void		builtin_export(char **args, t_vshdata *data)
 {
 	int	i;
 	int	flags;
@@ -139,7 +138,7 @@ void		builtin_export(char **args, t_envlst *envlst)
 		return ;
 	g_state->exit_code = EXIT_SUCCESS;
 	if (args[i] == NULL)
-		builtin_export_print(envlst, flags);
+		builtin_export_print(data->envlst, flags);
 	else
-		builtin_export_args(&args[i], envlst, flags);
+		builtin_export_args(&args[i], data, flags);
 }

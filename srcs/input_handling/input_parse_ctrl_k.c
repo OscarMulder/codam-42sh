@@ -6,30 +6,26 @@
 /*   By: rkuijper <rkuijper@student.codam.nl>         +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2019/05/16 13:48:04 by rkuijper       #+#    #+#                */
-/*   Updated: 2019/08/14 12:13:53 by rkuijper      ########   odam.nl         */
+/*   Updated: 2019/08/29 14:25:21 by jbrinksm      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "vsh.h"
 #include <term.h>
 
-/*
-**	Not finished yet, can be better....
-*/
-int			input_parse_ctrl_k(t_inputdata *data, t_vshdata *vshdata)
+void		input_parse_ctrl_k(t_vshdata *data)
 {
-	unsigned i;
-	
-	if (data->index < data->len_cur)
+	if (data->line->index < data->line->len_cur)
 	{
-		i = data->index;
-		while (i < data->len_cur)
-		{
-			vshdata->line[i] = '\0';
-			i++;
-		}
-		ft_printf("\e[1%dP", data->len_cur - data->index);
-		data->len_cur -= (data->len_cur - data->index);
+		if (data->line->line_copy != NULL)
+			ft_strdel(&data->line->line_copy);
+		data->line->line_copy = ft_strdup(&data->line->line[data->line->index]);
+		ft_bzero(&data->line->line[data->line->index],
+			data->line->len_cur - data->line->index);
+		curs_go_home(data);
+		tputs(data->termcaps->tc_clear_lines_str, 1, &ft_tputchar);
+		data->line->len_cur = ft_strlen(data->line->line);
+		data->line->index = data->line->len_cur;
+		input_print_str(data, data->line->line);
 	}
-	return (FUNCT_SUCCESS);
 }

@@ -6,105 +6,88 @@
 /*   By: omulder <omulder@student.codam.nl>           +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2019/05/16 13:39:59 by rkuijper       #+#    #+#                */
-/*   Updated: 2019/08/15 15:35:37 by omulder       ########   odam.nl         */
+/*   Updated: 2019/08/31 16:16:40 by mavan-he      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "vsh.h"
-#include <sys/ioctl.h>
 
 /*
 **	Algorithm that moves the cursor (and index) to the beginning of a previous
 **	word (or beginning of the line if there is none).
 */
 
-void		curs_move_prev_word(t_inputdata *data, t_vshdata *vshdata)
+void		curs_move_prev_word(t_vshdata *data)
 {
 	int	i;
 
-	if (data->index == 0)
+	if (data->line->index == 0)
 		return ;
 	i = 0;
-	if ((data->index > 0
-		&& tools_isprintnotblank(vshdata->line[data->index]) == true // i++ if at beginning of previous word
-		&& ft_isblank(vshdata->line[data->index - 1]) == true)
-		|| (data->index > 0 && data->index == data->len_cur)) // i++ if at end of line
+	if ((data->line->index > 0
+		&& tools_isprintnotblank(data->line->line[data->line->index]) == true
+		&& ft_isblank(data->line->line[data->line->index - 1]) == true)
+		|| (data->line->index > 0 && data->line->index == data->line->len_cur))
 		i++;
-	while (data->index - i > 0 // i++ blanks
-		&& ft_isblank(vshdata->line[data->index - i]) == true)
+	while (data->line->index - i > 0
+		&& ft_isblank(data->line->line[data->line->index - i]) == true)
 		i++;
-	if (data->index - i == 0)
+	if (data->line->index - i == 0)
 		curs_move_n_left(data, i);
 	else
 	{
-		while (data->index - i > 0
-			&& tools_isprintnotblank(vshdata->line[data->index - i - 1]))
+		while (data->line->index - i > 0 && tools_isprintnotblank(
+				data->line->line[data->line->index - i - 1]))
 			i++;
 		curs_move_n_left(data, i);
 	}
 }
 
 /*
-**	`ws` will be taken from `data` after Oscar is done.
-**
-**	Calculations to move n times to the left (or up if necessar) on the current
-**	ws. If used after some weird screen clearing, make sure to compensate
-**	for the automatic `index` change if necessar
+**	Calculates the end position once if there are no newlines in the part
+**	of the string the cursor will traverse. If there is a newline, it will
+**	call a function with a slower method to reposition the cursor.
 */
 
-void		curs_move_n_left(t_inputdata *data, size_t n)
+void		curs_move_n_left(t_vshdata *data, size_t n)
 {
-	struct winsize	ws; //WILL BE OSCARS DATA
-	int				linepos;
-	int				up;
-	int				x_offset;
+	int		up;
+	int		x_offset;
+	int		curs_row_pos;
 
-	ioctl(STDIN_FILENO, TIOCGWINSZ, &ws); //WILL BE OSCARS DATA
-	linepos = get_cursor_linepos();
-	if (n == 0)
+	if (n <= 0 || data->line->index == 0)
 		return ;
-	if (n > data->index)
-		n = data->index;
-	up = ((ws.ws_col - linepos) + n) / ws.ws_col;
-	x_offset = (ws.ws_col - linepos) - (((ws.ws_col - linepos) + n) % ws.ws_col);
+	if (n > data->line->index)
+		n = data->line->index;
+	if (ft_strchr(data->line->line, '\n') == NULL)
+	{
+		curs_row_pos = data->curs->cur_ws_col - data->curs->coords.x;
+		up = (curs_row_pos + n) / data->curs->cur_ws_col;
+		x_offset = curs_row_pos - ((curs_row_pos + n) % data->curs->cur_ws_col);
+		if (up > 0)
+			ft_printf("\e[%iA", up);
+		if (x_offset > 0)
+			ft_printf("\e[%iC", x_offset);
+		else if (x_offset < 0)
+			ft_printf("\e[%iD", x_offset * -1);
+		data->line->index -= n;
+		data->curs->coords.y -= up;
+		data->curs->coords.x += x_offset;
+	}
+	else
+		curs_move_n_left_hasnewlines(data, n);
 	#ifdef DEBUG
-	ft_eprintf("Move left: (%d - %d) - ((%d - %d) + %d) %% %d = %d\n", ws.ws_col, linepos, ws.ws_col, linepos, n, ws.ws_col, x_offset);
-	#endif
-	if (up > 0)
-		ft_printf("\e[%iA", up);
-	if (x_offset > 0)
-		ft_printf("\e[%iC", x_offset);
-	else if (x_offset < 0)
-		ft_printf("\e[%iD", x_offset * -1);
-	data->index -= n;
-	#ifdef DEBUG
-	ft_eprintf("Moving Cursor Left: n[%u] up[%d] x[%d] new_i[%d]\n", n, up, x_offset, data->index);
+	ft_eprintf("New cursor coordinates: [%d:%d]\n", data->curs->coords.x, data->curs->coords.y);
 	#endif
 }
 
 /*
-**	`ws` will be taken from data after Oscar is done.
-**
 **	Moves the cursor (and index) one to the left (or up if necessary)
 **	If used after some weird screen clearing, make sure to compensate
 **	for the automatic `index` change if necessar
 */
 
-void		curs_move_left(t_inputdata *data)
+void		curs_move_left(t_vshdata *data)
 {
-	struct winsize	ws; //WILL BE OSCARS DATA
-
-	ioctl(STDIN_FILENO, TIOCGWINSZ, &ws); //WILL BE OSCARS DATA
-	if (data->index > 0)
-	{
-		// Needs to account for newline characters.
-		if (get_cursor_linepos() == 1)
-		{
-			ft_putstr("\e[A");
-			ft_printf("\e[%iC", ws.ws_col - 1);
-		}
-		else
-			ft_putstr(CURS_LEFT);
-		data->index--;
-	}
+	curs_move_n_left(data, 1);
 }

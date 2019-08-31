@@ -6,7 +6,7 @@
 /*   By: omulder <omulder@student.codam.nl>           +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2019/05/16 13:33:54 by rkuijper       #+#    #+#                */
-/*   Updated: 2019/08/15 13:12:03 by rkuijper      ########   odam.nl         */
+/*   Updated: 2019/08/30 16:53:50 by jbrinksm      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -38,30 +38,29 @@ static void	create_char_gap(char *line, int len, int gap_index)
 **	of memory allocated for `*line` is doubled first.
 */
 
-static int	add_char_at(t_inputdata *data, char **line)
+static int	add_char_at(t_vshdata *data, char **line)
 {
-	char		*tmp;
-	int			len;
+	char	*tmp;
 
-	len = data->len_cur;
-	if (len < data->len_max)
+	if (data->line->len_cur < data->line->len_max)
 	{
-		create_char_gap(*line, len, data->index);
-		(*line)[data->index] = data->c;
+		create_char_gap(*line, data->line->len_cur, data->line->index);
+		(*line)[data->line->index] = data->input->c;
 	}
 	else
 	{
-		data->len_max *= 2;
-		tmp = ft_strnew(data->len_max);
+		while (data->line->len_cur >= data->line->len_max)
+			data->line->len_max *= 2;
+		tmp = ft_strnew(data->line->len_max);
 		if (tmp == NULL)
 			return (FUNCT_ERROR);
 		ft_strcpy(tmp, *line);
 		ft_strdel(line);
-		create_char_gap(tmp, len, data->index);
-		tmp[data->index] = data->c;
+		create_char_gap(tmp, data->line->len_cur, data->line->index);
+		tmp[data->line->index] = data->input->c;
 		*line = tmp;
 	}
-	data->len_cur++;
+	data->line->len_cur++;
 	return (FUNCT_SUCCESS);
 }
 
@@ -72,57 +71,43 @@ static int	add_char_at(t_inputdata *data, char **line)
 **	by 1 byte first.
 */
 
-static int	add_newline(t_inputdata *data, char **line)
+static int	add_newline(t_vshdata *data, char **line)
 {
-	char		*tmp;
-	int			len;
+	char	*tmp;
 
-	len = data->len_cur;
-	if (len < data->len_max)
-		(*line)[len] = '\n';
+	if (data->line->len_cur < data->line->len_max)
+		(*line)[data->line->len_cur] = '\n';
 	else
 	{
-		data->len_max += 1;
-		tmp = ft_strnew(data->len_max);
+		data->line->len_max += 1;
+		tmp = ft_strnew(data->line->len_max);
 		if (tmp == NULL)
 			return (FUNCT_ERROR);
 		ft_strcpy(tmp, *line);
 		ft_strdel(line);
-		tmp[len] = '\n';
+		tmp[data->line->len_cur] = '\n';
 		*line = tmp;
 	}
-	data->len_cur++;
+	data->line->len_cur++;
 	return (FUNCT_SUCCESS);
 }
 
-int			ft_tputchar(int c)
+int			input_parse_char(t_vshdata *data)
 {
-	write(1, &c, 1);
-	return (1);
-}
+	int	old_index;
 
-/*
-**	`ws` will be taken from data when Oscars resize function is finished.
-**
-**	A the string will be edited and reprinted from the point of insertion.
-*/
-#include <sys/ioctl.h>
-
-int			input_parse_char(t_inputdata *data, t_vshdata *vshdata)
-{
-	if (ft_isprint(data->c))
+	if (ft_isprint(data->input->c))
 	{
-		if (add_char_at(data, &vshdata->line) == FUNCT_ERROR)
+		if (add_char_at(data, &data->line->line) == FUNCT_ERROR)
 			return (FUNCT_ERROR);
-		ft_printf("\e[s%s\e[u", vshdata->line + data->index);
-		//amt = ft_iputstr(vshdata->line + data->index, get_cursor_linepos(), ws.ws_col);
-		//if (amt > 1)
-		//	ft_printf("\e[%d;5A", amt);
-		curs_move_right(data);
+		old_index = data->line->index;
+		input_print_str(data, data->line->line + data->line->index);
+		data->line->index = data->line->len_cur;
+		curs_move_n_left(data, data->line->index - old_index - 1);
 	}
-	else if (data->c == '\n')
+	else if (data->input->c == '\n')
 	{
-		if (add_newline(data, &vshdata->line) == FUNCT_ERROR)
+		if (add_newline(data, &data->line->line) == FUNCT_ERROR)
 			return (FUNCT_ERROR);
 	}
 	return (FUNCT_SUCCESS);

@@ -6,7 +6,7 @@
 #    By: omulder <omulder@student.codam.nl>           +#+                      #
 #                                                    +#+                       #
 #    Created: 2019/04/10 20:30:07 by jbrinksm       #+#    #+#                 #
-#    Updated: 2019/08/16 12:26:44 by omulder       ########   odam.nl          #
+#    Updated: 2019/08/31 16:26:46 by mavan-he      ########   odam.nl          #
 #                                                                              #
 # **************************************************************************** #
 
@@ -23,7 +23,7 @@ VPATH = ./test ./libft ./srcs ./srcs/builtins ./srcs/input_handling \
 ./srcs/term_settings ./srcs/environment_handling ./srcs/shell \
 ./srcs/tools ./srcs/alias ./test/parser ./test/tools ./test/builtins \
 ./test/environment_handling ./srcs/lexer ./srcs/parser ./srcs/history \
-./srcs/expan ./srcs/autocomplete \
+./srcs/expan ./srcs/autocomplete ./srcs/hashtable \
 ./srcs/exec ./srcs/redir ./srcs/error_handling ./srcs/exec ./includes
 SRCS = shell_start shell_prompt shell_quote_checker shell_dless_input \
 shell_init_files shell_init_vshdata shell_getcurrentdir \
@@ -31,7 +31,10 @@ shell_handle_escaped_newlines \
 input_read input_parse_char input_parse_home \
 input_parse_end input_parse_prev input_parse_next input_parse_backspace \
 input_parse_delete input_parse_ctrl_c input_parse_ctrl_d input_parse_ctrl_k \
-input_parse_ctrl_up input_parse_ctrl_down input_parse_tab \
+input_parse_ctrl_up input_parse_ctrl_down input_print_str \
+input_parse_ctrl_u input_parse_ctrl_y input_resize_window_check \
+input_clear_char_at input_read_ansi input_parse_special \
+curs_move_n_left_hasnewlines curs_move_n_right_hasnewlines \
 term_prepare term_is_valid term_init_struct term_get_attributes \
 term_set_attributes term_reset_attributes term_free_struct \
 env_getvalue env_getlst env_lsttoarr env_lstnew env_lstaddback env_lstdel \
@@ -45,7 +48,7 @@ builtin_export builtin_export_print builtin_set builtin_unset \
 builtin_alias builtin_alias_set builtin_alias_lstdel builtin_unalias \
 builtin_cd builtin_cd_error builtin_cd_pathparsing \
 builtin_cd_pathparsing_tools builtin_cd_changedir \
-builtin_type \
+builtin_type builtin_hash \
 lexer lexer_utils lexer_debug lexer_evaluator lexer_scanner \
 lexer_state_if_else lexer_state_single lexer_state_start lexer_state_strings \
 parser_start parser_debug parser_utils parser_command parser_error \
@@ -59,11 +62,13 @@ exec_quote_remove expan_handle_variables expan_handle_dollar \
 exec_create_files \
 expan_handle_bracketed_var expan_tilde_expansion exec_validate_binary \
 redir_pipe redir redir_tools redir_tools2 \
-auto_get_cmdlst auto_match_builtins auto_get_filelst auto_get_varlst \
+hash_ht_insert hash_print hash_reset hash_init hash_check \
+print_errors \
+#auto_get_cmdlst auto_match_builtins auto_get_filelst auto_get_varlst \
 auto_find_state auto_start auto_add_match_toline auto_find_matches \
 auto_handle_matchlst auto_small_lst auto_big_lst auto_lst_print \
 auto_lst_print_helpers auto_clear_line \
-print_errors
+input_parse_tab 
 TESTS = unit_test builtin_assign_test
 OBJECTS := $(SRCS:%=%.o)
 TESTOBJECTS := $(TESTS:%=%.o)

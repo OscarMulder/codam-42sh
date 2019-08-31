@@ -6,7 +6,7 @@
 /*   By: tde-jong <tde-jong@student.codam.nl>         +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2019/08/06 13:09:18 by tde-jong       #+#    #+#                */
-/*   Updated: 2019/08/08 11:52:46 by tde-jong      ########   odam.nl         */
+/*   Updated: 2019/08/22 11:12:41 by omulder       ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,11 +14,7 @@
 
 static bool	is_builtin(char *name)
 {
-	if (ft_strequ(name, "echo") || ft_strequ(name, "exit") ||
-		ft_strequ(name, "cd") || ft_strequ(name, "export") ||
-		ft_strequ(name, "set") || ft_strequ(name, "unset") ||
-		ft_strequ(name, "history") || ft_strequ(name, "type") ||
-		ft_strequ(name, "alias") || ft_strequ(name, "unalias"))
+	if (tools_is_builtin(name) == true)
 	{
 		ft_printf("%s is a shell builtin\n", name);
 		return (true);
@@ -62,7 +58,7 @@ static bool	is_executable(char *name)
 	currpath = getcwd(NULL, 0);
 	if (currpath == NULL)
 	{
-		ft_eprintf("vsh: cannot get current working directory\n");
+		ft_eprintf(E_NOT_CUR_DIR);
 		return (false);
 	}
 	ret = builtin_cd_create_newpath_wrap(currpath, name);
@@ -90,7 +86,7 @@ void		builtin_type(char **args, t_envlst *envlst, t_aliaslst *aliaslst)
 			is_executable(args[i]) == false)
 		{
 			g_state->exit_code = EXIT_FAILURE;
-			ft_eprintf("vsh: type: %s: not found\n", args[i]);
+			ft_eprintf(E_N_P_NOT_FOUND, "type", args[i]);
 		}
 		i++;
 	}

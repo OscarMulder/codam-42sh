@@ -6,7 +6,7 @@
 /*   By: tde-jong <tde-jong@student.codam.nl>         +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2019/06/05 15:16:46 by tde-jong       #+#    #+#                */
-/*   Updated: 2019/08/07 16:19:59 by tde-jong      ########   odam.nl         */
+/*   Updated: 2019/08/22 11:30:40 by omulder       ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -95,17 +95,28 @@ int			find_binary(char *filename, t_envlst *envlst, char **binary)
 	return (FUNCT_SUCCESS);
 }
 
-int			exec_find_binary(char *filename, t_envlst *envlst, char **binary)
+int			exec_find_binary(char *filename, t_vshdata *data, char **binary)
 {
-	int ret;
+	int		ret;
+	char	*bin_dup;
 
-	ret = find_binary(filename, envlst, binary);
+	ret = hash_check(data, filename, binary);
+	if (ret == FUNCT_SUCCESS)
+		return (FUNCT_SUCCESS);
+	if (ret == FUNCT_ERROR)
+		return (FUNCT_ERROR);
+	ret = find_binary(filename, data->envlst, binary);
 	if (ret == FUNCT_ERROR)
 		return (FUNCT_ERROR);
 	if (ret == FUNCT_FAILURE)
 	{
-		ft_eprintf("vsh: %s: Command not found.\n", filename);
+		ft_eprintf(E_P_CMD_NOT_FOUND, filename);
 		return (err_ret_exit(NULL, EXIT_NOTFOUND));
 	}
+	bin_dup = ft_strdup(*binary);
+	if (bin_dup == NULL)
+		return (err_ret_exit(E_ALLOC_STR, EXIT_FAILURE));
+	if (hash_ht_insert(data, filename, bin_dup, HASH_HIT) == FUNCT_ERROR)
+		return (FUNCT_ERROR);
 	return (FUNCT_SUCCESS);
 }

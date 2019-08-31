@@ -6,7 +6,7 @@
 /*   By: omulder <omulder@student.codam.nl>           +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2019/06/02 14:28:54 by mavan-he       #+#    #+#                */
-/*   Updated: 2019/08/16 04:13:24 by mavan-he      ########   odam.nl         */
+/*   Updated: 2019/08/31 16:13:00 by mavan-he      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,36 +19,27 @@
 **	be cleared from that line and onwards. A new prompt will be displayed.
 */
 
-static void	history_clear_line(t_inputdata *data, t_vshdata *vshdata)
+static void	history_clear_line(t_vshdata *data)
 {
-	char	*tc_clear_lines_str;
-
 	curs_go_home(data);
-	ft_printf("\e[%iD", vshdata->prompt_len);
-	tc_clear_lines_str = tgetstr("cd", NULL);
-	if (tc_clear_lines_str == NULL)
-	{
-		ft_eprintf("ERROR\n");
-		return ; // do fatal shit
-	}
-	tputs(tc_clear_lines_str, 1, &ft_tputchar);
-	shell_display_prompt(vshdata);
+	tputs(data->termcaps->tc_clear_lines_str, 1, &ft_tputchar);
 }
 
-static int	malloc_and_copy(t_inputdata *data, char **line, char *str)
+static int	malloc_and_copy(t_vshdata *data, char **line, char *str)
 {
-	int len;
+	unsigned	len;
 
 	len = ft_strlen(str);
-	if (len < data->len_max)
+	if (len < data->line->len_max)
 	{
-		ft_bzero(*line, data->len_max);
+		ft_bzero(*line, data->line->len_max);
 	}
 	else
 	{
-		data->len_max *= 2;
+		while (len >= data->line->len_max)
+			data->line->len_max *= 2;
 		ft_strdel(&(*line));
-		*line = ft_strnew(data->len_max);
+		*line = ft_strnew(data->line->len_max);
 		if (*line == NULL)
 			return (FUNCT_ERROR);
 	}
@@ -56,34 +47,37 @@ static int	malloc_and_copy(t_inputdata *data, char **line, char *str)
 	return (FUNCT_SUCCESS);
 }
 
-static int	set_line(t_inputdata *data, char **line)
+static int	set_line(t_vshdata *data, char **line)
 {
-	if (malloc_and_copy(data, line, data->history[data->hist_index]->str)
-	== FUNCT_ERROR)
+	if (malloc_and_copy(data, line,
+		data->history->history[data->history->hist_index]->str) == FUNCT_ERROR)
 		return (FUNCT_ERROR);
 	return (FUNCT_SUCCESS);
 }
 
-int			history_change_line(t_inputdata *data, t_vshdata *vshdata,
+int			history_change_line(t_vshdata *data,
 		char arrow)
 {
-	history_clear_line(data, vshdata);
+	size_t	linelen;
+
+	history_clear_line(data);
 	if (arrow == ARROW_UP)
 	{
 		if (history_index_change_up(data))
-			set_line(data, &vshdata->line);
+			set_line(data, &data->line->line);
 		else
 			ft_printf("\a");
 	}
 	else if (arrow == ARROW_DOWN)
 	{
 		if (history_index_change_down(data))
-			set_line(data, &vshdata->line);
+			set_line(data, &data->line->line);
 		else
-			ft_bzero(vshdata->line, data->len_max);
+			ft_bzero(data->line->line, data->line->len_max);
 	}
-	ft_putstr(vshdata->line);
-	data->index = ft_strlen(vshdata->line);
-	data->len_cur = data->index;
+	input_print_str(data, data->line->line);
+	linelen = ft_strlen(data->line->line);
+	data->line->index = linelen;
+	data->line->len_cur = linelen;
 	return (FUNCT_SUCCESS);
 }

@@ -6,7 +6,7 @@
 /*   By: omulder <omulder@student.codam.nl>           +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2019/07/30 12:41:21 by omulder        #+#    #+#                */
-/*   Updated: 2019/08/02 15:27:59 by tde-jong      ########   odam.nl         */
+/*   Updated: 2019/08/22 11:01:50 by omulder       ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -65,19 +65,19 @@ static int	cd_parse_flags(char **args, char *cd_flag, int *countflags)
 	return (FUNCT_SUCCESS);
 }
 
-static int	cd_parse_dash(char *newpath, t_envlst *envlst, char cd_flag,
+static int	cd_parse_dash(char *newpath, t_vshdata *data, char cd_flag,
 				char *var)
 {
 	if (newpath == NULL || *newpath == '\0')
 	{
-		ft_eprintf("vsh: cd: %s: not set\n", var);
+		ft_eprintf(E_CD_P_NOT_SET, var);
 		return (FUNCT_ERROR);
 	}
-	return (builtin_cd_change_dir(newpath, envlst, cd_flag,
+	return (builtin_cd_change_dir(newpath, data, cd_flag,
 		(ft_strequ(var, "HOME") == 1) ? false : true));
 }
 
-int			builtin_cd(char **args, t_envlst *envlst)
+int			builtin_cd(char **args, t_vshdata *data)
 {
 	char	cd_flag;
 	char	*newpath;
@@ -89,13 +89,13 @@ int			builtin_cd(char **args, t_envlst *envlst)
 		return (FUNCT_ERROR);
 	if (args[1 + flags] == NULL || ft_strequ(args[1 + flags], "--") == 1)
 	{
-		newpath = env_getvalue("HOME", envlst);
-		return (cd_parse_dash(newpath, envlst, cd_flag, "HOME"));
+		newpath = env_getvalue("HOME", data->envlst);
+		return (cd_parse_dash(newpath, data, cd_flag, "HOME"));
 	}
 	if (ft_strequ(args[1 + flags], "-") == 1)
 	{
-		newpath = env_getvalue("OLDPWD", envlst);
-		return (cd_parse_dash(newpath, envlst, cd_flag, "OLDPWD"));
+		newpath = env_getvalue("OLDPWD", data->envlst);
+		return (cd_parse_dash(newpath, data, cd_flag, "OLDPWD"));
 	}
-	return (builtin_cd_change_dir(args[1 + flags], envlst, cd_flag, false));
+	return (builtin_cd_change_dir(args[1 + flags], data, cd_flag, false));
 }

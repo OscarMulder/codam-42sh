@@ -6,93 +6,79 @@
 /*   By: omulder <omulder@student.codam.nl>           +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2019/05/16 13:41:00 by rkuijper       #+#    #+#                */
-/*   Updated: 2019/08/15 14:53:35 by omulder       ########   odam.nl         */
+/*   Updated: 2019/08/31 16:14:51 by mavan-he      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "vsh.h"
-#include <sys/ioctl.h>
 
 /*
 **	Algorithm that moves the cursor (and index) to the beginning of the next
 **	word (or end of the line if there is none).
 */
 
-void		curs_move_next_word(t_inputdata *data, t_vshdata *vshdata)
+void		curs_move_next_word(t_vshdata *data)
 {
 	size_t	i;
 
-	if (data->index == data->len_cur)
+	if (data->line->index == data->line->len_cur)
 		return ;
 	i = 0;
-	while (ft_isprint(vshdata->line[data->index + i]) == true
-		&& ft_isblank(vshdata->line[data->index + i]) == false)
+	while (ft_isprint(data->line->line[data->line->index + i]) == true
+		&& ft_isblank(data->line->line[data->line->index + i]) == false)
 		i++;
-	while (ft_isblank(vshdata->line[data->index + i]) == true)
+	while (ft_isblank(data->line->line[data->line->index + i]) == true)
 		i++;
-	if ((data->index + i == data->len_cur) // end of line
-		|| (ft_isprint(vshdata->line[data->index + i]) == true
-		&& ft_isblank(vshdata->line[data->index + i]) == false))
-		curs_move_n_right(data, vshdata, i);
+	if ((data->line->index + i == data->line->len_cur)
+		|| (ft_isprint(data->line->line[data->line->index + i]) == true
+		&& ft_isblank(data->line->line[data->line->index + i]) == false))
+		curs_move_n_right(data, i);
 }
 
 /*
-**	`ws` will be taken from `data` after Oscar is done.
-**
-**	Calculations to move cursor (and index) n times to the right
-**	(or up if necessary) on the current ws.
-**	If used after some weird screen clearing, make sure to compensate
-**	for the automatic `index` change if necessary.
+**	Calculates the end position once if there are no newlines in the part
+**	of the string the cursor will traverse. If there is a newline, it will
+**	call a function with a slower method to reposition the cursor.
 */
 
-void		curs_move_n_right(t_inputdata *data, t_vshdata *vshdata, size_t n)
+void		curs_move_n_right(t_vshdata *data, size_t n)
 {
-	struct winsize	ws; //WILL BE OSCARS DATA
-	int				linepos;
-	int				down;
-	int				x_offset;
+	int		down;
+	int		x_offset;
 
-	(void)vshdata;
-	if (n == 0 || data->len_cur == data->index)
+	if (n <= 0 || data->line->index == data->line->len_cur)
 		return ;
-	if (n > data->len_cur - data->index)
-		n = data->len_cur - data->index;
-	ioctl(STDIN_FILENO, TIOCGWINSZ, &ws); //WILL BE OSCARS DATA
-	linepos = get_cursor_linepos();
-	down = ((linepos - 1) + n) / ws.ws_col;
-	x_offset = (((linepos - 1) + n) % ws.ws_col) - (linepos - 1);
-	if (down > 0)
-		ft_printf("\e[%iB", down);
-	if (x_offset > 0)
-		ft_printf("\e[%iC", x_offset);
-	else if (x_offset < 0)
-		ft_printf("\e[%iD", x_offset * -1);
-	data->index += n;
+	if (n > data->line->len_cur - data->line->index)
+		n = data->line->len_cur - data->line->index;
+	if (ft_strchr(data->line->line, '\n') == NULL)
+	{
+		down = ((data->curs->coords.x - 1) + n) / data->curs->cur_ws_col;
+		x_offset = (((data->curs->coords.x - 1) + n) % data->curs->cur_ws_col)
+			- (data->curs->coords.x - 1);
+		if (down > 0)
+			ft_printf("\e[%iB", down);
+		if (x_offset > 0)
+			ft_printf("\e[%iC", x_offset);
+		else if (x_offset < 0)
+			ft_printf("\e[%iD", x_offset * -1);
+		data->line->index += n;
+		data->curs->coords.y += down;
+		data->curs->coords.x += x_offset;
+	}
+	else
+		curs_move_n_right_hasnewlines(data, n);
+	#ifdef DEBUG
+	ft_eprintf("New cursor coordinates: [%d:%d]\n", data->curs->coords.x, data->curs->coords.y);
+	#endif
 }
 
 /*
-**	`ws` will be taken from data after Oscar is done.
-**
 **	Moves the cursor (and index) one to the right (or down if necessary)
 **	If used after some weird screen clearing, make sure to compensate
 **	for the automatic `index` change if necessary.
 */
 
-void		curs_move_right(t_inputdata *data)
+void		curs_move_right(t_vshdata *data)
 {
-	struct winsize	ws; //WILL BE OSCARS DATA
-
-	ioctl(STDIN_FILENO, TIOCGWINSZ, &ws); //WILL BE OSCARS DATA
-	if (data->index < data->len_cur)
-	{
-		// Needs to account for newline characters.
-		if (get_cursor_linepos() == ws.ws_col)
-		{
-			ft_putstr("\e[B");
-			ft_printf("\e[%iD", ws.ws_col - 1);
-		}
-		else
-			ft_putstr(CURS_RIGHT);
-		(data->index)++;
-	}
+	curs_move_n_right(data, 1);
 }

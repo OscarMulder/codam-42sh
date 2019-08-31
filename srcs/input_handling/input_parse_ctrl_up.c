@@ -6,33 +6,77 @@
 /*   By: omulder <omulder@student.codam.nl>           +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2019/05/16 15:03:17 by rkuijper       #+#    #+#                */
-/*   Updated: 2019/08/16 04:53:13 by mavan-he      ########   odam.nl         */
+/*   Updated: 2019/08/31 16:14:09 by mavan-he      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "vsh.h"
-#include <sys/ioctl.h>
 
 /*
 **	Moves the cursor (and index) up or sets it at home if it would otherwise
 **	collide with the prompt.
 */
 
-void		curs_move_up(t_inputdata *data, t_vshdata *vshdata)
+static unsigned	get_cur_line_index(t_vshdata *data)
 {
-	struct winsize	ws; //WILL BE OSCARS DATA
-//	size_t			linepos;
+	int i;
 
-	(void)vshdata;
-	ioctl(STDIN_FILENO, TIOCGWINSZ, &ws); //WILL BE OSCARS DATA
-//	linepos = get_cursor_linepos();
-	if (data->index == 0)
+	i = data->line->index - 1;
+	while (i > 0)
+	{
+		if (data->line->line[i] == '\n')
+			return (data->line->index - i - 1);
+		i--;
+	}
+	return (data->line->index);
+}
+
+static void		move_up_handle_newline(t_vshdata *data)
+{
+	unsigned	i;
+	int			j;
+	unsigned	l;
+
+	i = data->line->index;
+	j = -1;
+	l = get_cur_line_index(data);
+	#ifdef DEBUG
+	ft_eprintf("Line index: %d\n", l);
+	#endif
+	while (i > 0)
+	{
+		if (data->line->line[i] == '\n')
+		{
+			if (j == -1)
+				j = 0;
+			else
+			{
+				j = 1;
+				break ;
+			}
+		}
+		i--;
+	}
+	if (j != -1)
+		i += l + (j == 1 ? 1 : 0);
+	curs_move_n_left(data, data->line->index - i);
+}
+
+void			curs_move_up(t_vshdata *data)
+{
+	char			*newline_str;
+
+	if (data->line->index == 0)
 		return ;
-	else if (data->index < ws.ws_col)
+	newline_str = ft_strrnchr(data->line->line, '\n', data->line->index);
+	if (newline_str != NULL)
+		move_up_handle_newline(data);
+	else if (data->line->index < (unsigned)data->curs->cur_ws_col)
 		curs_go_home(data);
 	else
 	{
 		ft_printf(CURS_UP);
-		data->index -= ws.ws_col;
+		data->line->index -= data->curs->cur_ws_col;
+		data->curs->coords.y--;
 	}
 }

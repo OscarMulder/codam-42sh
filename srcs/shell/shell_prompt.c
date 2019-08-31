@@ -6,30 +6,51 @@
 /*   By: jbrinksm <jbrinksm@student.codam.nl>         +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2019/04/11 20:16:38 by jbrinksm       #+#    #+#                */
-/*   Updated: 2019/08/16 04:39:05 by mavan-he      ########   odam.nl         */
+/*   Updated: 2019/08/31 16:12:09 by mavan-he      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "vsh.h"
 
-void	shell_display_prompt(t_vshdata *vshdata)
+void	shell_get_valid_prompt(t_vshdata *data, int prompt_type)
 {
-//	char *cwd;
-//	char *lastdir;
-	char *arrow;
-
-//	cwd = env_getvalue("PWD", vshdata->envlst);
-	if (g_state->exit_code == EXIT_SUCCESS)
-		arrow = YEL "> ";
+	if (prompt_type == QUOTE_PROMPT)
+		data->prompt->prompt_name = "quote";
+	else if (prompt_type == DQUOTE_PROMPT)
+		data->prompt->prompt_name = "dquote";
 	else
-		arrow = RED "> ";
-//	lastdir = shell_getcurrentdir(cwd);
-	vshdata->prompt_len = 6;
-	// if (lastdir == NULL)
-		ft_printf(RED "vsh %s" RESET, arrow);
-	// else
-	// {
-	// 	ft_printf(RED "vsh " BLU "%s %s" RESET, lastdir, arrow);
-	// 	vshdata->prompt_len = 6 + ft_strlen(lastdir);
-	// }
+		data->prompt->prompt_name = "vsh ";
+	data->prompt->prompt_seperator = "> ";
+	if (data->prompt->prompt_addition != NULL)
+		data->prompt->prompt_len = ft_strlen(data->prompt->prompt_name)
+			+ ft_strlen(data->prompt->prompt_seperator)
+			+ ft_strlen(data->prompt->prompt_addition) + 1; // 1 is for padding
+	else
+		data->prompt->prompt_len = ft_strlen(data->prompt->prompt_name)
+		+ ft_strlen(data->prompt->prompt_seperator);
+}
+
+void	shell_display_prompt(t_vshdata *data, int prompt_type)
+{
+	char	*cwd;
+
+	cwd = env_getvalue("PWD", data->envlst);
+	data->prompt->prompt_addition = shell_getcurrentdir(cwd);
+	shell_get_valid_prompt(data, prompt_type);
+	data->prompt->cur_prompt_type = prompt_type;
+	if (prompt_type == REGULAR_PROMPT)
+		ft_printf(RED);
+	input_print_str(data, data->prompt->prompt_name);
+	if (data->prompt->prompt_addition != NULL)
+	{
+		ft_printf(BLU);
+		input_print_str(data, data->prompt->prompt_addition);
+		input_print_str(data, " ");
+	}
+	if (prompt_type == REGULAR_PROMPT && g_state->exit_code == EXIT_SUCCESS)
+		ft_printf(YEL);
+	else if (prompt_type == REGULAR_PROMPT)
+		ft_printf(RED);
+	input_print_str(data, data->prompt->prompt_seperator);
+	ft_printf(RESET);
 }

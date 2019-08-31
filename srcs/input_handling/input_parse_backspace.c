@@ -6,13 +6,12 @@
 /*   By: rkuijper <rkuijper@student.codam.nl>         +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2019/05/16 13:43:07 by rkuijper       #+#    #+#                */
-/*   Updated: 2019/08/15 10:37:12 by rkuijper      ########   odam.nl         */
+/*   Updated: 2019/08/29 11:28:22 by jbrinksm      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "vsh.h"
 #include <term.h>
-#include <sys/ioctl.h>
 
 /*
 **	Backspaces are handled saving the cursor position and then clearing the
@@ -20,17 +19,21 @@
 **	cursor position.
 */
 
-int		input_handle_backspace(t_inputdata *data, t_vshdata *vshdata)
+void	input_handle_backspace(t_vshdata *data)
 {
-	struct winsize	ws;
+	int			len_left;
+	int			saved_index;
 
-	ioctl(STDIN_FILENO, TIOCGWINSZ, &ws);
-	if (data->index > 0)
+	if (data->line->index > 0)
 	{
-		input_clear_char_at(&vshdata->line, data->index - 1);
-		data->len_cur--;
-		curs_move_left(data);
-		ft_printf("\e[s%s \e[u", vshdata->line + data->index);
+		saved_index = data->line->index;
+		len_left = data->line->len_cur - data->line->index;
+		data->line->len_cur--;
+		curs_go_home(data);
+		input_clear_char_at(&data->line->line, saved_index - 1);
+		tputs(data->termcaps->tc_clear_lines_str, 1, &ft_tputchar);
+		input_print_str(data, data->line->line);
+		data->line->index = data->line->len_cur;
+		curs_move_n_left(data, len_left);
 	}
-	return (FUNCT_SUCCESS);
 }

@@ -6,17 +6,21 @@
 /*   By: jbrinksm <jbrinksm@student.codam.nl>         +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2019/07/14 01:05:00 by jbrinksm       #+#    #+#                */
-/*   Updated: 2019/08/06 10:53:34 by mavan-he      ########   odam.nl         */
+/*   Updated: 2019/08/22 11:33:21 by omulder       ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "vsh.h"
 
-static int	return_error(int ret, int error) // deze error func kan straks weg
+/*
+**	deze error func kan straks weg
+*/
+
+static int	return_error(int ret, int error)
 {
 	g_state->exit_code = EXIT_FAILURE;
 	if (error == E_ALLOC)
-		ft_eprintf("vsh: failed to allocate enough memory\n");
+		ft_eprintf(E_ALLOC_STR);
 	return (ret);
 }
 

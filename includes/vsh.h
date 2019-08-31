@@ -6,7 +6,7 @@
 /*   By: omulder <omulder@student.codam.nl>           +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2019/04/10 20:29:42 by jbrinksm       #+#    #+#                */
-/*   Updated: 2019/08/16 19:29:25 by mavan-he      ########   odam.nl         */
+/*   Updated: 2019/08/31 16:24:17 by mavan-he      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -20,24 +20,69 @@
 **==================================defines=====================================
 */
 
+# define SHELL				"vsh"
+# define PROMPT_NAME		"vsh"
+# define PROMPT_SEPERATOR	"> "
 # define FUNCT_FAILURE 0
 # define FUNCT_SUCCESS 1
 # define FUNCT_ERROR -1
 # define PROG_FAILURE 1
 # define PROG_SUCCESS 0
-# define NEW_PROMPT -1
-# define E_STAT_STR "vsh: could not get stat info of file\n"
-# define E_ALLOC_STR "vsh: failed to allocate enough memory\n"
-# define E_FORK_STR "vsh: Fork Failed\n"
-# define E_HOME_NOTSET_STR "vsh: Environment value HOME not set\n"
-# define E_HIST_READ_STR "vsh: Failed to read history file\n"
-# define E_HIST_OPEN_STR "vsh: Failed to open / create history file\n"
-# define E_ALIAS_OPEN_STR "vsh: Failed to open alias file\n"
-# define E_ALIAS_READ_STR "vsh: Failed to read alias file\n"
-# define E_ACCESS_STR "vsh: Failed to read alias file\n"
-# define E_READ_STR "vsh: error reading input\n"
-# define E_TERM_NF "vsh: error getting termcap info\n"
-# define E_ALLOC 420
+# define NEW_PROMPT FUNCT_ERROR
+# define U_ALIAS			"alias: usage: alias [-p] [name[=value] ... ]\n"
+# define U_CD				"cd: usage: cd [-L|-P] [dir]\n"
+# define U_EXPORT			"export: usage: export [-n] [name[=value] ...] or export -p"
+# define U_HASH				"hash: usage: hash [-r] [utility ...]\n"
+# define U_UNALIAS			"unalias: usage: unalias [-a] name [name ...]\n"
+# define U_SET				"set: usage: set\n"
+# define E_SYNTAX_P			SHELL ": syntax error near unexpected token '%s'\n"
+# define E_P_NOT_VAL_HERE	SHELL ": '%s' is not a valid heredoc delimiter\n"
+# define E_P_BAD_FD			SHELL ": %s: bad file descriptor\n"
+# define E_BAD_FD			SHELL ": %i: bad file descriptor\n"
+# define E_FAIL_DUP_FD		SHELL ": failed to duplicate file descriptor\n"
+# define E_FD_CLOSE			SHELL ": failed to close file descriptor\n"
+# define E_NO_PERM_NO_SUCH	SHELL ": no perm / no such file or directory\n"
+# define E_NO_SUCH_P		SHELL ": no such file or directory: %s\n"
+# define E_P_IS_DIR			SHELL ": %s: is a directory\n"
+# define E_P_BAD_SUBS		SHELL ": %.*s: bad substitution\n"
+# define E_P_CMD_NOT_FOUND	SHELL ": %s: command not found.\n"
+# define E_FAIL_OPEN_P		SHELL ": failed to open/create %s\n"
+# define E_FAIL_EXEC_P		SHELL ": failed to execute %s\n"
+# define E_NO_PIPE			SHELL ": unable to create pipe"
+# define E_P_BAD_REDIR		SHELL ": %s: bad redirect\n"
+# define E_N_P_INV_OPT		SHELL ": %s: -%c: invalid option\n"
+# define E_ALLOC_STR		SHELL ": failed to allocate enough memory\n"
+# define E_N_ALLOC_STR		SHELL ": %s: failed to allocate enough memory\n"
+# define E_N_PER_DEN		SHELL ": %s: permission denied\n"
+# define E_N_PER_DEN_P		SHELL ": %s: permission denied: %s\n"
+# define E_N_P_NOT_FOUND	SHELL ": %s: %s: not found\n"
+# define E_N_P_NUM_REQ		SHELL ": %s: %s: numeric argument required\n"
+# define E_N_TOO_MANY		SHELL ": %s: too many arguments\n"
+# define E_N_P_NOT_VAL_ID	SHELL ": %s: '%s': not a valid identifier\n"
+# define E_N_FAIL_HOME		SHELL ": %s: failed to get home directory\n"
+# define E_NOT_CUR_DIR		SHELL ": cannot get current working directory\n"
+# define E_NOT_RESET		SHELL ": could not reset terminal settings\n"
+# define E_STAT_STR			SHELL ": could not get stat info of file\n"
+# define E_STAT_P			SHELL ": could not get stat info of %s\n"
+# define E_ALLOC_STR		SHELL ": failed to allocate enough memory\n"
+# define E_FORK_STR			SHELL ": fork failed\n"
+# define E_HOME_NOTSET_STR 	SHELL ": environment value HOME not set\n"
+# define E_HIST_READ_STR 	SHELL ": failed to read history file\n"
+# define E_HIST_OPEN_STR 	SHELL ": failed to open / create history file\n"
+# define E_ALIAS_OPEN_STR 	SHELL ": failed to open alias file\n"
+# define E_ALIAS_READ_STR	SHELL ": failed to read alias file\n"
+# define E_ALIAS_INV_NAME	SHELL ": alias: '%.*s': invalid alias name\n"
+# define E_CD_CNG_DIR		SHELL ": cd: could not get current working directory parsing: %s\n"
+# define E_CD_NO_SUCH		SHELL ": cd: no such file or directory: %s\n"
+# define E_CD_NOT_DIR		SHELL ": cd: not a directory: %s\n"
+# define E_CD_P_NOT_SET		SHELL ": cd: %s: not set\n"
+# define E_TERM_CNT_GET		SHELL ": couldn't get terminal attributes.\n"
+# define E_TERM_CNT_SET		SHELL ": couldn't set terminal attributes.\n"
+# define E_TERM_NOT_SET		SHELL ": term environment variable not set.\n"
+# define E_TERM_DB_NOT_F	SHELL ": terminfo database could not be found.\n"
+# define E_TERM_NO_SUCH		SHELL ": no such TERM entry in the database\n"
+# define E_STDIN_NOT_TTY	SHELL ": STDIN does not refer to a terminal\n"
+# define E_ALLOC 42
 # define E_DUP 100
 # define E_OPEN 101
 # define E_BADFD 102
@@ -98,6 +143,18 @@
 # define ALIASFILENAME		".vsh_alias"
 # define ALIAS_MAX	500
 
+
+/*
+**-----------------------------------hash--------------------------------------
+*/
+
+# define HT_SIZE			100
+# define HT_EMPTY			0
+# define HT_HAS_CONTENT		1
+# define HASH_LR			(1 << 0)
+# define HASH_HIT			1
+# define HASH_NO_HIT		0
+
 /*
 **-----------------------------------builtin------------------------------------
 */
@@ -143,6 +200,7 @@
 
 
 # define ENV_MASK 0xF8
+# define ENV_TMP_OVERWRITE (1 << 4)
 # define ENV_SPECIAL (1 << 3)
 # define ENV_EXTERN (1 << 2)
 # define ENV_LOCAL (1 << 1)
@@ -266,33 +324,120 @@ typedef struct	s_aliaslst
 }				t_aliaslst;
 
 /*
+**------------------------------------hashtable---------------------------------
+*/
+
+typedef struct	s_ht
+{
+	char			*key;
+	char			*path;
+	int				hits;
+	struct s_ht		*next;
+}				t_ht;
+
+/*
 **-----------------------------------term---------------------------------------
 */
 
 typedef struct termios	t_termios;
 
-typedef struct	s_term
-{
-	t_termios	*old_termios_p;
-	t_termios	*termios_p;
-}				t_term;
-
 /*
 **-----------------------------------vsh_data-----------------------------------
 */
 
+typedef struct	s_point
+{
+	int			x;
+	int			y;
+}				t_point;
+
+typedef struct	s_vshdatatermcaps
+{
+	char	*tc_clear_lines_str;
+	char	*tc_scroll_down_str;
+}				t_vshdatatermcaps;
+
+typedef struct	s_vshdataterm
+{
+	t_termios	*old_termios_p;
+	t_termios	*termios_p;
+}				t_vshdataterm;
+
+typedef struct	s_vshdatacurs
+{
+	t_point	coords;
+	int		cur_ws_col;
+	int		cur_ws_row;
+}				t_vshdatacurs;
+
+typedef struct	s_vshdatahistory
+{
+	t_history	**history;
+	char		*history_file;
+	int			hist_index;
+	int			hist_start;
+	int			hist_first;
+}				t_vshdatahistory;
+
+typedef struct	s_vshdataline
+{
+	char		*line;
+	char		*line_copy;
+	unsigned	index;
+	unsigned	len_max;
+	unsigned	len_cur;
+}				t_vshdataline;
+
+typedef struct	s_vshdataprompt
+{
+	char	*prompt_name;
+	char	*prompt_seperator;
+	char	*prompt_addition;
+	int		prompt_len;
+	int		cur_prompt_type;
+
+}				t_vshdataprompt;
+
+typedef struct	s_vshdatainput
+{
+	char				c;
+}				t_vshdatainput;
+
+typedef struct	s_vshdatahashtable
+{
+	t_ht	*ht[HT_SIZE];
+	char	ht_flag;
+}				t_vshdatahashtable;
+
+typedef	struct	s_vshdataalias
+{
+	t_aliaslst	*aliaslst;
+	char		*alias_file;
+}				t_vshdataalias;
+
+#define UNINIT -1
+
 typedef struct	s_vshdata
 {
-	t_envlst	*envlst;
-	t_history	**history;
-	t_aliaslst	*aliaslst;
-	t_term		*term;
-	int			stdfds[3];
-	char		*history_file;
-	char		*alias_file;
-	char		*line;
-	int			prompt_len;
+	t_envlst			*envlst;
+	int					stdfds[3];
+	t_vshdataterm		*term;
+	t_vshdatacurs		*curs;
+	t_vshdatahistory	*history;
+	t_vshdataline		*line;
+	t_vshdataprompt		*prompt;
+	t_vshdatainput		*input;
+	t_vshdatahashtable	*hashtable;
+	t_vshdataalias		*alias;
+	t_vshdatatermcaps	*termcaps;
 }				t_vshdata;
+
+typedef enum	e_prompt_type
+{
+	REGULAR_PROMPT,
+	QUOTE_PROMPT,
+	DQUOTE_PROMPT
+}				t_prompt_type;
 
 /*
 **----------------------------------lexer--------------------------------------
@@ -415,19 +560,19 @@ void		env_lstdel(t_envlst **envlst);
 void   		env_remove_tmp(t_envlst *env);
 void		env_sort(t_envlst *head);
 void		env_lstadd_to_sortlst(t_envlst *envlst, t_envlst *new);
-int			env_add_extern_value(t_envlst *envlst, char *name, char *value);
+int			env_add_extern_value(t_vshdata *data, char *name, char *value);
 
 /*
 **----------------------------------terminal------------------------------------
 */
 
-t_term			*term_prepare(t_envlst *lst);
+t_vshdataterm			*term_prepare(t_envlst *lst);
 int				term_is_valid(t_envlst *envlst);
-t_term			*term_init_struct(void);
-int				term_get_attributes(int fd, t_term *term_p);
-int				term_set_attributes(t_term *term_p);
-int				term_reset(t_term *term_p);
-void			term_free_struct(t_term **term_p);
+t_vshdataterm			*term_init_struct(void);
+int				term_get_attributes(int fd, t_vshdataterm*term_p);
+int				term_set_attributes(t_vshdataterm*term_p);
+int				term_reset(t_vshdataterm*term_p);
+void			term_free_struct(t_vshdataterm**term_p);
 
 /*
 **-----------------------------------input--------------------------------------
@@ -455,76 +600,81 @@ void			term_free_struct(t_term **term_p);
 # define INPUT_CTRL_D '\4'
 # define INPUT_CTRL_K '\v'
 # define INPUT_TAB '\t'
+# define INPUT_CTRL_U 21
+# define INPUT_CTRL_Y 25
+# define TC_MAXRESPONSESIZE 50
 
-typedef struct	s_inputdata
-{
-	char		c;
-	int			hist_index;
-	int			hist_start;
-	int			hist_first;
-	unsigned	index;
-	int			len_max;
-	unsigned	len_cur;
-	t_history	**history;
-	int			tab_pressed;
-}				t_inputdata;
-
-int				input_read(t_vshdata *vshdata);
+int				input_read(t_vshdata *data);
+int				input_read_ansi(t_vshdata *data);
+int				input_parse_special(t_vshdata *data);
 int				input_is_word_start(char *str, int i1, int i2);
 void			input_clear_char_at(char **line, unsigned index);
-int				input_parse_char(t_inputdata *data, t_vshdata *vshdata);
-int				get_cursor_linepos(void); //column
-int				get_cursor_rowpos(void); //row
+int				input_parse_char(t_vshdata *data);
+void			input_print_str(t_vshdata *data, char *str);
 
 int				ft_tputchar(int c);
 int				tools_isprintnotblank(int i);
 
-int				input_handle_backspace(t_inputdata *data, t_vshdata *vshdata);
-int				input_handle_delete(t_inputdata *data, t_vshdata *vshdata);
+void			input_handle_backspace(t_vshdata *data);
+void			input_handle_delete(t_vshdata *data);
 
-void			curs_move_left(t_inputdata *data);
-void			curs_move_n_left(t_inputdata *data, size_t n);
+void			curs_move_left(t_vshdata *data);
+void			curs_move_n_left(t_vshdata *data, size_t n);
+void			curs_move_n_left_hasnewlines(t_vshdata *data, size_t n);
 
-void			curs_move_right(t_inputdata *data);
-void			curs_move_n_right(t_inputdata *data, t_vshdata *vshdata, size_t n);
+void			curs_move_right(t_vshdata *data);
+void			curs_move_n_right(t_vshdata *data, size_t n);
+void			curs_move_n_right_hasnewlines(t_vshdata *data, size_t n);
+void			curs_move_right_at_colmax(t_vshdata *data, int colmax);
 
-void			curs_move_up(t_inputdata *data, t_vshdata *vshdata);
-void			curs_move_down(t_inputdata *data, t_vshdata *vshdata);
+void			curs_move_up(t_vshdata *data);
+void			curs_move_down(t_vshdata *data);
 
-int				curs_go_home(t_inputdata *data);
-int				curs_go_end(t_inputdata *data, t_vshdata *vshdata);
+void			curs_go_home(t_vshdata *data);
+void			curs_go_end(t_vshdata *data);
 
-void			curs_move_next_word(t_inputdata *data, t_vshdata *vshdata);
-void			curs_move_prev_word(t_inputdata *data, t_vshdata *vshdata);
+void			curs_move_next_word(t_vshdata *data);
+void			curs_move_prev_word(t_vshdata *data);
 
-int				input_parse_ctrl_c(t_inputdata *data, t_vshdata *vshdata);
-int				input_parse_ctrl_d(t_inputdata *data, t_vshdata *vshdata);
-int				input_parse_ctrl_k(t_inputdata *data, t_vshdata *vshdata);
-int				input_parse_tab(t_inputdata *data, t_vshdata *vshdata);
-// int				input_parse_next(t_inputdata *data, char **line);
-// int				input_parse_prev(t_inputdata *data, char **line);
-// int				input_parse_ctrl_up(t_inputdata *data, char **line);
-// int				input_parse_ctrl_down(t_inputdata *data, char **line);
-// int				input_parse_ctrl_k(t_inputdata *data, char **line);
+int				input_parse_ctrl_c(t_vshdata *data);
+void			input_parse_ctrl_d(t_vshdata *data);
+void			input_parse_ctrl_k(t_vshdata *data);
+void			input_parse_ctrl_u(t_vshdata *data);
+void			input_parse_ctrl_y(t_vshdata *data);
+
+
+int				input_resize_window_check(t_vshdata *data);
+
+int				get_curs_row(t_vshdata *data);
 
 /*
 **----------------------------------shell---------------------------------------
 */
 
-void			shell_display_prompt(t_vshdata *vshdata);
+void			shell_display_prompt(t_vshdata *data, int prompt_type);
 int				shell_dless_read_till_stop(char **heredoc, char *stop,
-					t_vshdata *vshdata);
+					t_vshdata *data);
 int				shell_dless_set_tk_val(t_tokenlst *probe, char **heredoc,
-					char *stop, t_vshdata *vshdata);
-int				shell_dless_input(t_vshdata *vshdata, t_tokenlst **token_lst);
-int				shell_close_unclosed_quotes(t_vshdata *vshdata);
-int				shell_init_files(t_vshdata *vshdata);
-int				shell_start(t_vshdata *vshdata);
-int				shell_init_vshdata(t_vshdata *vshdata);
+					char *stop, t_vshdata *data);
+int				shell_dless_input(t_vshdata *data, t_tokenlst **token_lst);
+int				shell_close_unclosed_quotes(t_vshdata *data);
+int				shell_init_files(t_vshdata *data);
+int				shell_start(t_vshdata *data);
+t_vshdata		*shell_init_vshdata(void);
 char			*shell_getcurrentdir(char *cwd);
-int				shell_close_quote_and_esc(t_vshdata *vshdata);
+int				shell_close_quote_and_esc(t_vshdata *data);
 char			shell_quote_checker_find_quote(char *line);
-int				shell_handle_escaped_newlines(t_vshdata *vshdata);
+int				shell_handle_escaped_newlines(t_vshdata *data);
+void			shell_get_valid_prompt(t_vshdata *data, int prompt_type);
+
+t_vshdatatermcaps	*shell_init_vshdatatermcaps(void);
+t_vshdataalias		*shell_init_vshdataalias(void);
+t_vshdatahistory	*shell_init_vshdatahistory(void);
+t_vshdatahashtable	*shell_init_vshdatahashtable(void);
+t_vshdatainput		*shell_init_vshdatainput(void);
+t_vshdataprompt		*shell_init_vshdataprompt(void);
+t_vshdataline		*shell_init_vshdataline(void);
+t_vshdatacurs		*shell_init_vshdatacurs(void);
 
 /*
 **----------------------------------lexer---------------------------------------
@@ -569,10 +719,10 @@ void			lexer_state_ionum(t_scanner *scanner);
 **----------------------------------alias---------------------------------------
 */
 
-int				alias_expansion(t_vshdata *vhsdata, t_tokenlst **tokenlst, char **expanded_aliases);
-int				alias_replace(t_vshdata *vshdata, t_tokenlst *probe, char *alias, char **expanded_aliases);
+int				alias_expansion(t_vshdata *data, t_tokenlst **tokenlst, char **expanded_aliases);
+int				alias_replace(t_vshdata *data, t_tokenlst *probe, char *alias, char **expanded_aliases);
 int				alias_error(char **line, t_tokenlst **tokenlst, char ***expanded);
-int				alias_read_file(t_vshdata *vshdata);
+int				alias_read_file(t_vshdata *data);
 char			**alias_add_expanded(char **expanded, char *alias, char *alias_equal);
 char			*alias_getvalue(char *var_key, t_aliaslst *aliaslst);
 
@@ -599,14 +749,15 @@ bool			parser_cmd_suffix(t_tokenlst **token_lst, t_ast **cmd,
 **----------------------------------builtins------------------------------------
 */
 
-void			builtin_exit(char **args, t_vshdata *vshdata);
+void			builtin_hash(char **args, t_vshdata *data);
+void			builtin_exit(char **args, t_vshdata *data);
 void			builtin_echo(char **args);
 char			builtin_echo_set_flags(char **args, int *arg_i);
-void			builtin_export(char **args, t_envlst *envlst);
+void			builtin_export(char **args, t_vshdata *data);
 void			builtin_export_var_to_type(char *varname, t_envlst *envlst, int type);
 void			builtin_export_print(t_envlst *envlst, int flags);
-void			builtin_export_args(char **args, t_envlst *envlst, int i);
-int				builtin_assign(char *arg, t_envlst *envlst, int env_type);
+void			builtin_export_args(char **args, t_vshdata *data, int i);
+int				builtin_assign(char *arg, t_vshdata *data, int env_type);
 int				builtin_assign_addexist(t_envlst *envlst, char *var, int env_type);
 int				builtin_assign_addnew(t_envlst *envlst, char *var, int env_type);
 void			builtin_set(char **args, t_envlst *envlst);
@@ -617,9 +768,9 @@ void			builtin_alias_delnode(t_aliaslst **node);
 void			builtin_alias_lstdel(t_aliaslst **lst);
 void			builtin_unalias(char **args, t_aliaslst **aliaslst);
 void			builtin_type(char **args, t_envlst *envlst, t_aliaslst *aliaslst);
-int				builtin_cd(char **args, t_envlst *envlst);
+int				builtin_cd(char **args, t_vshdata *data);
 void			builtin_cd_create_newpath(char **newpath, char *argpath);
-int				builtin_cd_change_dir(char *argpath, t_envlst *envlst,
+int				builtin_cd_change_dir(char *argpath, t_vshdata *data,
 					char cd_flag, int print);
 char			*builtin_cd_create_newpath_wrap(char *currpath, char *argpath);
 int				cd_print_usage(void);
@@ -650,17 +801,17 @@ int				tool_get_paths(t_envlst *envlst, char ***paths);
 **----------------------------------execution-----------------------------------
 */
 
-int				exec_complete_command(t_ast *ast, t_vshdata *vshdata);
-int				exec_list(t_ast *ast, t_vshdata *vshdata);
-int				exec_and_or(t_ast *ast, t_vshdata *vshdata);
-int				exec_pipe_sequence(t_ast *ast, t_vshdata *vshdata, t_pipes pipes);
-int				exec_command(t_ast *ast, t_vshdata *vshdata, t_pipes pipes);
+int				exec_complete_command(t_ast *ast, t_vshdata *data);
+int				exec_list(t_ast *ast, t_vshdata *data);
+int				exec_and_or(t_ast *ast, t_vshdata *data);
+int				exec_pipe_sequence(t_ast *ast, t_vshdata *data, t_pipes pipes);
+int				exec_command(t_ast *ast, t_vshdata *data, t_pipes pipes);
 
 
-void			exec_cmd(char **args, t_vshdata *vshdata);
-bool			exec_builtin(char **args, t_vshdata *vshdata);
-void			exec_external(char **args, t_vshdata *vshdata);
-int				exec_find_binary(char *filename, t_envlst *envlst, char **binary);
+void			exec_cmd(char **args, t_vshdata *data);
+bool			exec_builtin(char **args, t_vshdata *data);
+void			exec_external(char **args, t_vshdata *data);
+int				exec_find_binary(char *filename, t_vshdata *data, char **binary);
 int				find_binary(char *filename, t_envlst *envlst, char **binary);
 void			exec_quote_remove(t_ast *node);
 int				exec_validate_binary(char *binary);
@@ -693,27 +844,38 @@ int				redir_create_heredoc_fd(char *right_side);
 
 t_pipes			redir_init_pipestruct(void);
 int				redir_pipe(t_ast *pipe_node);
-int				redir_run_pipesequence(t_ast *pipenode, t_vshdata *vshdata,
+int				redir_run_pipesequence(t_ast *pipenode, t_vshdata *data,
 					t_pipes pipes);
 int				redir_handle_pipe(t_pipes pipes);
 
-int				redir_save_stdfds(t_vshdata *vshdata);
-int				return_and_reset_fds(int retval, t_vshdata *vshdata);
-int				redir_reset_stdfds(t_vshdata *vshdata);
-int				redir_close_saved_stdfds(t_vshdata *vshdata);
+int				redir_save_stdfds(t_vshdata *data);
+int				return_and_reset_fds(int retval, t_vshdata *data);
+int				redir_reset_stdfds(t_vshdata *data);
+int				redir_close_saved_stdfds(t_vshdata *data);
 
 /*
 **------------------------------------history-----------------------------------
 */
 
-int				history_to_file(t_vshdata *vshdata);
-int				history_get_file_content(t_vshdata *vshdata);
+int				history_to_file(t_vshdata *data);
+int				history_get_file_content(t_vshdata *data);
 int				history_line_to_array(t_history **history, char **line);
 void	        history_print(t_history **history);
-int				history_change_line(t_inputdata *data, t_vshdata *vshdata,
+int				history_change_line(t_vshdata *data,
 					char arrow);
-int				history_index_change_down(t_inputdata *data);
-int				history_index_change_up(t_inputdata *data);
+int				history_index_change_down(t_vshdata *data);
+int				history_index_change_up(t_vshdata *data);
+
+/*
+**--------------------------------hashtable-------------------------------------
+*/
+
+int				hash_ht_insert(t_vshdata *data, char *key, char *path, int count);
+void			hash_print(t_ht **ht);
+void			hash_reset(t_vshdata *data);
+void			hash_init(t_vshdata *data);
+unsigned int	hash_create_hash(char *key);
+int				hash_check(t_vshdata *data, char *key, char **binary);
 
 /*
 **--------------------------------error_handling--------------------------------
@@ -728,7 +890,7 @@ int				err_ret(char *str);
 **--------------------------------autocomplete----------------------------------
 */
 
-int				auto_get_cmdlst(char *match, t_envlst *envlst, t_list **matchlst);
+/* int				auto_get_cmdlst(char *match, t_envlst *envlst, t_list **matchlst);
 int				auto_add_tolst(t_list **matchlst, char *filename);
 int				auto_match_builtins(char *match, t_list **matchlst);
 int				auto_get_filelst(char *match, char *path, t_list **matchlst);
@@ -747,7 +909,7 @@ int				auto_lst_count(t_list *lst);
 void			auto_sort_n(t_list **matchlst);
 void			auto_swap_lstitem(t_list **flst, t_list *smal, t_list *prev);
 void			auto_clear_line(t_inputdata *data, t_vshdata *vshdata);
-
+ */
 
 /*
 **----------------------------------debugging-----------------------------------

@@ -6,7 +6,7 @@
 /*   By: mavan-he <mavan-he@student.codam.nl>         +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2019/07/26 20:29:50 by mavan-he       #+#    #+#                */
-/*   Updated: 2019/08/07 11:08:26 by jbrinksm      ########   odam.nl         */
+/*   Updated: 2019/08/23 13:41:40 by jbrinksm      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -65,9 +65,13 @@ static void	alias_combine_tokenlsts(t_tokenlst *probe, t_tokenlst *new_tokenlst)
 	probe->next = new_tokenlst;
 }
 
+/*
+**	int status had the comment: This may or may not need to get fixed
+*/
+
 int			alias_error(char **line, t_tokenlst **tokenlst, char ***expanded)
 {
-	ft_eprintf("vsh: alias: failed to allocate enough memory\n");
+	ft_eprintf(E_N_ALLOC_STR, "alias");
 	if (expanded != NULL && *expanded != NULL)
 		ft_strarrdel(expanded);
 	if (tokenlst != NULL && *tokenlst != NULL)
@@ -77,7 +81,7 @@ int			alias_error(char **line, t_tokenlst **tokenlst, char ***expanded)
 	return (FUNCT_ERROR);
 }
 
-int			alias_replace(t_vshdata *vshdata, t_tokenlst *probe, char *alias,
+int			alias_replace(t_vshdata *data, t_tokenlst *probe, char *alias,
 			char **expanded)
 {
 	char		*alias_equal;
@@ -85,18 +89,18 @@ int			alias_replace(t_vshdata *vshdata, t_tokenlst *probe, char *alias,
 	t_tokenlst	*new_tokenlst;
 
 	alias_equal = ft_strchr(alias, '=');
-	ft_strdel(&vshdata->line);
-	vshdata->line = ft_strjoin(alias_equal + 1, "\n");
+	ft_strdel(&data->line->line);
+	data->line->line = ft_strjoin(alias_equal + 1, "\n");
 	new_tokenlst = NULL;
-	if (vshdata->line == NULL || shell_close_quote_and_esc(vshdata) == FUNCT_ERROR
-		|| lexer(&vshdata->line, &new_tokenlst) == FUNCT_ERROR
-		|| shell_dless_input(vshdata, &new_tokenlst) == FUNCT_ERROR)
-		return (alias_error(&vshdata->line, &new_tokenlst, NULL));
+	if (data->line->line == NULL || shell_close_quote_and_esc(data) == FUNCT_ERROR
+		|| lexer(&data->line->line, &new_tokenlst) == FUNCT_ERROR
+		|| shell_dless_input(data, &new_tokenlst) == FUNCT_ERROR)
+		return (alias_error(&data->line->line, &new_tokenlst, NULL));
 	new_expanded = alias_add_expanded(expanded, alias, alias_equal);
 	if (new_expanded == NULL)
-		return (alias_error(&vshdata->line, &new_tokenlst, &new_expanded));
-	if (alias_expansion(vshdata, &new_tokenlst, new_expanded) == FUNCT_ERROR)
-		return (alias_error(&vshdata->line, &new_tokenlst, &new_expanded));
+		return (alias_error(&data->line->line, &new_tokenlst, &new_expanded));
+	if (alias_expansion(data, &new_tokenlst, new_expanded) == FUNCT_ERROR)
+		return (alias_error(&data->line->line, &new_tokenlst, &new_expanded));
 	ft_strarrdel(&new_expanded);
 	alias_combine_tokenlsts(probe, new_tokenlst);
 	return (FUNCT_SUCCESS);
