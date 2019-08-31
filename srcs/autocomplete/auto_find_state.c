@@ -6,7 +6,7 @@
 /*   By: mavan-he <mavan-he@student.codam.nl>         +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2019/08/12 17:12:17 by mavan-he       #+#    #+#                */
-/*   Updated: 2019/08/15 15:22:09 by omulder       ########   odam.nl         */
+/*   Updated: 2019/08/31 17:16:33 by mavan-he      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -30,7 +30,7 @@ static int	find_state_before_whitespace(char *line, int i)
 	return (STATE_FILE);
 }
 
-int			auto_find_state(char *line, int i)
+int			auto_find_state(char *line, ssize_t i)
 {
 	if (i == 0)
 		return (STATE_CMD);

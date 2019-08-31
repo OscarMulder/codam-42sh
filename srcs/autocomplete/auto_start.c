@@ -6,7 +6,7 @@
 /*   By: mavan-he <mavan-he@student.codam.nl>         +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2019/08/12 14:09:10 by mavan-he       #+#    #+#                */
-/*   Updated: 2019/08/15 16:10:40 by omulder       ########   odam.nl         */
+/*   Updated: 2019/08/31 18:13:56 by mavan-he      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,9 +18,9 @@ void	auto_lstdel(void *str, size_t size)
 	ft_strdel((char**)&str);
 }
 
-char	*auto_get_file_str(char *line, int i)
+char	*auto_get_file_str(char *line, ssize_t i)
 {
-	int		i_cursor;
+	ssize_t	i_cursor;
 	char	*match;
 
 	i_cursor = i;
@@ -43,7 +43,7 @@ char	*auto_get_file_str(char *line, int i)
 	return (match);
 }
 
-char	*auto_get_match_str(char *line, int i)
+char	*auto_get_match_str(char *line, ssize_t i)
 {
 	int		i_cursor;
 	char	*match;
@@ -67,44 +67,39 @@ char	*auto_get_match_str(char *line, int i)
 	return (match);
 }
 
-int		auto_start(t_vshdata *vshdata, t_inputdata *data)
+void	auto_start(t_vshdata *data)
 {
 	int		state;
 	char	*match;
 	t_list	*matchlst;
 
-	if (vshdata->line == NULL)
-		return (FUNCT_ERROR);
-	state = auto_find_state(vshdata->line, (int)data->index);
+	if (data->line->line == NULL)
+		return ;
+	state = auto_find_state(data->line->line, data->line->index);
 	#ifdef DEBUG
 	ft_eprintf("\n<<<<< State = %d >>>>>>\n", state);
 	#endif
 	match = NULL;
 	matchlst = NULL;
 	if (state == STATE_CMD)
-		match = auto_get_match_str(vshdata->line, (int)data->index);
+		match = auto_get_match_str(data->line->line, data->line->index);
 	else if (state == STATE_VAR)
-		match = auto_get_match_str(vshdata->line, (int)data->index);
+		match = auto_get_match_str(data->line->line, data->line->index);
 	else if (state == STATE_FILE)
-		match = auto_get_file_str(vshdata->line, (int)data->index);
+		match = auto_get_file_str(data->line->line, data->line->index);
 	#ifdef DEBUG
 	ft_eprintf("<<<<< Match = %s >>>>>>\n", match);
 	#endif
 	if (match == NULL ||
-		auto_find_matches(vshdata, &match, &matchlst, state) == FUNCT_ERROR)
+		auto_find_matches(data, &match, &matchlst, state) == FUNCT_ERROR)
 		state = FUNCT_ERROR;
 	else
-		state = auto_handle_matchlst(vshdata, data, match, &matchlst);
-	if (state == FUNCT_SUCCESS || state == FUNCT_FAILURE)
+		state = auto_handle_matchlst(data, match, &matchlst);
+	if (state != AUTO_NO_MATCHES && state != AUTO_ADDED_MATCH)
 	{
-		shell_display_prompt(vshdata);
-		ft_printf(vshdata->line);
+		shell_display_prompt(data, REGULAR_PROMPT);
+		input_print_str(data, data->line->line);
 	}
-	// else if (state == AUTO_STATE_LINE)
-	// {
-
-	// }
 	ft_strdel(&match);
 	ft_lstdel(&matchlst, &auto_lstdel);
-	return (state);
 }

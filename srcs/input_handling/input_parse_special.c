@@ -6,7 +6,7 @@
 /*   By: rkuijper <rkuijper@student.codam.nl>         +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2019/08/30 14:05:27 by rkuijper       #+#    #+#                */
-/*   Updated: 2019/08/30 14:05:41 by rkuijper      ########   odam.nl         */
+/*   Updated: 2019/08/31 17:12:37 by mavan-he      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -24,6 +24,8 @@ int			input_parse_special(t_vshdata *data)
 		input_parse_ctrl_u(data);
 	else if (data->input->c == INPUT_CTRL_Y)
 		input_parse_ctrl_y(data);
+	else if (data->input->c == INPUT_TAB)
+		input_parse_tab(data);
 	else
 		return (FUNCT_FAILURE);
 	return (FUNCT_SUCCESS);

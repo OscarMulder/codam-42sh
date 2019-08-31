@@ -6,7 +6,7 @@
 /*   By: omulder <omulder@student.codam.nl>           +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2019/04/10 20:29:42 by jbrinksm       #+#    #+#                */
-/*   Updated: 2019/08/31 16:52:29 by mavan-he      ########   odam.nl         */
+/*   Updated: 2019/08/31 18:13:19 by mavan-he      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -248,7 +248,8 @@
 # define HIST_SEPARATE	-1
 
 
-#define AUTO_STATE_LINE	(1 << 2)
+#define AUTO_NO_MATCHES		(1 << 2)
+#define AUTO_ADDED_MATCH	(1 << 3)
 
 
 /*
@@ -642,6 +643,7 @@ void			input_parse_ctrl_d(t_vshdata *data);
 void			input_parse_ctrl_k(t_vshdata *data);
 void			input_parse_ctrl_u(t_vshdata *data);
 void			input_parse_ctrl_y(t_vshdata *data);
+void			input_parse_tab(t_vshdata *data);
 
 
 int				input_resize_window_check(t_vshdata *data);
@@ -891,26 +893,26 @@ int				err_ret(char *str);
 **--------------------------------autocomplete----------------------------------
 */
 
-/* int				auto_get_cmdlst(char *match, t_envlst *envlst, t_list **matchlst);
+int				auto_get_cmdlst(char *match, t_envlst *envlst, t_list **matchlst);
 int				auto_add_tolst(t_list **matchlst, char *filename);
 int				auto_match_builtins(char *match, t_list **matchlst);
 int				auto_get_filelst(char *match, char *path, t_list **matchlst);
 int				auto_get_varlst(char *match, int match_len, t_envlst *envlst, t_list **matchlst);
-int				auto_find_state(char *line, int i);
-int				auto_start(t_vshdata *vshdata, t_inputdata *data);
-int				auto_add_match_toline(char *match, char *to_add, t_vshdata *vshdata, t_inputdata *data);
-int				auto_find_matches(t_vshdata *vshdata, char **match, t_list **matchlst, int state);
+int				auto_find_state(char *line, ssize_t i);
+void			auto_start(t_vshdata *data);
+int				auto_add_match_toline(char *match, char *to_add, t_vshdata *data);
+int				auto_find_matches(t_vshdata *data, char **match, t_list **matchlst, int state);
 void			auto_lstdel(void *str, size_t size);
-int				auto_handle_matchlst(t_vshdata *vshdata, t_inputdata *data, char *match, t_list **matchlst);
-int				auto_small_lst(char *match, t_list **matchlst, t_vshdata *vshdata, t_inputdata *data);
+int				auto_handle_matchlst(t_vshdata *data, char *match, t_list **matchlst);
+int				auto_small_lst(char *match, t_list **matchlst, t_vshdata *data);
 void			auto_lst_print(t_list **matchlst, int lst_len);
 int				auto_big_lst(t_list **matchlst, int lst_len);
 int				auto_lenname(t_list *matchlst, int length);
 int				auto_lst_count(t_list *lst);
 void			auto_sort_n(t_list **matchlst);
 void			auto_swap_lstitem(t_list **flst, t_list *smal, t_list *prev);
-void			auto_clear_line(t_inputdata *data, t_vshdata *vshdata);
- */
+void			auto_clear_line(t_vshdata *data);
+
 
 /*
 **----------------------------------debugging-----------------------------------

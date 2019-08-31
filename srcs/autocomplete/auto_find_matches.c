@@ -6,7 +6,7 @@
 /*   By: mavan-he <mavan-he@student.codam.nl>         +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2019/08/12 20:20:16 by mavan-he       #+#    #+#                */
-/*   Updated: 2019/08/15 10:06:01 by omulder       ########   odam.nl         */
+/*   Updated: 2019/08/31 17:29:03 by mavan-he      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -56,14 +56,14 @@ int			auto_find_filelst(char **match, t_list **matchlst)
 	return (ret);
 }
 
-int			auto_find_matches(t_vshdata *vshdata, char **match,
+int			auto_find_matches(t_vshdata *data, char **match,
 			t_list **matchlst, int state)
 {
-	if (state == STATE_CMD && auto_get_cmdlst(*match, vshdata->envlst,
+	if (state == STATE_CMD && auto_get_cmdlst(*match, data->envlst,
 		matchlst) == FUNCT_ERROR)
 		return (FUNCT_ERROR);
 	if (state == STATE_VAR && auto_get_varlst(*match, ft_strlen(*match),
-		vshdata->envlst->next, matchlst) == FUNCT_ERROR)
+		data->envlst->next, matchlst) == FUNCT_ERROR)
 		return (FUNCT_ERROR);
 	if (state == STATE_FILE && auto_find_filelst(match, matchlst) == FUNCT_ERROR)
 		return (FUNCT_ERROR);
