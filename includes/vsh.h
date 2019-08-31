@@ -6,7 +6,7 @@
 /*   By: omulder <omulder@student.codam.nl>           +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2019/04/10 20:29:42 by jbrinksm       #+#    #+#                */
-/*   Updated: 2019/08/31 16:24:17 by mavan-he      ########   odam.nl         */
+/*   Updated: 2019/08/31 16:52:29 by mavan-he      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -65,6 +65,7 @@
 # define E_STAT_STR			SHELL ": could not get stat info of file\n"
 # define E_STAT_P			SHELL ": could not get stat info of %s\n"
 # define E_ALLOC_STR		SHELL ": failed to allocate enough memory\n"
+# define E_READ_STR			SHELL ": failed to read input\n"
 # define E_FORK_STR			SHELL ": fork failed\n"
 # define E_HOME_NOTSET_STR 	SHELL ": environment value HOME not set\n"
 # define E_HIST_READ_STR 	SHELL ": failed to read history file\n"
