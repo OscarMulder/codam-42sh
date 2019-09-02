@@ -6,7 +6,7 @@
 /*   By: mavan-he <mavan-he@student.codam.nl>         +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2019/08/13 17:40:10 by mavan-he       #+#    #+#                */
-/*   Updated: 2019/08/31 17:25:43 by mavan-he      ########   odam.nl         */
+/*   Updated: 2019/09/02 15:46:39 by rkuijper      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -32,7 +32,7 @@ int		auto_anything_to_add(int i, t_list *matchlst, char **to_add)
 	match_len = ft_strlen(&match[i]);
 	while (matchlst != NULL)
 	{
-		compare_len = auto_compare(&match[i], &((char *)matchlst->content)[i]);
+		compare_len = auto_compare(&match[i], (char*)(matchlst->content + i));
 		if (compare_len < match_len)
 			match_len = compare_len;
 		if (match_len == 0)

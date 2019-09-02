@@ -6,7 +6,7 @@
 /*   By: mavan-he <mavan-he@student.codam.nl>         +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2019/08/13 19:53:22 by mavan-he       #+#    #+#                */
-/*   Updated: 2019/08/16 19:30:55 by mavan-he      ########   odam.nl         */
+/*   Updated: 2019/09/02 15:46:00 by rkuijper      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,13 +16,15 @@
 static int			get_row(int n, int width, int length)
 {
 	int row;
+	int aspect;
 
 	if (n == 0 || width == 0 || length == 0)
 		return (1);
-	if (width / length == 0)
+	aspect = width / length;
+	if (aspect == 0)
 		return (1);
-	row = (n / (width / length));
-	if ((n % (width / length)) != 0)
+	row = (n / aspect);
+	if ((n % aspect) != 0)
 		row++;
 	return (row);
 }

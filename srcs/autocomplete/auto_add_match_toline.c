@@ -6,7 +6,7 @@
 /*   By: mavan-he <mavan-he@student.codam.nl>         +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2019/08/12 20:55:01 by mavan-he       #+#    #+#                */
-/*   Updated: 2019/09/02 12:19:16 by mavan-he      ########   odam.nl         */
+/*   Updated: 2019/09/02 15:43:26 by rkuijper      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -22,9 +22,9 @@ int		auto_add_match_toline(char *match, char *to_add, t_vshdata *data)
 	match_len = ft_strlen(match);
 	to_add_len = ft_strlen(to_add);
 	new_line = ft_strnew(data->line->len_cur - match_len + to_add_len);
-	data->line->len_max = data->line->len_cur - match_len + to_add_len;
 	if (new_line == NULL)
 		return (err_ret(E_ALLOC_STR));
+	data->line->len_max = data->line->len_cur - match_len + to_add_len;
 	ft_strncpy(new_line, data->line->line, data->line->index - match_len);
 	ft_strcat(new_line, to_add);
 	ft_strcat(new_line, &(data->line->line)[data->line->index]);

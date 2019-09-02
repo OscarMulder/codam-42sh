@@ -6,7 +6,7 @@
 /*   By: mavan-he <mavan-he@student.codam.nl>         +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2019/08/12 20:20:16 by mavan-he       #+#    #+#                */
-/*   Updated: 2019/09/02 12:20:16 by mavan-he      ########   odam.nl         */
+/*   Updated: 2019/09/02 15:43:52 by rkuijper      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,7 +16,7 @@ static int	cut_path_from_match(char **match, int i)
 {
 	char *new_match;
 
-	new_match = ft_strdup(&(*match)[i]);
+	new_match = ft_strdup(*match + i);
 	if (new_match == NULL)
 	{
 		ft_eprintf(E_ALLOC_STR);
@@ -45,7 +45,7 @@ int			auto_find_filelst(char **match, t_list **matchlst)
 	if (i < 0)
 		path = getcwd(NULL, 0);
 	else
-		path = ft_strndup((*match), match_len - (match_len - (i + 1)));
+		path = ft_strndup(*match, i + 1);
 	if (path == NULL || cut_path_from_match(match, i + 1) == FUNCT_ERROR)
 		return (FUNCT_ERROR);
 	ret = auto_get_filelst(*match, path, matchlst);
