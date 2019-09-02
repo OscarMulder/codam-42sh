@@ -6,7 +6,7 @@
 /*   By: jbrinksm <jbrinksm@student.codam.nl>         +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2019/04/11 20:16:38 by jbrinksm       #+#    #+#                */
-/*   Updated: 2019/09/02 13:13:19 by jbrinksm      ########   odam.nl         */
+/*   Updated: 2019/09/02 13:19:53 by jbrinksm      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -24,7 +24,7 @@ void	shell_get_valid_prompt(t_vshdata *data, int prompt_type)
 	if (data->prompt->prompt_addition != NULL && prompt_type == REGULAR_PROMPT)
 		data->prompt->prompt_len = ft_strlen(data->prompt->prompt_name)
 			+ ft_strlen(data->prompt->prompt_seperator)
-			+ ft_strlen(data->prompt->prompt_addition) + 1; // 1 is for padding
+			+ ft_strlen(data->prompt->prompt_addition) + 1;
 	else
 		data->prompt->prompt_len = ft_strlen(data->prompt->prompt_name)
 		+ ft_strlen(data->prompt->prompt_seperator);
