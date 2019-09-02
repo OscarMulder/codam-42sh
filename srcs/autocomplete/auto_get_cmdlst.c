@@ -6,7 +6,7 @@
 /*   By: mavan-he <mavan-he@student.codam.nl>         +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2019/08/10 12:53:34 by mavan-he       #+#    #+#                */
-/*   Updated: 2019/09/02 12:22:00 by mavan-he      ########   odam.nl         */
+/*   Updated: 2019/09/02 17:12:26 by mavan-he      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,6 +17,8 @@ int			auto_add_tolst(t_list **matchlst, char *filename)
 {
 	t_list *new;
 
+	if (auto_check_dups(*matchlst, filename) == true)
+		return (FUNCT_SUCCESS);
 	new = ft_lstnew(filename, ft_strlen(filename) + 1);
 	if (new == NULL)
 		return (err_ret(E_ALLOC_STR));

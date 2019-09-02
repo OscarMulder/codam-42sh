@@ -6,14 +6,14 @@
 /*   By: mavan-he <mavan-he@student.codam.nl>         +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2019/08/13 19:53:22 by mavan-he       #+#    #+#                */
-/*   Updated: 2019/09/02 16:07:00 by rkuijper      ########   odam.nl         */
+/*   Updated: 2019/09/02 17:17:53 by mavan-he      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "vsh.h"
 #include <sys/ioctl.h>
 
-static int			get_row(int n, int width, int length)
+static int		get_row(int n, int width, int length)
 {
 	int row;
 	int aspect;
@@ -29,7 +29,7 @@ static int			get_row(int n, int width, int length)
 	return (row);
 }
 
-static int			get_termwidth(void)
+static int		get_termwidth(void)
 {
 	struct winsize w;
 
@@ -37,7 +37,7 @@ static int			get_termwidth(void)
 	return (w.ws_col);
 }
 
-static t_list		*set_ptr(t_list *ptr, t_list *matchlst, int l, int row)
+static t_list	*set_ptr(t_list *ptr, t_list *matchlst, int l, int row)
 {
 	int	j;
 
@@ -78,7 +78,7 @@ static void		init_vars(t_list *matchlst, int lst_len,
 	a->extra = 0;
 }
 
-void				auto_lst_print(t_list **matchlst, int lst_len)
+void			auto_lst_print(t_list **matchlst, int lst_len)
 {
 	t_list		*ptr;
 	t_print		a;

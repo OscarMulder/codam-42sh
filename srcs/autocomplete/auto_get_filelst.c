@@ -6,7 +6,7 @@
 /*   By: mavan-he <mavan-he@student.codam.nl>         +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2019/08/11 12:28:38 by mavan-he       #+#    #+#                */
-/*   Updated: 2019/09/02 16:04:18 by rkuijper      ########   odam.nl         */
+/*   Updated: 2019/09/02 17:17:27 by mavan-he      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -23,9 +23,9 @@ static int	is_dir(char *path, int l)
 	struct stat buf;
 
 	if (l && lstat(path, &buf) == -1)
-			return (0);
+		return (0);
 	else if (stat(path, &buf) == -1)
-			return (0);
+		return (0);
 	return (S_ISDIR(buf.st_mode));
 }
 
