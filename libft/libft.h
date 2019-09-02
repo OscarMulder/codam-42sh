@@ -103,5 +103,7 @@ int					ft_free_return(void *tofree, int ret);
 int					ft_is_regular_file(const char *path);
 int					ft_isdir(const char *path);
 int					ft_aisint(char *n);
+char				*ft_strrnchr(const char *s, int c, int n);
+int					ft_tputchar(int c);
 
 #endif

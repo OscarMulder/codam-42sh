@@ -26,11 +26,11 @@ ft_lstnew.c ft_lstaddback.c ft_lstadd.c ft_strchr.c \
 ft_strsplit.c ft_strjoinchr.c ft_strjoinchrfree.c ft_strndup.c \
 ft_lstiter.c ft_lstdel.c ft_lstdelone.c ft_strarradd.c \
 ft_joinstrcstr.c ft_chartostr.c ft_joinstrcstr_free_s1.c \
-ft_joinstrcstr_free_s2.c ft_joinstrcstr_free_all.c \
+ft_joinstrcstr_free_s2.c ft_joinstrcstr_free_all.c ft_strrnchr.c \
 ft_get_next_line.c \
 ft_strjoinfree_s1.c ft_strjoinfree_s2.c ft_strjoinfree_all.c \
 ft_strclen.c ft_isalpha.c ft_isalnum.c ft_free_return.c ft_is_regular_file.c \
-ft_isdir.c ft_aisint.c
+ft_isdir.c ft_aisint.c ft_tputchar.c
 OBJECTS = $(FILES:.c=.o)
 
 all: $(OBJECTS) $(NAME)
