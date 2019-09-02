@@ -6,7 +6,7 @@
 /*   By: mavan-he <mavan-he@student.codam.nl>         +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2019/08/11 12:28:38 by mavan-he       #+#    #+#                */
-/*   Updated: 2019/09/02 15:45:24 by rkuijper      ########   odam.nl         */
+/*   Updated: 2019/09/02 16:04:18 by rkuijper      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -34,9 +34,9 @@ char *path)
 {
 	char	*tmp;
 
-	if (!(ft_strequ(match, "") == true &&
-	(ft_strequ(name, ".") == true ||
-	ft_strequ(name, "..") == true)))
+	if (ft_strequ(match, "") == false ||
+	(ft_strequ(name, ".") == false &&
+	ft_strequ(name, "..") == false))
 	{
 		tmp = ft_strjoinfree_s1(ft_strjoin(path, "/"), name);
 		if (is_dir(tmp, true))

@@ -6,7 +6,7 @@
 /*   By: mavan-he <mavan-he@student.codam.nl>         +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2019/08/13 19:53:22 by mavan-he       #+#    #+#                */
-/*   Updated: 2019/09/02 15:46:00 by rkuijper      ########   odam.nl         */
+/*   Updated: 2019/09/02 16:07:00 by rkuijper      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -62,22 +62,20 @@ static t_list		*set_ptr(t_list *ptr, t_list *matchlst, int l, int row)
 	return (ptr);
 }
 
-static t_print		init_vars(t_list *matchlst, int lst_len)
+static void		init_vars(t_list *matchlst, int lst_len,
+	t_print *a)
 {
-	t_print		a;
-
-	a.length = auto_lenname(matchlst, 0) + 1;
-	a.coli = 1;
-	a.total = lst_len;
-	a.row = get_row(a.total, get_termwidth(), a.length);
-	if (a.row == 0)
-		a.col = 1;
+	a->length = auto_lenname(matchlst, 0) + 1;
+	a->coli = 1;
+	a->total = lst_len;
+	a->row = get_row(a->total, get_termwidth(), a->length);
+	if (a->row == 0)
+		a->col = 1;
 	else
-		a.col = a.total / a.row;
-	a.left = a.total % a.row;
-	a.printed = 0;
-	a.extra = 0;
-	return (a);
+		a->col = a->total / a->row;
+	a->left = a->total % a->row;
+	a->printed = 0;
+	a->extra = 0;
 }
 
 void				auto_lst_print(t_list **matchlst, int lst_len)
@@ -87,7 +85,7 @@ void				auto_lst_print(t_list **matchlst, int lst_len)
 
 	auto_sort_n(matchlst);
 	ptr = *matchlst;
-	a = init_vars(*matchlst, lst_len);
+	init_vars(*matchlst, lst_len, &a);
 	while (a.printed < a.total)
 	{
 		if (a.coli == a.col && a.extra == (a.row - 1))
