@@ -6,7 +6,7 @@
 /*   By: jbrinksm <jbrinksm@student.codam.nl>         +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2019/06/07 16:55:26 by jbrinksm       #+#    #+#                */
-/*   Updated: 2019/08/31 16:45:08 by mavan-he      ########   odam.nl         */
+/*   Updated: 2019/08/30 16:19:11 by jbrinksm      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -31,6 +31,7 @@ Test(builtin_assign, basic_change_existingvar_1)
 	INIT_VSHDATA
 	cr_assert(shell_init_files(data) != FUNCT_ERROR);
 	cr_assert(history_get_file_content(data) != FUNCT_ERROR);
+	cr_assert(alias_read_file(data) != FUNCT_ERROR);
 	g_state = (t_state*)ft_memalloc(sizeof(t_state));
 	hash_init(data);
 	cr_assert(data->envlst != NULL);

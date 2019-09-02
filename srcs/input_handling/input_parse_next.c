@@ -6,7 +6,7 @@
 /*   By: omulder <omulder@student.codam.nl>           +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2019/05/16 13:41:00 by rkuijper       #+#    #+#                */
-/*   Updated: 2019/08/31 16:14:51 by mavan-he      ########   odam.nl         */
+/*   Updated: 2019/08/30 16:55:26 by jbrinksm      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -24,14 +24,14 @@ void		curs_move_next_word(t_vshdata *data)
 	if (data->line->index == data->line->len_cur)
 		return ;
 	i = 0;
-	while (ft_isprint(data->line->line[data->line->index + i]) == true
-		&& ft_isblank(data->line->line[data->line->index + i]) == false)
+	while (tools_isprintnotblank(data->line->line[data->line->index + i])
+		== true)
 		i++;
 	while (ft_isblank(data->line->line[data->line->index + i]) == true)
 		i++;
 	if ((data->line->index + i == data->line->len_cur)
-		|| (ft_isprint(data->line->line[data->line->index + i]) == true
-		&& ft_isblank(data->line->line[data->line->index + i]) == false))
+		|| (tools_isprintnotblank(data->line->line[data->line->index + i]) 
+		== true))
 		curs_move_n_right(data, i);
 }
 

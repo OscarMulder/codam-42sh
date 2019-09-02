@@ -6,7 +6,7 @@
 /*   By: omulder <omulder@student.codam.nl>           +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2019/04/17 14:03:16 by jbrinksm       #+#    #+#                */
-/*   Updated: 2019/09/02 12:06:03 by mavan-he      ########   odam.nl         */
+/*   Updated: 2019/09/02 13:58:55 by jbrinksm      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -50,8 +50,15 @@ static int	reset_input_read_return(t_vshdata *data, int ret)
 
 static int	input_parse(t_vshdata *data)
 {
+	int		ret;
+
 	if (input_parse_ctrl_c(data) == FUNCT_SUCCESS)
 		return (reset_input_read_return(data, NEW_PROMPT));
+	ret = input_parse_ctrl_d(data);
+	if (ret == NEW_PROMPT)
+		return (reset_input_read_return(data, NEW_PROMPT));
+	else if (ret == FUNCT_SUCCESS)
+		return (FUNCT_SUCCESS);
 	else if (input_read_ansi(data) == FUNCT_FAILURE)
 	{
 		if (input_parse_special(data) == FUNCT_FAILURE)
