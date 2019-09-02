@@ -22,7 +22,7 @@ int			shell_dless_read_till_stop(char **heredoc, char *heredoc_delim,
 	data->line->line = NULL;
 	while (true)
 	{
-		ft_putstr("> ");
+		ft_putstr(PROMPT_SEPERATOR);
 		if (input_read(data) == FUNCT_ERROR)
 			return (FUNCT_ERROR);
 		ft_putstr("\n");

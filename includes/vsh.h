@@ -21,8 +21,9 @@
 */
 
 # define SHELL				"vsh"
-# define PROMPT_NAME		"vsh"
-# define PROMPT_SEPERATOR	"> "
+# define SEPERATOR			">"
+# define PROMPT_NAME		SHELL " "
+# define PROMPT_SEPERATOR	SEPERATOR " "
 # define FUNCT_FAILURE 0
 # define FUNCT_SUCCESS 1
 # define FUNCT_ERROR -1

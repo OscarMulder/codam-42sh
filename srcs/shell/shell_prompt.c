@@ -19,8 +19,8 @@ void	shell_get_valid_prompt(t_vshdata *data, int prompt_type)
 	else if (prompt_type == DQUOTE_PROMPT)
 		data->prompt->prompt_name = "dquote";
 	else
-		data->prompt->prompt_name = "vsh ";
-	data->prompt->prompt_seperator = "> ";
+		data->prompt->prompt_name = PROMPT_NAME;
+	data->prompt->prompt_seperator = PROMPT_SEPERATOR;
 	if (data->prompt->prompt_addition != NULL)
 		data->prompt->prompt_len = ft_strlen(data->prompt->prompt_name)
 			+ ft_strlen(data->prompt->prompt_seperator)
