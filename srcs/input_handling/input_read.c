@@ -6,7 +6,7 @@
 /*   By: omulder <omulder@student.codam.nl>           +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2019/04/17 14:03:16 by jbrinksm       #+#    #+#                */
-/*   Updated: 2019/08/30 14:22:54 by omulder       ########   odam.nl         */
+/*   Updated: 2019/09/02 12:04:14 by rkuijper      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -40,7 +40,7 @@ static int	reset_input_read_return(t_vshdata *data, int ret)
 	data->line->index = 0;
 	data->line->len_max = 64;
 	data->line->len_cur = 0;
-	data->curs->coords.x = 1;
+	data->curs->coords.x = data->prompt->prompt_len + 1;
 	data->curs->coords.y = 1;
 	data->history->hist_index = find_start(data->history->history);
 	data->history->hist_start = data->history->hist_index - 1;
