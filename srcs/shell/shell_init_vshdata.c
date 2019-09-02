@@ -47,7 +47,7 @@ t_vshdataprompt	*shell_init_vshdataprompt(void)
 	prompt->cur_prompt_type = REGULAR_PROMPT;
 	prompt->prompt_name = PROMPT_NAME;
 	prompt->prompt_seperator = PROMPT_SEPERATOR;
-	prompt->prompt_len = ft_strlen(prompt->prompt_name) + 
+	prompt->prompt_len = ft_strlen(prompt->prompt_name) +
 		ft_strlen(prompt->prompt_seperator);
 	return (prompt);
 }
