@@ -6,7 +6,7 @@
 /*   By: omulder <omulder@student.codam.nl>           +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2019/04/10 20:29:42 by jbrinksm       #+#    #+#                */
-/*   Updated: 2019/08/30 16:46:45 by jbrinksm      ########   odam.nl         */
+/*   Updated: 2019/09/02 13:57:59 by jbrinksm      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -608,7 +608,7 @@ void			curs_move_next_word(t_vshdata *data);
 void			curs_move_prev_word(t_vshdata *data);
 
 int				input_parse_ctrl_c(t_vshdata *data);
-void			input_parse_ctrl_d(t_vshdata *data);
+int				input_parse_ctrl_d(t_vshdata *data);
 void			input_parse_ctrl_k(t_vshdata *data);
 void			input_parse_ctrl_u(t_vshdata *data);
 void			input_parse_ctrl_y(t_vshdata *data);
