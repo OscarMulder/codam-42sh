@@ -22,7 +22,7 @@ int			shell_dless_read_till_stop(char **heredoc, char *heredoc_delim,
 	data->line->line = NULL;
 	while (true)
 	{
-		ft_putstr("> ");
+		ft_putstr(PROMPT_SEPERATOR);
 		if (input_read(data) == FUNCT_ERROR)
 			return (FUNCT_ERROR);
 		ft_putstr("\n");
@@ -107,7 +107,7 @@ int			shell_dless_input(t_vshdata *data, t_tokenlst **token_lst)
 			heredoc_delim = ft_strjoin(probe->value, "\n");
 			if (heredoc_delim == NULL || shell_dless_set_tk_val(probe, &heredoc,
 			heredoc_delim, data) == FUNCT_ERROR)
-				return_alloc_error(FUNCT_ERROR);
+				return (return_alloc_error(FUNCT_ERROR));
 			ft_strdel(&heredoc);
 			ft_strdel(&heredoc_delim);
 		}
