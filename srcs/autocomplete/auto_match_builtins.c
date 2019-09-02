@@ -6,19 +6,17 @@
 /*   By: mavan-he <mavan-he@student.codam.nl>         +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2019/08/10 20:15:06 by mavan-he       #+#    #+#                */
-/*   Updated: 2019/08/10 20:29:47 by mavan-he      ########   odam.nl         */
+/*   Updated: 2019/09/02 12:22:23 by mavan-he      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "vsh.h"
 
-int		auto_match_builtins(char *match, t_list **matchlst)
+int		auto_match_builtins(char *match, t_list **matchlst, int match_len)
 {
-	int		match_len;
 	char	*builtin;
 
 	builtin = NULL;
-	match_len = ft_strlen(match);
 	if (ft_strnequ(match, "echo", match_len))
 		builtin = "echo";
 	else if (ft_strnequ(match, "exit", match_len))
@@ -39,5 +37,6 @@ int		auto_match_builtins(char *match, t_list **matchlst)
 		builtin = "alias";
 	else if (ft_strnequ(match, "unalias", match_len))
 		builtin = "unalias";
-	return (builtin == NULL ? FUNCT_FAILURE : auto_add_tolst(matchlst, builtin));
+	return (builtin == NULL ?
+		FUNCT_FAILURE : auto_add_tolst(matchlst, builtin));
 }

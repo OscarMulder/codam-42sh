@@ -6,7 +6,7 @@
 /*   By: mavan-he <mavan-he@student.codam.nl>         +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2019/08/12 14:09:10 by mavan-he       #+#    #+#                */
-/*   Updated: 2019/08/31 18:13:56 by mavan-he      ########   odam.nl         */
+/*   Updated: 2019/09/02 12:16:49 by mavan-he      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -67,6 +67,18 @@ char	*auto_get_match_str(char *line, ssize_t i)
 	return (match);
 }
 
+void	auto_print_line(t_vshdata *data)
+{
+	int		old_index;
+
+	old_index = data->line->index;
+	shell_display_prompt(data, data->prompt->cur_prompt_type);
+	data->curs->coords = (t_point){ data->prompt->prompt_len + 1, 1 };
+	input_print_str(data, data->line->line);
+	data->line->index = data->line->len_cur;
+	curs_move_n_left(data, data->line->index - old_index);
+}
+
 void	auto_start(t_vshdata *data)
 {
 	int		state;
@@ -76,9 +88,6 @@ void	auto_start(t_vshdata *data)
 	if (data->line->line == NULL)
 		return ;
 	state = auto_find_state(data->line->line, data->line->index);
-	#ifdef DEBUG
-	ft_eprintf("\n<<<<< State = %d >>>>>>\n", state);
-	#endif
 	match = NULL;
 	matchlst = NULL;
 	if (state == STATE_CMD)
@@ -87,19 +96,13 @@ void	auto_start(t_vshdata *data)
 		match = auto_get_match_str(data->line->line, data->line->index);
 	else if (state == STATE_FILE)
 		match = auto_get_file_str(data->line->line, data->line->index);
-	#ifdef DEBUG
-	ft_eprintf("<<<<< Match = %s >>>>>>\n", match);
-	#endif
 	if (match == NULL ||
 		auto_find_matches(data, &match, &matchlst, state) == FUNCT_ERROR)
 		state = FUNCT_ERROR;
 	else
 		state = auto_handle_matchlst(data, match, &matchlst);
 	if (state != AUTO_NO_MATCHES && state != AUTO_ADDED_MATCH)
-	{
-		shell_display_prompt(data, REGULAR_PROMPT);
-		input_print_str(data, data->line->line);
-	}
+		auto_print_line(data);
 	ft_strdel(&match);
 	ft_lstdel(&matchlst, &auto_lstdel);
 }
