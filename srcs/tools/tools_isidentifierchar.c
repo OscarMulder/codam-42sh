@@ -6,7 +6,7 @@
 /*   By: jbrinksm <jbrinksm@student.codam.nl>         +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2019/07/13 19:50:31 by jbrinksm       #+#    #+#                */
-/*   Updated: 2019/07/31 12:26:29 by mavan-he      ########   odam.nl         */
+/*   Updated: 2019/09/03 12:39:35 by mavan-he      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,5 +14,5 @@
 
 bool	tools_isidentifierchar(char c)
 {
-	return (ft_isalnum(c) == true || c == '_');
+	return (ft_isalnum(c) == true || c == '_' || c == '-');
 }
