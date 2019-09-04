@@ -61,9 +61,6 @@ int			get_curs_row(t_vshdata *data)
 		i++;
 	if (buf[i] == '[')
 		i++;
-	#ifdef DEBUG
-	ft_eprintf("curs: <%s>\n", &buf[1]);
-	#endif
 	if (ft_isdigit(buf[i]) == false)
 		return (get_curs_row_return(data, &buf, NULL, FUNCT_ERROR));
 	row = ft_atoi(&buf[i]);

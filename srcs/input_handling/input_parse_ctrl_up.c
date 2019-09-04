@@ -40,9 +40,6 @@ static void		move_up_handle_newline(t_vshdata *data)
 	i = data->line->index;
 	j = -1;
 	l = get_cur_line_index(data);
-	#ifdef DEBUG
-	ft_eprintf("Line index: %d\n", l);
-	#endif
 	while (i > 0)
 	{
 		if (data->line->line[i] == '\n')
