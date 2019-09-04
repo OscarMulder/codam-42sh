@@ -6,7 +6,7 @@
 /*   By: omulder <omulder@student.codam.nl>           +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2019/04/10 20:29:42 by jbrinksm       #+#    #+#                */
-/*   Updated: 2019/09/04 11:36:31 by mavan-he      ########   odam.nl         */
+/*   Updated: 2019/09/04 11:47:23 by mavan-he      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -284,7 +284,7 @@
 
 typedef struct	s_state
 {
-	int				exit_code;
+	int			exit_code;
 }				t_state;
 
 t_state *g_state;
@@ -352,7 +352,7 @@ typedef struct	s_vshdatatermcaps
 {
 	char	*tc_clear_lines_str;
 	char	*tc_scroll_down_str;
-}				t_vshdatatermcaps;
+}				t_datatermcaps;
 
 typedef struct	s_vshdataterm
 {
@@ -365,7 +365,7 @@ typedef struct	s_vshdatacurs
 	t_point	coords;
 	int		cur_ws_col;
 	int		cur_ws_row;
-}				t_vshdatacurs;
+}				t_datacurs;
 
 typedef struct	s_vshdatahistory
 {
@@ -374,7 +374,7 @@ typedef struct	s_vshdatahistory
 	int			hist_index;
 	int			hist_start;
 	int			hist_first;
-}				t_vshdatahistory;
+}				t_datahistory;
 
 typedef struct	s_vshdataline
 {
@@ -383,7 +383,7 @@ typedef struct	s_vshdataline
 	unsigned	index;
 	unsigned	len_max;
 	unsigned	len_cur;
-}				t_vshdataline;
+}				t_dataline;
 
 typedef struct	s_vshdataprompt
 {
@@ -392,39 +392,38 @@ typedef struct	s_vshdataprompt
 	char	*prompt_addition;
 	int		prompt_len;
 	int		cur_prompt_type;
-
-}				t_vshdataprompt;
+}				t_dataprompt;
 
 typedef struct	s_vshdatainput
 {
 	char				c;
-}				t_vshdatainput;
+}				t_datainput;
 
 typedef struct	s_vshdatahashtable
 {
 	t_ht	*ht[HT_SIZE];
 	char	ht_flag;
-}				t_vshdatahashtable;
+}				t_datahashtable;
 
 typedef	struct	s_vshdataalias
 {
 	t_aliaslst	*aliaslst;
 	char		*alias_file;
-}				t_vshdataalias;
+}				t_dataalias;
 
 typedef struct	s_vshdata
 {
-	t_envlst			*envlst;
-	int					stdfds[3];
-	t_vshdataterm		*term;
-	t_vshdatacurs		*curs;
-	t_vshdatahistory	*history;
-	t_vshdataline		*line;
-	t_vshdataprompt		*prompt;
-	t_vshdatainput		*input;
-	t_vshdatahashtable	*hashtable;
-	t_vshdataalias		*alias;
-	t_vshdatatermcaps	*termcaps;
+	t_envlst		*envlst;
+	int				stdfds[3];
+	t_vshdataterm	*term;
+	t_datacurs		*curs;
+	t_datahistory	*history;
+	t_dataline		*line;
+	t_dataprompt	*prompt;
+	t_datainput		*input;
+	t_datahashtable	*hashtable;
+	t_dataalias		*alias;
+	t_datatermcaps	*termcaps;
 }				t_vshdata;
 
 typedef enum	e_prompt_type
@@ -558,9 +557,9 @@ int				env_add_extern_value(t_vshdata *data, char *name, char *value);
 **----------------------------------terminal------------------------------------
 */
 
-t_vshdataterm			*term_prepare(t_envlst *lst);
+t_vshdataterm	*term_prepare(t_envlst *lst);
 int				term_is_valid(t_envlst *envlst);
-t_vshdataterm			*term_init_struct(void);
+t_vshdataterm	*term_init_struct(void);
 int				term_get_attributes(int fd, t_vshdataterm*term_p);
 int				term_set_attributes(t_vshdataterm*term_p);
 int				term_reset(t_vshdataterm*term_p);
@@ -570,7 +569,6 @@ void			term_free_struct(t_vshdataterm**term_p);
 **-----------------------------------input--------------------------------------
 */
 
-
 int				input_read(t_vshdata *data);
 int				input_read_ansi(t_vshdata *data);
 int				input_parse_special(t_vshdata *data);
@@ -578,40 +576,30 @@ int				input_is_word_start(char *str, int i1, int i2);
 void			input_clear_char_at(char **line, unsigned index);
 int				input_parse_char(t_vshdata *data);
 void			input_print_str(t_vshdata *data, char *str);
-
 int				ft_tputchar(int c);
 int				tools_isprintnotblank(int i);
-
 void			input_handle_backspace(t_vshdata *data);
 void			input_handle_delete(t_vshdata *data);
-
 void			curs_move_left(t_vshdata *data);
 void			curs_move_n_left(t_vshdata *data, size_t n);
 void			curs_move_n_left_hasnewlines(t_vshdata *data, size_t n);
-
 void			curs_move_right(t_vshdata *data);
 void			curs_move_n_right(t_vshdata *data, size_t n);
 void			curs_move_n_right_hasnewlines(t_vshdata *data, size_t n);
 void			curs_move_right_at_colmax(t_vshdata *data, int colmax);
-
 void			curs_move_up(t_vshdata *data);
 void			curs_move_down(t_vshdata *data);
-
 void			curs_go_home(t_vshdata *data);
 void			curs_go_end(t_vshdata *data);
-
 void			curs_move_next_word(t_vshdata *data);
 void			curs_move_prev_word(t_vshdata *data);
-
 int				input_parse_ctrl_c(t_vshdata *data);
 int				input_parse_ctrl_d(t_vshdata *data);
 void			input_parse_ctrl_k(t_vshdata *data);
 void			input_parse_ctrl_u(t_vshdata *data);
 void			input_parse_ctrl_y(t_vshdata *data);
 void			input_parse_tab(t_vshdata *data);
-
 int				input_resize_window_check(t_vshdata *data);
-
 int				get_curs_row(t_vshdata *data);
 
 /*
@@ -634,14 +622,14 @@ char			shell_quote_checker_find_quote(char *line);
 int				shell_handle_escaped_newlines(t_vshdata *data);
 void			shell_get_valid_prompt(t_vshdata *data, int prompt_type);
 
-t_vshdatatermcaps	*shell_init_vshdatatermcaps(void);
-t_vshdataalias		*shell_init_vshdataalias(void);
-t_vshdatahistory	*shell_init_vshdatahistory(void);
-t_vshdatahashtable	*shell_init_vshdatahashtable(void);
-t_vshdatainput		*shell_init_vshdatainput(void);
-t_vshdataprompt		*shell_init_vshdataprompt(void);
-t_vshdataline		*shell_init_vshdataline(void);
-t_vshdatacurs		*shell_init_vshdatacurs(void);
+t_datatermcaps	*shell_init_vshdatatermcaps(void);
+t_dataalias		*shell_init_vshdataalias(void);
+t_datahistory	*shell_init_vshdatahistory(void);
+t_datahashtable	*shell_init_vshdatahashtable(void);
+t_datainput		*shell_init_vshdatainput(void);
+t_dataprompt	*shell_init_vshdataprompt(void);
+t_dataline		*shell_init_vshdataline(void);
+t_datacurs		*shell_init_vshdatacurs(void);
 
 /*
 **----------------------------------lexer---------------------------------------

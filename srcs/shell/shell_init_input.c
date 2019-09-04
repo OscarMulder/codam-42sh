@@ -6,18 +6,18 @@
 /*   By: rkuijper <rkuijper@student.codam.nl>         +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2019/09/04 10:22:44 by rkuijper       #+#    #+#                */
-/*   Updated: 2019/09/04 10:37:55 by mavan-he      ########   odam.nl         */
+/*   Updated: 2019/09/04 11:45:48 by mavan-he      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "vsh.h"
 #include <term.h>
 
-t_vshdatacurs		*shell_init_vshdatacurs(void)
+t_datacurs		*shell_init_vshdatacurs(void)
 {
-	t_vshdatacurs	*curs;
+	t_datacurs	*curs;
 
-	curs = ft_memalloc(sizeof(t_vshdatacurs));
+	curs = ft_memalloc(sizeof(t_datacurs));
 	if (curs == NULL)
 		return (NULL);
 	curs->coords = (t_point){ 1, 1 };
@@ -26,22 +26,22 @@ t_vshdatacurs		*shell_init_vshdatacurs(void)
 	return (curs);
 }
 
-t_vshdataline		*shell_init_vshdataline(void)
+t_dataline		*shell_init_vshdataline(void)
 {
-	t_vshdataline	*line;
+	t_dataline	*line;
 
-	line = ft_memalloc(sizeof(t_vshdataline));
+	line = ft_memalloc(sizeof(t_dataline));
 	if (line == NULL)
 		return (NULL);
 	line->len_max = 64;
 	return (line);
 }
 
-t_vshdataprompt		*shell_init_vshdataprompt(void)
+t_dataprompt		*shell_init_vshdataprompt(void)
 {
-	t_vshdataprompt	*prompt;
+	t_dataprompt	*prompt;
 
-	prompt = ft_memalloc(sizeof(t_vshdataprompt));
+	prompt = ft_memalloc(sizeof(t_dataprompt));
 	if (prompt == NULL)
 		return (NULL);
 	prompt->cur_prompt_type = REGULAR_PROMPT;
@@ -52,21 +52,21 @@ t_vshdataprompt		*shell_init_vshdataprompt(void)
 	return (prompt);
 }
 
-t_vshdatainput		*shell_init_vshdatainput(void)
+t_datainput		*shell_init_vshdatainput(void)
 {
-	t_vshdatainput	*input;
+	t_datainput	*input;
 
-	input = ft_memalloc(sizeof(t_vshdatainput));
+	input = ft_memalloc(sizeof(t_datainput));
 	if (input == NULL)
 		return (NULL);
 	return (input);
 }
 
-t_vshdatatermcaps	*shell_init_vshdatatermcaps(void)
+t_datatermcaps	*shell_init_vshdatatermcaps(void)
 {
-	t_vshdatatermcaps	*termcaps;
+	t_datatermcaps	*termcaps;
 
-	termcaps = ft_memalloc(sizeof(t_vshdatatermcaps));
+	termcaps = ft_memalloc(sizeof(t_datatermcaps));
 	if (termcaps == NULL)
 		return (NULL);
 	termcaps->tc_clear_lines_str = tgetstr("cd", NULL);

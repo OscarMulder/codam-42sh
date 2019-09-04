@@ -6,37 +6,37 @@
 /*   By: rkuijper <rkuijper@student.codam.nl>         +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2019/09/04 10:25:31 by rkuijper       #+#    #+#                */
-/*   Updated: 2019/09/04 10:38:05 by mavan-he      ########   odam.nl         */
+/*   Updated: 2019/09/04 11:44:55 by mavan-he      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "vsh.h"
 
-t_vshdatahashtable	*shell_init_vshdatahashtable(void)
+t_datahashtable	*shell_init_vshdatahashtable(void)
 {
-	t_vshdatahashtable	*hashtable;
+	t_datahashtable	*hashtable;
 
-	hashtable = ft_memalloc(sizeof(t_vshdatahashtable));
+	hashtable = ft_memalloc(sizeof(t_datahashtable));
 	if (hashtable == NULL)
 		return (NULL);
 	return (hashtable);
 }
 
-t_vshdatahistory	*shell_init_vshdatahistory(void)
+t_datahistory	*shell_init_vshdatahistory(void)
 {
-	t_vshdatahistory	*history;
+	t_datahistory	*history;
 
-	history = ft_memalloc(sizeof(t_vshdatahistory));
+	history = ft_memalloc(sizeof(t_datahistory));
 	if (history == NULL)
 		return (NULL);
 	return (history);
 }
 
-t_vshdataalias		*shell_init_vshdataalias(void)
+t_dataalias		*shell_init_vshdataalias(void)
 {
-	t_vshdataalias	*alias;
+	t_dataalias	*alias;
 
-	alias = ft_memalloc(sizeof(t_vshdataalias));
+	alias = ft_memalloc(sizeof(t_dataalias));
 	if (alias == NULL)
 		return (NULL);
 	alias->alias_file = ALIASFILENAME;
