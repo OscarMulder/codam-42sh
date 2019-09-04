@@ -13,12 +13,9 @@
 NAME = vsh
 CC = gcc
 FLAGS = -Wall -Werror -Wextra -Wunreachable-code -g
-COVERAGE =
 INCLUDES = -I./libft/ -I./includes
 LIBFT = ./libft/libft.a
 LIB = -L./libft/ -lft -ltermcap
-CRITERIONINCLUDES = -I$(HOME)/.brew/include
-CRITERION = $(CRITERIONINCLUDES) -L$(HOME)/.brew/lib -lcriterion
 VPATH = ./test ./libft ./srcs ./srcs/builtins ./srcs/input_handling \
 ./srcs/term_settings ./srcs/environment_handling ./srcs/shell \
 ./srcs/tools ./srcs/alias ./test/parser ./test/tools ./test/builtins \
@@ -69,65 +66,32 @@ auto_get_cmdlst auto_match_builtins auto_get_filelst auto_get_varlst \
 auto_find_state auto_start auto_add_match_toline auto_find_matches \
 auto_handle_matchlst auto_small_lst auto_big_lst auto_lst_print \
 auto_lst_print_helpers auto_check_dups
-TESTS = unit_test builtin_assign_test
 OBJECTS := $(SRCS:%=%.o)
-TESTOBJECTS := $(TESTS:%=%.o)
 SRCS := $(SRCS:%=%.c)
-TESTS := $(TESTS:%=%.c)
 
 all: $(OBJECTS) $(LIBFT) $(NAME)
 
 $(NAME): $(OBJECTS) main.o
-	@$(CC) $(FLAGS) $^ $(COVERAGE) $(INCLUDES) $(LIB) -o $(NAME)
+	@$(CC) $(FLAGS) $^ $(INCLUDES) $(LIB) -o $(NAME)
 	@echo "[ + ] vsh has been compiled"
 
 %.o: %.c vsh.h
-	@$(CC) -o $@ $(FLAGS) $< $(COVERAGE) $(INCLUDES) -c
+	@$(CC) -o $@ $(FLAGS) $< $(INCLUDES) -c
 
 $(LIBFT):
-	@$(MAKE) -C libft
+	@make -C libft
 
 clean:
-	@rm -f $(OBJECTS) $(TESTOBJECTS) main.o
-	@$(MAKE) -C libft clean
+	@rm -f $(OBJECTS) main.o
+	@make -C libft clean
 	@echo "[ - ] removed object files"
-	@rm -f *.gcno
-	@rm -f *.gcda
 
 fclean: clean
 	@rm -f $(NAME) test_coverage vsh_tests
-	@$(MAKE) -C libft fclean
+	@make -C libft fclean
 	@echo "[ - ] removed binaries"
-	@rm -f *.gcov
 
 re: fclean all
 
 run_valgrind_vsh: all
 	@valgrind --tool=memcheck --leak-check=full ./vsh
-
-test_norm: fclean
-	@echo "[ + ] cloning norminette+"
-	@git clone https://github.com/thijsdejong/codam-norminette-plus ~/norminette+
-	@echo "[...] running norminette+"
-	@sh ${TRAVIS_BUILD_DIR}/test/norminette.sh
-
-$(TESTOBJECTS): $(TESTS)
-	@$(CC) $(FLAGS) $^ $(INCLUDES) $(CRITERIONINCLUDES) -c
-
-build_test: $(TESTOBJECTS) $(OBJECTS)
-	@make re COVERAGE=$(COVERAGE)
-	@make $(TESTOBJECTS) COVERAGE=$(COVERAGE)
-	@$(CC) $(FLAGS) $^ $(COVERAGE) $(INCLUDES) $(CRITERION) $(LIB) -o vsh_tests
-
-test: build_test
-	@./vsh_tests
-
-test_valgrind: build_test
-	@valgrind --tool=memcheck --leak-check=full ./vsh_tests
-
-
-test_coverage: COVERAGE = -coverage
-test_coverage: test
-	@gcov $(SRCS)
-
-.PHONY: test_norm test_coverage all clean fclean re test $(TESTOBJECTS)
