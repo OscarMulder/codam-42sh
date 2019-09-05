@@ -601,6 +601,7 @@ void			input_parse_ctrl_y(t_vshdata *data);
 void			input_parse_tab(t_vshdata *data);
 int				input_resize_window_check(t_vshdata *data);
 int				get_curs_row(t_vshdata *data);
+void			input_reset_cursor_pos();
 
 /*
 **----------------------------------shell---------------------------------------

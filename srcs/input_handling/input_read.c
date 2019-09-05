@@ -13,6 +13,39 @@
 #include "vsh.h"
 #include <unistd.h>
 
+void	input_reset_cursor_pos()
+{
+	size_t		i;
+	size_t		answer_len;
+	char		answer[16];
+
+	int ttyfd = open("/dev/tty", O_RDWR);
+	if (ttyfd < 0)
+	{
+		ft_eprintf("Could not open /dev/tty\n");
+		return ;
+	}
+	write(ttyfd, "\x1B[6n\n", 5);
+
+	answer_len = 0;
+	ft_bzero(answer, 16);
+	while (answer_len < sizeof(answer) - 1 &&
+		read(ttyfd, answer + answer_len, 1) == 1)
+		if (answer[answer_len++] == 'R')
+			break;
+	answer[answer_len] = '\0';
+	i = 0;
+	while (answer[i] != '\0' && answer[i] != '[')
+		i++;
+	if (answer[i] != '\0')
+	{
+		i++;
+		if (ft_atoi(&answer[i]) > 1)
+			ft_putstr("%\n");
+	}
+	close(ttyfd);
+}
+
 static int	find_start(t_history **history)
 {
 	int i;
@@ -86,10 +119,10 @@ int			input_read(t_vshdata *data)
 			return (reset_input_read_return(data, FUNCT_ERROR));
 		if (input_parse(data) == NEW_PROMPT)
 			return (NEW_PROMPT);
-		ft_eprintf("Input: %d\n", data->input->c);
 		if (data->input->c == '\n')
 		{
 			curs_go_end(data);
+			ft_putchar('\n');
 			break ;
 		}
 		data->input->c = '\0';
