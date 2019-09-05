@@ -13,7 +13,7 @@
 #include "vsh.h"
 #include <unistd.h>
 
-void	input_reset_cursor_pos(void)
+void		input_reset_cursor_pos(void)
 {
 	size_t		i;
 	int			output;
@@ -27,7 +27,7 @@ void	input_reset_cursor_pos(void)
 	{
 		if (answer[answer_len] == 'R')
 			break ;
-			answer_len++;
+		answer_len++;
 	}
 	answer[answer_len] = '\0';
 	i = 1;
