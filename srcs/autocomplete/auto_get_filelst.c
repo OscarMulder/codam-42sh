@@ -6,7 +6,7 @@
 /*   By: mavan-he <mavan-he@student.codam.nl>         +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2019/08/11 12:28:38 by mavan-he       #+#    #+#                */
-/*   Updated: 2019/09/05 15:12:39 by mavan-he      ########   odam.nl         */
+/*   Updated: 2019/09/05 15:18:11 by mavan-he      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -98,7 +98,7 @@ int			auto_get_filelst(char *match, char **path, t_list **matchlst)
 {
 	DIR				*dir;
 
-	if (**path == '~' && (*path)[1] == '/' &&
+	if ((*path)[0] == '~' && (*path)[1] == '/' &&
 		auto_tilde_expan(path) == FUNCT_ERROR)
 		return (FUNCT_ERROR);
 	dir = opendir(*path);
