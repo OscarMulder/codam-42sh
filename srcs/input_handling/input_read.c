@@ -86,6 +86,7 @@ int			input_read(t_vshdata *data)
 			return (reset_input_read_return(data, FUNCT_ERROR));
 		if (input_parse(data) == NEW_PROMPT)
 			return (NEW_PROMPT);
+		ft_eprintf("Input: %d\n", data->input->c);
 		if (data->input->c == '\n')
 		{
 			curs_go_end(data);
