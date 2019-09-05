@@ -13,7 +13,7 @@
 #include "vsh.h"
 #include <unistd.h>
 
-void	input_reset_cursor_pos()
+void	input_reset_cursor_pos(void)
 {
 	size_t		i;
 	int			output;
@@ -21,12 +21,14 @@ void	input_reset_cursor_pos()
 	char		answer[TC_MAXRESPONSESIZE];
 
 	answer_len = 0;
-	ft_bzero(answer, TC_MAXRESPONSESIZE);
 	write(STDIN_FILENO, "\x1B[6n", 5);
 	while (answer_len < sizeof(answer) - 1 &&
 		read(1, answer + answer_len, 1) == 1)
-		if (answer[answer_len++] == 'R')
-			break;
+	{
+		if (answer[answer_len] == 'R')
+			break ;
+			answer_len++;
+	}
 	answer[answer_len] = '\0';
 	i = 1;
 	while (i < answer_len && answer[i] != ';')
