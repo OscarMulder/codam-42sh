@@ -1,0 +1,81 @@
+String: vsh 
+String: 42sh
+String:  
+String: > 
+String: R
+String: U
+String: N
+String:  
+String: o
+String: p
+String: e
+String: n
+String: s
+String: s
+String: l
+String:  
+String: r
+String: e
+String: q
+String:  
+String: -
+String: n
+String: e
+String: w
+String:  
+String: -
+String: x
+String: 5
+String: 0
+String: 9
+String:  
+String: -
+String: n
+String: o
+String: d
+String: e
+String: s
+String:  
+String: -
+String: n
+String: e
+String: w
+String: k
+String: e
+String: y
+String:  
+String: r
+String: s
+String: a
+String: :
+String: 2
+String: 0
+String: 4
+String: 8
+String:  
+String: -
+String: k
+String: e
+String: y
+String: o
+String: u
+String: t
+String:  
+String: /
+String: e
+String: t
+String: c
+String: /
+String: g
+String: vsh 
+String: 42sh
+String:  
+String: > 
+String: RUN openssl req -new -x509 -nodes -newkey rsa:2048 -keyout /etc/g
+String: vsh 
+String: 42sh
+String:  
+String: > 
+String: RUN openssl req -new -x509 -nodes -newkey rsa:2048 -keyout /etc/g
+String: 
+exit

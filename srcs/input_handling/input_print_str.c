@@ -82,6 +82,7 @@ void		input_print_str(t_vshdata *data, char *str)
 	int		i;
 
 	i = 0;
+	ft_eprintf("String: %s\n", str);
 	while (str[i] != '\0')
 	{
 		ft_putchar(str[i]);
