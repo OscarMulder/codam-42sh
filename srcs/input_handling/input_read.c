@@ -16,34 +16,28 @@
 void	input_reset_cursor_pos()
 {
 	size_t		i;
+	int			output;
 	size_t		answer_len;
 	char		answer[16];
 
-	int ttyfd = open("/dev/tty", O_RDWR);
-	if (ttyfd < 0)
-	{
-		ft_eprintf("Could not open /dev/tty\n");
-		return ;
-	}
-	write(ttyfd, "\x1B[6n\n", 5);
-
 	answer_len = 0;
 	ft_bzero(answer, 16);
+	write(STDIN_FILENO, "\x1B[6n", 5);
 	while (answer_len < sizeof(answer) - 1 &&
-		read(ttyfd, answer + answer_len, 1) == 1)
+		read(1, answer + answer_len, 1) == 1)
 		if (answer[answer_len++] == 'R')
 			break;
 	answer[answer_len] = '\0';
-	i = 0;
-	while (answer[i] != '\0' && answer[i] != '[')
+	i = 1;
+	while (i < answer_len && answer[i] != ';')
 		i++;
 	if (answer[i] != '\0')
 	{
 		i++;
-		if (ft_atoi(&answer[i]) > 1)
-			ft_putstr("%\n");
+		output = ft_atoi(&answer[i]);
+		if (output > 1)
+			ft_putstr("\n");
 	}
-	close(ttyfd);
 }
 
 static int	find_start(t_history **history)
@@ -122,7 +116,6 @@ int			input_read(t_vshdata *data)
 		if (data->input->c == '\n')
 		{
 			curs_go_end(data);
-			ft_putchar('\n');
 			break ;
 		}
 		data->input->c = '\0';
