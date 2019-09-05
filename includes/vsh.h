@@ -244,7 +244,7 @@
 # define INPUT_TAB '\t'
 # define INPUT_CTRL_U 21
 # define INPUT_CTRL_Y 25
-# define TC_MAXRESPONSESIZE 50
+# define TC_MAXRESPONSESIZE 16
 
 /*
 **=================================pipe defines=================================
@@ -365,6 +365,7 @@ typedef struct	s_vshdatacurs
 	t_point	coords;
 	int		cur_ws_col;
 	int		cur_ws_row;
+	int		cur_respec_y;
 }				t_datacurs;
 
 typedef struct	s_vshdatahistory
