@@ -18,7 +18,13 @@
 **
 */
 
-void		builtin_jobs(char **args, t_vshdata *data)
+static void	read_options(char **args, int *options)
 {
 
+}
+
+void		builtin_jobs(char **args, t_vshdata *data)
+{
+	(void)args;
+	(void)data;
 }
