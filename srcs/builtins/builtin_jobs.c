@@ -18,6 +18,10 @@
 **
 */
 
+#define JOB_OPT_NONE	0
+#define JOB_OPT_P		1
+#define JOB_OPT_L		2
+
 static int	read_options(char **args, int *arg, int *options)
 {
 	int i;
@@ -28,9 +32,9 @@ static int	read_options(char **args, int *arg, int *options)
 		while (args[*arg][i] != '\0')
 		{
 			if (args[*arg][i] == 'p')
-				*options |= 1;
+				*options |= JOB_OPT_P;
 			else if (args[*arg][i] == 'l')
-				*options |= 2;
+				*options |= JOB_OPT_L;
 			else
 			{
 				ft_eprintf("vsh: bad option: -%c\n", args[*arg][i]);
@@ -51,7 +55,7 @@ int			builtin_jobs(char **args, t_vshdata *data)
 	(void)data;
 
 	arg = 1;
-	options = 0;
+	options = JOB_OPT_NONE;
 	/* Try to read out all options. */
 	if (read_options(args, &arg, &options) != FUNCT_SUCCESS)
 		return (FUNCT_ERROR);
