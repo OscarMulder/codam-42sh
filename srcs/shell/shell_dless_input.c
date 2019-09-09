@@ -6,7 +6,7 @@
 /*   By: jbrinksm <jbrinksm@student.codam.nl>         +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2019/06/02 13:23:16 by jbrinksm       #+#    #+#                */
-/*   Updated: 2019/08/30 13:56:37 by rkuijper      ########   odam.nl         */
+/*   Updated: 2019/09/09 14:46:15 by jbrinksm      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -55,7 +55,7 @@ int			shell_dless_set_tk_val(t_tokenlst *probe, char **heredoc,
 		else
 			probe->value = ft_strnew(0);
 	}
-	if (probe->value == NULL)
+	if (ret == FUNCT_ERROR || probe->value == NULL)
 	{
 		ft_strdel(heredoc);
 		ft_strdel(&heredoc_delim);
