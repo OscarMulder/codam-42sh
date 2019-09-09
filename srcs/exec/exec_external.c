@@ -6,7 +6,7 @@
 /*   By: omulder <omulder@student.codam.nl>           +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2019/05/31 10:47:19 by tde-jong       #+#    #+#                */
-/*   Updated: 2019/08/22 11:25:02 by omulder       ########   odam.nl         */
+/*   Updated: 2019/09/09 19:39:32 by jbrinksm      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -35,21 +35,24 @@ void			signal_print_newline(int signum)
 }
 
 static void		exec_bin(char *binary, char **args, char **vshenviron,
-t_termios *termios_p)
+t_vshdata *data)
 {
 	pid_t	pid;
 	int		status;
+	t_list	*save_pid;
 
 	if (exec_validate_binary(binary) == FUNCT_ERROR)
 		return ;
-	term_flags_init(termios_p);
+	term_flags_init(data->term->termios_p);
 	pid = fork();
-	if (pid < 0)
+	save_pid = ft_lstnew(exec_get_pid_ptr(pid), sizeof(pid_t));
+	if (pid < 0 || save_pid == NULL)
 		return (err_void_exit(E_FORK_STR, EXIT_FAILURE));
 	if (pid > 0)
 		signal(SIGINT, signal_print_newline);
 	else
 	{
+		ft_eprintf("orig executing: %s\n", binary);
 		execve(binary, args, vshenviron);
 		ft_eprintf(E_FAIL_EXEC_P, binary);
 		exit(EXIT_FAILURE);
@@ -60,7 +63,8 @@ t_termios *termios_p)
 	else if (WIFSIGNALED(status))
 		g_state->exit_code = EXIT_FATAL + WTERMSIG(status);
 	signal(SIGINT, SIG_DFL);
-	term_flags_destroy(termios_p);
+	term_flags_destroy(data->term->termios_p);
+	ft_eprintf("orig done executing: %s\n", binary);
 }
 
 void			exec_external(char **args, t_vshdata *data)
@@ -83,10 +87,10 @@ void			exec_external(char **args, t_vshdata *data)
 	{
 		ft_strdel(&binary);
 		if (exec_find_binary(args[0], data, &binary) == FUNCT_SUCCESS)
-			exec_bin(binary, args, vshenviron, data->term->termios_p);
+			exec_bin(binary, args, vshenviron, data);
 	}
 	else
-		exec_bin(binary, args, vshenviron, data->term->termios_p);
+		exec_bin(binary, args, vshenviron, data);
 	free(vshenviron);
 	ft_strdel(&binary);
 }

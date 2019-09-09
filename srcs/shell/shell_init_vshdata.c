@@ -6,7 +6,7 @@
 /*   By: mavan-he <mavan-he@student.codam.nl>         +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2019/07/29 12:42:44 by mavan-he       #+#    #+#                */
-/*   Updated: 2019/09/04 10:40:32 by mavan-he      ########   odam.nl         */
+/*   Updated: 2019/09/09 19:38:32 by jbrinksm      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -23,10 +23,11 @@ static int	shell_init_data(t_vshdata *data)
 	data->hashtable = shell_init_vshdatahashtable();
 	data->alias = shell_init_vshdataalias();
 	data->termcaps = shell_init_vshdatatermcaps();
+	data->pids = ft_lstnew(exec_get_pid_ptr(UNINIT), sizeof(pid_t));
 	if (data->term == NULL || data->curs == NULL
 		|| data->history == NULL || data->line == NULL || data->prompt == NULL
 		|| data->input == NULL || data->hashtable == NULL || data->alias == NULL
-		|| data->termcaps == NULL)
+		|| data->termcaps == NULL || data->pids == NULL)
 		return (FUNCT_FAILURE);
 	return (FUNCT_SUCCESS);
 }

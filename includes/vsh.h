@@ -6,7 +6,7 @@
 /*   By: omulder <omulder@student.codam.nl>           +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2019/04/10 20:29:42 by jbrinksm       #+#    #+#                */
-/*   Updated: 2019/09/04 11:47:23 by mavan-he      ########   odam.nl         */
+/*   Updated: 2019/09/09 19:38:24 by jbrinksm      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -424,6 +424,7 @@ typedef struct	s_vshdata
 	t_datahashtable	*hashtable;
 	t_dataalias		*alias;
 	t_datatermcaps	*termcaps;
+	t_list			*pids;
 }				t_vshdata;
 
 typedef enum	e_prompt_type
@@ -768,7 +769,7 @@ int				exec_list(t_ast *ast, t_vshdata *data);
 int				exec_and_or(t_ast *ast, t_vshdata *data);
 int				exec_pipe_sequence(t_ast *ast, t_vshdata *data, t_pipes pipes);
 int				exec_command(t_ast *ast, t_vshdata *data, t_pipes pipes);
-void			exec_cmd(char **args, t_vshdata *data);
+void			exec_cmd(char **args, t_vshdata *data, t_pipes pipes);
 bool			exec_builtin(char **args, t_vshdata *data);
 void			exec_external(char **args, t_vshdata *data);
 int				exec_find_binary(char *filename, t_vshdata *data,
@@ -778,6 +779,8 @@ void			exec_quote_remove(t_ast *node);
 int				exec_validate_binary(char *binary);
 int				exec_create_files(t_ast *ast);
 void			signal_print_newline(int signum);
+
+int				*exec_get_pid_ptr(pid_t pid);
 
 /*
 **------------------------------------expan-------------------------------------
