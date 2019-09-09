@@ -339,6 +339,20 @@ typedef struct	s_ht
 typedef struct termios	t_termios;
 
 /*
+**-----------------------------------jobs---------------------------------------
+*/
+
+typedef struct	s_job
+{
+	int				job_id;
+	pid_t			process_id;
+	char			*command_name;
+	int				current;
+	int				state;
+	struct s_job	*next;
+}				t_job;
+
+/*
 **-----------------------------------vsh_data-----------------------------------
 */
 
@@ -411,6 +425,11 @@ typedef	struct	s_vshdataalias
 	char		*alias_file;
 }				t_dataalias;
 
+typedef struct	s_vshdatajobs
+{
+	t_job		*joblist;
+}				t_datajobs;
+
 typedef struct	s_vshdata
 {
 	t_envlst		*envlst;
@@ -424,6 +443,7 @@ typedef struct	s_vshdata
 	t_datahashtable	*hashtable;
 	t_dataalias		*alias;
 	t_datatermcaps	*termcaps;
+	t_datajobs		*jobs;
 }				t_vshdata;
 
 typedef enum	e_prompt_type
