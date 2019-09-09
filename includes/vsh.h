@@ -365,7 +365,7 @@ typedef struct	s_vshdatacurs
 	t_point	coords;
 	int		cur_ws_col;
 	int		cur_ws_row;
-	int		cur_respec_y;
+	int		cur_relative_y;
 }				t_datacurs;
 
 typedef struct	s_vshdatahistory

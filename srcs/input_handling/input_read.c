@@ -21,7 +21,7 @@ void		input_reset_cursor_pos(void)
 	char		answer[TC_MAXRESPONSESIZE];
 
 	answer_len = 0;
-	write(STDIN_FILENO, "\x1B[6n", 5);
+	write(STDIN_FILENO, "\e[6n", 5);
 	while (answer_len < sizeof(answer) - 1 &&
 		read(1, answer + answer_len, 1) == 1)
 	{
@@ -71,7 +71,7 @@ static int	reset_input_read_return(t_vshdata *data, int ret)
 	data->line->len_cur = 0;
 	data->curs->coords.x = data->prompt->prompt_len + 1;
 	data->curs->coords.y = get_curs_row(data);
-	data->curs->cur_respec_y = 1;
+	data->curs->cur_relative_y = 1;
 	data->history->hist_index = find_start(data->history->history);
 	data->history->hist_start = data->history->hist_index - 1;
 	data->history->hist_first = true;
