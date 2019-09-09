@@ -22,7 +22,7 @@ static int	read_options(char **args, int *arg, int *options)
 {
 	int i;
 
-	while (*args[*arg] == '-')
+	while (args[*arg] != NULL && *args[*arg] == '-')
 	{
 		i = 1;
 		while (args[*arg][i] != '\0')
@@ -52,7 +52,16 @@ int			builtin_jobs(char **args, t_vshdata *data)
 
 	arg = 1;
 	options = 0;
+	/* Try to read out all options. */
 	if (read_options(args, &arg, &options) != FUNCT_SUCCESS)
 		return (FUNCT_ERROR);
+	if (args[arg] != NULL) /* Start parsing the rest of the parameters. */
+	{
+
+	}
+	else /* No parameters left after options, start logging ALL jobs. */
+	{
+		
+	}	
 	return (FUNCT_SUCCESS);
 }
