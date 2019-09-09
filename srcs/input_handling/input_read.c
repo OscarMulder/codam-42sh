@@ -21,7 +21,7 @@ void		input_reset_cursor_pos(void)
 	char		answer[TC_MAXRESPONSESIZE];
 
 	answer_len = 0;
-	write(STDIN_FILENO, "\e[6n", 5);
+	write(STDIN_FILENO, TC_GETCURSORPOS, 4);
 	while (answer_len < sizeof(answer) - 1 &&
 		read(1, answer + answer_len, 1) == 1)
 	{
