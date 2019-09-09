@@ -12,7 +12,17 @@
 
 #include "vsh.h"
 
-int		auto_match_builtins(char *match, t_list **matchlst, int match_len)
+static void	match_buildins_2(char *match, int match_len, char **builtin)
+{
+	if (ft_strnequ(match, "alias", match_len))
+		*builtin = "alias";
+	else if (ft_strnequ(match, "unalias", match_len))
+		*builtin = "unalias";	
+	else if (ft_strnequ(match, "jobs", match_len))
+		*builtin = "jobs";
+}
+
+int			auto_match_builtins(char *match, t_list **matchlst, int match_len)
 {
 	char	*builtin;
 
@@ -33,10 +43,8 @@ int		auto_match_builtins(char *match, t_list **matchlst, int match_len)
 		builtin = "history";
 	else if (ft_strnequ(match, "type", match_len))
 		builtin = "type";
-	else if (ft_strnequ(match, "alias", match_len))
-		builtin = "alias";
-	else if (ft_strnequ(match, "unalias", match_len))
-		builtin = "unalias";
+	else
+		match_buildins_2(match, match_len, &builtin);
 	return (builtin == NULL ?
 		FUNCT_FAILURE : auto_add_tolst(matchlst, builtin));
 }
