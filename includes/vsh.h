@@ -6,7 +6,7 @@
 /*   By: omulder <omulder@student.codam.nl>           +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2019/04/10 20:29:42 by jbrinksm       #+#    #+#                */
-/*   Updated: 2019/09/05 14:55:57 by mavan-he      ########   odam.nl         */
+/*   Updated: 2019/09/10 18:40:45 by mavan-he      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -348,7 +348,7 @@ typedef struct	s_point
 	int			y;
 }				t_point;
 
-typedef struct	s_vshdatatermcaps
+typedef struct	s_datatermcaps
 {
 	char	*tc_clear_lines_str;
 	char	*tc_scroll_down_str;
@@ -360,7 +360,7 @@ typedef struct	s_vshdataterm
 	t_termios	*termios_p;
 }				t_vshdataterm;
 
-typedef struct	s_vshdatacurs
+typedef struct	s_datacurs
 {
 	t_point	coords;
 	int		cur_ws_col;
@@ -368,7 +368,7 @@ typedef struct	s_vshdatacurs
 	int		cur_relative_y;
 }				t_datacurs;
 
-typedef struct	s_vshdatahistory
+typedef struct	s_datahistory
 {
 	t_history	**history;
 	char		*history_file;
@@ -377,7 +377,7 @@ typedef struct	s_vshdatahistory
 	int			hist_first;
 }				t_datahistory;
 
-typedef struct	s_vshdataline
+typedef struct	s_dataline
 {
 	char		*line;
 	char		*line_copy;
@@ -386,7 +386,7 @@ typedef struct	s_vshdataline
 	unsigned	len_cur;
 }				t_dataline;
 
-typedef struct	s_vshdataprompt
+typedef struct	s_dataprompt
 {
 	char	*prompt_name;
 	char	*prompt_seperator;
@@ -400,13 +400,13 @@ typedef struct	s_vshdatainput
 	char				c;
 }				t_datainput;
 
-typedef struct	s_vshdatahashtable
+typedef struct	s_datahashtable
 {
 	t_ht	*ht[HT_SIZE];
 	char	ht_flag;
 }				t_datahashtable;
 
-typedef	struct	s_vshdataalias
+typedef	struct	s_dataalias
 {
 	t_aliaslst	*aliaslst;
 	char		*alias_file;
@@ -828,6 +828,8 @@ int				history_change_line(t_vshdata *data,
 					char arrow);
 int				history_index_change_down(t_vshdata *data);
 int				history_index_change_up(t_vshdata *data);
+int				history_expansion(t_vshdata *data);
+char			*history_get_line(t_datahistory *history, char *line, size_t i);
 
 /*
 **--------------------------------hashtable-------------------------------------
