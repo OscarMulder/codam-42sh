@@ -6,7 +6,7 @@
 /*   By: omulder <omulder@student.codam.nl>           +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2019/04/10 20:29:42 by jbrinksm       #+#    #+#                */
-/*   Updated: 2019/09/05 14:55:57 by mavan-he      ########   odam.nl         */
+/*   Updated: 2019/09/10 13:22:50 by omulder       ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -157,6 +157,27 @@
 # define HASH_LR			(1 << 0)
 # define HASH_HIT			1
 # define HASH_NO_HIT		0
+
+/*
+**-----------------------------------fc-----------------------------------------
+*/
+
+# define DEF_FCEDIT			"ed"
+# define FC_OPT_E			(1 << 0)
+# define FC_OPT_L			(1 << 1)
+# define FC_OPT_N			(1 << 2)
+# define FC_OPT_R			(1 << 3)
+# define FC_OPT_S			(1 << 4)
+
+typedef struct	s_fcdata
+{
+	char	options;
+	int		first;
+	int		last;
+	char	*editor;
+	char	*replace;
+	char	*match;
+}				t_fcdata;
 
 /*
 **-----------------------------------builtin------------------------------------
