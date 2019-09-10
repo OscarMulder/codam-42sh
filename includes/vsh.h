@@ -6,7 +6,7 @@
 /*   By: omulder <omulder@student.codam.nl>           +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2019/04/10 20:29:42 by jbrinksm       #+#    #+#                */
-/*   Updated: 2019/09/05 14:55:57 by mavan-he      ########   odam.nl         */
+/*   Updated: 2019/09/10 19:46:49 by anonymous     ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -650,6 +650,7 @@ t_datainput		*shell_init_vshdatainput(void);
 t_dataprompt	*shell_init_vshdataprompt(void);
 t_dataline		*shell_init_vshdataline(void);
 t_datacurs		*shell_init_vshdatacurs(void);
+t_datajobs		*shell_init_vshdatajobs(void);
 
 /*
 **----------------------------------lexer---------------------------------------
@@ -751,6 +752,8 @@ void			builtin_unalias(char **args, t_aliaslst **aliaslst);
 void			builtin_type(char **args, t_envlst *envlst,
 				t_aliaslst *aliaslst);
 int				builtin_jobs(char **args, t_vshdata *data);
+int				builtin_fg(char **args, t_vshdata *data);
+int				builtin_bg(char **args, t_vshdata *data);
 int				builtin_cd(char **args, t_vshdata *data);
 void			builtin_cd_create_newpath(char **newpath, char *argpath);
 int				builtin_cd_change_dir(char *argpath, t_vshdata *data,
