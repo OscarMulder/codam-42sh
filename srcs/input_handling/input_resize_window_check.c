@@ -6,13 +6,14 @@
 /*   By: jbrinksm <jbrinksm@student.codam.nl>         +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2019/08/29 10:40:21 by jbrinksm       #+#    #+#                */
-/*   Updated: 2019/08/30 11:35:22 by jbrinksm      ########   odam.nl         */
+/*   Updated: 2019/09/11 18:36:25 by anonymous     ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "vsh.h"
-#include <sys/ioctl.h>
 #include <term.h>
+#include <signal.h>
+#include <sys/ioctl.h>
 
 static void	input_resize_window(t_vshdata *data, struct winsize new)
 {
@@ -42,24 +43,12 @@ static void	input_resize_window(t_vshdata *data, struct winsize new)
 	curs_move_n_right(data, saved_index);
 }
 
-// int			input_resize_window_check(t_vshdata *data)
-// {
-// 	struct winsize	new;
-
-// 	if (ioctl(STDIN_FILENO, TIOCGWINSZ, &new) == -1)
-// 	{
-// 		ft_eprintf(E_BAD_FD, STDIN_FILENO);
-// 		builtin_exit(NULL, data);
-// 	}
-// 	data->curs->cur_ws_row = new.ws_row;
-// 	if (data->curs->cur_ws_col == UNINIT)
-// 		data->curs->cur_ws_col = new.ws_col;
-// 	else if (data->curs->cur_ws_col != new.ws_col)
-// 		input_resize_window(data, new);
-// 	else
-// 		return (FUNCT_FAILURE);
-// 	return (FUNCT_SUCCESS);
-// }
+/*
+**	A signal function to catch window resize events.
+**	Gets called for the first time in main() to initialize
+**	window size variables, for later resize purposes
+**	and to bind the SIGWINCH signal event to the method.
+*/
 
 void		resize_window_check(int sig)
 {

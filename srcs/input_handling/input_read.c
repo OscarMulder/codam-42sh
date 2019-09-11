@@ -6,7 +6,7 @@
 /*   By: omulder <omulder@student.codam.nl>           +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2019/04/17 14:03:16 by jbrinksm       #+#    #+#                */
-/*   Updated: 2019/09/02 13:58:55 by jbrinksm      ########   odam.nl         */
+/*   Updated: 2019/09/11 18:34:52 by anonymous     ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -110,8 +110,6 @@ int			input_read(t_vshdata *data)
 	reset_input_read_return(data, 0);
 	while (true)
 	{
-		//if (input_resize_window_check(data) == FUNCT_ERROR)
-		//	return (reset_input_read_return(data, FUNCT_ERROR));
 		if (read(STDIN_FILENO, &data->input->c, 1) == -1)
 			return (reset_input_read_return(data, FUNCT_ERROR));
 		if (input_parse(data) == NEW_PROMPT)
@@ -121,7 +119,6 @@ int			input_read(t_vshdata *data)
 			curs_go_end(data);
 			break ;
 		}
-		ft_eprintf("Read: %i\n", data->input->c);
 		data->input->c = '\0';
 	}
 	return (reset_input_read_return(data, FUNCT_SUCCESS));
