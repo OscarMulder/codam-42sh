@@ -19,8 +19,8 @@ int		term_set_attributes(t_vshdataterm *term_p)
 	int	ret;
 
 	term_p->termios_p->c_lflag &= ~(ECHO | ICANON | ISIG);
-	term_p->termios_p->c_cc[VMIN] = 0;
-	term_p->termios_p->c_cc[VTIME] = 2;
+	term_p->termios_p->c_cc[VMIN] = 1;
+	term_p->termios_p->c_cc[VTIME] = 1;
 	ret = tcsetattr(STDIN_FILENO, TCSANOW, term_p->termios_p);
 	if (ret == -1)
 	{

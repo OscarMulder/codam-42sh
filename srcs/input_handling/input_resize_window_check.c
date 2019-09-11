@@ -42,21 +42,41 @@ static void	input_resize_window(t_vshdata *data, struct winsize new)
 	curs_move_n_right(data, saved_index);
 }
 
-int			input_resize_window_check(t_vshdata *data)
-{
-	struct winsize	new;
+// int			input_resize_window_check(t_vshdata *data)
+// {
+// 	struct winsize	new;
 
-	if (ioctl(STDIN_FILENO, TIOCGWINSZ, &new) == -1)
+// 	if (ioctl(STDIN_FILENO, TIOCGWINSZ, &new) == -1)
+// 	{
+// 		ft_eprintf(E_BAD_FD, STDIN_FILENO);
+// 		builtin_exit(NULL, data);
+// 	}
+// 	data->curs->cur_ws_row = new.ws_row;
+// 	if (data->curs->cur_ws_col == UNINIT)
+// 		data->curs->cur_ws_col = new.ws_col;
+// 	else if (data->curs->cur_ws_col != new.ws_col)
+// 		input_resize_window(data, new);
+// 	else
+// 		return (FUNCT_FAILURE);
+// 	return (FUNCT_SUCCESS);
+// }
+
+void		resize_window_check(int sig)
+{
+	struct winsize ws;
+
+	if (sig == SIGWINCH)
 	{
-		ft_eprintf(E_BAD_FD, STDIN_FILENO);
-		builtin_exit(NULL, data);
+		if (ioctl(STDIN_FILENO, TIOCGWINSZ, &ws) == -1)
+		{
+			ft_eprintf(E_BAD_FD, STDIN_FILENO);
+			builtin_exit(NULL, g_data);
+		}
+		g_data->curs->cur_ws_row = ws.ws_row;
+		if (g_data->curs->cur_ws_col == UNINIT)
+			g_data->curs->cur_ws_col = ws.ws_col;
+		else if (g_data->curs->cur_ws_col != ws.ws_col)
+			input_resize_window(g_data, ws);
 	}
-	data->curs->cur_ws_row = new.ws_row;
-	if (data->curs->cur_ws_col == UNINIT)
-		data->curs->cur_ws_col = new.ws_col;
-	else if (data->curs->cur_ws_col != new.ws_col)
-		input_resize_window(data, new);
-	else
-		return (FUNCT_FAILURE);
-	return (FUNCT_SUCCESS);
+	signal(SIGWINCH, resize_window_check);
 }

@@ -110,8 +110,8 @@ int			input_read(t_vshdata *data)
 	reset_input_read_return(data, 0);
 	while (true)
 	{
-		if (input_resize_window_check(data) == FUNCT_ERROR)
-			return (reset_input_read_return(data, FUNCT_ERROR));
+		//if (input_resize_window_check(data) == FUNCT_ERROR)
+		//	return (reset_input_read_return(data, FUNCT_ERROR));
 		if (read(STDIN_FILENO, &data->input->c, 1) == -1)
 			return (reset_input_read_return(data, FUNCT_ERROR));
 		if (input_parse(data) == NEW_PROMPT)
@@ -121,6 +121,7 @@ int			input_read(t_vshdata *data)
 			curs_go_end(data);
 			break ;
 		}
+		ft_eprintf("Read: %i\n", data->input->c);
 		data->input->c = '\0';
 	}
 	return (reset_input_read_return(data, FUNCT_SUCCESS));

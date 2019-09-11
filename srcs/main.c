@@ -34,7 +34,8 @@ int		main(void)
 		return (EXIT_FAILURE);
 	if (redir_save_stdfds(data) == FUNCT_ERROR)
 		return (EXIT_FAILURE);
-	input_resize_window_check(data);
+	signal(SIGWINCH, resize_window_check);
+	//input_resize_window_check(data);
 	shell_start(data);
 	return (EXIT_SUCCESS);
 }
