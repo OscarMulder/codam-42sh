@@ -6,13 +6,13 @@
 /*   By: omulder <omulder@student.codam.nl>           +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2019/09/11 12:54:36 by omulder        #+#    #+#                */
-/*   Updated: 2019/09/11 15:11:34 by omulder       ########   odam.nl         */
+/*   Updated: 2019/09/11 16:56:19 by omulder       ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "vsh.h"
 
-static void	find_start(t_history **history, int *start)
+/* static void	find_start(t_history **history, int *start)
 {
 	int		i;
 	int		smallest;
@@ -28,7 +28,7 @@ static void	find_start(t_history **history, int *start)
 		}
 		i++;
 	}
-}
+} */
 
 /*
 ** Start and end have to be valid indexes on the history_array
@@ -86,13 +86,13 @@ static void	print_reverse(int start, int end, t_history **history, t_fcdata *fc)
 	}
 }
 
-static void	find_end(int start, int *end)
+/* static void	find_end(int start, int *end)
 {
 	if (start == 0)
 		*end = HISTORY_MAX - 1;
 	else
 		*end = start - 1;
-}
+} */
 
 void		fc_list(t_datahistory *history, t_fcdata *fc)
 {
@@ -101,10 +101,14 @@ void		fc_list(t_datahistory *history, t_fcdata *fc)
 
 	if (fc->first == NULL)
 	{
-		find_start(history->history, &start);
-		find_end(start, &end);
+		end = history->hist_start + 1;
+		start = end - 16;
+		ft_eprintf("start: %d\nend: %d\n", start, end);
+		if (start < 0 && history->history[0]->number != 1)
+			start = HISTORY_MAX - start;
+		else
+			start = 0;
 	}
-	else
 	if (fc->options & FC_OPT_R)
 		print_reverse(start, end, history->history, fc);
 	else
