@@ -6,7 +6,7 @@
 /*   By: omulder <omulder@student.codam.nl>           +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2019/04/10 20:29:42 by jbrinksm       #+#    #+#                */
-/*   Updated: 2019/09/11 12:47:54 by omulder       ########   odam.nl         */
+/*   Updated: 2019/09/11 13:44:22 by omulder       ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -399,7 +399,7 @@ typedef struct	s_vshdatahistory
 	char		*history_file;
 	int			hist_index;
 	int			hist_start;
-	int			hist_first;
+	int			hist_isfirst;
 }				t_datahistory;
 
 typedef struct	s_vshdataline
