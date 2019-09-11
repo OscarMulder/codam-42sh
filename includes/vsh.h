@@ -6,7 +6,7 @@
 /*   By: omulder <omulder@student.codam.nl>           +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2019/04/10 20:29:42 by jbrinksm       #+#    #+#                */
-/*   Updated: 2019/09/10 13:22:50 by omulder       ########   odam.nl         */
+/*   Updated: 2019/09/11 12:15:34 by omulder       ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -168,12 +168,16 @@
 # define FC_OPT_N			(1 << 2)
 # define FC_OPT_R			(1 << 3)
 # define FC_OPT_S			(1 << 4)
+# define U_FC 				"fc: usage: fc [-e ename] [-nlr] [first] [last] or \
+fc -s [pat=rep] [cmd]\n"
+# define E_FC_REQARG		SHELL "fc: %s: option requires an argument\n"
+# define E_FC_INV_OPT		SHELL ": fc: %.2s: invalid option\n"
 
 typedef struct	s_fcdata
 {
 	char	options;
-	int		first;
-	int		last;
+	char	*first;
+	char	*last;
 	char	*editor;
 	char	*replace;
 	char	*match;
@@ -763,6 +767,7 @@ int				cd_change_dir_error(char *realpath, char *argpath,
 					char **newpath, char **currpath);
 int				cd_alloc_error(void);
 int				cd_invalid_option(char c);
+void			builtin_fc(char **args, t_vshdata *data);
 
 /*
 **---------------------------------tools----------------------------------------
