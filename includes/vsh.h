@@ -342,6 +342,10 @@ typedef struct termios	t_termios;
 **-----------------------------------jobs---------------------------------------
 */
 
+# define JOB_EXIT		0
+# define JOB_RUNNING	1
+# define JOB_SUSPEND	2
+
 typedef struct	s_job
 {
 	int				job_id;
@@ -445,6 +449,7 @@ typedef struct	s_vshdata
 	t_datatermcaps	*termcaps;
 	t_datajobs		*jobs;
 }				t_vshdata;
+t_vshdata		*g_vshdata;
 
 typedef enum	e_prompt_type
 {
@@ -621,6 +626,14 @@ void			input_parse_ctrl_y(t_vshdata *data);
 void			input_parse_tab(t_vshdata *data);
 int				input_resize_window_check(t_vshdata *data);
 int				get_curs_row(t_vshdata *data);
+
+/*
+**----------------------------------jobs----------------------------------------
+*/
+
+int				jobs_get_job_state(t_job *job);
+t_job			*jobs_remove_job(t_job *job, pid_t pid);
+int				jobs_add_job(t_vshdata *vshdata, pid_t pid, char *command);
 
 /*
 **----------------------------------shell---------------------------------------

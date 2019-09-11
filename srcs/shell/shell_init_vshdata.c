@@ -37,6 +37,7 @@ t_vshdata	*shell_init_vshdata(void)
 	t_vshdata *data;
 
 	data = ft_memalloc(sizeof(t_vshdata));
+	g_vshdata = data;
 	if (data == NULL)
 	{
 		ft_eprintf(E_ALLOC_STR);

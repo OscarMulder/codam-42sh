@@ -52,8 +52,7 @@ static int	jobs_log_args(t_datajobs *jobs, int options, char **args)
 {
 	int		i;
 	t_job	*job;
-	/* 	If joblist is null right off the bat, we know there are no jobs we can loop through,
-		so return with an error code immediately. */
+	
 	(void)options;
 	if (jobs->joblist == NULL)
 	{
@@ -77,23 +76,23 @@ static int	jobs_log_args(t_datajobs *jobs, int options, char **args)
 static int	jobs_log_all(t_datajobs *jobs, int options)
 {
 	t_job *job;
-	/* If job list is empty, just return a success state. */
+
 	if (jobs->joblist == NULL)
 		return (FUNCT_SUCCESS);
-	/* Start looping through all jobs. */
 	job = jobs->joblist;
 	while (job != NULL)
 	{
 		if (job->process_id == 0)
 		{
 			job = job->next;
-			continue;
+			continue ;
 		}
+		ft_printf("[%i]  + ", job->job_id);
 		if (options & JOB_OPT_L || options & JOB_OPT_P)
-			ft_printf("[%i]  + %i %s  %s\n", job->job_id, job->process_id,
-				job->state == 0 ? "running" : "suspended", job->command_name);
-		else
-			ft_printf("[%i]  + %s %s\n", job->job_id, job->state == 0 ? "running" : "suspended", job->command_name);
+			ft_printf("%i ", job->process_id);
+		ft_printf("%s ", jobs_get_job_state(job) == JOB_RUNNING ?
+			"running" : "suspended");
+		ft_printf("%s\n", job->command_name);
 		job = job->next;
 	}
 	return (FUNCT_SUCCESS);

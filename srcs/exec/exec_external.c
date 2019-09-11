@@ -32,10 +32,11 @@ void			signal_print_newline(int signum)
 {
 	(void)signum;
 	ft_putchar('\n');
+	signal(SIGINT, signal_print_newline);
 }
 
 static void		exec_bin(char *binary, char **args, char **vshenviron,
-t_termios *termios_p)
+t_termios *termios_p, t_vshdata *data)
 {
 	pid_t	pid;
 	int		status;
@@ -47,7 +48,10 @@ t_termios *termios_p)
 	if (pid < 0)
 		return (err_void_exit(E_FORK_STR, EXIT_FAILURE));
 	if (pid > 0)
+	{
+		jobs_add_job(data, pid, binary);
 		signal(SIGINT, signal_print_newline);
+	}
 	else
 	{
 		execve(binary, args, vshenviron);
@@ -83,10 +87,10 @@ void			exec_external(char **args, t_vshdata *data)
 	{
 		ft_strdel(&binary);
 		if (exec_find_binary(args[0], data, &binary) == FUNCT_SUCCESS)
-			exec_bin(binary, args, vshenviron, data->term->termios_p);
+			exec_bin(binary, args, vshenviron, data->term->termios_p, data);
 	}
 	else
-		exec_bin(binary, args, vshenviron, data->term->termios_p);
+		exec_bin(binary, args, vshenviron, data->term->termios_p, data);
 	free(vshenviron);
 	ft_strdel(&binary);
 }
