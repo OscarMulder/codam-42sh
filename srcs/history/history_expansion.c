@@ -6,7 +6,7 @@
 /*   By: mavan-he <mavan-he@student.codam.nl>         +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2019/09/10 12:37:29 by mavan-he       #+#    #+#                */
-/*   Updated: 2019/09/12 15:42:15 by mavan-he      ########   odam.nl         */
+/*   Updated: 2019/09/12 18:18:30 by mavan-he      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -24,15 +24,13 @@
 int		history_expand(t_datahistory *history, char **line, size_t *i)
 {
 	char *history_line;
-	if (ft_strchr("\n\t =(", (*line)[*i + 1]) != NULL
-		|| (*line)[*i + 1] == '\0')
-		return (FUNCT_SUCCESS);
+
 	history_line = history_get_line(history, *line, *i);
 	if (history_line == NULL)
 		return (FUNCT_ERROR);
 	if (history_insert_into_line(line, history_line, *i) == FUNCT_ERROR)
 		return (FUNCT_ERROR);
-	*i = *i + ft_strlen(history_line);
+	*i = *i + ft_strlen(history_line) - 1;
 	return (FUNCT_SUCCESS);
 }
 
@@ -43,23 +41,23 @@ int		history_expansion(t_vshdata *data)
 
 	state = 0;
 	i = 0;
-	while (data->line->line[i])
+	while (data->line->line[i] != '\0')
 	{
-		if (data->line->line[i])
-		{
-			if (data->line->line[i] == '\\')
-				i++;
-			else if (data->line->line[i] == '\'')
-				state ^= T_STATE_SQUOTE;
-			else if (data->line->line[i] == '!' &&
-				(state & T_STATE_SQUOTE) == false)
-			{
-				if (history_expand(data->history, &data->line->line, &i)
-					!= FUNCT_SUCCESS)
-					return (FUNCT_ERROR);
-			}
+		if (data->line->line[i] == '\\')
 			i++;
+		else if (data->line->line[i] == '\'')
+			state ^= T_STATE_SQUOTE;
+		else if (data->line->line[i] == '!' && (state & T_STATE_SQUOTE) == false
+			&& ft_strchr("\n\t =(", data->line->line[i + 1]) == NULL)
+		{
+			if (history_expand(data->history, &data->line->line, &i)
+				!= FUNCT_SUCCESS)
+				return (FUNCT_ERROR);
+			state |= HIST_EXPANDED;
 		}
+		i++;
 	}
+	if (state & HIST_EXPANDED)
+		ft_printf("\n%s", data->line->line); // without newline ?
 	return (FUNCT_SUCCESS);
 }

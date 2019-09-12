@@ -6,7 +6,7 @@
 /*   By: omulder <omulder@student.codam.nl>           +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2019/04/10 20:29:42 by jbrinksm       #+#    #+#                */
-/*   Updated: 2019/09/12 15:41:26 by mavan-he      ########   odam.nl         */
+/*   Updated: 2019/09/12 18:18:10 by mavan-he      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -266,6 +266,7 @@
 # define ARROW_DOWN	    2
 # define HISTFILENAME	".vsh_history"
 # define HIST_SEPARATE	-1
+# define HIST_EXPANDED	(1 << 2)
 
 /*
 **===============================personal headers===============================
