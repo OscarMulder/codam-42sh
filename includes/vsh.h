@@ -432,6 +432,7 @@ typedef	struct	s_vshdataalias
 typedef struct	s_vshdatajobs
 {
 	t_job		*joblist;
+	int			current_job;
 }				t_datajobs;
 
 typedef struct	s_vshdata
