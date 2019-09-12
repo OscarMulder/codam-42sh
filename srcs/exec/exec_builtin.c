@@ -6,13 +6,34 @@
 /*   By: omulder <omulder@student.codam.nl>           +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2019/05/29 16:59:41 by omulder        #+#    #+#                */
-/*   Updated: 2019/08/26 18:40:47 by jbrinksm      ########   odam.nl         */
+/*   Updated: 2019/09/10 20:02:49 by anonymous     ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "vsh.h"
 
-bool	exec_builtin(char **args, t_vshdata *data)
+static bool		exec_builtin_2(char **args, t_vshdata *data)
+{
+	if (ft_strequ(args[0], "history"))
+		history_print(data->history->history);
+	else if (ft_strequ(args[0], "type"))
+		builtin_type(args, data->envlst, data->alias->aliaslst);
+	else if (ft_strequ(args[0], "alias"))
+		builtin_alias(args, &data->alias->aliaslst);
+	else if (ft_strequ(args[0], "unalias"))
+		builtin_unalias(args, &data->alias->aliaslst);
+	else if (ft_strequ(args[0], "jobs"))
+		builtin_jobs(args, data);
+	else if (ft_strequ(args[0], "fg"))
+		builtin_fg(args, data);
+	else if (ft_strequ(args[0], "bg"))
+		builtin_bg(args, data);
+	else
+		return (false);
+	return (true);
+}
+
+bool			exec_builtin(char **args, t_vshdata *data)
 {
 	if (ft_strequ(args[0], "echo"))
 		builtin_echo(args);
@@ -26,17 +47,9 @@ bool	exec_builtin(char **args, t_vshdata *data)
 		builtin_set(args, data->envlst);
 	else if (ft_strequ(args[0], "unset"))
 		builtin_unset(args, data->envlst);
-	else if (ft_strequ(args[0], "history"))
-		history_print(data->history->history);
-	else if (ft_strequ(args[0], "type"))
-		builtin_type(args, data->envlst, data->alias->aliaslst);
-	else if (ft_strequ(args[0], "alias"))
-		builtin_alias(args, &data->alias->aliaslst);
-	else if (ft_strequ(args[0], "unalias"))
-		builtin_unalias(args, &data->alias->aliaslst);
 	else if (ft_strequ(args[0], "hash"))
 		builtin_hash(args, data);
-	else
+	else if (exec_builtin_2(args, data) == false)
 		return (false);
 	return (true);
 }

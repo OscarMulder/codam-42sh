@@ -6,7 +6,7 @@
 /*   By: omulder <omulder@student.codam.nl>           +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2019/04/10 20:29:42 by jbrinksm       #+#    #+#                */
-/*   Updated: 2019/09/09 19:38:24 by jbrinksm      ########   odam.nl         */
+/*   Updated: 2019/09/12 14:18:42 by jbrinksm      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -244,7 +244,7 @@
 # define INPUT_TAB '\t'
 # define INPUT_CTRL_U 21
 # define INPUT_CTRL_Y 25
-# define TC_MAXRESPONSESIZE 50
+# define TC_MAXRESPONSESIZE 16
 
 /*
 **=================================pipe defines=================================
@@ -339,6 +339,24 @@ typedef struct	s_ht
 typedef struct termios	t_termios;
 
 /*
+**-----------------------------------jobs---------------------------------------
+*/
+
+# define JOB_EXIT		0
+# define JOB_RUNNING	1
+# define JOB_SUSPEND	2
+
+typedef struct	s_job
+{
+	int				job_id;
+	pid_t			process_id;
+	char			*command_name;
+	int				current;
+	int				state;
+	struct s_job	*next;
+}				t_job;
+
+/*
 **-----------------------------------vsh_data-----------------------------------
 */
 
@@ -365,6 +383,7 @@ typedef struct	s_vshdatacurs
 	t_point	coords;
 	int		cur_ws_col;
 	int		cur_ws_row;
+	int		cur_relative_y;
 }				t_datacurs;
 
 typedef struct	s_vshdatahistory
@@ -411,6 +430,12 @@ typedef	struct	s_vshdataalias
 	char		*alias_file;
 }				t_dataalias;
 
+typedef struct	s_vshdatajobs
+{
+	t_job		*joblist;
+	int			current_job;
+}				t_datajobs;
+
 typedef struct	s_vshdata
 {
 	t_envlst		*envlst;
@@ -424,8 +449,10 @@ typedef struct	s_vshdata
 	t_datahashtable	*hashtable;
 	t_dataalias		*alias;
 	t_datatermcaps	*termcaps;
-	t_list			*pids;
+	t_datajobs		*jobs;
+	t_datajobs		*pipe_jobs;
 }				t_vshdata;
+t_vshdata		*g_data;
 
 typedef enum	e_prompt_type
 {
@@ -600,8 +627,18 @@ void			input_parse_ctrl_k(t_vshdata *data);
 void			input_parse_ctrl_u(t_vshdata *data);
 void			input_parse_ctrl_y(t_vshdata *data);
 void			input_parse_tab(t_vshdata *data);
-int				input_resize_window_check(t_vshdata *data);
-int				get_curs_row(t_vshdata *data);
+int				get_curs_row();
+void			input_reset_cursor_pos();
+void			resize_window_check(int sig);
+
+/*
+**----------------------------------jobs----------------------------------------
+*/
+
+int				jobs_get_job_state(t_job *job);
+t_job			*jobs_remove_job(t_job *job, pid_t pid);
+int				jobs_add_job(t_vshdata *vshdata, pid_t pid, char *command);
+int				jobs_add_pipe_job(t_vshdata *vshdata, pid_t pid, char *command);
 
 /*
 **----------------------------------shell---------------------------------------
@@ -631,6 +668,7 @@ t_datainput		*shell_init_vshdatainput(void);
 t_dataprompt	*shell_init_vshdataprompt(void);
 t_dataline		*shell_init_vshdataline(void);
 t_datacurs		*shell_init_vshdatacurs(void);
+t_datajobs		*shell_init_vshdatajobs(void);
 
 /*
 **----------------------------------lexer---------------------------------------
@@ -731,6 +769,9 @@ void			builtin_alias_lstdel(t_aliaslst **lst);
 void			builtin_unalias(char **args, t_aliaslst **aliaslst);
 void			builtin_type(char **args, t_envlst *envlst,
 				t_aliaslst *aliaslst);
+int				builtin_jobs(char **args, t_vshdata *data);
+int				builtin_fg(char **args, t_vshdata *data);
+int				builtin_bg(char **args, t_vshdata *data);
 int				builtin_cd(char **args, t_vshdata *data);
 void			builtin_cd_create_newpath(char **newpath, char *argpath);
 int				builtin_cd_change_dir(char *argpath, t_vshdata *data,
@@ -771,7 +812,7 @@ int				exec_pipe_sequence(t_ast *ast, t_vshdata *data, t_pipes pipes);
 int				exec_command(t_ast *ast, t_vshdata *data, t_pipes pipes);
 void			exec_cmd(char **args, t_vshdata *data, t_pipes pipes);
 bool			exec_builtin(char **args, t_vshdata *data);
-void			exec_external(char **args, t_vshdata *data);
+void			exec_external(char **args, t_vshdata *data, bool is_pipe);
 int				exec_find_binary(char *filename, t_vshdata *data,
 				char **binary);
 int				find_binary(char *filename, t_envlst *envlst, char **binary);
@@ -860,7 +901,7 @@ int				auto_get_cmdlst(char *match, t_envlst *envlst,
 int				auto_add_tolst(t_list **matchlst, char *filename);
 int				auto_match_builtins(char *match, t_list **matchlst,
 				int match_len);
-int				auto_get_filelst(char *match, char *path, t_list **matchlst);
+int				auto_get_filelst(char *match, char **path, t_list **matchlst);
 int				auto_get_varlst(char *match, int match_len, t_envlst *envlst,
 				t_list **matchlst);
 int				auto_find_state(char *line, ssize_t i);

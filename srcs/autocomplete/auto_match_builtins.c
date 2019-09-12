@@ -6,13 +6,27 @@
 /*   By: mavan-he <mavan-he@student.codam.nl>         +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2019/08/10 20:15:06 by mavan-he       #+#    #+#                */
-/*   Updated: 2019/09/02 17:02:55 by mavan-he      ########   odam.nl         */
+/*   Updated: 2019/09/10 19:51:40 by anonymous     ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "vsh.h"
 
-int		auto_match_builtins(char *match, t_list **matchlst, int match_len)
+static void	match_buildins_2(char *match, int match_len, char **builtin)
+{
+	if (ft_strnequ(match, "alias", match_len))
+		*builtin = "alias";
+	else if (ft_strnequ(match, "unalias", match_len))
+		*builtin = "unalias";	
+	else if (ft_strnequ(match, "jobs", match_len))
+		*builtin = "jobs";
+	else if (ft_strnequ(match, "fg", match_len))
+		*builtin = "fg";	
+	else if (ft_strnequ(match, "bg", match_len))
+		*builtin = "bg";
+}
+
+int			auto_match_builtins(char *match, t_list **matchlst, int match_len)
 {
 	char	*builtin;
 
@@ -33,10 +47,8 @@ int		auto_match_builtins(char *match, t_list **matchlst, int match_len)
 		builtin = "history";
 	else if (ft_strnequ(match, "type", match_len))
 		builtin = "type";
-	else if (ft_strnequ(match, "alias", match_len))
-		builtin = "alias";
-	else if (ft_strnequ(match, "unalias", match_len))
-		builtin = "unalias";
+	else
+		match_buildins_2(match, match_len, &builtin);
 	return (builtin == NULL ?
 		FUNCT_FAILURE : auto_add_tolst(matchlst, builtin));
 }

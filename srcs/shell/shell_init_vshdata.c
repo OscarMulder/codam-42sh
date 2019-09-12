@@ -6,7 +6,7 @@
 /*   By: mavan-he <mavan-he@student.codam.nl>         +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2019/07/29 12:42:44 by mavan-he       #+#    #+#                */
-/*   Updated: 2019/09/09 19:38:32 by jbrinksm      ########   odam.nl         */
+/*   Updated: 2019/09/12 13:41:27 by jbrinksm      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -23,11 +23,12 @@ static int	shell_init_data(t_vshdata *data)
 	data->hashtable = shell_init_vshdatahashtable();
 	data->alias = shell_init_vshdataalias();
 	data->termcaps = shell_init_vshdatatermcaps();
-	data->pids = ft_lstnew(exec_get_pid_ptr(UNINIT), sizeof(pid_t));
+	data->jobs = shell_init_vshdatajobs();
+	data->pipe_jobs = shell_init_vshdatajobs();
 	if (data->term == NULL || data->curs == NULL
 		|| data->history == NULL || data->line == NULL || data->prompt == NULL
 		|| data->input == NULL || data->hashtable == NULL || data->alias == NULL
-		|| data->termcaps == NULL || data->pids == NULL)
+		|| data->termcaps == NULL || data->jobs == NULL)
 		return (FUNCT_FAILURE);
 	return (FUNCT_SUCCESS);
 }
@@ -37,11 +38,13 @@ t_vshdata	*shell_init_vshdata(void)
 	t_vshdata *data;
 
 	data = ft_memalloc(sizeof(t_vshdata));
+	g_data = data;
 	if (data == NULL)
 	{
 		ft_eprintf(E_ALLOC_STR);
 		return (NULL);
 	}
+	g_data = data;
 	data->envlst = env_getlst();
 	if (data->envlst == NULL || shell_init_data(data) == FUNCT_FAILURE)
 	{

@@ -11,12 +11,24 @@
 /* ************************************************************************** */
 
 #include "vsh.h"
+#include <signal.h>
 
 static void	reset_exit(int exit_code, t_vshdataterm *term_p)
 {
 	if (term_reset(term_p) == FUNCT_FAILURE)
 		ft_eprintf(E_NOT_RESET);
 	exit(exit_code);
+}
+static void	close_jobs(t_datajobs *jobs)
+{
+	t_job *job;
+
+	job = jobs->joblist;
+	while (job != NULL)
+	{
+		kill(job->process_id, SIGABRT);
+		job = job->next;
+	}
 }
 
 void		builtin_exit(char **args, t_vshdata *data)
@@ -25,6 +37,7 @@ void		builtin_exit(char **args, t_vshdata *data)
 	history_to_file(data);
 	if (args == NULL)
 		reset_exit(g_state->exit_code, data->term);
+	close_jobs(data->jobs);
 	if (args[1] != NULL && args[2] == NULL)
 	{
 		if (ft_aisint(args[1]) == true)

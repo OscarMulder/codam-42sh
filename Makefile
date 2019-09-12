@@ -6,7 +6,7 @@
 #    By: omulder <omulder@student.codam.nl>           +#+                      #
 #                                                    +#+                       #
 #    Created: 2019/04/10 20:30:07 by jbrinksm       #+#    #+#                 #
-#    Updated: 2019/09/09 19:27:47 by jbrinksm      ########   odam.nl          #
+#    Updated: 2019/09/12 13:21:30 by jbrinksm      ########   odam.nl          #
 #                                                                              #
 # **************************************************************************** #
 
@@ -20,7 +20,7 @@ VPATH = ./test ./libft ./srcs ./srcs/builtins ./srcs/input_handling \
 ./srcs/term_settings ./srcs/environment_handling ./srcs/shell \
 ./srcs/tools ./srcs/alias ./test/parser ./test/tools ./test/builtins \
 ./test/environment_handling ./srcs/lexer ./srcs/parser ./srcs/history \
-./srcs/expan ./srcs/autocomplete ./srcs/hashtable \
+./srcs/expan ./srcs/autocomplete ./srcs/hashtable ./srcs/jobs \
 ./srcs/exec ./srcs/redir ./srcs/error_handling ./srcs/exec ./includes
 SRCS = shell_start shell_prompt shell_quote_checker shell_dless_input \
 shell_init_files shell_init_vshdata shell_getcurrentdir \
@@ -46,7 +46,7 @@ builtin_export builtin_export_print builtin_set builtin_unset \
 builtin_alias builtin_alias_set builtin_alias_lstdel builtin_unalias \
 builtin_cd builtin_cd_error builtin_cd_pathparsing \
 builtin_cd_pathparsing_tools builtin_cd_changedir \
-builtin_type builtin_hash \
+builtin_type builtin_hash builtin_jobs builtin_fg_bg \
 lexer lexer_utils lexer_evaluator lexer_scanner \
 lexer_state_if_else lexer_state_single lexer_state_start lexer_state_strings \
 parser_start parser_utils parser_command parser_error \
@@ -65,7 +65,9 @@ print_errors \
 auto_get_cmdlst auto_match_builtins auto_get_filelst auto_get_varlst \
 auto_find_state auto_start auto_add_match_toline auto_find_matches \
 auto_handle_matchlst auto_small_lst auto_big_lst auto_lst_print \
-auto_lst_print_helpers auto_check_dups
+auto_lst_print_helpers auto_check_dups \
+jobs_list_handling jobs_job_utils
+TESTS = unit_test builtin_assign_test
 OBJECTS := $(SRCS:%=%.o)
 SRCS := $(SRCS:%=%.c)
 
