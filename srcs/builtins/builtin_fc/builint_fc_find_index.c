@@ -6,7 +6,7 @@
 /*   By: omulder <omulder@student.codam.nl>           +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2019/09/12 18:16:01 by omulder        #+#    #+#                */
-/*   Updated: 2019/09/12 18:42:17 by omulder       ########   odam.nl         */
+/*   Updated: 2019/09/12 21:01:05 by omulder       ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -73,8 +73,13 @@ static void	find_history_item_num(t_datahistory *history, int num, int *index)
 {
 	int	his_max_num;
 
-	his_max_num = history->history[history->hist_start]->number;
-	ft_eprintf("HISMAXNUM: %d\n\n");
+	if (history->history[0]->number == 1)
+		his_max_num = history->history[history->hist_start]->number;
+	else if ((history->hist_start + 1) == HISTORY_MAX)
+		his_max_num = history->history[0]->number;
+	else
+		his_max_num = history->history[history->hist_start + 1]->number;
+	ft_eprintf("HISMAXNUM: %d\n\n", his_max_num);
 	if (num < 0)
 		num = his_max_num + 1 + num;
 	if (num == 0 || num > his_max_num)
