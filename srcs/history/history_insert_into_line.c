@@ -6,13 +6,13 @@
 /*   By: mavan-he <mavan-he@student.codam.nl>         +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2019/09/12 15:06:45 by mavan-he       #+#    #+#                */
-/*   Updated: 2019/09/12 18:04:06 by mavan-he      ########   odam.nl         */
+/*   Updated: 2019/09/12 18:58:58 by mavan-he      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "vsh.h"
 
-static size_t	history_get_match_len(char *line, size_t i)
+size_t		history_get_match_len(char *line, size_t i)
 {
 	size_t len;
 
@@ -36,7 +36,7 @@ static size_t	history_get_match_len(char *line, size_t i)
 	return (len);
 }
 
-int				history_insert_into_line(char **line, char *hist_line, size_t i)
+int			history_insert_into_line(char **line, char *hist_line, size_t i)
 {
 	size_t	match_len;
 	size_t	hist_len;
