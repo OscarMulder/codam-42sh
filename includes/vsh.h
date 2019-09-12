@@ -244,7 +244,7 @@
 # define INPUT_TAB '\t'
 # define INPUT_CTRL_U 21
 # define INPUT_CTRL_Y 25
-# define TC_MAXRESPONSESIZE 50
+# define TC_MAXRESPONSESIZE 16
 
 /*
 **=================================pipe defines=================================
@@ -383,6 +383,7 @@ typedef struct	s_vshdatacurs
 	t_point	coords;
 	int		cur_ws_col;
 	int		cur_ws_row;
+	int		cur_relative_y;
 }				t_datacurs;
 
 typedef struct	s_vshdatahistory
@@ -450,7 +451,7 @@ typedef struct	s_vshdata
 	t_datatermcaps	*termcaps;
 	t_datajobs		*jobs;
 }				t_vshdata;
-t_vshdata		*g_vshdata;
+t_vshdata		*g_data;
 
 typedef enum	e_prompt_type
 {
@@ -625,8 +626,9 @@ void			input_parse_ctrl_k(t_vshdata *data);
 void			input_parse_ctrl_u(t_vshdata *data);
 void			input_parse_ctrl_y(t_vshdata *data);
 void			input_parse_tab(t_vshdata *data);
-int				input_resize_window_check(t_vshdata *data);
-int				get_curs_row(t_vshdata *data);
+int				get_curs_row();
+void			input_reset_cursor_pos();
+void			resize_window_check(int sig);
 
 /*
 **----------------------------------jobs----------------------------------------

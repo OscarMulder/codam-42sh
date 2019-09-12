@@ -6,7 +6,7 @@
 /*   By: jbrinksm <jbrinksm@student.codam.nl>         +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2019/04/10 20:29:49 by jbrinksm       #+#    #+#                */
-/*   Updated: 2019/09/04 11:25:01 by mavan-he      ########   odam.nl         */
+/*   Updated: 2019/09/11 18:32:11 by anonymous     ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -23,7 +23,7 @@ void			signal_handle(int sig)
 
 	if (sig == SIGSTOP || sig == SIGTSTP)
 	{
-		job = g_vshdata->jobs->joblist;
+		job = g_data->jobs->joblist;
 		while (job != NULL)
 		{
 			kill(job->process_id, SIGSTOP);
@@ -43,18 +43,18 @@ void			sigchld_handle(int sig)
 	if (sig != SIGCHLD)
 		return ;
 	prev = NULL;
-	job = g_vshdata->jobs->joblist;
+	job = g_data->jobs->joblist;
 	while (job != NULL)
 	{
 		if (jobs_get_job_state(job) == JOB_EXIT)
 		{
 			if (prev == NULL)
-				g_vshdata->jobs->joblist = job->next;
+				g_data->jobs->joblist = job->next;
 			else
 				prev->next = job->next;
 			ft_strdel(&job->command_name);
 			free(job);
-			job = g_vshdata->jobs->joblist;
+			job = g_data->jobs->joblist;
 			continue;
 		}
 		prev = job;
@@ -84,7 +84,7 @@ int		main(void)
 		return (EXIT_FAILURE);
 	if (redir_save_stdfds(data) == FUNCT_ERROR)
 		return (EXIT_FAILURE);
-	input_resize_window_check(data);
+	resize_window_check(SIGWINCH);
 	shell_start(data);
 	return (EXIT_SUCCESS);
 }
