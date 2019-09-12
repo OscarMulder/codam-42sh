@@ -26,3 +26,8 @@ int		jobs_get_job_state(t_job *job)
 		return (JOB_EXIT);
 	return (JOB_RUNNING);
 }
+
+void	job_set_active(int job_id)
+{
+	(void)job_id;
+}
