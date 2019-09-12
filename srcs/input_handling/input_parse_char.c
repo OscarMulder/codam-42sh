@@ -105,8 +105,9 @@ static int	empty_input_buffer(t_vshdata *data, int n)
 	{
 		read(STDIN_FILENO, &c, 1);
 		if (c == '\t')
-		c = ' ';
-		if (add_char_at(data, data->line->index + n, c, &data->line->line) == FUNCT_ERROR)
+			c = ' ';
+		if (add_char_at(data, data->line->index + n, c, &data->line->line)
+			== FUNCT_ERROR)
 			return (0);
 		return (empty_input_buffer(data, n + 1));
 	}
@@ -119,8 +120,8 @@ int			input_parse_char(t_vshdata *data)
 
 	if (ft_isprint(data->input->c))
 	{
-		if (add_char_at(data, data->line->index, data->input->c, &data->line->line)
-			== FUNCT_ERROR)
+		if (add_char_at(data, data->line->index, data->input->c,
+			&data->line->line) == FUNCT_ERROR)
 			return (FUNCT_ERROR);
 		old_index = data->line->index + empty_input_buffer(data, 1);
 		input_print_str(data, data->line->line + data->line->index);
