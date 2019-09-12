@@ -6,29 +6,11 @@
 /*   By: omulder <omulder@student.codam.nl>           +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2019/09/11 12:54:36 by omulder        #+#    #+#                */
-/*   Updated: 2019/09/12 15:13:42 by omulder       ########   odam.nl         */
+/*   Updated: 2019/09/12 15:17:09 by omulder       ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "vsh.h"
-
-/* static void	find_start(t_history **history, int *start)
-{
-	int		i;
-	int		smallest;
-
-	i = 0;
-	smallest = HISTORY_MAX + 1;
-	while (i < HISTORY_MAX && history[i]->str != NULL)
-	{
-		if (history[i]->number < smallest)
-		{
-			*start = i;
-			smallest = history[i]->number;
-		}
-		i++;
-	}
-} */
 
 /*
 ** Start and end have to be valid indexes on the history_array
@@ -86,15 +68,8 @@ static void	print_reverse(int start, int end, t_history **history, t_fcdata *fc)
 	}
 }
 
-/* static void	find_end(int start, int *end)
-{
-	if (start == 0)
-		*end = HISTORY_MAX - 1;
-	else
-		*end = start - 1;
-} */
-
-int			find_history_item_str(t_datahistory *history, char *match, int *index)
+int			find_history_item_str(t_datahistory *history, char *match,
+int *index)
 {
 	int i;
 
@@ -174,7 +149,8 @@ int			find_index(t_datahistory *history, char *str, int *index)
 {
 	if (ft_isdigit(str[0]) || str[0] == '+' || str[0] == '-')
 	{
-		if (find_history_item_num(history, ft_atoi(str), index) == FUNCT_FAILURE)
+		if (find_history_item_num(history, ft_atoi(str), index)
+		== FUNCT_FAILURE)
 		{
 			ft_eprintf("ERROR4\n");
 			return (FUNCT_FAILURE);
