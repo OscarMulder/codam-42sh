@@ -6,7 +6,7 @@
 /*   By: omulder <omulder@student.codam.nl>           +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2019/09/11 13:03:14 by omulder        #+#    #+#                */
-/*   Updated: 2019/09/11 13:40:11 by omulder       ########   odam.nl         */
+/*   Updated: 2019/09/12 18:58:53 by omulder       ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -69,4 +69,62 @@ void		fc_list_print_line(t_history *history, t_fcdata *fc)
 		ft_printf("%d\t%s\n", history->number, tmp);
 	if (ret == true)
 		ft_strdel(&tmp);
+}
+
+/*
+** Start and end have to be valid indexes on the history_array
+*/
+
+void		fc_print_regular(int start, int end, t_history **history,
+t_fcdata *fc)
+{
+	int i;
+
+	i = 0;
+	while ((start + i) < HISTORY_MAX &&
+	((end >= start && (start + i) <= end) || end < start) &&
+	history[start + i]->str != NULL)
+	{
+		fc_list_print_line(history[(start + i)], fc);
+		i++;
+	}
+	if ((start + i) >= HISTORY_MAX && end < start)
+	{
+		i = 0;
+		while (i <= end && history[i]->str != NULL)
+		{
+			fc_list_print_line(history[i], fc);
+			i++;
+		}
+	}
+}
+
+/*
+** Start and end have to be valid indexes on the history_array.
+** The function will start printing at end and will decrement untill it reaches
+** start. This is counterintuitive but hey it says reverse so....
+*/
+
+void		fc_print_reverse(int start, int end, t_history **history,
+t_fcdata *fc)
+{
+	int i;
+
+	i = 0;
+	while ((end - i) >= 0 &&
+	((end >= start && (end - i) >= start) || start > end) &&
+	history[end - i]->str != NULL)
+	{
+		fc_list_print_line(history[end - i], fc);
+		i++;
+	}
+	if ((end - i) <= 0 && start > end)
+	{
+		i = HISTORY_MAX - 1;
+		while (i >= start && history[i]->str != NULL)
+		{
+			fc_list_print_line(history[i], fc);
+			i--;
+		}
+	}
 }

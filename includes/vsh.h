@@ -6,7 +6,7 @@
 /*   By: omulder <omulder@student.codam.nl>           +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2019/04/10 20:29:42 by jbrinksm       #+#    #+#                */
-/*   Updated: 2019/09/11 16:48:47 by omulder       ########   odam.nl         */
+/*   Updated: 2019/09/12 18:29:06 by omulder       ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -172,6 +172,7 @@
 fc -s [pat=rep] [cmd]\n"
 # define E_FC_REQARG		SHELL "fc: %s: option requires an argument\n"
 # define E_FC_INV_OPT		SHELL ": fc: %.2s: invalid option\n"
+# define E_FC_OUT_RANGE		SHELL ": fc: history specification out of range\n"
 
 typedef struct	s_fcdata
 {
@@ -285,7 +286,7 @@ typedef struct	s_fcdata
 **----------------------------------history-------------------------------------
 */
 
-# define HISTORY_MAX	500
+# define HISTORY_MAX	25
 # define ARROW_UP	    1
 # define ARROW_DOWN	    2
 # define HISTFILENAME	".vsh_history"
@@ -783,6 +784,12 @@ void			fc_option_suppress(t_fcdata *fc);
 void			fc_option_reverse(t_fcdata *fc);
 void			fc_list(t_datahistory *history, t_fcdata *fc);
 void			fc_list_print_line(t_history *history, t_fcdata *fc);
+void			fc_print_regular(int start, int end, t_history **history,
+				t_fcdata *fc);
+void			fc_print_reverse(int start, int end, t_history **history,
+				t_fcdata *fc);
+int				fc_find_index(t_datahistory *history, char *str, int *index);
+
 /*
 **---------------------------------tools----------------------------------------
 */
