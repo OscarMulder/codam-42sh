@@ -11,8 +11,6 @@
 /* ************************************************************************** */
 
 #include "vsh.h"
-#include <termcap.h>
-#include <sys/ioctl.h>
 
 /*
 **  This function makes sure that when you are inserting a char
