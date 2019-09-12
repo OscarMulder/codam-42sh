@@ -6,7 +6,7 @@
 /*   By: omulder <omulder@student.codam.nl>           +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2019/09/11 12:54:36 by omulder        #+#    #+#                */
-/*   Updated: 2019/09/11 16:56:19 by omulder       ########   odam.nl         */
+/*   Updated: 2019/09/12 13:03:33 by omulder       ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -43,7 +43,7 @@ static void	print_regular(int start, int end, t_history **history, t_fcdata *fc)
 	((end >= start && (start + i) <= end) || end < start) &&
 	history[start + i]->str != NULL)
 	{
-		fc_list_print_line(history[start + i], fc);
+		fc_list_print_line(history[(start + i)], fc);
 		i++;
 	}
 	if ((start + i) > HISTORY_MAX && end < start)
@@ -94,6 +94,16 @@ static void	print_reverse(int start, int end, t_history **history, t_fcdata *fc)
 		*end = start - 1;
 } */
 
+int			find_first(t_datahistory *history, t_fcdata *fc, int *start)
+{
+
+}
+
+int			find_last(t_datahistory *history, t_fcdata *fc, int *end)
+{
+	
+}
+
 void		fc_list(t_datahistory *history, t_fcdata *fc)
 {
 	int start;
@@ -102,12 +112,29 @@ void		fc_list(t_datahistory *history, t_fcdata *fc)
 	if (fc->first == NULL)
 	{
 		end = history->hist_start + 1;
-		start = end - 16;
-		ft_eprintf("start: %d\nend: %d\n", start, end);
+		start = end - 15;
 		if (start < 0 && history->history[0]->number != 1)
 			start = HISTORY_MAX - start;
-		else
+		else if (start < 0)
 			start = 0;
+	}
+	else
+	{
+		if (find_first(history, fc, &start) == FUNCT_ERROR)
+		{
+			ft_eprintf("ERROR1\n");
+			return ;
+		}
+		if (fc->last == NULL)
+			end = history->hist_start + 1;
+		else
+		{
+			if (find_last(history, fc, &end) == FUNCT_ERROR)
+			{
+				ft_eprintf("ERROR2\n");
+				return ;
+			}
+		}
 	}
 	if (fc->options & FC_OPT_R)
 		print_reverse(start, end, history->history, fc);
