@@ -31,6 +31,7 @@ void			signal_handle(int sig)
 		}
 		signal(SIGSTOP, signal_handle);
 		signal(SIGTSTP, signal_handle);
+		ft_putchar('\n');
 	}
 }
 
