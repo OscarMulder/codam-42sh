@@ -6,7 +6,7 @@
 /*   By: jbrinksm <jbrinksm@student.codam.nl>         +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2019/04/10 20:29:49 by jbrinksm       #+#    #+#                */
-/*   Updated: 2019/09/04 11:25:01 by mavan-he      ########   odam.nl         */
+/*   Updated: 2019/09/11 18:32:11 by anonymous     ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -34,7 +34,6 @@ int		main(void)
 		return (EXIT_FAILURE);
 	if (redir_save_stdfds(data) == FUNCT_ERROR)
 		return (EXIT_FAILURE);
-	input_resize_window_check(data);
 	shell_start(data);
 	return (EXIT_SUCCESS);
 }

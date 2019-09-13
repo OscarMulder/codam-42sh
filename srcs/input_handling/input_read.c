@@ -12,6 +12,7 @@
 
 #include "vsh.h"
 #include <unistd.h>
+#include <signal.h>
 
 void		input_reset_cursor_pos(void)
 {
@@ -70,11 +71,12 @@ static int	reset_input_read_return(t_vshdata *data, int ret)
 	data->line->len_max = 64;
 	data->line->len_cur = 0;
 	data->curs->coords.x = data->prompt->prompt_len + 1;
-	data->curs->coords.y = get_curs_row(data);
+	data->curs->coords.y = get_curs_row();
 	data->curs->cur_relative_y = 1;
 	data->history->hist_index = find_start(data->history->history);
 	data->history->hist_start = data->history->hist_index - 1;
 	data->history->hist_isfirst = true;
+	signal(SIGWINCH, SIG_DFL);
 	return (ret);
 }
 
@@ -108,10 +110,9 @@ int			input_read(t_vshdata *data)
 	if (data->line->line == NULL)
 		return (reset_input_read_return(data, FUNCT_ERROR));
 	reset_input_read_return(data, 0);
+	resize_window_check(SIGWINCH);
 	while (true)
 	{
-		if (input_resize_window_check(data) == FUNCT_ERROR)
-			return (reset_input_read_return(data, FUNCT_ERROR));
 		if (read(STDIN_FILENO, &data->input->c, 1) == -1)
 			return (reset_input_read_return(data, FUNCT_ERROR));
 		if (input_parse(data) == NEW_PROMPT)
@@ -121,7 +122,6 @@ int			input_read(t_vshdata *data)
 			curs_go_end(data);
 			break ;
 		}
-		data->input->c = '\0';
 	}
 	return (reset_input_read_return(data, FUNCT_SUCCESS));
 }
