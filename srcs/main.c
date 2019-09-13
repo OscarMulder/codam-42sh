@@ -6,7 +6,7 @@
 /*   By: jbrinksm <jbrinksm@student.codam.nl>         +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2019/04/10 20:29:49 by jbrinksm       #+#    #+#                */
-/*   Updated: 2019/09/13 16:33:36 by jbrinksm      ########   odam.nl         */
+/*   Updated: 2019/09/13 16:47:17 by jbrinksm      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -54,30 +54,30 @@ static void		kill_useless_progs(void)
 
 void			sigchld_handle(int sig)
 {
-	// t_job		*job;
-	// t_job		*prev;
+	t_job		*job;
+	t_job		*prev;
 
 	if (sig != SIGCHLD)
 		return ;
 	kill_useless_progs();
-	// prev = NULL;
-	// job = g_data->jobs->joblist;
-	// while (job != NULL)
-	// {
-	// 	if (tools_get_pid_state(job->process_id) == PID_EXIT)
-	// 	{
-	// 		if (prev == NULL)
-	// 			g_data->jobs->joblist = job->next;
-	// 		else
-	// 			prev->next = job->next;
-	// 		ft_strdel(&job->command_name);
-	// 		// free(job); THIS CAUSES MANY ERRORS
-	// 		job = g_data->jobs->joblist;
-	// 		continue;
-	// 	}
-	// 	prev = job;
-	// 	job = job->next;
-	// }
+	prev = NULL;
+	job = g_data->jobs->joblist;
+	while (job != NULL)
+	{
+		if (tools_get_pid_state(job->process_id) == PID_EXIT)
+		{
+			if (prev == NULL)
+				g_data->jobs->joblist = job->next;
+			else
+				prev->next = job->next;
+			ft_strdel(&job->command_name);
+			free(job); //IS CAUSES MANY ERRORS
+			job = g_data->jobs->joblist;
+			continue;
+		}
+		prev = job;
+		job = job->next;
+	}
 	signal(SIGCHLD, sigchld_handle);
 }
 
@@ -102,7 +102,6 @@ int		main(void)
 		return (EXIT_FAILURE);
 	if (redir_save_stdfds(data) == FUNCT_ERROR)
 		return (EXIT_FAILURE);
-	resize_window_check(SIGWINCH);
 	shell_start(data);
 	return (EXIT_SUCCESS);
 }
