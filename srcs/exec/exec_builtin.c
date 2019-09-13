@@ -12,7 +12,16 @@
 
 #include "vsh.h"
 
-bool	exec_builtin(char **args, t_vshdata *data)
+static bool	exec_builtin_cont(char **args, t_vshdata *data)
+{
+	if (ft_strequ(args[0], "hash"))
+		builtin_hash(args, data);
+	else
+		return (false);
+	return (true);
+}
+
+bool		exec_builtin(char **args, t_vshdata *data)
 {
 	if (ft_strequ(args[0], "echo"))
 		builtin_echo(args);
@@ -36,9 +45,7 @@ bool	exec_builtin(char **args, t_vshdata *data)
 		builtin_alias(args, &data->alias->aliaslst);
 	else if (ft_strequ(args[0], "unalias"))
 		builtin_unalias(args, &data->alias->aliaslst);
-	else if (ft_strequ(args[0], "hash"))
-		builtin_hash(args, data);
 	else
-		return (false);
+		return (exec_builtin_cont);
 	return (true);
 }
