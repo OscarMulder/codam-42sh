@@ -26,3 +26,8 @@ int		tools_get_pid_state(pid_t pid)
 		return (PID_EXIT);
 	return (PID_RUNNING);
 }
+
+void	job_set_active(int job_id)
+{
+	(void)job_id;
+}
