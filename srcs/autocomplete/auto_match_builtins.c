@@ -6,7 +6,7 @@
 /*   By: mavan-he <mavan-he@student.codam.nl>         +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2019/08/10 20:15:06 by mavan-he       #+#    #+#                */
-/*   Updated: 2019/09/13 17:08:47 by mavan-he      ########   odam.nl         */
+/*   Updated: 2019/09/13 17:09:20 by mavan-he      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -51,5 +51,5 @@ int			auto_match_builtins(char *match, t_list **matchlst, int match_len)
 		ret = auto_add_tolst(matchlst, "type");
 	if (ret == FUNCT_ERROR)
 		return (ret);
-	return (auto_match_builtins2(match, matchlst, match_len));
+	return (auto_match_builtins_continued(match, matchlst, match_len));
 }
