@@ -6,7 +6,7 @@
 /*   By: omulder <omulder@student.codam.nl>           +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2019/09/11 13:03:14 by omulder        #+#    #+#                */
-/*   Updated: 2019/09/12 20:32:28 by omulder       ########   odam.nl         */
+/*   Updated: 2019/09/13 14:45:02 by omulder       ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -81,7 +81,6 @@ t_fcdata *fc)
 	int i;
 
 	i = 0;
-	ft_eprintf("START: %d\n\n", start);
 	while ((start + i) < HISTORY_MAX &&
 	((end >= start && (start + i) <= end) || end < start) &&
 	history[start + i]->str != NULL)
