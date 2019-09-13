@@ -6,7 +6,7 @@
 /*   By: omulder <omulder@student.codam.nl>           +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2019/09/11 12:45:01 by omulder        #+#    #+#                */
-/*   Updated: 2019/09/11 12:52:13 by omulder       ########   odam.nl         */
+/*   Updated: 2019/09/13 14:37:26 by omulder       ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -44,15 +44,4 @@ void	fc_set_default_editor(t_vshdata *data, t_fcdata *fc)
 	fc->editor = env_getvalue("FCEDIT", data->envlst);
 	if (fc->editor == NULL)
 		fc->editor = DEF_FCEDIT;
-}
-
-void	fc_init_fcdata(t_fcdata **fc)
-{
-	*fc = ft_memalloc(sizeof(t_fcdata));
-	(*fc)->editor = NULL;
-	(*fc)->first = NULL;
-	(*fc)->last = NULL;
-	(*fc)->match = NULL;
-	(*fc)->replace = NULL;
-	(*fc)->options = 0;
 }
