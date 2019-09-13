@@ -46,6 +46,6 @@ bool		exec_builtin(char **args, t_vshdata *data)
 	else if (ft_strequ(args[0], "unalias"))
 		builtin_unalias(args, &data->alias->aliaslst);
 	else
-		return (exec_builtin_cont);
+		return (exec_builtin_cont(args, data));
 	return (true);
 }
