@@ -6,7 +6,7 @@
 /*   By: jbrinksm <jbrinksm@student.codam.nl>         +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2019/07/14 10:37:41 by jbrinksm       #+#    #+#                */
-/*   Updated: 2019/09/12 14:54:53 by jbrinksm      ########   odam.nl         */
+/*   Updated: 2019/09/12 18:40:46 by jbrinksm      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -47,7 +47,6 @@ t_pipes		redir_init_pipestruct(void)
 
 int			redir_handle_pipe(t_pipes pipes)
 {
-	ft_eprintf(">>>\t%i %i %i %i\n", pipes.currentpipe[PIPE_READ], pipes.currentpipe[PIPE_WRITE], pipes.parentpipe[PIPE_READ], pipes.parentpipe[PIPE_WRITE]);
 	if (pipes.currentpipe[PIPE_READ] != PIPE_UNINIT
 	&& pipes.currentpipe[PIPE_WRITE] != PIPE_UNINIT)
 	{

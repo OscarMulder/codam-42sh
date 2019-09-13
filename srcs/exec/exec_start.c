@@ -6,7 +6,7 @@
 /*   By: omulder <omulder@student.codam.nl>           +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2019/05/29 17:52:22 by omulder        #+#    #+#                */
-/*   Updated: 2019/09/04 10:23:58 by mavan-he      ########   odam.nl         */
+/*   Updated: 2019/09/13 16:21:12 by jbrinksm      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -59,13 +59,31 @@ int				exec_pipe_sequence(t_ast *ast, t_vshdata *data, t_pipes pipes)
 	return (exec_post_pipe_sequence(ast, data, pipes));
 }
 
+static void		exec_free_pipeseqlist(t_vshdata *data)
+{
+	t_pipeseqlist	*probe;
+	t_pipeseqlist	*deleter;
+
+	probe = data->pipeseq;
+	while (probe != NULL)
+	{
+		deleter = probe;
+		probe = probe->next;
+		free(deleter);
+	}
+	data->pipeseq = NULL;
+}
+
 int				exec_and_or(t_ast *ast, t_vshdata *data)
 {
 	t_pipes pipes;
 
 	pipes = redir_init_pipestruct();
 	if (ast->type != AND_IF && ast->type != OR_IF)
+	{
+		exec_free_pipeseqlist(data);
 		return (exec_pipe_sequence(ast, data, pipes));
+	}
 	if (exec_and_or(ast->left, data) == FUNCT_ERROR)
 		return (FUNCT_ERROR);
 	if (ast->type == AND_IF && g_state->exit_code != EXIT_SUCCESS)

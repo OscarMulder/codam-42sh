@@ -45,7 +45,7 @@ int		builtin_fg(char **args, t_vshdata* data)
 	while (job != NULL)
 	{
 		ft_eprintf("Checking job with pid: %i\n", job->process_id);
-		if (jobs_get_job_state(job) == JOB_SUSPEND)
+		if (tools_get_pid_state(job->process_id) == PID_SUSPEND)
 		{
 			signal(SIGINT, signal_print_newline);
 			term_flags_init(data->term->termios_p);
@@ -72,7 +72,7 @@ int		builtin_bg(char **args, t_vshdata* data)
 	while (job != NULL)
 	{
 		ft_eprintf("Checking job with pid: %i\n", job->process_id);
-		if (jobs_get_job_state(job) == JOB_SUSPEND)
+		if (tools_get_pid_state(job->process_id) == PID_SUSPEND)
 		{
 			kill(job->process_id, SIGCONT);
 			waitpid(job->process_id, &status, WNOHANG);

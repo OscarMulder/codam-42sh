@@ -6,7 +6,7 @@
 /*   By: jbrinksm <jbrinksm@student.codam.nl>         +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2019/04/10 20:29:49 by jbrinksm       #+#    #+#                */
-/*   Updated: 2019/09/11 18:32:11 by anonymous     ########   odam.nl         */
+/*   Updated: 2019/09/13 16:33:36 by jbrinksm      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -35,31 +35,49 @@ void			signal_handle(int sig)
 	}
 }
 
+static void		kill_useless_progs(void)
+{
+	t_pipeseqlist	*pipeseqprobe;
+	bool			killmode;
+
+	pipeseqprobe = g_data->pipeseq;
+	killmode = false;
+	while (pipeseqprobe != NULL)
+	{
+		if (killmode == true)
+			kill(pipeseqprobe->pid, SIGINT);
+		if (tools_get_pid_state(pipeseqprobe->pid) == PID_EXIT)
+			killmode = true;
+		pipeseqprobe = pipeseqprobe->next;
+	}
+}
+
 void			sigchld_handle(int sig)
 {
-	t_job	*job;
-	t_job	*prev;
+	// t_job		*job;
+	// t_job		*prev;
 
 	if (sig != SIGCHLD)
 		return ;
-	prev = NULL;
-	job = g_data->jobs->joblist;
-	while (job != NULL)
-	{
-		if (jobs_get_job_state(job) == JOB_EXIT)
-		{
-			if (prev == NULL)
-				g_data->jobs->joblist = job->next;
-			else
-				prev->next = job->next;
-			ft_strdel(&job->command_name);
-			free(job);
-			job = g_data->jobs->joblist;
-			continue;
-		}
-		prev = job;
-		job = job->next;
-	}
+	kill_useless_progs();
+	// prev = NULL;
+	// job = g_data->jobs->joblist;
+	// while (job != NULL)
+	// {
+	// 	if (tools_get_pid_state(job->process_id) == PID_EXIT)
+	// 	{
+	// 		if (prev == NULL)
+	// 			g_data->jobs->joblist = job->next;
+	// 		else
+	// 			prev->next = job->next;
+	// 		ft_strdel(&job->command_name);
+	// 		// free(job); THIS CAUSES MANY ERRORS
+	// 		job = g_data->jobs->joblist;
+	// 		continue;
+	// 	}
+	// 	prev = job;
+	// 	job = job->next;
+	// }
 	signal(SIGCHLD, sigchld_handle);
 }
 

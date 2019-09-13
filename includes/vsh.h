@@ -6,7 +6,7 @@
 /*   By: omulder <omulder@student.codam.nl>           +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2019/04/10 20:29:42 by jbrinksm       #+#    #+#                */
-/*   Updated: 2019/09/12 14:18:42 by jbrinksm      ########   odam.nl         */
+/*   Updated: 2019/09/13 16:28:41 by jbrinksm      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -333,6 +333,17 @@ typedef struct	s_ht
 }				t_ht;
 
 /*
+**----------------------------------pipes---------------------------------------
+*/
+
+typedef struct	s_pipes
+{
+	int			pipeside;
+	int			parentpipe[2];
+	int			currentpipe[2];
+}				t_pipes;
+
+/*
 **-----------------------------------term---------------------------------------
 */
 
@@ -342,9 +353,9 @@ typedef struct termios	t_termios;
 **-----------------------------------jobs---------------------------------------
 */
 
-# define JOB_EXIT		0
-# define JOB_RUNNING	1
-# define JOB_SUSPEND	2
+# define PID_EXIT		0
+# define PID_RUNNING	1
+# define PID_SUSPEND	2
 
 typedef struct	s_job
 {
@@ -436,6 +447,13 @@ typedef struct	s_vshdatajobs
 	int			current_job;
 }				t_datajobs;
 
+typedef struct	s_pipeseqlist
+{
+	pid_t					pid;
+	// t_pipes					pipes;
+	struct s_pipeseqlist	*next;
+}				t_pipeseqlist;
+
 typedef struct	s_vshdata
 {
 	t_envlst		*envlst;
@@ -450,8 +468,9 @@ typedef struct	s_vshdata
 	t_dataalias		*alias;
 	t_datatermcaps	*termcaps;
 	t_datajobs		*jobs;
-	t_datajobs		*pipe_jobs;
+	t_pipeseqlist	*pipeseq;
 }				t_vshdata;
+
 t_vshdata		*g_data;
 
 typedef enum	e_prompt_type
@@ -554,17 +573,6 @@ typedef struct	s_print
 }				t_print;
 
 /*
-**----------------------------------pipes---------------------------------------
-*/
-
-typedef struct	s_pipes
-{
-	int			pipeside;
-	int			parentpipe[2];
-	int			currentpipe[2];
-}				t_pipes;
-
-/*
 **---------------------------------environment----------------------------------
 */
 
@@ -635,7 +643,6 @@ void			resize_window_check(int sig);
 **----------------------------------jobs----------------------------------------
 */
 
-int				jobs_get_job_state(t_job *job);
 t_job			*jobs_remove_job(t_job *job, pid_t pid);
 int				jobs_add_job(t_vshdata *vshdata, pid_t pid, char *command);
 int				jobs_add_pipe_job(t_vshdata *vshdata, pid_t pid, char *command);
@@ -800,6 +807,7 @@ bool			tool_is_special(char c);
 bool			tool_check_for_special(char *str);
 bool			tool_check_for_whitespace(char *str);
 int				tool_get_paths(t_envlst *envlst, char ***paths);
+int				tools_get_pid_state(pid_t pid);
 
 /*
 **----------------------------------execution-----------------------------------
@@ -820,6 +828,7 @@ void			exec_quote_remove(t_ast *node);
 int				exec_validate_binary(char *binary);
 int				exec_create_files(t_ast *ast);
 void			signal_print_newline(int signum);
+
 
 int				*exec_get_pid_ptr(pid_t pid);
 

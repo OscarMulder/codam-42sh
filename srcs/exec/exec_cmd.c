@@ -6,7 +6,7 @@
 /*   By: omulder <omulder@student.codam.nl>           +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2019/05/29 17:17:48 by omulder        #+#    #+#                */
-/*   Updated: 2019/09/12 15:03:42 by jbrinksm      ########   odam.nl         */
+/*   Updated: 2019/09/13 16:30:11 by jbrinksm      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,42 +18,62 @@
 #include <termios.h>
 #include <signal.h>
 
-static void		term_flags_init(t_termios *termios_p)
+static void	term_flags_init(t_termios *termios_p)
 {
 	termios_p->c_lflag |= (ECHO | ICANON | ISIG);
 	tcsetattr(STDIN_FILENO, TCSANOW, termios_p);
 }
 
-static void		term_flags_destroy(t_termios *termios_p)
+static void	term_flags_destroy(t_termios *termios_p)
 {
 	termios_p->c_lflag &= ~(ECHO | ICANON | ISIG);
 	tcsetattr(STDIN_FILENO, TCSANOW, termios_p);
 }
 
-static void		exec_bin(char *binary, char **args, char **vshenviron,
+static void		exec_add_pid_to_pipeseqlist(t_vshdata *data, pid_t pid)
+{
+	t_pipeseqlist	*probe;
+
+	if (data->pipeseq == NULL)
+	{
+		data->pipeseq = ft_memalloc(sizeof(t_pipeseqlist));
+		if (data->pipeseq == NULL) //WHAT DO WE DO ON FAIL
+			return ;
+		data->pipeseq->pid = pid;
+	}
+	else
+	{
+		probe = data->pipeseq;
+		data->pipeseq = ft_memalloc(sizeof(t_pipeseqlist));
+		if (data->pipeseq == NULL) //WHAT DO WE DO ON FAIL
+			return ;
+		data->pipeseq->pid = pid;
+		data->pipeseq->next = probe;
+	}
+}
+
+static void		exec_bin_handle_parent(t_vshdata *data, pid_t pid, char *binary,
+bool is_pipe)
+{
+	jobs_add_job(data, pid, binary);
+	if (is_pipe)
+		exec_add_pid_to_pipeseqlist(data, pid);
+	signal(SIGINT, signal_print_newline);
+}
+
+static void	exec_bin(char *binary, char **args, char **vshenviron,
 t_vshdata *data, bool is_pipe)
 {
 	pid_t	pid;
-	// t_list	*save_pid;
 
 	if (exec_validate_binary(binary) == FUNCT_ERROR)
 		return ;
 	term_flags_init(data->term->termios_p);
 	pid = fork();
-	// save_pid = ft_lstnew(exec_get_pid_ptr(pid), sizeof(pid_t));
-	if (pid < 0 /* || save_pid == NULL*/)
+	if (pid < 0)
 		return (err_void_exit(E_FORK_STR, EXIT_FAILURE));
-	// ft_lstaddback(data->pids, save_pid);
 	if (pid > 0)
-	{
-		jobs_add_job(data, pid, binary);
-		if (is_pipe)
-		{
-			jobs_add_pipe_job(data, pid, binary);
-			ft_eprintf(">>>\t\t\tBG: %s at %i\n", binary, pid);
-		}
-		signal(SIGINT, signal_print_newline);
-	}
+		exec_bin_handle_parent(data, pid, binary, is_pipe);
 	else
 	{
 		execve(binary, args, vshenviron);
@@ -64,7 +84,7 @@ t_vshdata *data, bool is_pipe)
 	term_flags_destroy(data->term->termios_p);
 }
 
-static void			exec_external_nowait(char **args, t_vshdata *data, bool is_pipe)
+static void	exec_external_nowait(char **args, t_vshdata *data, bool is_pipe)
 {
 	char	**vshenviron;
 	char	*binary;
@@ -98,26 +118,22 @@ void		exec_cmd(char **args, t_vshdata *data, t_pipes pipes)
 
 	if (exec_builtin(args, data) == false)
 	{
-		if (pipes.currentpipe[0] == PIPE_UNINIT && pipes.currentpipe[1] == PIPE_UNINIT
-		&& pipes.parentpipe[0] == PIPE_UNINIT && pipes.parentpipe[1] == PIPE_UNINIT)
+		if (pipes.currentpipe[0] == PIPE_UNINIT
+		&& pipes.currentpipe[1] == PIPE_UNINIT
+		&& pipes.parentpipe[0] == PIPE_UNINIT
+		&& pipes.parentpipe[1] == PIPE_UNINIT)
 			is_pipe = false;
 		else
 			is_pipe = true;
 		if (pipes.pipeside == PIPE_UNINIT || (pipes.pipeside == PIPE_EXTEND
-		&& pipes.currentpipe[0] != PIPE_UNINIT && pipes.currentpipe[1] != PIPE_UNINIT && pipes.parentpipe[0] == PIPE_UNINIT && pipes.parentpipe[1] == PIPE_UNINIT))
-		{
-			// ft_eprintf("CMD: [%s] read FROM [%i] and sends TO [%i]\n", args[0], pipes.currentpipe[0], pipes.currentpipe[1]);
+		&& pipes.currentpipe[0] != PIPE_UNINIT
+		&& pipes.currentpipe[1] != PIPE_UNINIT
+		&& pipes.parentpipe[0] == PIPE_UNINIT
+		&& pipes.parentpipe[1] == PIPE_UNINIT))
 			exec_external(args, data, is_pipe);
-		}
 		else
-		{
-			// ft_eprintf("CMD: [%s] read FROM [%i] and sends TO [%i]\n", args[0], pipes.currentpipe[0], pipes.currentpipe[1]);
 			exec_external_nowait(args, data, is_pipe);
-		}
 	}
-	// DEBUG
-	close(pipes.parentpipe[PIPE_READ]);
-	// DEBUG
 	ft_strarrdel(&args);
 	env_remove_tmp(data->envlst);
 }

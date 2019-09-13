@@ -6,7 +6,7 @@
 /*   By: omulder <omulder@student.codam.nl>           +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2019/05/31 10:47:19 by tde-jong       #+#    #+#                */
-/*   Updated: 2019/09/12 14:19:23 by jbrinksm      ########   odam.nl         */
+/*   Updated: 2019/09/13 15:11:47 by jbrinksm      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -56,34 +56,6 @@ int				jobs_add_job(t_vshdata *vshdata, pid_t pid, char *command)
 	else
 	{
 		job = vshdata->jobs->joblist;
-		jid = job->job_id;
-		while (job->next)
-		{
-			job = job->next;
-			if (job->job_id > jid)
-				jid = job->job_id;
-		}
-		job->next = new_job(pid, jid + 1, command);
-		if (job->next == NULL)
-			return (FUNCT_ERROR);
-	}
-	return (FUNCT_SUCCESS);
-}
-
-int				jobs_add_pipe_job(t_vshdata *vshdata, pid_t pid, char *command)
-{
-	t_job	*job;
-	int		jid;
-
-	if (vshdata->pipe_jobs->joblist == NULL)
-	{
-		vshdata->pipe_jobs->joblist = new_job(pid, 1, command);
-		if (vshdata->pipe_jobs->joblist == NULL)
-			return (FUNCT_ERROR);
-	}
-	else
-	{
-		job = vshdata->pipe_jobs->joblist;
 		jid = job->job_id;
 		while (job->next)
 		{

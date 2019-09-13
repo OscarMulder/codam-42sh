@@ -6,7 +6,7 @@
 /*   By: omulder <omulder@student.codam.nl>           +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2019/05/31 10:47:19 by tde-jong       #+#    #+#                */
-/*   Updated: 2019/09/12 14:29:58 by jbrinksm      ########   odam.nl         */
+/*   Updated: 2019/09/13 16:16:54 by jbrinksm      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -35,31 +35,51 @@ void			signal_print_newline(int signum)
 	signal(SIGINT, signal_print_newline);
 }
 
+static void		exec_add_pid_to_pipeseqlist(t_vshdata *data, pid_t pid)
+{
+	t_pipeseqlist	*probe;
+
+	if (data->pipeseq == NULL)
+	{
+		data->pipeseq = ft_memalloc(sizeof(t_pipeseqlist));
+		if (data->pipeseq == NULL) //WHAT DO WE DO ON FAIL
+			return ;
+		data->pipeseq->pid = pid;
+	}
+	else
+	{
+		probe = data->pipeseq;
+		data->pipeseq = ft_memalloc(sizeof(t_pipeseqlist));
+		if (data->pipeseq == NULL) //WHAT DO WE DO ON FAIL
+			return ;
+		data->pipeseq->pid = pid;
+		data->pipeseq->next = probe;
+	}
+}
+
+static void		exec_bin_handle_parent(t_vshdata *data, pid_t pid, char *binary,
+bool is_pipe)
+{
+	jobs_add_job(data, pid, binary);
+	if (is_pipe)
+		exec_add_pid_to_pipeseqlist(data, pid);
+	signal(SIGINT, signal_print_newline);
+}
+
 static void		exec_bin(char *binary, char **args, char **vshenviron,
-t_termios *termios_p, t_vshdata *data, bool is_pipe)
+t_vshdata *data, bool is_pipe)
 {
 	pid_t	pid;
 	int		status;
-	// t_list	*save_pid;
-	(void)termios_p;
 
 	if (exec_validate_binary(binary) == FUNCT_ERROR)
 		return ;
 	term_flags_init(data->term->termios_p);
 	pid = fork();
-	// save_pid = ft_lstnew(exec_get_pid_ptr(pid), sizeof(pid_t));
-	if (pid < 0 /*|| save_pid == NULL*/)
+	if (pid < 0)
 		return (err_void_exit(E_FORK_STR, EXIT_FAILURE));
 	if (pid > 0)
-	{
-		jobs_add_job(data, pid, binary);
-		if (is_pipe)
-		{
-			jobs_add_pipe_job(data, pid, binary);
-			ft_eprintf(">>>\t\t\tFG: %s at %i\n", binary, pid);
-		}
-		signal(SIGINT, signal_print_newline);
-	}
+		exec_bin_handle_parent(data, pid, binary, is_pipe);
 	else
 	{
 		execve(binary, args, vshenviron);
@@ -73,18 +93,6 @@ t_termios *termios_p, t_vshdata *data, bool is_pipe)
 		g_state->exit_code = EXIT_FATAL + WTERMSIG(status);
 	signal(SIGINT, SIG_DFL);
 	term_flags_destroy(data->term->termios_p);
-	if (is_pipe)
-	{
-		t_job *probe = data->pipe_jobs->joblist;
-		int i = 1;
-		ft_eprintf("\t\tRUNNING THROUGH JOBS\n");
-		while (probe != NULL)
-		{
-			ft_eprintf("!!! EXEC %i: %s\n", i, probe->command_name);
-			probe = probe->next;
-			i++;
-		}
-	}
 }
 
 void			exec_external(char **args, t_vshdata *data, bool is_pipe)
@@ -107,10 +115,10 @@ void			exec_external(char **args, t_vshdata *data, bool is_pipe)
 	{
 		ft_strdel(&binary);
 		if (exec_find_binary(args[0], data, &binary) == FUNCT_SUCCESS)
-			exec_bin(binary, args, vshenviron, data->term->termios_p, data, is_pipe);
+			exec_bin(binary, args, vshenviron, data, is_pipe);
 	}
 	else
-		exec_bin(binary, args, vshenviron, data->term->termios_p, data, is_pipe);
+		exec_bin(binary, args, vshenviron, data, is_pipe);
 	free(vshenviron);
 	ft_strdel(&binary);
 }

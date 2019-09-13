@@ -6,7 +6,7 @@
 /*   By: omulder <omulder@student.codam.nl>           +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2019/04/17 14:03:16 by rkuijper       #+#    #+#                */
-/*   Updated: 2019/09/10 19:51:07 by anonymous     ########   odam.nl         */
+/*   Updated: 2019/09/13 16:24:55 by jbrinksm      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -90,7 +90,7 @@ static int	jobs_log_all(t_datajobs *jobs, int options)
 		ft_printf("[%i]  + ", job->job_id);
 		if (options & JOB_OPT_L || options & JOB_OPT_P)
 			ft_printf("%i ", job->process_id);
-		ft_printf("%s ", jobs_get_job_state(job) == JOB_RUNNING ?
+		ft_printf("%s ", tools_get_pid_state(job->process_id) == PID_RUNNING ?
 			"running" : "suspended");
 		ft_printf("%s\n", job->command_name);
 		job = job->next;

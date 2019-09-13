@@ -6,13 +6,13 @@
 /*   By: omulder <omulder@student.codam.nl>           +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2019/05/31 10:47:19 by tde-jong       #+#    #+#                */
-/*   Updated: 2019/09/13 15:04:32 by jbrinksm      ########   odam.nl         */
+/*   Updated: 2019/09/13 16:24:21 by jbrinksm      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include <vsh.h>
 
-int		exec_get_pid_state(pid_t pid)
+int		tools_get_pid_state(pid_t pid)
 {
 	int		status;
 	pid_t	result;
