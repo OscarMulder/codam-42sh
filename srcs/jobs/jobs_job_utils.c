@@ -6,23 +6,23 @@
 /*   By: omulder <omulder@student.codam.nl>           +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2019/05/31 10:47:19 by tde-jong       #+#    #+#                */
-/*   Updated: 2019/08/22 11:25:02 by omulder       ########   odam.nl         */
+/*   Updated: 2019/09/13 15:04:32 by jbrinksm      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include <vsh.h>
 
-int		jobs_get_job_state(t_job *job)
+int		exec_get_pid_state(pid_t pid)
 {
 	int		status;
 	pid_t	result;
 
-	result = waitpid(job->process_id, &status, WNOHANG);
+	result = waitpid(pid, &status, WNOHANG);
 	if (WIFSTOPPED(status))
-		return (JOB_SUSPEND);
+		return (PID_SUSPEND);
 	if (WIFCONTINUED(status))
-		return (JOB_RUNNING);
+		return (PID_RUNNING);
 	if (result != 0)
-		return (JOB_EXIT);
-	return (JOB_RUNNING);
+		return (PID_EXIT);
+	return (PID_RUNNING);
 }
