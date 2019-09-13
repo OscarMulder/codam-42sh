@@ -6,13 +6,13 @@
 /*   By: mavan-he <mavan-he@student.codam.nl>         +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2019/08/10 20:15:06 by mavan-he       #+#    #+#                */
-/*   Updated: 2019/09/13 15:34:37 by mavan-he      ########   odam.nl         */
+/*   Updated: 2019/09/13 17:08:47 by mavan-he      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "vsh.h"
 
-int		auto_match_builtins2(char *match, t_list **matchlst, int match_len)
+static int	auto_match_builtins_continued(char *match, t_list **matchlst, int match_len)
 {
 	int ret;
 
@@ -28,7 +28,7 @@ int		auto_match_builtins2(char *match, t_list **matchlst, int match_len)
 	return (ret);
 }
 
-int		auto_match_builtins(char *match, t_list **matchlst, int match_len)
+int			auto_match_builtins(char *match, t_list **matchlst, int match_len)
 {
 	int ret;
 
