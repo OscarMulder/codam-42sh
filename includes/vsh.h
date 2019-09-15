@@ -6,7 +6,7 @@
 /*   By: omulder <omulder@student.codam.nl>           +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2019/04/10 20:29:42 by jbrinksm       #+#    #+#                */
-/*   Updated: 2019/09/12 19:00:27 by mavan-he      ########   odam.nl         */
+/*   Updated: 2019/09/15 21:57:53 by mavan-he      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -47,6 +47,7 @@
 # define E_P_BAD_SUBS		SHELL ": %.*s: bad substitution\n"
 # define E_P_CMD_NOT_FOUND	SHELL ": %s: command not found.\n"
 # define E_FAIL_OPEN_P		SHELL ": failed to open/create %s\n"
+# define E_FAIL_OPEN		SHELL ": failed to open file\n"
 # define E_FAIL_EXEC_P		SHELL ": failed to execute %s\n"
 # define E_NO_PIPE			SHELL ": unable to create pipe"
 # define E_P_BAD_REDIR		SHELL ": %s: bad redirect\n"
@@ -65,6 +66,7 @@
 # define E_STAT_STR			SHELL ": could not get stat info of file\n"
 # define E_STAT_P			SHELL ": could not get stat info of %s\n"
 # define E_ALLOC_STR		SHELL ": failed to allocate enough memory\n"
+# define E_READ_FILE_STR	SHELL ": failed to read file\n"
 # define E_READ_STR			SHELL ": failed to read input\n"
 # define E_FORK_STR			SHELL ": fork failed\n"
 # define E_HOME_NOTSET_STR 	SHELL ": environment value HOME not set\n"
@@ -83,6 +85,8 @@
 # define E_TERM_DB_NOT_F	SHELL ": terminfo database could not be found.\n"
 # define E_TERM_NO_SUCH		SHELL ": no such TERM entry in the database\n"
 # define E_STDIN_NOT_TTY	SHELL ": STDIN does not refer to a terminal\n"
+# define E_TERM_INIT		SHELL ": term init failed\n"
+# define E_BINARY_FILE		SHELL ": cannot execute binary file\n"
 # define E_HIST_NOT_FOUND   "\n" SHELL ": !%s: event not found\n"
 # define E_HIST_NUM_ERROR   "\n" SHELL ": %.*s: event not found\n"
 # define E_ALLOC 42
@@ -627,6 +631,11 @@ int				shell_close_quote_and_esc(t_vshdata *data);
 char			shell_quote_checker_find_quote(char *line);
 int				shell_handle_escaped_newlines(t_vshdata *data);
 void			shell_get_valid_prompt(t_vshdata *data, int prompt_type);
+int 			shell_init_term(t_vshdata *data);
+void			shell_args(t_vshdata *data, char *filepath);
+int				shell_get_path(t_vshdata *data, char **filepath);
+int				shell_init_line(t_vshdata *data, char *filepath);
+int				shell_one_line(t_vshdata *data);
 
 t_datatermcaps	*shell_init_vshdatatermcaps(void);
 t_dataalias		*shell_init_vshdataalias(void);
