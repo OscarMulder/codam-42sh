@@ -6,7 +6,7 @@
 /*   By: omulder <omulder@student.codam.nl>           +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2019/09/11 12:54:36 by omulder        #+#    #+#                */
-/*   Updated: 2019/09/13 10:34:47 by omulder       ########   odam.nl         */
+/*   Updated: 2019/09/15 20:54:58 by omulder       ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -33,7 +33,7 @@ int *end)
 		if ((history->hist_start + 1) == HISTORY_MAX)
 			*end = 0;
 		else
-			*end = history->hist_start + 1;
+			*end = history->hist_start;
 	}
 	else
 	{
