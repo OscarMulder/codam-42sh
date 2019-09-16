@@ -6,7 +6,7 @@
 /*   By: omulder <omulder@student.codam.nl>           +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2019/05/31 10:47:19 by tde-jong       #+#    #+#                */
-/*   Updated: 2019/09/16 09:56:27 by jbrinksm      ########   odam.nl         */
+/*   Updated: 2019/09/16 10:07:39 by jbrinksm      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,13 +18,13 @@
 
 static void		term_flags_init(t_termios *termios_p)
 {
-	termios_p->c_lflag |= (ECHO | ICANON | ISIG);
+	termios_p->c_lflag |= (ECHO | ICANON);
 	tcsetattr(STDIN_FILENO, TCSANOW, termios_p);
 }
 
 static void		term_flags_destroy(t_termios *termios_p)
 {
-	termios_p->c_lflag &= ~(ECHO | ICANON | ISIG);
+	termios_p->c_lflag &= ~(ECHO | ICANON);
 	tcsetattr(STDIN_FILENO, TCSANOW, termios_p);
 }
 
