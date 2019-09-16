@@ -6,12 +6,41 @@
 /*   By: omulder <omulder@student.codam.nl>           +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2019/04/17 14:03:16 by jbrinksm       #+#    #+#                */
-/*   Updated: 2019/09/16 13:38:59 by jbrinksm      ########   odam.nl         */
+/*   Updated: 2019/09/16 18:06:41 by jbrinksm      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "vsh.h"
 #include <unistd.h>
+
+void		input_reset_cursor_pos(void)
+{
+	size_t		i;
+	int			output;
+	size_t		answer_len;
+	char		answer[TC_MAXRESPONSESIZE];
+
+	answer_len = 0;
+	write(STDIN_FILENO, TC_GETCURSORPOS, 4);
+	while (answer_len < sizeof(answer) - 1 &&
+		read(1, answer + answer_len, 1) == 1)
+	{
+		if (answer[answer_len] == 'R')
+			break ;
+		answer_len++;
+	}
+	answer[answer_len] = '\0';
+	i = 1;
+	while (i < answer_len && answer[i] != ';')
+		i++;
+	if (answer[i] != '\0')
+	{
+		i++;
+		output = ft_atoi(&answer[i]);
+		if (output > 1)
+			ft_putstr("\e[47;30m%\e[0m\n");
+	}
+}
 
 static int	find_start(t_history **history)
 {
