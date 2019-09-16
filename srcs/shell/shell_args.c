@@ -6,7 +6,7 @@
 /*   By: mavan-he <mavan-he@student.codam.nl>         +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2019/09/15 14:41:31 by mavan-he       #+#    #+#                */
-/*   Updated: 2019/09/15 21:57:30 by mavan-he      ########   odam.nl         */
+/*   Updated: 2019/09/16 17:38:22 by mavan-he      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -43,6 +43,7 @@ void		shell_args(t_vshdata *data, char *filepath)
 		return ;
 	if (shell_init_line(data, filepath) == FUNCT_FAILURE)
 		return ;
+	ft_strdel(&filepath);
 	shell_one_line(data);
 	return ;
 }

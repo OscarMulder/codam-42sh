@@ -6,11 +6,16 @@
 /*   By: mavan-he <mavan-he@student.codam.nl>         +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2019/09/15 21:53:03 by mavan-he       #+#    #+#                */
-/*   Updated: 2019/09/16 16:38:10 by mavan-he      ########   odam.nl         */
+/*   Updated: 2019/09/16 17:40:30 by mavan-he      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "vsh.h"
+
+/*
+** This will be replaced by a cmd line splitter
+** Currently we only handle one line and stop at the first newline
+*/
 
 void	shell_one_line(t_vshdata *data)
 {
@@ -29,5 +34,6 @@ void	shell_one_line(t_vshdata *data)
 		return ;
 	}
 	exec_complete_command(ast, data);
+	shell_dell(&data->line->line, &ast, &token_lst);
 	return ;
 }

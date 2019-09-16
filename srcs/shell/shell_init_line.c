@@ -6,7 +6,7 @@
 /*   By: mavan-he <mavan-he@student.codam.nl>         +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2019/09/15 20:47:40 by mavan-he       #+#    #+#                */
-/*   Updated: 2019/09/16 16:35:31 by mavan-he      ########   odam.nl         */
+/*   Updated: 2019/09/16 17:38:03 by mavan-he      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -45,6 +45,7 @@ int			shell_init_line(t_vshdata *data, char *filepath)
 	ret = read(fd, data->line->line, file_info.st_size);
 	if (ret == -1)
 		return (err_ret_exit(E_READ_FILE_STR, EXIT_FAILURE));
+	close(fd);
 	if (ret > 80)
 		ret = 80;
 	if (is_binary_file(data->line->line, ret) == true)
