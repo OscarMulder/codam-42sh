@@ -6,7 +6,7 @@
 /*   By: omulder <omulder@student.codam.nl>           +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2019/04/10 20:29:42 by jbrinksm       #+#    #+#                */
-/*   Updated: 2019/09/16 10:12:52 by jbrinksm      ########   odam.nl         */
+/*   Updated: 2019/09/16 10:54:47 by jbrinksm      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -419,9 +419,9 @@ typedef struct	s_pipeseqlist
 
 # define EXEC_ISPIPED (1 << 0)
 # define EXEC_WAIT (1 << 1)
-# define PID_EXIT		0
-# define PID_RUNNING	1
-# define PID_SUSPEND	2
+# define PID_STATE_EXIT		0
+# define PID_STATE_RUNNING	1
+# define PID_STATE_SUSPEND	2
 
 typedef struct	s_vshdata
 {
