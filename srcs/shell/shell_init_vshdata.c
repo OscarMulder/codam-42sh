@@ -6,7 +6,7 @@
 /*   By: mavan-he <mavan-he@student.codam.nl>         +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2019/07/29 12:42:44 by mavan-he       #+#    #+#                */
-/*   Updated: 2019/09/04 10:40:32 by mavan-he      ########   odam.nl         */
+/*   Updated: 2019/09/16 09:33:18 by jbrinksm      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -36,6 +36,7 @@ t_vshdata	*shell_init_vshdata(void)
 	t_vshdata *data;
 
 	data = ft_memalloc(sizeof(t_vshdata));
+	g_data = data;
 	if (data == NULL)
 	{
 		ft_eprintf(E_ALLOC_STR);

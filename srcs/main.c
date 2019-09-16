@@ -6,7 +6,7 @@
 /*   By: jbrinksm <jbrinksm@student.codam.nl>         +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2019/04/10 20:29:49 by jbrinksm       #+#    #+#                */
-/*   Updated: 2019/09/04 11:25:01 by mavan-he      ########   odam.nl         */
+/*   Updated: 2019/09/16 10:00:47 by jbrinksm      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -20,6 +20,7 @@ int		main(void)
 {
 	t_vshdata	*data;
 
+	signal(SIGCHLD, signal_handle_child_death);
 	if (isatty(STDIN_FILENO) != 1)
 	{
 		ft_eprintf(E_STDIN_NOT_TTY);
