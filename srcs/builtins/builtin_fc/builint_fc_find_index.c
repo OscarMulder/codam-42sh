@@ -6,7 +6,7 @@
 /*   By: omulder <omulder@student.codam.nl>           +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2019/09/12 18:16:01 by omulder        #+#    #+#                */
-/*   Updated: 2019/09/13 14:44:49 by omulder       ########   odam.nl         */
+/*   Updated: 2019/09/16 16:30:22 by omulder       ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -111,11 +111,20 @@ static void	find_history_item_num(t_datahistory *history, int num, int *index)
 		find_hist_num_backup(history, num, index);
 }
 
-int			fc_find_index(t_datahistory *history, char *str, int *index)
+int			fc_find_index(t_datahistory *history, t_fcdata *fc,
+char *str, int *index)
 {
+	int	num;
+
+	num = 0;
 	if (ft_isdigit(str[0]) || str[0] == '+' || str[0] == '-')
 	{
-		find_history_item_num(history, ft_atoi(str), index);
+		num = ft_atoi(str);
+		if (num < 0 && fc->options & ~FC_FIRST_NEG)
+			fc->options |= FC_FIRST_NEG;
+		else if (num < 0)
+			fc->options |= FC_LAST_NEG;
+		find_history_item_num(history, num, index);
 	}
 	else
 	{

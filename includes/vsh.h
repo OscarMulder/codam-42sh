@@ -6,7 +6,7 @@
 /*   By: omulder <omulder@student.codam.nl>           +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2019/04/10 20:29:42 by jbrinksm       #+#    #+#                */
-/*   Updated: 2019/09/12 19:00:27 by mavan-he      ########   odam.nl         */
+/*   Updated: 2019/09/16 16:27:28 by omulder       ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -170,6 +170,8 @@
 # define FC_OPT_N			(1 << 2)
 # define FC_OPT_R			(1 << 3)
 # define FC_OPT_S			(1 << 4)
+# define FC_FIRST_NEG		(1 << 5)
+# define FC_LAST_NEG		(1 << 6)
 # define U_FC 				"fc: usage: fc [-e ename] [-nlr] [first] [last] or \
 fc -s [pat=rep] [cmd]\n"
 # define E_FC_REQARG		SHELL "fc: %s: option requires an argument\n"
@@ -792,7 +794,8 @@ void			fc_print_regular(int start, int end, t_history **history,
 				t_fcdata *fc);
 void			fc_print_reverse(int start, int end, t_history **history,
 				t_fcdata *fc);
-int				fc_find_index(t_datahistory *history, char *str, int *index);
+int				fc_find_index(t_datahistory *history, t_fcdata *fc,
+				char *str, int *index);
 
 /*
 **---------------------------------tools----------------------------------------
