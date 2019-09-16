@@ -1,0 +1,14 @@
+temp done executing: /usr/bin/base64
+temp executing: /usr/bin/base64
+orig executing: /usr/bin/head
+orig done executing: /usr/bin/head
+temp done executing: /usr/bin/base64
+temp executing: /usr/bin/base64
+orig executing: /usr/bin/head
+head: Error reading stdin
+orig done executing: /usr/bin/head
+temp done executing: /usr/bin/base64
+temp executing: /usr/bin/base64
+temp done executing: /usr/bin/rev
+temp executing: /usr/bin/rev
+orig executing: /usr/bin/head

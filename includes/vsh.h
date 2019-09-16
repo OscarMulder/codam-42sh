@@ -6,7 +6,7 @@
 /*   By: omulder <omulder@student.codam.nl>           +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2019/04/10 20:29:42 by jbrinksm       #+#    #+#                */
-/*   Updated: 2019/09/04 11:47:23 by mavan-he      ########   odam.nl         */
+/*   Updated: 2019/09/16 11:36:09 by jbrinksm      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -411,6 +411,18 @@ typedef	struct	s_vshdataalias
 	char		*alias_file;
 }				t_dataalias;
 
+typedef struct	s_pipeseqlist
+{
+	pid_t					pid;
+	struct s_pipeseqlist	*next;
+}				t_pipeseqlist;
+
+# define EXEC_ISPIPED (1 << 0)
+# define EXEC_WAIT (1 << 1)
+# define PID_STATE_EXIT		0
+# define PID_STATE_RUNNING	1
+# define PID_STATE_SUSPEND	2
+
 typedef struct	s_vshdata
 {
 	t_envlst		*envlst;
@@ -424,7 +436,11 @@ typedef struct	s_vshdata
 	t_datahashtable	*hashtable;
 	t_dataalias		*alias;
 	t_datatermcaps	*termcaps;
+	t_pipeseqlist	*pipeseq;
+	short			exec_flags;
 }				t_vshdata;
+
+t_vshdata		*g_data;
 
 typedef enum	e_prompt_type
 {
@@ -601,6 +617,7 @@ void			input_parse_ctrl_y(t_vshdata *data);
 void			input_parse_tab(t_vshdata *data);
 int				input_resize_window_check(t_vshdata *data);
 int				get_curs_row(t_vshdata *data);
+void			input_reset_cursor_pos(void);
 
 /*
 **----------------------------------shell---------------------------------------
@@ -758,6 +775,7 @@ bool			tool_is_special(char c);
 bool			tool_check_for_special(char *str);
 bool			tool_check_for_whitespace(char *str);
 int				tool_get_paths(t_envlst *envlst, char ***paths);
+int				tools_get_pid_state(pid_t pid);
 
 /*
 **----------------------------------execution-----------------------------------
@@ -768,7 +786,7 @@ int				exec_list(t_ast *ast, t_vshdata *data);
 int				exec_and_or(t_ast *ast, t_vshdata *data);
 int				exec_pipe_sequence(t_ast *ast, t_vshdata *data, t_pipes pipes);
 int				exec_command(t_ast *ast, t_vshdata *data, t_pipes pipes);
-void			exec_cmd(char **args, t_vshdata *data);
+void			exec_cmd(char **args, t_vshdata *data, t_pipes pipes);
 bool			exec_builtin(char **args, t_vshdata *data);
 void			exec_external(char **args, t_vshdata *data);
 int				exec_find_binary(char *filename, t_vshdata *data,
@@ -777,6 +795,13 @@ int				find_binary(char *filename, t_envlst *envlst, char **binary);
 void			exec_quote_remove(t_ast *node);
 int				exec_validate_binary(char *binary);
 int				exec_create_files(t_ast *ast);
+void			exec_add_pid_to_pipeseqlist(t_vshdata *data, pid_t pid);
+
+/*
+**-----------------------------------signals------------------------------------
+*/
+
+void			signal_handle_child_death(int signum);
 void			signal_print_newline(int signum);
 
 /*
