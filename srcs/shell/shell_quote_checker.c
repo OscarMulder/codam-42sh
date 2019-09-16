@@ -6,7 +6,7 @@
 /*   By: jbrinksm <jbrinksm@student.codam.nl>         +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2019/05/31 07:47:19 by jbrinksm       #+#    #+#                */
-/*   Updated: 2019/09/03 17:38:14 by mavan-he      ########   odam.nl         */
+/*   Updated: 2019/09/16 14:47:00 by jbrinksm      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -48,6 +48,7 @@ int		shell_close_unclosed_quotes(t_vshdata *data)
 {
 	char	quote;
 	char	*line_tmp;
+	int		ret;
 
 	quote = shell_quote_checker_find_quote(data->line->line);
 	while (quote != '\0')
@@ -59,10 +60,11 @@ int		shell_close_unclosed_quotes(t_vshdata *data)
 			shell_display_prompt(data, QUOTE_PROMPT);
 		else if (quote == '"')
 			shell_display_prompt(data, DQUOTE_PROMPT);
-		if (input_read(data) == FUNCT_ERROR)
+		ret = input_read(data);
+		if (ret == FUNCT_ERROR || ret == NEW_PROMPT || ret == IR_EOF)
 		{
 			ft_strdel(&line_tmp);
-			return (FUNCT_ERROR);
+			return (ret);
 		}
 		data->line->line = ft_strjoinfree_all(line_tmp, data->line->line);
 		if (data->line->line == NULL)
