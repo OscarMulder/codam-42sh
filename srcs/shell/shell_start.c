@@ -6,7 +6,7 @@
 /*   By: omulder <omulder@student.codam.nl>           +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2019/04/18 16:44:50 by omulder        #+#    #+#                */
-/*   Updated: 2019/09/10 16:51:47 by mavan-he      ########   odam.nl         */
+/*   Updated: 2019/09/16 16:01:58 by mavan-he      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -43,7 +43,7 @@ void	shell_dell(char **line, t_ast **ast, t_tokenlst **token_lst)
 	lexer_tokenlstdel(token_lst);
 }
 
-int		shell_start(t_vshdata *data)
+void	shell_start(t_vshdata *data)
 {
 	t_tokenlst	*token_lst;
 	t_ast		*ast;
@@ -68,5 +68,4 @@ int		shell_start(t_vshdata *data)
 			continue ;
 		exec_complete_command(ast, data);
 	}
-	return (FUNCT_SUCCESS);
 }

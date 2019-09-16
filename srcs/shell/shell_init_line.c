@@ -6,7 +6,7 @@
 /*   By: mavan-he <mavan-he@student.codam.nl>         +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2019/09/15 20:47:40 by mavan-he       #+#    #+#                */
-/*   Updated: 2019/09/15 21:32:16 by mavan-he      ########   odam.nl         */
+/*   Updated: 2019/09/16 16:35:31 by mavan-he      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -49,5 +49,8 @@ int			shell_init_line(t_vshdata *data, char *filepath)
 		ret = 80;
 	if (is_binary_file(data->line->line, ret) == true)
 		return (err_ret_exit(E_BINARY_FILE, EXIT_FAILURE));
+	data->line->line = ft_strjoinfree_s1(data->line->line, "\n");
+	if (data->line->line == NULL)
+		return (err_ret_exit(E_ALLOC_STR, EXIT_FAILURE));
 	return (FUNCT_SUCCESS);
 }

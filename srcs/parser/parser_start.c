@@ -6,7 +6,7 @@
 /*   By: jbrinksm <jbrinksm@student.codam.nl>         +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2019/05/19 19:58:40 by jbrinksm       #+#    #+#                */
-/*   Updated: 2019/09/15 23:02:00 by mavan-he      ########   odam.nl         */
+/*   Updated: 2019/09/16 12:40:30 by mavan-he      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -95,6 +95,5 @@ int			parser_start(t_tokenlst **token_lst, t_ast **ast)
 			parser_return_token_str((tmp)->type));
 		return (ret);
 	}
-	lexer_tokenlstdel(token_lst);
 	return (FUNCT_SUCCESS);
 }

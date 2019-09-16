@@ -6,7 +6,7 @@
 /*   By: omulder <omulder@student.codam.nl>           +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2019/04/10 20:29:42 by jbrinksm       #+#    #+#                */
-/*   Updated: 2019/09/15 21:57:53 by mavan-he      ########   odam.nl         */
+/*   Updated: 2019/09/16 16:04:06 by mavan-he      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -28,6 +28,7 @@
 # define FUNCT_ERROR -1
 # define PROG_FAILURE 1
 # define PROG_SUCCESS 0
+# define SHELL_BUF			42
 # define NEW_PROMPT FUNCT_ERROR
 # define U_ALIAS			"alias: usage: alias [-p] [name[=value] ... ]\n"
 # define U_CD				"cd: usage: cd [-L|-P] [dir]\n"
@@ -71,6 +72,7 @@
 # define E_FORK_STR			SHELL ": fork failed\n"
 # define E_HOME_NOTSET_STR 	SHELL ": environment value HOME not set\n"
 # define E_HIST_READ_STR 	SHELL ": failed to read history file\n"
+# define E_READ_STDIN_STR 	SHELL ": failed to read stdin\n"
 # define E_HIST_OPEN_STR 	SHELL ": failed to open / create history file\n"
 # define E_ALIAS_OPEN_STR 	SHELL ": failed to open alias file\n"
 # define E_ALIAS_READ_STR	SHELL ": failed to read alias file\n"
@@ -624,7 +626,7 @@ int				shell_dless_set_tk_val(t_tokenlst *probe, char **heredoc,
 int				shell_dless_input(t_vshdata *data, t_tokenlst **token_lst);
 int				shell_close_unclosed_quotes(t_vshdata *data);
 int				shell_init_files(t_vshdata *data);
-int				shell_start(t_vshdata *data);
+void			shell_start(t_vshdata *data);
 t_vshdata		*shell_init_vshdata(void);
 char			*shell_getcurrentdir(char *cwd);
 int				shell_close_quote_and_esc(t_vshdata *data);
@@ -635,7 +637,8 @@ int 			shell_init_term(t_vshdata *data);
 void			shell_args(t_vshdata *data, char *filepath);
 int				shell_get_path(t_vshdata *data, char **filepath);
 int				shell_init_line(t_vshdata *data, char *filepath);
-int				shell_one_line(t_vshdata *data);
+void			shell_one_line(t_vshdata *data);
+void			shell_stdin(t_vshdata *data);
 
 t_datatermcaps	*shell_init_vshdatatermcaps(void);
 t_dataalias		*shell_init_vshdataalias(void);
@@ -909,5 +912,6 @@ void			print_node(t_tokenlst *node);
 void			print_tree(t_ast *root);
 void			print_token(t_scanner *scanner);
 void			print_tree(t_ast *root);
+void			print_token_list(t_tokenlst *node);
 
 #endif

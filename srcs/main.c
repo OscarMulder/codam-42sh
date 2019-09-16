@@ -6,15 +6,11 @@
 /*   By: jbrinksm <jbrinksm@student.codam.nl>         +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2019/04/10 20:29:49 by jbrinksm       #+#    #+#                */
-/*   Updated: 2019/09/15 17:20:38 by mavan-he      ########   odam.nl         */
+/*   Updated: 2019/09/16 16:02:27 by mavan-he      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "vsh.h"
-
-/*
-**	ft_printf alloc error handling
-*/
 
 int		main(int argc, char **argv)
 {
@@ -36,11 +32,11 @@ int		main(int argc, char **argv)
 	}
 	if (isatty(STDIN_FILENO) != 1)
 	{
-		ft_eprintf(E_STDIN_NOT_TTY);
-		return (EXIT_FAILURE);
+		shell_stdin(data);
+		return (g_state->exit_code);
 	}
 	if (shell_init_term(data) == FUNCT_ERROR)
 		return (EXIT_FAILURE);
 	shell_start(data);
-	return (EXIT_SUCCESS);
+	return (g_state->exit_code);
 }
