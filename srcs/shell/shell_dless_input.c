@@ -6,7 +6,7 @@
 /*   By: jbrinksm <jbrinksm@student.codam.nl>         +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2019/06/02 13:23:16 by jbrinksm       #+#    #+#                */
-/*   Updated: 2019/08/30 13:56:37 by rkuijper      ########   odam.nl         */
+/*   Updated: 2019/09/16 14:37:19 by jbrinksm      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,17 +17,21 @@ int			shell_dless_read_till_stop(char **heredoc, char *heredoc_delim,
 			t_vshdata *data)
 {
 	char	*line_tmp;
+	int		ret;
 
 	line_tmp = data->line->line;
 	data->line->line = NULL;
 	while (true)
 	{
-		ft_putstr(PROMPT_SEPERATOR);
-		if (input_read(data) == FUNCT_ERROR)
+		shell_display_prompt(data, DLESS_PROMPT);
+		ret = input_read(data);
+		if (ret == FUNCT_ERROR)
 			return (FUNCT_ERROR);
-		ft_putstr("\n");
-		if (ft_strequ(data->line->line, heredoc_delim) == true)
+		else if (ret == NEW_PROMPT)
+			return (NEW_PROMPT);
+		if (ft_strequ(data->line->line, heredoc_delim) == true || ret == IR_EOF)
 			break ;
+		ft_putstr("\n");
 		if (*heredoc == NULL)
 			*heredoc = ft_strdup(data->line->line);
 		else
@@ -38,7 +42,7 @@ int			shell_dless_read_till_stop(char **heredoc, char *heredoc_delim,
 	}
 	ft_strdel(&data->line->line);
 	data->line->line = line_tmp;
-	return (FUNCT_SUCCESS);
+	return (ret);
 }
 
 int			shell_dless_set_tk_val(t_tokenlst *probe, char **heredoc,
@@ -48,18 +52,18 @@ int			shell_dless_set_tk_val(t_tokenlst *probe, char **heredoc,
 
 	ft_strdel(&(probe->value));
 	ret = shell_dless_read_till_stop(heredoc, heredoc_delim, data);
-	if (ret == FUNCT_SUCCESS)
+	if (ret == FUNCT_SUCCESS || ret == IR_EOF)
 	{
 		if (*heredoc != NULL)
 			probe->value = ft_strdup(*heredoc);
 		else
 			probe->value = ft_strnew(0);
 	}
-	if (probe->value == NULL)
+	if (probe->value == NULL || ret == NEW_PROMPT || ret == FUNCT_ERROR)
 	{
 		ft_strdel(heredoc);
 		ft_strdel(&heredoc_delim);
-		return (FUNCT_ERROR);
+		return (ret);
 	}
 	return (FUNCT_SUCCESS);
 }
@@ -94,6 +98,7 @@ int			shell_dless_input(t_vshdata *data, t_tokenlst **token_lst)
 	char		*heredoc;
 	t_tokenlst	*probe;
 	char		*heredoc_delim;
+	int			ret;
 
 	probe = *token_lst;
 	heredoc = NULL;
@@ -105,9 +110,13 @@ int			shell_dless_input(t_vshdata *data, t_tokenlst **token_lst)
 			if (is_valid_heredoc_delim(probe) == false)
 				return (FUNCT_ERROR);
 			heredoc_delim = ft_strjoin(probe->value, "\n");
-			if (heredoc_delim == NULL || shell_dless_set_tk_val(probe, &heredoc,
-			heredoc_delim, data) == FUNCT_ERROR)
+			if (heredoc_delim == NULL)
 				return (return_alloc_error(FUNCT_ERROR));
+			ret = shell_dless_set_tk_val(probe, &heredoc, heredoc_delim, data);
+			if (ret == FUNCT_ERROR)
+				return (return_alloc_error(FUNCT_ERROR));
+			else if (ret == NEW_PROMPT)
+				return (ret);
 			ft_strdel(&heredoc);
 			ft_strdel(&heredoc_delim);
 		}

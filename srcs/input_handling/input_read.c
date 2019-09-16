@@ -6,7 +6,7 @@
 /*   By: omulder <omulder@student.codam.nl>           +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2019/04/17 14:03:16 by jbrinksm       #+#    #+#                */
-/*   Updated: 2019/09/02 13:58:55 by jbrinksm      ########   odam.nl         */
+/*   Updated: 2019/09/16 13:38:59 by jbrinksm      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -57,6 +57,8 @@ static int	input_parse(t_vshdata *data)
 	ret = input_parse_ctrl_d(data);
 	if (ret == NEW_PROMPT)
 		return (reset_input_read_return(data, NEW_PROMPT));
+	else if (ret == IR_EOF)
+		return (IR_EOF);
 	else if (ret == FUNCT_SUCCESS)
 		return (FUNCT_SUCCESS);
 	else if (input_read_ansi(data) == FUNCT_FAILURE)
@@ -72,6 +74,8 @@ static int	input_parse(t_vshdata *data)
 
 int			input_read(t_vshdata *data)
 {
+	int		ret;
+
 	if (data == NULL)
 		return (FUNCT_ERROR);
 	data->line->line = ft_strnew(data->line->len_max);
@@ -84,8 +88,9 @@ int			input_read(t_vshdata *data)
 			return (reset_input_read_return(data, FUNCT_ERROR));
 		if (read(STDIN_FILENO, &data->input->c, 1) == -1)
 			return (reset_input_read_return(data, FUNCT_ERROR));
-		if (input_parse(data) == NEW_PROMPT)
-			return (NEW_PROMPT);
+		ret = input_parse(data);
+		if (ret == NEW_PROMPT || ret == FUNCT_ERROR || ret == IR_EOF)
+			return (ret);
 		if (data->input->c == '\n')
 		{
 			curs_go_end(data);

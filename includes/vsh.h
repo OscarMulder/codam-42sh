@@ -6,7 +6,7 @@
 /*   By: omulder <omulder@student.codam.nl>           +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2019/04/10 20:29:42 by jbrinksm       #+#    #+#                */
-/*   Updated: 2019/09/04 11:47:23 by mavan-he      ########   odam.nl         */
+/*   Updated: 2019/09/16 13:33:32 by jbrinksm      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -25,10 +25,11 @@
 # define PROMPT_SEPERATOR	SEPERATOR " "
 # define FUNCT_FAILURE 0
 # define FUNCT_SUCCESS 1
+# define NEW_PROMPT 2
 # define FUNCT_ERROR -1
 # define PROG_FAILURE 1
 # define PROG_SUCCESS 0
-# define NEW_PROMPT FUNCT_ERROR
+# define IR_EOF 3
 # define U_ALIAS			"alias: usage: alias [-p] [name[=value] ... ]\n"
 # define U_CD				"cd: usage: cd [-L|-P] [dir]\n"
 # define U_EXPORT "export: usage: export [-n] [name[=value] ...] or export -p\n"
@@ -430,7 +431,8 @@ typedef enum	e_prompt_type
 {
 	REGULAR_PROMPT,
 	QUOTE_PROMPT,
-	DQUOTE_PROMPT
+	DQUOTE_PROMPT,
+	DLESS_PROMPT
 }				t_prompt_type;
 
 /*

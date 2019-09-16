@@ -6,7 +6,7 @@
 /*   By: omulder <omulder@student.codam.nl>           +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2019/04/18 16:44:50 by omulder        #+#    #+#                */
-/*   Updated: 2019/09/04 10:46:04 by mavan-he      ########   odam.nl         */
+/*   Updated: 2019/09/16 14:13:03 by jbrinksm      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -40,6 +40,7 @@ int		shell_start(t_vshdata *data)
 {
 	t_tokenlst	*token_lst;
 	t_ast		*ast;
+	int			ret;
 
 	token_lst = NULL;
 	ast = NULL;
@@ -49,7 +50,8 @@ int		shell_start(t_vshdata *data)
 		parser_astdel(&ast);
 		lexer_tokenlstdel(&token_lst);
 		shell_display_prompt(data, REGULAR_PROMPT);
-		if (input_read(data) == FUNCT_ERROR ||
+		ret = input_read(data);
+		if (ret == FUNCT_ERROR || ret == NEW_PROMPT ||
 			shell_close_quote_and_esc(data) == FUNCT_ERROR)
 			continue ;
 		ft_putchar('\n');

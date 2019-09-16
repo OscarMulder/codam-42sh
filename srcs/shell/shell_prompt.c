@@ -6,7 +6,7 @@
 /*   By: jbrinksm <jbrinksm@student.codam.nl>         +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2019/04/11 20:16:38 by jbrinksm       #+#    #+#                */
-/*   Updated: 2019/09/02 13:19:53 by jbrinksm      ########   odam.nl         */
+/*   Updated: 2019/09/16 13:33:15 by jbrinksm      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,6 +18,8 @@ void	shell_get_valid_prompt(t_vshdata *data, int prompt_type)
 		data->prompt->prompt_name = "quote";
 	else if (prompt_type == DQUOTE_PROMPT)
 		data->prompt->prompt_name = "dquote";
+	else if (prompt_type == DLESS_PROMPT)
+		data->prompt->prompt_name = "";
 	else
 		data->prompt->prompt_name = PROMPT_NAME;
 	data->prompt->prompt_seperator = PROMPT_SEPERATOR;
