@@ -6,7 +6,7 @@
 /*   By: omulder <omulder@student.codam.nl>           +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2019/04/18 16:44:50 by omulder        #+#    #+#                */
-/*   Updated: 2019/09/16 14:13:03 by jbrinksm      ########   odam.nl         */
+/*   Updated: 2019/09/16 18:18:05 by jbrinksm      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -27,8 +27,9 @@ int		shell_close_quote_and_esc(t_vshdata *data)
 	ret = FUNCT_SUCCESS;
 	while (ret == FUNCT_SUCCESS)
 	{
-		if (shell_close_unclosed_quotes(data) == FUNCT_ERROR)
-			return (FUNCT_ERROR);
+		ret = shell_close_unclosed_quotes(data);
+		if (ret == FUNCT_ERROR || ret == NEW_PROMPT)
+			return (ret);
 		ret = shell_handle_escaped_newlines(data);
 		if (ret == FUNCT_ERROR)
 			return (FUNCT_ERROR);
@@ -51,8 +52,10 @@ int		shell_start(t_vshdata *data)
 		lexer_tokenlstdel(&token_lst);
 		shell_display_prompt(data, REGULAR_PROMPT);
 		ret = input_read(data);
-		if (ret == FUNCT_ERROR || ret == NEW_PROMPT ||
-			shell_close_quote_and_esc(data) == FUNCT_ERROR)
+		if (ret == FUNCT_ERROR || ret == NEW_PROMPT)
+			continue ;
+		ret = shell_close_quote_and_esc(data);
+		if (ret == FUNCT_ERROR || ret == NEW_PROMPT)
 			continue ;
 		ft_putchar('\n');
 		if (history_line_to_array(data->history->history, &data->line->line)
