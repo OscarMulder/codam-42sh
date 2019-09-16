@@ -6,7 +6,7 @@
 #    By: omulder <omulder@student.codam.nl>           +#+                      #
 #                                                    +#+                       #
 #    Created: 2019/04/10 20:30:07 by jbrinksm       #+#    #+#                 #
-#    Updated: 2019/09/13 16:44:31 by jbrinksm      ########   odam.nl          #
+#    Updated: 2019/09/16 08:16:16 by jbrinksm      ########   odam.nl          #
 #                                                                              #
 # **************************************************************************** #
 
@@ -21,7 +21,8 @@ VPATH = ./test ./libft ./srcs ./srcs/builtins ./srcs/input_handling \
 ./srcs/tools ./srcs/alias ./test/parser ./test/tools ./test/builtins \
 ./test/environment_handling ./srcs/lexer ./srcs/parser ./srcs/history \
 ./srcs/expan ./srcs/autocomplete ./srcs/hashtable ./srcs/jobs \
-./srcs/exec ./srcs/redir ./srcs/error_handling ./srcs/exec ./includes
+./srcs/exec ./srcs/redir ./srcs/error_handling ./srcs/exec ./srcs/signal \
+./includes
 SRCS = shell_start shell_prompt shell_quote_checker shell_dless_input \
 shell_init_files shell_init_vshdata shell_getcurrentdir \
 shell_handle_escaped_newlines shell_init_input shell_init_features \
@@ -58,7 +59,7 @@ history_change_line history_index_change history_expansion history_get_line \
 history_match_line history_insert_into_line \
 exec_builtin exec_cmd exec_external exec_start exec_find_binary \
 exec_quote_remove expan_handle_variables expan_handle_dollar \
-exec_create_files exec_command \
+exec_create_files exec_command exec_add_pid_to_pipeseqlist \
 expan_handle_bracketed_var expan_tilde_expansion exec_validate_binary \
 redir_pipe redir redir_tools redir_tools2 \
 hash_ht_insert hash_print hash_reset hash_init hash_check \
@@ -67,7 +68,8 @@ auto_get_cmdlst auto_match_builtins auto_get_filelst auto_get_varlst \
 auto_find_state auto_start auto_add_match_toline auto_find_matches \
 auto_handle_matchlst auto_small_lst auto_big_lst auto_lst_print \
 auto_lst_print_helpers auto_check_dups \
-jobs_list_handling jobs_job_utils
+jobs_list_handling jobs_job_utils \
+signal_print_newline
 TESTS = unit_test builtin_assign_test
 OBJECTS := $(SRCS:%=%.o)
 SRCS := $(SRCS:%=%.c)

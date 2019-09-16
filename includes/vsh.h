@@ -6,7 +6,7 @@
 /*   By: omulder <omulder@student.codam.nl>           +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2019/04/10 20:29:42 by jbrinksm       #+#    #+#                */
-/*   Updated: 2019/09/13 16:44:02 by jbrinksm      ########   odam.nl         */
+/*   Updated: 2019/09/16 08:17:47 by jbrinksm      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -457,6 +457,9 @@ typedef struct	s_pipeseqlist
 	struct s_pipeseqlist	*next;
 }				t_pipeseqlist;
 
+# define EXEC_ISPIPED (1 << 0)
+# define EXEC_WAIT (1 << 1)
+
 typedef struct	s_vshdata
 {
 	t_envlst		*envlst;
@@ -472,6 +475,7 @@ typedef struct	s_vshdata
 	t_datatermcaps	*termcaps;
 	t_datajobs		*jobs;
 	t_pipeseqlist	*pipeseq;
+	short			exec_flags;
 }				t_vshdata;
 
 t_vshdata		*g_data;
@@ -823,13 +827,19 @@ int				exec_pipe_sequence(t_ast *ast, t_vshdata *data, t_pipes pipes);
 int				exec_command(t_ast *ast, t_vshdata *data, t_pipes pipes);
 void			exec_cmd(char **args, t_vshdata *data, t_pipes pipes);
 bool			exec_builtin(char **args, t_vshdata *data);
-void			exec_external(char **args, t_vshdata *data, bool is_pipe);
+void			exec_external(char **args, t_vshdata *data);
 int				exec_find_binary(char *filename, t_vshdata *data,
 				char **binary);
 int				find_binary(char *filename, t_envlst *envlst, char **binary);
 void			exec_quote_remove(t_ast *node);
 int				exec_validate_binary(char *binary);
 int				exec_create_files(t_ast *ast);
+void			exec_add_pid_to_pipeseqlist(t_vshdata *data, pid_t pid);
+
+/*
+**-----------------------------------signals------------------------------------
+*/
+
 void			signal_print_newline(int signum);
 
 /*
