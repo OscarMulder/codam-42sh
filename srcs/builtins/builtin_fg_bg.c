@@ -22,13 +22,13 @@
 
 static void		term_flags_init(t_termios *termios_p)
 {
-	termios_p->c_lflag |= (ECHO | ICANON | ISIG);
+	termios_p->c_lflag |= (ECHO | ICANON);
 	tcsetattr(STDIN_FILENO, TCSANOW, termios_p);
 }
 
 static void		term_flags_destroy(t_termios *termios_p)
 {
-	termios_p->c_lflag &= ~(ECHO | ICANON | ISIG);
+	termios_p->c_lflag &= ~(ECHO | ICANON);
 	tcsetattr(STDIN_FILENO, TCSANOW, termios_p);
 }
 
