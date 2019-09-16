@@ -6,11 +6,12 @@
 /*   By: jbrinksm <jbrinksm@student.codam.nl>         +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2019/09/16 10:04:00 by jbrinksm       #+#    #+#                */
-/*   Updated: 2019/09/16 10:53:58 by jbrinksm      ########   odam.nl         */
+/*   Updated: 2019/09/16 16:38:31 by jbrinksm      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "vsh.h"
+#include <sys/wait.h>
 
 int		tools_get_pid_state(pid_t pid)
 {
