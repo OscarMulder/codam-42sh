@@ -6,16 +6,15 @@
 /*   By: jbrinksm <jbrinksm@student.codam.nl>         +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2019/06/02 13:23:16 by jbrinksm       #+#    #+#                */
-/*   Updated: 2019/09/17 16:40:46 by jbrinksm      ########   odam.nl         */
+/*   Updated: 2019/09/17 16:49:28 by jbrinksm      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "vsh.h"
 #include <unistd.h>
 
-static int	return_heredoc_error(char **strtofree)
+static int	return_heredoc_error(void)
 {
-	ft_strdel(strtofree);
 	ft_printf(E_N_ALLOC_STR, "heredoc");
 	return (FUNCT_ERROR);
 }
@@ -28,7 +27,6 @@ int			shell_dless_read_till_stop(char **heredoc, char *heredoc_delim,
 
 	line_tmp = data->line->line;
 	data->line->line = NULL;
-	*heredoc == NULL;
 	while (true)
 	{
 		shell_display_prompt(data, DLESS_PROMPT);
@@ -42,8 +40,9 @@ int			shell_dless_read_till_stop(char **heredoc, char *heredoc_delim,
 			*heredoc = ft_strdup(data->line->line);
 		else
 			*heredoc = ft_strjoinfree_s1(*heredoc, data->line->line);
+		ft_strdel(&data->line->line);
 		if (*heredoc == NULL)
-			return (return_heredoc_error(&data->line->line));
+			return (return_heredoc_error());
 	}
 	ft_strdel(&data->line->line);
 	data->line->line = line_tmp;
@@ -56,6 +55,7 @@ int			shell_dless_set_tk_val(t_tokenlst *probe, char **heredoc,
 	int	ret;
 
 	ft_strdel(&(probe->value));
+	*heredoc = NULL;
 	ret = shell_dless_read_till_stop(heredoc, heredoc_delim, data);
 	if (ret == FUNCT_SUCCESS || ret == IR_EOF)
 	{
@@ -109,7 +109,7 @@ int			shell_dless_input(t_vshdata *data, t_tokenlst **token_lst)
 				return (FUNCT_ERROR);
 			heredoc_delim = ft_strjoin(probe->value, "\n");
 			if (heredoc_delim == NULL)
-				return (return_heredoc_error(NULL));
+				return (return_heredoc_error());
 			ret = shell_dless_set_tk_val(probe, &heredoc, heredoc_delim, data);
 			if (ret == FUNCT_ERROR || ret == NEW_PROMPT)
 				return (ret);
