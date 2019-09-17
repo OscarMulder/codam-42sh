@@ -10,7 +10,8 @@
 /*                                                                            */
 /* ************************************************************************** */
 
-#include <vsh.h>
+#include "vsh.h"
+#include <sys/wait.h>
 
 int		jobs_get_job_state(t_job *job)
 {
