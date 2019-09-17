@@ -6,7 +6,7 @@
 /*   By: omulder <omulder@student.codam.nl>           +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2019/04/10 20:29:42 by jbrinksm       #+#    #+#                */
-/*   Updated: 2019/09/17 13:27:00 by mavan-he      ########   odam.nl         */
+/*   Updated: 2019/09/17 16:51:56 by tde-jong      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -793,6 +793,7 @@ void			builtin_unalias(char **args, t_aliaslst **aliaslst);
 void			builtin_type(char **args, t_envlst *envlst,
 				t_aliaslst *aliaslst);
 int				builtin_jobs(char **args, t_vshdata *data);
+t_job			*builtin_jobs_find_job(char *job_id, t_job *joblist);
 int				builtin_fg(char **args, t_vshdata *data);
 int				builtin_bg(char **args, t_vshdata *data);
 int				builtin_cd(char **args, t_vshdata *data);

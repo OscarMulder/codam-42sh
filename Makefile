@@ -6,7 +6,7 @@
 #    By: omulder <omulder@student.codam.nl>           +#+                      #
 #                                                    +#+                       #
 #    Created: 2019/04/10 20:30:07 by jbrinksm       #+#    #+#                 #
-#    Updated: 2019/09/16 16:03:47 by mavan-he      ########   odam.nl          #
+#    Updated: 2019/09/17 16:46:10 by tde-jong      ########   odam.nl          #
 #                                                                              #
 # **************************************************************************** #
 
@@ -50,7 +50,7 @@ builtin_export builtin_export_print builtin_set builtin_unset \
 builtin_alias builtin_alias_set builtin_alias_lstdel builtin_unalias \
 builtin_cd builtin_cd_error builtin_cd_pathparsing \
 builtin_cd_pathparsing_tools builtin_cd_changedir \
-builtin_type builtin_hash builtin_jobs builtin_fg_bg \
+builtin_type builtin_hash builtin_jobs builtin_jobs_find_job builtin_fg_bg \
 lexer lexer_utils lexer_debug lexer_evaluator lexer_scanner \
 lexer_state_if_else lexer_state_single lexer_state_start lexer_state_strings \
 parser_start parser_debug parser_utils parser_command parser_error \

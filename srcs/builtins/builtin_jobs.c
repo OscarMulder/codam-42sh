@@ -6,7 +6,7 @@
 /*   By: omulder <omulder@student.codam.nl>           +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2019/04/17 14:03:16 by rkuijper       #+#    #+#                */
-/*   Updated: 2019/09/10 19:51:07 by anonymous     ########   odam.nl         */
+/*   Updated: 2019/09/17 17:09:55 by tde-jong      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -52,6 +52,7 @@ static int	jobs_log_args(t_datajobs *jobs, int options, char **args)
 {
 	int		i;
 	t_job	*job;
+	t_job	*toprint;
 	
 	(void)options;
 	if (jobs->joblist == NULL)
@@ -62,12 +63,16 @@ static int	jobs_log_args(t_datajobs *jobs, int options, char **args)
 	i = 0;
 	while (args[i] != NULL)
 	{
-		job = jobs->joblist;
-		while (job != NULL)
-		{
-			/* I'm not too sure how this has to be parsed. Something for the near future. */
-			job = job->next;
-		}
+		toprint = builtin_jobs_find_job(args[i], jobs->joblist);
+		if (toprint == NULL)
+			return (FUNCT_FAILURE);
+		/* Pribt job info, use code from jobs_log_all that should be a seperate function */
+		// job = jobs->joblist;
+		// while (job != NULL)
+		// {
+		// 	/* I'm not too sure how this has to be parsed. Something for the near future. */
+		// 	job = job->next;
+		// }
 		i++;
 	}
 	return (FUNCT_SUCCESS);
@@ -112,6 +117,6 @@ int			builtin_jobs(char **args, t_vshdata *data)
 	if (args[arg] != NULL) /* Start parsing the rest of the parameters, only listing the given jobs. */
 		jobs_log_args(data->jobs, options, args + arg);
 	else /* No parameters left after options, start logging ALL jobs. */
-		jobs_log_all(data->jobs, options);
+		return (jobs_log_all(data->jobs, options));
 	return (FUNCT_SUCCESS);
 }
