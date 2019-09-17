@@ -6,49 +6,50 @@
 /*   By: mavan-he <mavan-he@student.codam.nl>         +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2019/08/10 20:15:06 by mavan-he       #+#    #+#                */
-/*   Updated: 2019/09/10 19:51:40 by anonymous     ########   odam.nl         */
+/*   Updated: 2019/09/13 17:09:20 by mavan-he      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "vsh.h"
 
-static void	match_buildins_2(char *match, int match_len, char **builtin)
+static int	auto_match_builtins_continued(char *match, t_list **matchlst, int match_len)
 {
-	if (ft_strnequ(match, "alias", match_len))
-		*builtin = "alias";
-	else if (ft_strnequ(match, "unalias", match_len))
-		*builtin = "unalias";	
-	else if (ft_strnequ(match, "jobs", match_len))
-		*builtin = "jobs";
-	else if (ft_strnequ(match, "fg", match_len))
-		*builtin = "fg";	
-	else if (ft_strnequ(match, "bg", match_len))
-		*builtin = "bg";
+	int ret;
+
+	ret = FUNCT_FAILURE;
+	if (ret != FUNCT_ERROR && ft_strnequ(match, "alias", match_len))
+		ret = auto_add_tolst(matchlst, "alias");
+	if (ret != FUNCT_ERROR && ft_strnequ(match, "unalias", match_len))
+		ret = auto_add_tolst(matchlst, "unalias");
+	if (ret != FUNCT_ERROR && ft_strnequ(match, "hash", match_len))
+		ret = auto_add_tolst(matchlst, "hash");
+	if (ret != FUNCT_ERROR && ft_strnequ(match, "fc", match_len))
+		ret = auto_add_tolst(matchlst, "fc");
+	return (ret);
 }
 
 int			auto_match_builtins(char *match, t_list **matchlst, int match_len)
 {
-	char	*builtin;
+	int ret;
 
-	builtin = NULL;
-	if (ft_strnequ(match, "echo", match_len))
-		builtin = "echo";
-	else if (ft_strnequ(match, "exit", match_len))
-		builtin = "exit";
-	else if (ft_strnequ(match, "cd", match_len))
-		builtin = "cd";
-	else if (ft_strnequ(match, "export", match_len))
-		builtin = "export";
-	else if (ft_strnequ(match, "set", match_len))
-		builtin = "set";
-	else if (ft_strnequ(match, "unset", match_len))
-		builtin = "unset";
-	else if (ft_strnequ(match, "history", match_len))
-		builtin = "history";
-	else if (ft_strnequ(match, "type", match_len))
-		builtin = "type";
-	else
-		match_buildins_2(match, match_len, &builtin);
-	return (builtin == NULL ?
-		FUNCT_FAILURE : auto_add_tolst(matchlst, builtin));
+	ret = FUNCT_FAILURE;
+	if (ret != FUNCT_ERROR && ft_strnequ(match, "echo", match_len))
+		ret = auto_add_tolst(matchlst, "echo");	
+	if (ret != FUNCT_ERROR && ft_strnequ(match, "exit", match_len))
+		ret = auto_add_tolst(matchlst, "exit");
+	if (ret != FUNCT_ERROR && ft_strnequ(match, "cd", match_len))
+		ret = auto_add_tolst(matchlst, "cd");
+	if (ret != FUNCT_ERROR && ft_strnequ(match, "export", match_len))
+		ret = auto_add_tolst(matchlst, "export");
+	if (ret != FUNCT_ERROR && ft_strnequ(match, "set", match_len))
+		ret = auto_add_tolst(matchlst, "set");
+	if (ret != FUNCT_ERROR && ft_strnequ(match, "unset", match_len))
+		ret = auto_add_tolst(matchlst, "unset");
+	if (ret != FUNCT_ERROR && ft_strnequ(match, "history", match_len))
+		ret = auto_add_tolst(matchlst, "history");
+	if (ret != FUNCT_ERROR && ft_strnequ(match, "type", match_len))
+		ret = auto_add_tolst(matchlst, "type");
+	if (ret == FUNCT_ERROR)
+		return (ret);
+	return (auto_match_builtins_continued(match, matchlst, match_len));
 }
