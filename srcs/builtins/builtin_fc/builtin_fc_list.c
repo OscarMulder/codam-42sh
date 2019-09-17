@@ -6,7 +6,7 @@
 /*   By: omulder <omulder@student.codam.nl>           +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2019/09/11 12:54:36 by omulder        #+#    #+#                */
-/*   Updated: 2019/09/16 16:26:53 by omulder       ########   odam.nl         */
+/*   Updated: 2019/09/17 10:19:45 by omulder       ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -57,6 +57,9 @@ void		fc_list(t_datahistory *history, t_fcdata *fc)
 	}
 	if (fc->options & FC_OPT_R)
 		fc_print_reverse(start, end, history->history, fc);
+	else if (history->history[start]->number > history->history[end]->number ||
+	(fc->options & FC_FIRST_NEG && fc->options & FC_LAST_NEG))
+		fc_print_reverse(end, start, history->history, fc);
 	else
 		fc_print_regular(start, end, history->history, fc);
 }
