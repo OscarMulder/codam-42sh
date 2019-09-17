@@ -6,7 +6,7 @@
 /*   By: jbrinksm <jbrinksm@student.codam.nl>         +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2019/04/10 20:29:49 by jbrinksm       #+#    #+#                */
-/*   Updated: 2019/09/17 13:52:23 by tde-jong      ########   odam.nl         */
+/*   Updated: 2019/09/17 15:54:59 by tde-jong      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -21,16 +21,14 @@ void			signal_handle(int sig)
 {
 	t_job *job;
 
-	if (sig == SIGSTOP || sig == SIGTSTP)
+	if (sig == SIGTSTP)
 	{
 		job = g_data->jobs->joblist;
 		while (job != NULL)
 		{
-			kill(job->process_id, SIGSTOP);
+			kill(job->process_id, SIGTSTP);
 			job = job->next;
 		}
-		signal(SIGSTOP, signal_handle);
-		signal(SIGTSTP, signal_handle);
 		ft_putchar('\n');
 	}
 }
@@ -67,7 +65,6 @@ int		main(int argc, char **argv)
 {
 	t_vshdata	*data;
 
-	signal(SIGSTOP, signal_handle);
 	signal(SIGTSTP, signal_handle);
 	signal(SIGCHLD, sigchld_handle);
 	g_state = (t_state*)ft_memalloc(sizeof(t_state));
