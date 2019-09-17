@@ -6,7 +6,7 @@
 /*   By: omulder <omulder@student.codam.nl>           +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2019/04/18 16:44:50 by omulder        #+#    #+#                */
-/*   Updated: 2019/09/17 17:47:01 by jbrinksm      ########   odam.nl         */
+/*   Updated: 2019/09/17 18:13:27 by jbrinksm      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -22,18 +22,24 @@ void	lexer_tokenlstiter(t_tokenlst *lst, void (*f)(t_tokenlst *elem))
 
 int		shell_close_quote_and_esc(t_vshdata *data)
 {
-	int ret;
+	int 	ret;
+	bool	ctrl_d;
 
 	ret = FUNCT_SUCCESS;
+	ctrl_d = false;
 	while (ret == FUNCT_SUCCESS)
 	{
 		ret = shell_close_unclosed_quotes(data);
 		if (ret == FUNCT_ERROR || ret == NEW_PROMPT)
 			return (ret);
+		else if (ret == IR_EOF)
+			ctrl_d = true;
 		ret = shell_handle_escaped_newlines(data);
 		if (ret == FUNCT_ERROR)
 			return (FUNCT_ERROR);
 	}
+	if (ctrl_d == true)
+		return (IR_EOF);
 	return (FUNCT_SUCCESS);
 }
 
@@ -47,14 +53,23 @@ void	shell_dell(char **line, t_ast **ast, t_tokenlst **token_lst)
 int		pre_lexer_reading(t_vshdata *data)
 {
 	int			ret;
+	bool		ctrl_d;
 
+	ctrl_d = false;
 	ret = input_read(data);
-	if (ret == FUNCT_ERROR || ret == NEW_PROMPT)
-		return (ret);
-	ret = shell_close_quote_and_esc(data);
-	if (ret == FUNCT_ERROR || ret == NEW_PROMPT)
-		return (ret);
-	return (FUNCT_SUCCESS);
+	if (ret == IR_EOF)
+		ctrl_d = true;
+	if (ret != FUNCT_ERROR && ret != NEW_PROMPT)
+	{
+		ret = shell_close_quote_and_esc(data);
+		if (ret == IR_EOF)
+			ctrl_d = true;
+		if (ret != FUNCT_ERROR && ret != NEW_PROMPT)
+			ret = FUNCT_SUCCESS;
+	}
+	if (ret == FUNCT_SUCCESS && ctrl_d == false)
+		ft_putchar('\n');
+	return (ret);
 }
 
 int		shell_start(t_vshdata *data)
@@ -68,15 +83,15 @@ int		shell_start(t_vshdata *data)
 	{
 		shell_dell(&data->line->line, &ast, &token_lst);
 		shell_display_prompt(data, REGULAR_PROMPT);
-		if (pre_lexer_reading(data) != FUNCT_SUCCESS ||
-			history_expansion(data) != FUNCT_SUCCESS ||
+		if (pre_lexer_reading(data) != FUNCT_SUCCESS)
+			continue ;
+		if (history_expansion(data) != FUNCT_SUCCESS ||
 			history_line_to_array(data->history->history, &data->line->line)
 			== FUNCT_ERROR || lexer(&data->line->line, &token_lst) !=
 			FUNCT_SUCCESS || shell_dless_input(data, &token_lst) !=
 			FUNCT_SUCCESS || alias_expansion(data, &token_lst, NULL) !=
 			FUNCT_SUCCESS)
 			continue ;
-		ft_putchar('\n');
 		if (token_lst->next->type == NEWLINE
 			|| parser_start(&token_lst, &ast) != FUNCT_SUCCESS)
 			continue ;
