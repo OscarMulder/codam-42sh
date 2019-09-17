@@ -6,7 +6,7 @@
 /*   By: omulder <omulder@student.codam.nl>           +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2019/04/10 20:29:42 by jbrinksm       #+#    #+#                */
-/*   Updated: 2019/09/17 10:43:05 by jbrinksm      ########   odam.nl         */
+/*   Updated: 2019/09/17 15:10:12 by jbrinksm      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -587,6 +587,8 @@ int				term_get_attributes(int fd, t_vshdataterm*term_p);
 int				term_set_attributes(t_vshdataterm*term_p);
 int				term_reset(t_vshdataterm*term_p);
 void			term_free_struct(t_vshdataterm**term_p);
+void			term_enable_isig(t_termios *termios_p);
+void			term_disable_isig(t_termios *termios_p);
 
 /*
 **-----------------------------------input--------------------------------------

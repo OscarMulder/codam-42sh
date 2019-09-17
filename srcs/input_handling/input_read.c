@@ -6,7 +6,7 @@
 /*   By: omulder <omulder@student.codam.nl>           +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2019/04/17 14:03:16 by jbrinksm       #+#    #+#                */
-/*   Updated: 2019/09/17 10:44:07 by jbrinksm      ########   odam.nl         */
+/*   Updated: 2019/09/17 15:11:20 by jbrinksm      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -115,6 +115,7 @@ int			input_read(t_vshdata *data)
 		return (reset_input_read_return(data, FUNCT_ERROR));
 	reset_input_read_return(data, 0);
 	resize_window_check(SIGWINCH);
+	term_disable_isig(data->term->termios_p);
 	while (true)
 	{
 		if (read(STDIN_FILENO, &data->input->c, 1) == -1)
@@ -128,5 +129,6 @@ int			input_read(t_vshdata *data)
 			break ;
 		}
 	}
+	term_enable_isig(data->term->termios_p);
 	return (reset_input_read_return(data, FUNCT_SUCCESS));
 }
