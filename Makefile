@@ -6,7 +6,7 @@
 #    By: omulder <omulder@student.codam.nl>           +#+                      #
 #                                                    +#+                       #
 #    Created: 2019/04/10 20:30:07 by jbrinksm       #+#    #+#                 #
-#    Updated: 2019/09/17 15:56:39 by jbrinksm      ########   odam.nl          #
+#    Updated: 2019/09/17 17:09:33 by jbrinksm      ########   odam.nl          #
 #                                                                              #
 # **************************************************************************** #
 
@@ -71,7 +71,7 @@ auto_get_cmdlst auto_match_builtins auto_get_filelst auto_get_varlst \
 auto_find_state auto_start auto_add_match_toline auto_find_matches \
 auto_handle_matchlst auto_small_lst auto_big_lst auto_lst_print \
 auto_lst_print_helpers auto_check_dups \
-signal_handle_child_death signal_print_newline
+signal_handle_child_death
 TESTS = unit_test builtin_assign_test
 OBJECTS := $(SRCS:%=%.o)
 TESTOBJECTS := $(TESTS:%=%.o)

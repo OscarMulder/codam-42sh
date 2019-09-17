@@ -6,7 +6,7 @@
 /*   By: omulder <omulder@student.codam.nl>           +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2019/05/31 10:47:19 by tde-jong       #+#    #+#                */
-/*   Updated: 2019/09/16 10:07:39 by jbrinksm      ########   odam.nl         */
+/*   Updated: 2019/09/17 17:07:33 by jbrinksm      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,13 +18,13 @@
 
 static void		term_flags_init(t_termios *termios_p)
 {
-	termios_p->c_lflag |= (ECHO | ICANON);
+	termios_p->c_lflag |= (ECHO | ICANON | ISIG);
 	tcsetattr(STDIN_FILENO, TCSANOW, termios_p);
 }
 
 static void		term_flags_destroy(t_termios *termios_p)
 {
-	termios_p->c_lflag &= ~(ECHO | ICANON);
+	termios_p->c_lflag &= ~(ECHO | ICANON | ISIG);
 	tcsetattr(STDIN_FILENO, TCSANOW, termios_p);
 }
 
@@ -52,19 +52,19 @@ t_vshdata *data)
 		return (err_void_exit(E_FORK_STR, EXIT_FAILURE));
 	if (pid > 0)
 	{
+		signal(SIGINT, SIG_IGN);
 		if (data->exec_flags & EXEC_ISPIPED)
 			exec_add_pid_to_pipeseqlist(data, pid);
-		signal(SIGINT, signal_print_newline);
 	}
 	else
 	{
+		signal(SIGINT, SIG_DFL);
 		execve(binary, args, vshenviron);
 		ft_eprintf(E_FAIL_EXEC_P, binary);
 		exit(EXIT_FAILURE);
 	}
 	if (data->exec_flags & EXEC_WAIT)
 		exec_bin_handlewait(pid);
-	signal(SIGINT, SIG_DFL);
 	term_flags_destroy(data->term->termios_p);
 }
 

@@ -6,7 +6,7 @@
 /*   By: omulder <omulder@student.codam.nl>           +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2019/04/10 20:29:42 by jbrinksm       #+#    #+#                */
-/*   Updated: 2019/09/17 15:10:12 by jbrinksm      ########   odam.nl         */
+/*   Updated: 2019/09/17 17:09:27 by jbrinksm      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -811,7 +811,6 @@ void			exec_add_pid_to_pipeseqlist(t_vshdata *data, pid_t pid);
 */
 
 void			signal_handle_child_death(int signum);
-void			signal_print_newline(int signum);
 
 /*
 **------------------------------------expan-------------------------------------
