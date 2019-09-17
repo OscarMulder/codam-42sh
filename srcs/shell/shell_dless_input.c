@@ -6,12 +6,19 @@
 /*   By: jbrinksm <jbrinksm@student.codam.nl>         +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2019/06/02 13:23:16 by jbrinksm       #+#    #+#                */
-/*   Updated: 2019/09/16 14:37:19 by jbrinksm      ########   odam.nl         */
+/*   Updated: 2019/09/17 16:40:46 by jbrinksm      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "vsh.h"
 #include <unistd.h>
+
+static int	return_heredoc_error(char **strtofree)
+{
+	ft_strdel(strtofree);
+	ft_printf(E_N_ALLOC_STR, "heredoc");
+	return (FUNCT_ERROR);
+}
 
 int			shell_dless_read_till_stop(char **heredoc, char *heredoc_delim,
 			t_vshdata *data)
@@ -21,24 +28,22 @@ int			shell_dless_read_till_stop(char **heredoc, char *heredoc_delim,
 
 	line_tmp = data->line->line;
 	data->line->line = NULL;
+	*heredoc == NULL;
 	while (true)
 	{
 		shell_display_prompt(data, DLESS_PROMPT);
 		ret = input_read(data);
-		if (ret == FUNCT_ERROR)
-			return (FUNCT_ERROR);
-		else if (ret == NEW_PROMPT)
-			return (NEW_PROMPT);
+		if (ret == FUNCT_ERROR || ret == NEW_PROMPT)
+			return (ret);
 		if (ft_strequ(data->line->line, heredoc_delim) == true || ret == IR_EOF)
 			break ;
-		ft_putstr("\n");
+		ft_putchar('\n');
 		if (*heredoc == NULL)
 			*heredoc = ft_strdup(data->line->line);
 		else
 			*heredoc = ft_strjoinfree_s1(*heredoc, data->line->line);
-		ft_strdel(&data->line->line);
 		if (*heredoc == NULL)
-			return (err_ret(E_ALLOC_STR));
+			return (return_heredoc_error(&data->line->line));
 	}
 	ft_strdel(&data->line->line);
 	data->line->line = line_tmp;
@@ -87,12 +92,6 @@ static bool	is_valid_heredoc_delim(t_tokenlst *token)
 	return (true);
 }
 
-static int	return_alloc_error(int ret)
-{
-	ft_eprintf(E_N_ALLOC_STR, "heredoc");
-	return (ret);
-}
-
 int			shell_dless_input(t_vshdata *data, t_tokenlst **token_lst)
 {
 	char		*heredoc;
@@ -101,7 +100,6 @@ int			shell_dless_input(t_vshdata *data, t_tokenlst **token_lst)
 	int			ret;
 
 	probe = *token_lst;
-	heredoc = NULL;
 	while (probe != NULL)
 	{
 		if (probe->type == DLESS)
@@ -111,11 +109,9 @@ int			shell_dless_input(t_vshdata *data, t_tokenlst **token_lst)
 				return (FUNCT_ERROR);
 			heredoc_delim = ft_strjoin(probe->value, "\n");
 			if (heredoc_delim == NULL)
-				return (return_alloc_error(FUNCT_ERROR));
+				return (return_heredoc_error(NULL));
 			ret = shell_dless_set_tk_val(probe, &heredoc, heredoc_delim, data);
-			if (ret == FUNCT_ERROR)
-				return (return_alloc_error(FUNCT_ERROR));
-			else if (ret == NEW_PROMPT)
+			if (ret == FUNCT_ERROR || ret == NEW_PROMPT)
 				return (ret);
 			ft_strdel(&heredoc);
 			ft_strdel(&heredoc_delim);
