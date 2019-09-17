@@ -6,7 +6,7 @@
 #    By: omulder <omulder@student.codam.nl>           +#+                      #
 #                                                    +#+                       #
 #    Created: 2019/04/10 20:30:07 by jbrinksm       #+#    #+#                 #
-#    Updated: 2019/09/17 15:11:10 by jbrinksm      ########   odam.nl          #
+#    Updated: 2019/09/17 15:15:54 by jbrinksm      ########   odam.nl          #
 #                                                                              #
 # **************************************************************************** #
 
@@ -88,18 +88,20 @@ $(NAME): $(OBJECTS) main.o
 	@$(CC) -o $@ $(FLAGS) $< $(COVERAGE) $(INCLUDES) -c
 
 $(LIBFT):
-	@make -C libft
+	@$(MAKE) -C libft
 
 clean:
 	@rm -f $(OBJECTS) $(TESTOBJECTS) main.o
-	@rm -f $(OBJECTS) main.o
-	@make -C libft clean
+	@$(MAKE) -C libft clean
 	@echo "[ - ] removed object files"
+	@rm -f *.gcno
+	@rm -f *.gcda
 
 fclean: clean
 	@rm -f $(NAME) test_coverage vsh_tests
-	@make -C libft fclean
+	@$(MAKE) -C libft fclean
 	@echo "[ - ] removed binaries"
+	@rm -f *.gcov
 
 re: fclean all
 
