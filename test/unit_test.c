@@ -1152,6 +1152,27 @@ Test(tilde_expansion, basic_test)
 
 TestSuite(builtin_fc_list);
 
+static int	find_start(t_history **history)
+{
+	int i;
+	int start;
+	int largest;
+
+	i = 0;
+	start = 0;
+	largest = -1;
+	while (i < HISTORY_MAX && history[i]->str != NULL)
+	{
+		if (history[i]->number > largest)
+		{
+			start = i;
+			largest = history[i]->number;
+		}
+		i++;
+	}
+	return (start + 1);
+}
+
 Test(fc_list, basic_test, .init=redirect_all_stdout)
 {
 	t_vshdata	*data;
@@ -1161,8 +1182,6 @@ Test(fc_list, basic_test, .init=redirect_all_stdout)
 	char		*str3 = ft_strdup("echo wauw\n");
 	char		**args;
 
-	# undef HISTORY_MAX
-	# define HISTORY_MAX	5
 	INIT_VSHDATA
 	i = 0;
 	data->history->history_file = ft_strdup("/tmp/.vsh_history4");
@@ -1175,6 +1194,9 @@ Test(fc_list, basic_test, .init=redirect_all_stdout)
 	history_line_to_array(data->history->history, &str1);
 	history_line_to_array(data->history->history, &str2);
 	history_line_to_array(data->history->history, &str3);
+	data->history->hist_index = find_start(data->history->history);
+	data->history->hist_start = data->history->hist_index - 1;
+	data->history->hist_isfirst = true;
 	args = (char**)ft_memalloc(sizeof(char *) * 3);
 	args[0] = ft_strdup("fc");
 	args[1] = ft_strdup("-l");
@@ -1185,40 +1207,40 @@ Test(fc_list, basic_test, .init=redirect_all_stdout)
 	remove(data->history->history_file);
 }
 
-// Test(fc_list, basic_test_rev, .init=redirect_all_stdout)
-// {
-// 	t_vshdata	*data;
-// 	int			i;
-// 	char		*str1 = ft_strdup("echo first\n");
-// 	char		*str2 = ft_strdup("echo bonjour\n");
-// 	char		*str3 = ft_strdup("echo wauw\n");
-// 	char		**args;
+Test(fc_list, basic_test_rev, .init=redirect_all_stdout)
+{
+	t_vshdata	*data;
+	int			i;
+	char		*str1 = ft_strdup("echo first\n");
+	char		*str2 = ft_strdup("echo bonjour\n");
+	char		*str3 = ft_strdup("echo wauw\n");
+	char		**args;
 
-// 	# undef HISTORY_MAX
-// 	# define HISTORY_MAX	5
-// 	INIT_VSHDATA
-// 	i = 0;
-// 	data->history->history_file = ft_strdup("/tmp/.vsh_history5");
-// 	data->history->history = (t_history **)ft_memalloc(sizeof(t_history *) * HISTORY_MAX);
-// 	while (i < HISTORY_MAX)
-// 	{
-// 		data->history->history[i] = (t_history*)ft_memalloc(sizeof(t_history));
-// 		i++;
-// 	}
-// 	history_line_to_array(data->history->history, &str1);
-// 	history_line_to_array(data->history->history, &str2);
-// 	history_line_to_array(data->history->history, &str3);
-// 	args = (char**)ft_memalloc(sizeof(char *) * 4);
-// 	args[0] = ft_strdup("fc");
-// 	args[1] = ft_strdup("-r");
-// 	args[2] = ft_strdup("-l");
-// 	fflush(NULL);
-// 	builtin_fc(args, data);
-	// cr_expect_stdout_eq_str("1\techo first\n2\techo bonjour\n3\techo wauw\n");
-	// cr_expect_stdout_eq_str("3\techo wauw\n2\techo bonjour\n1\techo first\n");
-// 	ft_strarrdel(&args);
-// 	remove(data->history->history_file);
-// }
+	INIT_VSHDATA
+	i = 0;
+	data->history->history_file = ft_strdup("/tmp/.vsh_history5");
+	data->history->history = (t_history **)ft_memalloc(sizeof(t_history *) * HISTORY_MAX);
+	while (i < HISTORY_MAX)
+	{
+		data->history->history[i] = (t_history*)ft_memalloc(sizeof(t_history));
+		i++;
+	}
+	history_line_to_array(data->history->history, &str1);
+	history_line_to_array(data->history->history, &str2);
+	history_line_to_array(data->history->history, &str3);
+	data->history->hist_index = find_start(data->history->history);
+	data->history->hist_start = data->history->hist_index - 1;
+	data->history->hist_isfirst = true;
+	args = (char**)ft_memalloc(sizeof(char *) * 4);
+	args[0] = ft_strdup("fc");
+	args[1] = ft_strdup("-r");
+	args[2] = ft_strdup("-l");
+	fflush(NULL);
+	builtin_fc(args, data);
+	cr_expect_stdout_eq_str("3\techo wauw\n2\techo bonjour\n1\techo first\n");
+	ft_strarrdel(&args);
+	remove(data->history->history_file);
+}
 
 Test(fc_list, basic_test_overflow, .init=redirect_all_stdout)
 {
