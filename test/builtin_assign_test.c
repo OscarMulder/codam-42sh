@@ -6,7 +6,11 @@
 /*   By: jbrinksm <jbrinksm@student.codam.nl>         +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2019/06/07 16:55:26 by jbrinksm       #+#    #+#                */
+<<<<<<< HEAD
 /*   Updated: 2019/09/12 12:23:07 by mavan-he      ########   odam.nl         */
+=======
+/*   Updated: 2019/08/30 16:19:11 by jbrinksm      ########   odam.nl         */
+>>>>>>> parent of 0b9fc60... Removed all non-essential files.
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -28,11 +32,18 @@ Test(builtin_assign, basic_change_existingvar_1)
 {
 	t_vshdata	*data;
 
+<<<<<<< HEAD
 	g_state = (t_state*)ft_memalloc(sizeof(t_state));
+=======
+>>>>>>> parent of 0b9fc60... Removed all non-essential files.
 	INIT_VSHDATA
 	cr_assert(shell_init_files(data) != FUNCT_ERROR);
 	cr_assert(history_get_file_content(data) != FUNCT_ERROR);
 	cr_assert(alias_read_file(data) != FUNCT_ERROR);
+<<<<<<< HEAD
+=======
+	g_state = (t_state*)ft_memalloc(sizeof(t_state));
+>>>>>>> parent of 0b9fc60... Removed all non-essential files.
 	hash_init(data);
 	cr_assert(data->envlst != NULL);
 	g_state->exit_code = 0;
