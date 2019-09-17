@@ -6,7 +6,7 @@
 /*   By: jbrinksm <jbrinksm@student.codam.nl>         +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2019/04/10 20:29:49 by jbrinksm       #+#    #+#                */
-/*   Updated: 2019/09/17 13:44:00 by tde-jong      ########   odam.nl         */
+/*   Updated: 2019/09/17 13:52:23 by tde-jong      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -63,7 +63,7 @@ void			sigchld_handle(int sig)
 	signal(SIGCHLD, sigchld_handle);
 }
 
-int		main(void)
+int		main(int argc, char **argv)
 {
 	t_vshdata	*data;
 
