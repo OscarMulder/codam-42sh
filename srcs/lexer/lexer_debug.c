@@ -6,12 +6,12 @@
 /*   By: mavan-he <mavan-he@student.codam.nl>         +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2019/05/16 16:06:49 by mavan-he       #+#    #+#                */
-/*   Updated: 2019/09/16 12:38:05 by mavan-he      ########   odam.nl         */
+/*   Updated: 2019/09/17 13:11:55 by mavan-he      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "vsh.h"
-#define DEBUG
+
 #ifdef DEBUG
 
 

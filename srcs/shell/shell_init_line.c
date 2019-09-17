@@ -6,7 +6,7 @@
 /*   By: mavan-he <mavan-he@student.codam.nl>         +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2019/09/15 20:47:40 by mavan-he       #+#    #+#                */
-/*   Updated: 2019/09/16 17:38:03 by mavan-he      ########   odam.nl         */
+/*   Updated: 2019/09/17 13:11:03 by mavan-he      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -39,7 +39,7 @@ int			shell_init_line(t_vshdata *data, char *filepath)
 		return (err_ret_exit(E_FAIL_OPEN, EXIT_FAILURE));
 	if (fstat(fd, &file_info) == -1)
 		return (err_ret_exit(E_STAT_STR, EXIT_FAILURE));
-	data->line->line = (char *)ft_memalloc(file_info.st_size + 1);
+	data->line->line = ft_strnew((file_info.st_size));
 	if (data->line->line == NULL)
 		return (err_ret_exit(E_ALLOC_STR, EXIT_FAILURE));
 	ret = read(fd, data->line->line, file_info.st_size);

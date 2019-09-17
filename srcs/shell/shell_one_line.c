@@ -6,7 +6,7 @@
 /*   By: mavan-he <mavan-he@student.codam.nl>         +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2019/09/15 21:53:03 by mavan-he       #+#    #+#                */
-/*   Updated: 2019/09/16 17:40:30 by mavan-he      ########   odam.nl         */
+/*   Updated: 2019/09/17 13:27:00 by mavan-he      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -34,6 +34,6 @@ void	shell_one_line(t_vshdata *data)
 		return ;
 	}
 	exec_complete_command(ast, data);
-	shell_dell(&data->line->line, &ast, &token_lst);
+	shell_clear_input_data(&data->line->line, &ast, &token_lst);
 	return ;
 }

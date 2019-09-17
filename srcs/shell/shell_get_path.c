@@ -6,7 +6,7 @@
 /*   By: mavan-he <mavan-he@student.codam.nl>         +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2019/09/15 20:37:03 by mavan-he       #+#    #+#                */
-/*   Updated: 2019/09/15 20:46:25 by mavan-he      ########   odam.nl         */
+/*   Updated: 2019/09/17 13:09:42 by mavan-he      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -33,7 +33,10 @@ static int	shell_add_cwd_to_env(t_vshdata *data)
 	if (new_path == NULL)
 		return (err_ret_exit(E_ALLOC_STR, EXIT_FAILURE));
 	if (builtin_assign(new_path, data, ENV_LOCAL) == FUNCT_ERROR)
+	{
+		ft_strdel(&new_path);
 		return (FUNCT_ERROR);
+	}
 	ft_strdel(&new_path);
 	return (FUNCT_SUCCESS);
 }

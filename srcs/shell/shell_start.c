@@ -6,7 +6,7 @@
 /*   By: omulder <omulder@student.codam.nl>           +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2019/04/18 16:44:50 by omulder        #+#    #+#                */
-/*   Updated: 2019/09/16 16:01:58 by mavan-he      ########   odam.nl         */
+/*   Updated: 2019/09/17 13:27:00 by mavan-he      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -36,7 +36,7 @@ int		shell_close_quote_and_esc(t_vshdata *data)
 	return (FUNCT_SUCCESS);
 }
 
-void	shell_dell(char **line, t_ast **ast, t_tokenlst **token_lst)
+void	shell_clear_input_data(char **line, t_ast **ast, t_tokenlst **token_lst)
 {
 	ft_strdel(line);
 	parser_astdel(ast);
@@ -52,7 +52,7 @@ void	shell_start(t_vshdata *data)
 	ast = NULL;
 	while (true)
 	{
-		shell_dell(&data->line->line, &ast, &token_lst);
+		shell_clear_input_data(&data->line->line, &ast, &token_lst);
 		shell_display_prompt(data, REGULAR_PROMPT);
 		if (input_read(data) == FUNCT_ERROR ||
 			shell_close_quote_and_esc(data) == FUNCT_ERROR ||
