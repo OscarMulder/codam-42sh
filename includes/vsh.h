@@ -6,7 +6,7 @@
 /*   By: omulder <omulder@student.codam.nl>           +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2019/04/10 20:29:42 by jbrinksm       #+#    #+#                */
-/*   Updated: 2019/09/16 18:06:31 by jbrinksm      ########   odam.nl         */
+/*   Updated: 2019/09/17 10:43:05 by jbrinksm      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -84,6 +84,8 @@
 # define E_TERM_DB_NOT_F	SHELL ": terminfo database could not be found.\n"
 # define E_TERM_NO_SUCH		SHELL ": no such TERM entry in the database\n"
 # define E_STDIN_NOT_TTY	SHELL ": STDIN does not refer to a terminal\n"
+# define E_HIST_NOT_FOUND   "\n" SHELL ": !%s: event not found\n"
+# define E_HIST_NUM_ERROR   "\n" SHELL ": %.*s: event not found\n"
 # define E_ALLOC 42
 # define E_DUP 100
 # define E_OPEN 101
@@ -245,7 +247,7 @@
 # define INPUT_TAB '\t'
 # define INPUT_CTRL_U 21
 # define INPUT_CTRL_Y 25
-# define TC_MAXRESPONSESIZE 50
+# define TC_MAXRESPONSESIZE 16
 
 /*
 **=================================pipe defines=================================
@@ -266,6 +268,7 @@
 # define ARROW_DOWN	    2
 # define HISTFILENAME	".vsh_history"
 # define HIST_SEPARATE	-1
+# define HIST_EXPANDED	(1 << 2)
 
 /*
 **===============================personal headers===============================
@@ -349,7 +352,7 @@ typedef struct	s_point
 	int			y;
 }				t_point;
 
-typedef struct	s_vshdatatermcaps
+typedef struct	s_datatermcaps
 {
 	char	*tc_clear_lines_str;
 	char	*tc_scroll_down_str;
@@ -361,14 +364,15 @@ typedef struct	s_vshdataterm
 	t_termios	*termios_p;
 }				t_vshdataterm;
 
-typedef struct	s_vshdatacurs
+typedef struct	s_datacurs
 {
 	t_point	coords;
 	int		cur_ws_col;
 	int		cur_ws_row;
+	int		cur_relative_y;
 }				t_datacurs;
 
-typedef struct	s_vshdatahistory
+typedef struct	s_datahistory
 {
 	t_history	**history;
 	char		*history_file;
@@ -377,7 +381,7 @@ typedef struct	s_vshdatahistory
 	int			hist_first;
 }				t_datahistory;
 
-typedef struct	s_vshdataline
+typedef struct	s_dataline
 {
 	char		*line;
 	char		*line_copy;
@@ -386,7 +390,7 @@ typedef struct	s_vshdataline
 	unsigned	len_cur;
 }				t_dataline;
 
-typedef struct	s_vshdataprompt
+typedef struct	s_dataprompt
 {
 	char	*prompt_name;
 	char	*prompt_seperator;
@@ -400,13 +404,13 @@ typedef struct	s_vshdatainput
 	char				c;
 }				t_datainput;
 
-typedef struct	s_vshdatahashtable
+typedef struct	s_datahashtable
 {
 	t_ht	*ht[HT_SIZE];
 	char	ht_flag;
 }				t_datahashtable;
 
-typedef	struct	s_vshdataalias
+typedef	struct	s_dataalias
 {
 	t_aliaslst	*aliaslst;
 	char		*alias_file;
@@ -440,6 +444,7 @@ typedef struct	s_vshdata
 	t_pipeseqlist	*pipeseq;
 	short			exec_flags;
 }				t_vshdata;
+t_vshdata		*g_data;
 
 t_vshdata		*g_data;
 
@@ -617,9 +622,9 @@ void			input_parse_ctrl_k(t_vshdata *data);
 void			input_parse_ctrl_u(t_vshdata *data);
 void			input_parse_ctrl_y(t_vshdata *data);
 void			input_parse_tab(t_vshdata *data);
-int				input_resize_window_check(t_vshdata *data);
-int				get_curs_row(t_vshdata *data);
-void			input_reset_cursor_pos(void);
+int				get_curs_row();
+void			input_reset_cursor_pos();
+void			resize_window_check(int sig);
 
 /*
 **----------------------------------shell---------------------------------------
@@ -853,6 +858,13 @@ int				history_change_line(t_vshdata *data,
 					char arrow);
 int				history_index_change_down(t_vshdata *data);
 int				history_index_change_up(t_vshdata *data);
+int				history_expansion(t_vshdata *data);
+char			*history_get_line(t_datahistory *history, char *line, size_t i);
+char			*history_match_line(t_datahistory *history,
+				char *line, size_t i);
+int				history_insert_into_line(char **line,
+				char *hist_line, size_t i);
+size_t			history_get_match_len(char *line, size_t i);
 
 /*
 **--------------------------------hashtable-------------------------------------
@@ -884,7 +896,7 @@ int				auto_get_cmdlst(char *match, t_envlst *envlst,
 int				auto_add_tolst(t_list **matchlst, char *filename);
 int				auto_match_builtins(char *match, t_list **matchlst,
 				int match_len);
-int				auto_get_filelst(char *match, char *path, t_list **matchlst);
+int				auto_get_filelst(char *match, char **path, t_list **matchlst);
 int				auto_get_varlst(char *match, int match_len, t_envlst *envlst,
 				t_list **matchlst);
 int				auto_find_state(char *line, ssize_t i);

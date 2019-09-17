@@ -6,7 +6,7 @@
 /*   By: omulder <omulder@student.codam.nl>           +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2019/04/18 16:44:50 by omulder        #+#    #+#                */
-/*   Updated: 2019/09/16 18:18:05 by jbrinksm      ########   odam.nl         */
+/*   Updated: 2019/09/17 10:42:42 by jbrinksm      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -37,6 +37,13 @@ int		shell_close_quote_and_esc(t_vshdata *data)
 	return (FUNCT_SUCCESS);
 }
 
+void	shell_dell(char **line, t_ast **ast, t_tokenlst **token_lst)
+{
+	ft_strdel(line);
+	parser_astdel(ast);
+	lexer_tokenlstdel(token_lst);
+}
+
 int		shell_start(t_vshdata *data)
 {
 	t_tokenlst	*token_lst;
@@ -47,15 +54,16 @@ int		shell_start(t_vshdata *data)
 	ast = NULL;
 	while (true)
 	{
-		ft_strdel(&data->line->line);
-		parser_astdel(&ast);
-		lexer_tokenlstdel(&token_lst);
+		shell_dell(&data->line->line, &ast, &token_lst);
 		shell_display_prompt(data, REGULAR_PROMPT);
 		ret = input_read(data);
 		if (ret == FUNCT_ERROR || ret == NEW_PROMPT)
 			continue ;
 		ret = shell_close_quote_and_esc(data);
 		if (ret == FUNCT_ERROR || ret == NEW_PROMPT)
+			continue ;
+		ret = history_expansion(data);
+		if (ret != FUNCT_SUCCESS)
 			continue ;
 		ft_putchar('\n');
 		if (history_line_to_array(data->history->history, &data->line->line)
