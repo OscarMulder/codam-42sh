@@ -920,4 +920,13 @@ void			auto_sort_n(t_list **matchlst);
 void			auto_swap_lstitem(t_list **flst, t_list *smal, t_list *prev);
 bool			auto_check_dups(t_list *matchlst, char *filename);
 
+/*
+**----------------------------------debugging-----------------------------------
+*/
+
+void			print_node(t_tokenlst *node);
+void			print_tree(t_ast *root);
+void			print_token(t_scanner *scanner);
+void			print_tree(t_ast *root);
+
 #endif

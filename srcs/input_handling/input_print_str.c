@@ -31,6 +31,9 @@ int			get_curs_row()
 		i++;
 	if (buf[i] == '[')
 		i++;
+	#ifdef DEBUG
+	ft_eprintf("curs: <%s>\n", &buf[1]);
+	#endif
 	if (ft_isdigit(buf[i]) == false)
 		return (ft_free_return(buf, FUNCT_ERROR));
 	row = ft_atoi(&buf[i]);

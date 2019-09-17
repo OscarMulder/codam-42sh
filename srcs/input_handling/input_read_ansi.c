@@ -61,7 +61,12 @@ int			input_read_ansi(t_vshdata *data)
 			else if (ft_strequ(termcapbuf, TC_DELETE) == true)
 				input_handle_delete(data);
 			else
+			{
+				#ifdef DEBUG
+				ft_eprintf(">%s< TERMCAP NOT FOUND\n", &termcapbuf[1]);
+				#endif
 				return (FUNCT_FAILURE);
+			}
 		}
 		return (FUNCT_SUCCESS);
 	}

@@ -30,7 +30,7 @@ void		curs_move_next_word(t_vshdata *data)
 	while (ft_isblank(data->line->line[data->line->index + i]) == true)
 		i++;
 	if ((data->line->index + i == data->line->len_cur)
-		|| (tools_isprintnotblank(data->line->line[data->line->index + i])
+		|| (tools_isprintnotblank(data->line->line[data->line->index + i]) 
 		== true))
 		curs_move_n_right(data, i);
 }
@@ -68,6 +68,9 @@ void		curs_move_n_right(t_vshdata *data, size_t n)
 	}
 	else
 		curs_move_n_right_hasnewlines(data, n);
+	#ifdef DEBUG
+	ft_eprintf("New cursor coordinates: [%d:%d]\n", data->curs->coords.x, data->curs->coords.y);
+	#endif
 }
 
 /*

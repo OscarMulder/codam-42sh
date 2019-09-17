@@ -52,6 +52,9 @@ int			history_index_change_up(t_vshdata *data)
 
 int			history_index_change_down(t_vshdata *data)
 {
+	#ifdef DEBUG
+	ft_eprintf("%i %i %i\n", data->history->hist_first, data->history->hist_index, data->history->hist_start);
+	#endif
 	if (data->history->hist_first)
 		return (FUNCT_FAILURE);
 	if (data->history->hist_index == data->history->hist_start)
