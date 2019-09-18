@@ -6,7 +6,7 @@
 /*   By: omulder <omulder@student.codam.nl>           +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2019/04/17 14:03:16 by rkuijper       #+#    #+#                */
-/*   Updated: 2019/09/17 17:09:55 by tde-jong      ########   odam.nl         */
+/*   Updated: 2019/09/18 15:01:20 by tde-jong      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -21,6 +21,16 @@
 #define JOB_OPT_NONE	0
 #define JOB_OPT_P		1
 #define JOB_OPT_L		2
+
+static void	print_job_info(t_job *job, int options)
+{
+	ft_printf("[%i]  + ", job->job_id);
+	if (options & JOB_OPT_L || options & JOB_OPT_P)
+		ft_printf("%i ", job->process_id);
+	ft_printf("%s ", jobs_get_job_state(job) == JOB_RUNNING ?
+		"running" : "suspended");
+	ft_printf("%s\n", job->command_name);
+}
 
 static int	read_options(char **args, int *arg, int *options)
 {
@@ -51,9 +61,8 @@ static int	read_options(char **args, int *arg, int *options)
 static int	jobs_log_args(t_datajobs *jobs, int options, char **args)
 {
 	int		i;
-	t_job	*job;
 	t_job	*toprint;
-	
+
 	(void)options;
 	if (jobs->joblist == NULL)
 	{
@@ -92,12 +101,7 @@ static int	jobs_log_all(t_datajobs *jobs, int options)
 			job = job->next;
 			continue ;
 		}
-		ft_printf("[%i]  + ", job->job_id);
-		if (options & JOB_OPT_L || options & JOB_OPT_P)
-			ft_printf("%i ", job->process_id);
-		ft_printf("%s ", jobs_get_job_state(job) == JOB_RUNNING ?
-			"running" : "suspended");
-		ft_printf("%s\n", job->command_name);
+		print_job_info(job, options);
 		job = job->next;
 	}
 	return (FUNCT_SUCCESS);
