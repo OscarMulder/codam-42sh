@@ -23,7 +23,7 @@ void		exec_add_pid_to_pipeseqlist(t_vshdata *data, pid_t pid)
 		orig_list = data->pipeseq;
 		is_first_item = true;
 	}
-	data->pipeseq = ft_memalloc(sizeof(t_pipeseqlist));
+	data->pipeseq = (t_pipeseqlist*)ft_memalloc(sizeof(t_pipeseqlist));
 	if (data->pipeseq == NULL)
 	{
 		ft_eprintf(SHELL ": could not allocate memory to keep track of a pid in"
