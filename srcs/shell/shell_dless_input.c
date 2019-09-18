@@ -61,7 +61,23 @@ int			shell_dless_set_tk_val(t_tokenlst *probe, char **heredoc,
 		ft_strdel(&heredoc_delim);
 		return (FUNCT_ERROR);
 	}
+	probe->flags |= T_FLAG_ISHEREDOC;
+	if (tool_check_for_special(probe->value) == true)
+		probe->flags |= T_FLAG_HASSPECIAL;
 	return (FUNCT_SUCCESS);
+}
+
+static bool	tools_contains_quoted_chars(char *str)
+{
+	if (str == NULL)
+		return (false);
+	while (*str != '\0')
+	{
+		if (*str == '"' || *str == '\'' || *str == '\\')
+			return (true);
+		str++;
+	}
+	return (false);
 }
 
 static bool	is_valid_heredoc_delim(t_tokenlst *token)
@@ -78,6 +94,11 @@ static bool	is_valid_heredoc_delim(t_tokenlst *token)
 		ft_eprintf(E_P_NOT_VAL_HERE,
 			token->value);
 		return (false);
+	}
+	if (tools_contains_quoted_chars(token->value) == true)
+	{
+		tools_remove_quotes_etc(token->value, false);
+		token->flags |= T_FLAG_HEREDOC_NOEXP;
 	}
 	g_state->exit_code = EXIT_SUCCESS;
 	return (true);

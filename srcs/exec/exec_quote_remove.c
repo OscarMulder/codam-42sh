@@ -20,6 +20,26 @@ static void	remove_backslash(char *str, int *i, int *i_new)
 	(*i_new)++;
 }
 
+/*
+**	In a expandable heredoc we only want to escape '\', '$', and
+**	handle the special line continuation (escaped '\n').
+*/
+
+static void	remove_heredoc_backslash(char *str, int *i, int *i_new)
+{
+	(*i)++;
+	if (str[*i] == '\\' || str[*i] == '$')
+	{
+		str[*i_new] = str[*i];
+		(*i_new)++;
+		(*i)++;
+	}
+	else if (str[*i] == '\n')
+		(*i)++;
+	else
+		(*i)--;
+}
+
 static void	remove_double_quote(char *str, int *i, int *i_new)
 {
 	(*i)++;
@@ -49,7 +69,7 @@ static void	remove_single_quote(char *str, int *i, int *i_new)
 	(*i)++;
 }
 
-static void	remove_quotes_etc(char *str)
+void	tools_remove_quotes_etc(char *str, bool is_heredoc)
 {
 	int		i;
 	int		i_new;
@@ -58,11 +78,13 @@ static void	remove_quotes_etc(char *str)
 	i_new = 0;
 	while (str[i] != '\0')
 	{
-		if (str[i] == '\\')
+		if (str[i] == '\\' && is_heredoc == false)
 			remove_backslash(str, &i, &i_new);
-		else if (str[i] == '\'')
+		else if (str[i] == '\\' && is_heredoc == true)
+			remove_heredoc_backslash(str, &i, &i_new);
+		else if (str[i] == '\'' && is_heredoc == false)
 			remove_single_quote(str, &i, &i_new);
-		else if (str[i] == '"')
+		else if (str[i] == '"' && is_heredoc == false)
 			remove_double_quote(str, &i, &i_new);
 		else
 		{
@@ -76,14 +98,19 @@ static void	remove_quotes_etc(char *str)
 
 void		exec_quote_remove(t_ast *node)
 {
-	char *str;
+	char	*str;
+	bool	is_heredoc;
 
 	if (node->left != NULL)
 		exec_quote_remove(node->left);
 	if (node->right != NULL)
 		exec_quote_remove(node->right);
-	if (node->type == WORD || node->type == ASSIGN)
+	if ((node->type == WORD || node->type == ASSIGN)
+	&& (node->flags & T_FLAG_HEREDOC_NOEXP) == false)
 	{
+		is_heredoc = false;
+		if (node->flags & T_FLAG_ISHEREDOC)
+			is_heredoc = true;
 		str = node->value;
 		if (node->type == ASSIGN)
 		{
@@ -91,6 +118,6 @@ void		exec_quote_remove(t_ast *node)
 				str++;
 			str++;
 		}
-		remove_quotes_etc(str);
+		tools_remove_quotes_etc(str, is_heredoc);
 	}
 }

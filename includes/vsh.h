@@ -193,6 +193,8 @@
 # define T_STATE_DQUOTE (1 << 2)
 # define T_FLAG_ISASSIGN (1 << 3)
 # define T_MALLOC_ERROR (1 << 4)
+# define T_FLAG_HEREDOC_NOEXP (1 << 5)
+# define T_FLAG_ISHEREDOC (1 << 6)
 
 /*
 **-----------------------------------executor-----------------------------------
@@ -786,6 +788,7 @@ bool			tool_is_special(char c);
 bool			tool_check_for_special(char *str);
 bool			tool_check_for_whitespace(char *str);
 int				tool_get_paths(t_envlst *envlst, char ***paths);
+void			tools_remove_quotes_etc(char *str, bool is_heredoc);
 
 /*
 **----------------------------------execution-----------------------------------
