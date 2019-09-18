@@ -14,22 +14,23 @@
 
 void		exec_add_pid_to_pipeseqlist(t_vshdata *data, pid_t pid)
 {
-	t_pipeseqlist	*probe;
+	t_pipeseqlist	*orig_list;
+	bool			is_first_item;
 
+	is_first_item = false;
 	if (data->pipeseq == NULL)
 	{
-		data->pipeseq = ft_memalloc(sizeof(t_pipeseqlist));
-		if (data->pipeseq == NULL)
-			return ;
-		data->pipeseq->pid = pid;
+		orig_list = data->pipeseq;
+		is_first_item = true;
 	}
-	else
+	data->pipeseq = ft_memalloc(sizeof(t_pipeseqlist));
+	if (data->pipeseq == NULL)
 	{
-		probe = data->pipeseq;
-		data->pipeseq = ft_memalloc(sizeof(t_pipeseqlist));
-		if (data->pipeseq == NULL)
-			return ;
-		data->pipeseq->pid = pid;
-		data->pipeseq->next = probe;
+		ft_eprintf(SHELL ": could not allocate memory to keep track of a pid in"
+		" a pipe sequence. You will have to manually cancel some processes.\n");
+		return ;
 	}
+	data->pipeseq->pid = pid;
+	if (is_first_item)
+		data->pipeseq->next = orig_list;
 }
