@@ -6,7 +6,7 @@
 /*   By: omulder <omulder@student.codam.nl>           +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2019/04/10 20:29:42 by jbrinksm       #+#    #+#                */
-/*   Updated: 2019/09/17 13:27:00 by mavan-he      ########   odam.nl         */
+/*   Updated: 2019/09/18 15:34:24 by mavan-he      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -646,7 +646,7 @@ int 			shell_init_term(t_vshdata *data);
 void			shell_args(t_vshdata *data, char *filepath);
 int				shell_get_path(t_vshdata *data, char **filepath);
 int				shell_init_line(t_vshdata *data, char *filepath);
-void			shell_one_line(t_vshdata *data);
+int				shell_one_line(t_vshdata *data);
 void			shell_stdin(t_vshdata *data);
 void			shell_clear_input_data(char **line, t_ast **ast, t_tokenlst **token_lst);
 
