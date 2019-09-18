@@ -26,7 +26,7 @@ t_datacurs		*shell_init_vshdatacurs(void)
 	if (ioctl(STDIN_FILENO, TIOCGWINSZ, &ws) != -1)
 	{
 		curs->cur_ws_col = ws.ws_col;
-		curs->cur_ws_row = ws.ws_row;		
+		curs->cur_ws_row = ws.ws_row;
 	}
 	return (curs);
 }
@@ -42,7 +42,7 @@ t_dataline		*shell_init_vshdataline(void)
 	return (line);
 }
 
-t_dataprompt		*shell_init_vshdataprompt(void)
+t_dataprompt	*shell_init_vshdataprompt(void)
 {
 	t_dataprompt	*prompt;
 
