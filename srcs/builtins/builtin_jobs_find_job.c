@@ -6,7 +6,7 @@
 /*   By: tde-jong <tde-jong@student.codam.nl>         +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2019/09/17 16:37:33 by tde-jong       #+#    #+#                */
-/*   Updated: 2019/09/18 16:43:42 by tde-jong      ########   odam.nl         */
+/*   Updated: 2019/09/18 16:45:39 by tde-jong      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -21,7 +21,9 @@ static t_job	*find_current_job(t_job *joblist)
 	{
 		if (job->current == 1)
 			return (job);
+		job = job->next;
 	}
+	return (NULL);
 }
 
 t_job			*builtin_jobs_find_job(char *job_id, t_job *joblist)
