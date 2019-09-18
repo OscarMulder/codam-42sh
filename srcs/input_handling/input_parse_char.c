@@ -113,9 +113,10 @@ static int	add_newline(t_vshdata *data, char **line)
 
 static int	empty_input_buffer(t_vshdata *data, int n)
 {
-	char			c;
 	fd_set			readfds;
 	struct timeval	timeout;
+	int				bytes_read;
+	char			buf[INPUT_BUF_READ_SIZE + 1];
 
 	FD_ZERO(&readfds);
 	timeout.tv_sec = 0;
@@ -123,13 +124,11 @@ static int	empty_input_buffer(t_vshdata *data, int n)
 	FD_SET(STDIN_FILENO, &readfds);
 	if (select(1, &readfds, NULL, NULL, &timeout) != 0)
 	{
-		read(STDIN_FILENO, &c, 1);
-		if (c == '\t')
-			c = ' ';
-		if (add_char_at(data, data->line->index + n, c,
-			&data->line->line) == FUNCT_ERROR)
-			return (0);
-		return (empty_input_buffer(data, n + 1));
+		bytes_read = read(STDIN_FILENO, buf, INPUT_BUF_READ_SIZE);
+		buf[bytes_read] = '\0';
+		input_add_chunk(data, buf, bytes_read, n);
+		data->line->len_cur += bytes_read;
+		return (empty_input_buffer(data, n + bytes_read));
 	}
 	return (n - 1);
 }
