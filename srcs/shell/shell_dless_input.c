@@ -15,7 +15,7 @@
 
 static int	return_heredoc_error(void)
 {
-	ft_printf(E_N_ALLOC_STR, "heredoc");
+	ft_eprintf(E_N_ALLOC_STR, "heredoc");
 	return (FUNCT_ERROR);
 }
 
@@ -66,6 +66,8 @@ int			shell_dless_set_tk_val(t_tokenlst *probe, char **heredoc,
 	}
 	if (probe->value == NULL || ret == NEW_PROMPT || ret == FUNCT_ERROR)
 	{
+		if (probe->value == NULL)
+			ft_eprintf(E_ALLOC_STR, "heredoc");
 		ft_strdel(heredoc);
 		ft_strdel(&heredoc_delim);
 		return (ret);

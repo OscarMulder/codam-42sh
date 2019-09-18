@@ -18,6 +18,8 @@ void	shell_get_valid_prompt(t_vshdata *data, int prompt_type)
 		data->prompt->prompt_name = "quote";
 	else if (prompt_type == DQUOTE_PROMPT)
 		data->prompt->prompt_name = "dquote";
+	else if (prompt_type == LINECONT_PROMPT)
+		data->prompt->prompt_name = "linecont";
 	else if (prompt_type == DLESS_PROMPT)
 		data->prompt->prompt_name = "";
 	else

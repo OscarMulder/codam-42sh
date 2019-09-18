@@ -18,7 +18,7 @@ void		exec_add_pid_to_pipeseqlist(t_vshdata *data, pid_t pid)
 	bool			is_first_item;
 
 	is_first_item = false;
-	if (data->pipeseq == NULL)
+	if (data->pipeseq != NULL)
 	{
 		orig_list = data->pipeseq;
 		is_first_item = true;

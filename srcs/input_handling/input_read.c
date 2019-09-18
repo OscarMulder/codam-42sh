@@ -87,9 +87,7 @@ static int	input_parse(t_vshdata *data)
 	if (input_parse_ctrl_c(data) == FUNCT_SUCCESS)
 		return (reset_input_read_return(data, NEW_PROMPT));
 	ret = input_parse_ctrl_d(data);
-	if (ret == NEW_PROMPT)
-		return (reset_input_read_return(data, NEW_PROMPT));
-	else if (ret == IR_EOF)
+	if (ret == IR_EOF)
 		return (IR_EOF);
 	else if (ret == FUNCT_SUCCESS)
 		return (FUNCT_SUCCESS);

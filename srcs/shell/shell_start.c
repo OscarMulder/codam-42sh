@@ -35,8 +35,10 @@ int		shell_close_quote_and_esc(t_vshdata *data)
 		else if (ret == IR_EOF)
 			ctrl_d = true;
 		ret = shell_handle_escaped_newlines(data);
-		if (ret == FUNCT_ERROR)
-			return (FUNCT_ERROR);
+		if (ret == FUNCT_ERROR || ret == NEW_PROMPT)
+			return (ret);
+		else if (ret == IR_EOF)
+			ctrl_d = true;
 	}
 	if (ctrl_d == true)
 		return (IR_EOF);

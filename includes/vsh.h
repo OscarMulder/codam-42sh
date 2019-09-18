@@ -466,6 +466,7 @@ t_vshdata		*g_data;
 typedef enum	e_prompt_type
 {
 	REGULAR_PROMPT,
+	LINECONT_PROMPT,
 	QUOTE_PROMPT,
 	DQUOTE_PROMPT,
 	DLESS_PROMPT
