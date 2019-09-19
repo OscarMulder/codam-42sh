@@ -110,6 +110,21 @@ static int	add_newline(t_vshdata *data, char **line)
 **	from the buffer (n - 1).
 */
 
+static int	input_filter_buffer(char *str)
+{
+	int i;
+
+	i = 0;
+	while (str[i] != '\0')
+	{
+		if (ft_isprint(str[i]) == false)
+			ft_memmove(&str[i], &str[i + 1], ft_strlen(&str[i + 1]) + 1);
+		else
+			i++;
+	}
+	return (ft_strlen(str));
+}
+
 int		input_empty_buffer(t_vshdata *data, int n)
 {
 	fd_set			readfds;
@@ -125,6 +140,7 @@ int		input_empty_buffer(t_vshdata *data, int n)
 	{
 		bytes_read = read(STDIN_FILENO, buf, INPUT_BUF_READ_SIZE);
 		buf[bytes_read] = '\0';
+		bytes_read = input_filter_buffer(buf);
 		input_add_chunk(data, buf, bytes_read, n);
 		data->line->len_cur += bytes_read;
 		return (input_empty_buffer(data, n + bytes_read));
