@@ -6,7 +6,7 @@
 /*   By: omulder <omulder@student.codam.nl>           +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2019/09/11 12:54:36 by omulder        #+#    #+#                */
-/*   Updated: 2019/09/17 10:19:45 by omulder       ########   odam.nl         */
+/*   Updated: 2019/09/19 17:32:00 by omulder       ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -29,12 +29,7 @@ int *end)
 	if (fc_find_index(history, fc, fc->first, start) == FUNCT_FAILURE)
 		return (FUNCT_FAILURE);
 	if (fc->last == NULL)
-	{
-		if ((history->hist_start + 1) == HISTORY_MAX)
-			*end = 0;
-		else
-			*end = history->hist_start;
-	}
+		*end = history->hist_start;
 	else
 	{
 		if (fc_find_index(history, fc, fc->last, end) == FUNCT_FAILURE)
@@ -58,7 +53,7 @@ void		fc_list(t_datahistory *history, t_fcdata *fc)
 	if (fc->options & FC_OPT_R)
 		fc_print_reverse(start, end, history->history, fc);
 	else if (history->history[start]->number > history->history[end]->number ||
-	(fc->options & FC_FIRST_NEG && fc->options & FC_LAST_NEG))
+	(fc->options & FC_FIRST_NEG && fc->last != NULL))
 		fc_print_reverse(end, start, history->history, fc);
 	else
 		fc_print_regular(start, end, history->history, fc);

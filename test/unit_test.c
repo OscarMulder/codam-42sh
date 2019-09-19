@@ -6,7 +6,7 @@
 /*   By: omulder <omulder@student.codam.nl>           +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2019/04/18 16:37:32 by omulder        #+#    #+#                */
-/*   Updated: 2019/09/17 17:41:21 by omulder       ########   odam.nl         */
+/*   Updated: 2019/09/19 19:11:16 by omulder       ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -1246,7 +1246,7 @@ Test(builtin_fc_list, basic_test_rev, .init=redirect_all_stdout)
 	remove(data->history->history_file);
 }
 
-Test(builtin_fc_list, basic_test_overflow/*, .init=redirect_all_stdout*/)
+Test(builtin_fc_list, basic_test_overflow, .init=redirect_all_stdout)
 {
 	t_vshdata	*data;
 	int			i;
@@ -1254,8 +1254,6 @@ Test(builtin_fc_list, basic_test_overflow/*, .init=redirect_all_stdout*/)
 	char		*str2 = ft_strdup("echo bonjour\n");
 	char		*str3 = ft_strdup("echo wauw\n");
 	char		*str4 = ft_strdup("echo lol\n");
-	// char		*str5 = ft_strdup("echo codam\n");
-	// char		*str6 = ft_strdup("echo last\n");
 	char		**args;
 
 	INIT_VSHDATA
@@ -1279,7 +1277,6 @@ Test(builtin_fc_list, basic_test_overflow/*, .init=redirect_all_stdout*/)
 	history_line_to_array(data->history->history, &str2);
 	history_line_to_array(data->history->history, &str3);
 	history_line_to_array(data->history->history, &str4);
-	history_line_to_array(data->history->history, &str4);
 	args = (char**)ft_memalloc(sizeof(char *) * 5);
 	args[0] = ft_strdup("fc");
 	args[1] = ft_strdup("-l");
@@ -1289,7 +1286,159 @@ Test(builtin_fc_list, basic_test_overflow/*, .init=redirect_all_stdout*/)
 	data->history->hist_index = find_start(data->history->history);
 	data->history->hist_start = data->history->hist_index - 1;
 	builtin_fc(args, data);
-	//cr_expect_stdout_eq_str("2\techo bonjour\n3\techo wauw\n4\techo lol\n5\techo codam\n6\techo last\n");
+	cr_expect_stdout_eq_str("501\techo bonjour\n502\techo wauw\n503\techo lol\n");
+	ft_strarrdel(&args);
+	remove(data->history->history_file);
+}
+
+Test(builtin_fc_list, neg_test_1, .init=redirect_all_stdout)
+{
+	t_vshdata	*data;
+	int			i;
+	char		*str1 = ft_strdup("echo first\n");
+	char		*str2 = ft_strdup("echo bonjour\n");
+	char		*str3 = ft_strdup("echo wauw\n");
+	char		**args;
+
+	INIT_VSHDATA
+	i = 0;
+	data->history->history_file = ft_strdup("/tmp/.vsh_history5");
+	data->history->history = (t_history **)ft_memalloc(sizeof(t_history *) * HISTORY_MAX);
+	while (i < HISTORY_MAX)
+	{
+		data->history->history[i] = (t_history*)ft_memalloc(sizeof(t_history));
+		i++;
+	}
+	history_line_to_array(data->history->history, &str1);
+	history_line_to_array(data->history->history, &str2);
+	history_line_to_array(data->history->history, &str3);
+	data->history->hist_index = find_start(data->history->history);
+	data->history->hist_start = data->history->hist_index - 1;
+	data->history->hist_isfirst = true;
+	args = (char**)ft_memalloc(sizeof(char *) * 4);
+	args[0] = ft_strdup("fc");
+	args[1] = ft_strdup("-l");
+	args[2] = ft_strdup("-1");
+	fflush(NULL);
+	builtin_fc(args, data);
+	cr_expect_stdout_eq_str("3\techo wauw\n");
+	ft_strarrdel(&args);
+	remove(data->history->history_file);
+}
+
+/*
+	This test could pass when only the first string is printed,
+	because cr_expect_stdout_eq_str stops checking
+ */
+
+Test(builtin_fc_list, neg_test_2, .init=redirect_all_stdout)
+{
+	t_vshdata	*data;
+	int			i;
+	char		*str1 = ft_strdup("echo first\n");
+	char		*str2 = ft_strdup("echo bonjour\n");
+	char		*str3 = ft_strdup("echo wauw\n");
+	char		**args;
+
+	INIT_VSHDATA
+	i = 0;
+	data->history->history_file = ft_strdup("/tmp/.vsh_history5");
+	data->history->history = (t_history **)ft_memalloc(sizeof(t_history *) * HISTORY_MAX);
+	while (i < HISTORY_MAX)
+	{
+		data->history->history[i] = (t_history*)ft_memalloc(sizeof(t_history));
+		i++;
+	}
+	history_line_to_array(data->history->history, &str1);
+	history_line_to_array(data->history->history, &str2);
+	history_line_to_array(data->history->history, &str3);
+	data->history->hist_index = find_start(data->history->history);
+	data->history->hist_start = data->history->hist_index - 1;
+	data->history->hist_isfirst = true;
+	args = (char**)ft_memalloc(sizeof(char *) * 4);
+	args[0] = ft_strdup("fc");
+	args[1] = ft_strdup("-l");
+	args[2] = ft_strdup("-2");
+	fflush(NULL);
+	builtin_fc(args, data);
+	cr_expect_stdout_eq_str("2\techo bonjour\n3\techo wauw\n");
+	ft_strarrdel(&args);
+	remove(data->history->history_file);
+}
+
+Test(builtin_fc_list, neg_test_over_max, .init=redirect_all_stdout)
+{
+	t_vshdata	*data;
+	int			i;
+	char		*str1 = ft_strdup("echo first\n");
+	char		*str2 = ft_strdup("echo bonjour\n");
+	char		*str3 = ft_strdup("echo wauw\n");
+	char		**args;
+
+	INIT_VSHDATA
+	i = 0;
+	data->history->history_file = ft_strdup("/tmp/.vsh_history5");
+	data->history->history = (t_history **)ft_memalloc(sizeof(t_history *) * HISTORY_MAX);
+	while (i < HISTORY_MAX)
+	{
+		data->history->history[i] = (t_history*)ft_memalloc(sizeof(t_history));
+		i++;
+	}
+	i = 0;
+	while (i < (HISTORY_MAX))
+	{
+		history_line_to_array(data->history->history, &str1);
+		i++;
+	}
+	history_line_to_array(data->history->history, &str1);
+	history_line_to_array(data->history->history, &str2);
+	history_line_to_array(data->history->history, &str3);
+	data->history->hist_index = find_start(data->history->history);
+	data->history->hist_start = data->history->hist_index - 1;
+	data->history->hist_isfirst = true;
+	args = (char**)ft_memalloc(sizeof(char *) * 5);
+	args[0] = ft_strdup("fc");
+	args[1] = ft_strdup("-l");
+	args[2] = ft_strdup("-1");
+	args[3] = ft_strdup("-3");
+	fflush(NULL);
+	builtin_fc(args, data);
+	cr_expect_stdout_eq_str("503\techo wauw\n502\techo bonjour\n501\techo first\n");
+	ft_strarrdel(&args);
+	remove(data->history->history_file);
+}
+
+Test(builtin_fc_list, basic_word_test, .init=redirect_all_stdout)
+{
+	t_vshdata	*data;
+	int			i;
+	char		*str1 = ft_strdup("echo first\n");
+	char		*str2 = ft_strdup("codam\n");
+	char		*str3 = ft_strdup("echo wauw\n");
+	char		**args;
+
+	INIT_VSHDATA
+	i = 0;
+	data->history->history_file = ft_strdup("/tmp/.vsh_history4");
+	data->history->history = (t_history **)ft_memalloc(sizeof(t_history *) * HISTORY_MAX);
+	while (i < HISTORY_MAX)
+	{
+		data->history->history[i] = (t_history*)ft_memalloc(sizeof(t_history));
+		i++;
+	}
+	history_line_to_array(data->history->history, &str1);
+	history_line_to_array(data->history->history, &str2);
+	history_line_to_array(data->history->history, &str3);
+	data->history->hist_index = find_start(data->history->history);
+	data->history->hist_start = data->history->hist_index - 1;
+	data->history->hist_isfirst = true;
+	args = (char**)ft_memalloc(sizeof(char *) * 4);
+	args[0] = ft_strdup("fc");
+	args[1] = ft_strdup("-l");
+	args[2] = ft_strdup("codam");
+	fflush(NULL);
+	builtin_fc(args, data);
+	cr_expect_stdout_eq_str("2\tcodam\n3\techo wauw\n");
 	ft_strarrdel(&args);
 	remove(data->history->history_file);
 }
