@@ -6,7 +6,7 @@
 /*   By: mavan-he <mavan-he@student.codam.nl>         +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2019/09/16 13:45:10 by mavan-he       #+#    #+#                */
-/*   Updated: 2019/09/16 16:34:34 by mavan-he      ########   odam.nl         */
+/*   Updated: 2019/09/19 19:58:30 by mavan-he      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -39,7 +39,13 @@ static int	shell_stdin_to_line(t_vshdata *data)
 
 void		shell_stdin(t_vshdata *data)
 {
+	char	**lines;
+
 	if (shell_stdin_to_line(data) != FUNCT_SUCCESS)
 		return ;
-	shell_one_line(data);
+	lines = shell_line_splitter(data);
+	if (lines == NULL)
+		return ;
+	shell_lines_exec(data, lines);
+	// del lines
 }
