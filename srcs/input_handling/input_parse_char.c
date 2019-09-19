@@ -87,7 +87,6 @@ static int	add_newline(t_vshdata *data, char **line)
 		tmp[data->line->len_cur] = '\n';
 		*line = tmp;
 	}
-	data->line->len_cur++;
 	return (FUNCT_SUCCESS);
 }
 
