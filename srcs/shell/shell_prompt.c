@@ -45,7 +45,6 @@ void	shell_display_prompt(t_vshdata *data, int prompt_type)
 	input_reset_cursor_pos();
 	if (prompt_type == REGULAR_PROMPT)
 		ft_printf(RED);
-	input_reset_cursor_pos();
 	input_print_str(data, data->prompt->prompt_name);
 	if (data->prompt->prompt_addition != NULL && prompt_type == REGULAR_PROMPT)
 	{
