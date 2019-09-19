@@ -6,7 +6,7 @@
 /*   By: omulder <omulder@student.codam.nl>           +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2019/04/10 20:29:42 by jbrinksm       #+#    #+#                */
-/*   Updated: 2019/09/17 16:51:56 by tde-jong      ########   odam.nl         */
+/*   Updated: 2019/09/19 11:16:27 by tde-jong      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -369,7 +369,6 @@ typedef struct	s_job
 	int				job_id;
 	pid_t			process_id;
 	char			*command_name;
-	int				current;
 	int				state;
 	struct s_job	*next;
 }				t_job;
