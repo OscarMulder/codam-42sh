@@ -6,7 +6,7 @@
 /*   By: omulder <omulder@student.codam.nl>           +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2019/09/10 12:23:10 by omulder        #+#    #+#                */
-/*   Updated: 2019/09/20 16:00:20 by omulder       ########   odam.nl         */
+/*   Updated: 2019/09/20 19:47:10 by omulder       ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -30,7 +30,11 @@ void	builtin_fc(char **args, t_vshdata *data)
 
 	fc = (t_fcdata*)ft_memalloc(sizeof(t_fcdata));
 	fc_set_default_editor(data, fc);
-	fc_set_options(args, fc);
+	if (fc_set_options(args, fc) == FUNCT_FAILURE)
+	{
+		g_state->exit_code = EXIT_FAILURE;
+		return ;
+	}
 	if (fc->options & FC_OPT_L)
 		g_state->exit_code = fc_list(data->history, fc);
 }

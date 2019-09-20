@@ -6,7 +6,7 @@
 /*   By: omulder <omulder@student.codam.nl>           +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2019/09/11 12:54:36 by omulder        #+#    #+#                */
-/*   Updated: 2019/09/20 16:33:13 by omulder       ########   odam.nl         */
+/*   Updated: 2019/09/20 20:34:37 by omulder       ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -50,10 +50,10 @@ int			fc_list(t_datahistory *history, t_fcdata *fc)
 		if (find_start_end(history, fc, &start, &end) == FUNCT_FAILURE)
 			return (EXIT_FAILURE);
 	}
-	if (fc->options & FC_OPT_R)
+	if (fc->options & FC_OPT_R && fc->last == NULL)
 		fc_print_reverse(start, end, history->history, fc);
-	else if (history->history[start]->number > history->history[end]->number ||
-	(fc->options & FC_FIRST_NEG && fc->last != NULL))
+	else if (history->history[start]->number > history->history[end]->number
+	&& fc->last != NULL)
 		fc_print_reverse(end, start, history->history, fc);
 	else
 		fc_print_regular(start, end, history->history, fc);

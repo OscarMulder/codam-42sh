@@ -6,7 +6,7 @@
 /*   By: omulder <omulder@student.codam.nl>           +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2019/04/10 20:29:42 by jbrinksm       #+#    #+#                */
-/*   Updated: 2019/09/20 16:00:37 by omulder       ########   odam.nl         */
+/*   Updated: 2019/09/20 19:43:18 by omulder       ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -191,7 +191,7 @@
 # define U_FC 				"fc: usage: fc [-e ename] [-nlr] [first] [last] or \
 fc -s [pat=rep] [cmd]\n"
 # define E_FC_REQARG		SHELL "fc: %s: option requires an argument\n"
-# define E_FC_INV_OPT		SHELL ": fc: %.2s: invalid option\n"
+# define E_FC_INV_OPT		SHELL ": fc: -%c: invalid option\n"
 # define E_FC_OUT_RANGE		SHELL ": fc: history specification out of range\n"
 
 typedef struct	s_fcdata
@@ -829,7 +829,7 @@ int				cd_invalid_option(char c);
 void			builtin_fc(char **args, t_vshdata *data);
 void			fc_init_fcdata(t_fcdata **fc);
 void			fc_set_default_editor(t_vshdata *data, t_fcdata *fc);
-void			fc_set_options(char **args, t_fcdata *fc);
+int				fc_set_options(char **args, t_fcdata *fc);
 int				fc_option_editor(int i, char **args, t_fcdata *fc);
 int				fc_option_list(int i, char **args, t_fcdata *fc);
 int				fc_option_substitute(int i, char **args, t_fcdata *fc);
