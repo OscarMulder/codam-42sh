@@ -14,7 +14,7 @@
 #include <termios.h>
 #include <term.h>
 
-int			get_curs_row()
+int			get_curs_row(void)
 {
 	int		i;
 	int		row;
