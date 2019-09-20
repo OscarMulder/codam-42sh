@@ -6,7 +6,7 @@
 /*   By: omulder <omulder@student.codam.nl>           +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2019/04/18 16:37:32 by omulder        #+#    #+#                */
-/*   Updated: 2019/09/19 19:11:16 by omulder       ########   odam.nl         */
+/*   Updated: 2019/09/20 16:39:25 by omulder       ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -23,7 +23,7 @@
 #include <unistd.h>
 #include <fcntl.h>
 #include <errno.h>
-#define INIT_VSHDATA data = ft_memalloc(sizeof(t_vshdata)); data->envlst = env_getlst(); data->curs = shell_init_vshdatacurs();	data->history = shell_init_vshdatahistory(); data->line = shell_init_vshdataline();	data->prompt = shell_init_vshdataprompt(); data->input = shell_init_vshdatainput();	data->hashtable = shell_init_vshdatahashtable(); data->alias = shell_init_vshdataalias(); data->term = term_init_struct(); data->termcaps = shell_init_vshdatatermcaps();
+#define INIT_VSHDATA data = ft_memalloc(sizeof(t_vshdata)); data->envlst = env_getlst(); data->curs = shell_init_vshdatacurs();	data->history = shell_init_vshdatahistory(); data->line = shell_init_vshdataline();	data->prompt = shell_init_vshdataprompt(); data->input = shell_init_vshdatainput();	data->hashtable = shell_init_vshdatahashtable(); data->alias = shell_init_vshdataalias(); data->term = term_init_struct(); data->termcaps = shell_init_vshdatatermcaps(); g_state = (t_state*)ft_memalloc(sizeof(t_state));
 
 void redirect_all_stdout(void)
 {
@@ -626,10 +626,9 @@ Test(exec_echo, basic, .init=redirect_all_stdout)
 	char 		*str;
 	t_vshdata	*data;
 
-	g_state = (t_state*)ft_memalloc(sizeof(t_state));
-	g_state->exit_code = 0;
 	
 	INIT_VSHDATA
+	g_state->exit_code = 0;
 	str = ft_strdup("echo hoi\n");
 	lst = NULL;
 	ast = NULL;
@@ -649,14 +648,13 @@ Test(exec_echo, basic2, .init=redirect_all_stdout)
 	char 		*str;
 	t_vshdata	*data;
 
-	g_state = (t_state*)ft_memalloc(sizeof(t_state));
-	g_state->exit_code = 0;
 
 	str = ft_strdup("echo \"Hi, this is a string\"\n");
 	lst = NULL;
 	ast = NULL;
 	
 	INIT_VSHDATA
+	g_state->exit_code = 0;
 	data->envlst = env_getlst();
 	cr_expect(lexer(&(str), &lst) == FUNCT_SUCCESS);
 	cr_expect(parser_start(&lst, &ast) == FUNCT_SUCCESS);
@@ -764,10 +762,9 @@ Test(exec_find_bin, execnonexistent, .init=redirect_all_stdout)
 	char 		*str;
 	t_vshdata	*data;
 
-	g_state = (t_state*)ft_memalloc(sizeof(t_state));
-	g_state->exit_code = 0;
 	
 	INIT_VSHDATA
+	g_state->exit_code = 0;
 	data->envlst = env_getlst();
 	hash_init(data);
 	str = ft_strdup("idontexist\n");
@@ -811,14 +808,13 @@ Test(builtin_export, basic_test_n_option)
 	t_vshdata	*data;
 	char		*args[4];
 
-	g_state = (t_state*)ft_memalloc(sizeof(t_state));
-	g_state->exit_code = 0;
 
 	args[0] = "export";
 	args[1] = "key=value";
 	args[2] = NULL;
 	
 	INIT_VSHDATA
+	g_state->exit_code = 0;
 	data->envlst = env_getlst();
 	builtin_export(args, data);
 	args[0] = "export";
@@ -839,9 +835,6 @@ Test(builtin_export, basic_output_error_test, .init=redirect_all_stdout)
 	t_vshdata	*data;
 	char		*args[3];
 
-	g_state = (t_state*)ft_memalloc(sizeof(t_state));
-
-	
 	INIT_VSHDATA
 	g_state->exit_code = 0;
 	args[0] = "export";
@@ -858,9 +851,6 @@ Test(builtin_export, basic_output_error_test2, .init=redirect_all_stdout)
 	char		*args[3];
 	t_vshdata	*data;
 
-	g_state = (t_state*)ft_memalloc(sizeof(t_state));
-	
-	
 	INIT_VSHDATA
 	g_state->exit_code = 0;
 	args[0] = "export";
@@ -990,11 +980,10 @@ Test(alias, basic_test)
 	t_tokenlst	*token_lst;
 	t_ast		*ast;
 
-	g_state = (t_state*)ft_memalloc(sizeof(t_state));
-	g_state->exit_code = 0;
 	line = ft_strdup("alias echo='echo hoi ; echo dit ' ; alias hoi=ditte ; alias dit=dat\n");
 	
 	INIT_VSHDATA
+	g_state->exit_code = 0;
 	data->envlst = env_getlst();
 	redir_save_stdfds(data);
 	cr_assert(data->envlst != NULL);
