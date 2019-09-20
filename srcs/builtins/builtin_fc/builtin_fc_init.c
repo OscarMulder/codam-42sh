@@ -6,7 +6,7 @@
 /*   By: omulder <omulder@student.codam.nl>           +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2019/09/11 12:45:01 by omulder        #+#    #+#                */
-/*   Updated: 2019/09/20 19:52:44 by omulder       ########   odam.nl         */
+/*   Updated: 2019/09/20 20:44:28 by omulder       ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -67,5 +67,9 @@ void		fc_set_default_editor(t_vshdata *data, t_fcdata *fc)
 {
 	fc->editor = env_getvalue("FCEDIT", data->envlst);
 	if (fc->editor == NULL)
-		fc->editor = DEF_FCEDIT;
+	{
+		fc->editor = env_getvalue("EDITOR", data->envlst);
+		if (fc->editor == NULL)
+			fc->editor = DEF_FCEDIT;
+	}
 }
