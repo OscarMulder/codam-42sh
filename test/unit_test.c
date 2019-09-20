@@ -6,7 +6,7 @@
 /*   By: omulder <omulder@student.codam.nl>           +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2019/04/18 16:37:32 by omulder        #+#    #+#                */
-/*   Updated: 2019/09/20 16:39:25 by omulder       ########   odam.nl         */
+/*   Updated: 2019/09/20 16:40:50 by omulder       ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -1053,7 +1053,6 @@ Test(alias_file, basic_file_test)
 
 	
 	INIT_VSHDATA
-	g_state = (t_state*)ft_memalloc(sizeof(t_state));
 	g_state->exit_code = 0;
 	data->envlst = env_getlst();
 	data->alias->aliaslst = NULL;
@@ -1082,7 +1081,6 @@ Test(replace_var, basic_test, .init=redirect_all_stdout)
 
 	
 	INIT_VSHDATA
-	g_state = (t_state*)ft_memalloc(sizeof(t_state));
 	g_state->exit_code = 0;
 	line = ft_strdup("dit=dat ; hier=daar\n");
 	data->alias->aliaslst = NULL;
@@ -1118,7 +1116,6 @@ Test(tilde_expansion, basic_test)
 
 	
 	INIT_VSHDATA
-	g_state = (t_state*)ft_memalloc(sizeof(t_state));
 	g_state->exit_code = 0;
 	data->alias->aliaslst = NULL;
 	data->envlst = env_getlst();
