@@ -76,7 +76,6 @@ static int	reset_input_read_return(t_vshdata *data, int ret)
 		input_print_str(data, data->line->line);
 		data->line->index = data->line->len_cur;
 	}
-	else
 	data->curs->coords.y = get_curs_row();
 	data->curs->cur_relative_y = 1;
 	data->history->hist_index = find_start(data->history->history);
