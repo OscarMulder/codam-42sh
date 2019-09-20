@@ -113,16 +113,21 @@ static int	add_newline(t_vshdata *data, char **line)
 static int	input_filter_buffer(char *str)
 {
 	int i;
+	int j;
 
 	i = 0;
+	j = 0;
 	while (str[i] != '\0')
 	{
-		if (ft_isprint(str[i]) == false)
-			ft_memmove(&str[i], &str[i + 1], ft_strlen(&str[i + 1]) + 1);
-		else
-			i++;
+		if (ft_isprint(str[i]) == true || str[i] == '\n')
+		{
+			str[j] = str[i];
+			j++;
+		}
+		i++;
 	}
-	return (ft_strlen(str));
+	str[j] = '\0';
+	return (j);
 }
 
 int		input_empty_buffer(t_vshdata *data, int n)
