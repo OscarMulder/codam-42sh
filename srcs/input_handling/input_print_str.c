@@ -48,6 +48,12 @@ static void	scroll_down_terminal(t_vshdata *data)
 	ft_printf("\e[%iC", data->curs->coords.x - 1);
 }
 
+static void	update_newline_coords(t_vshdata *data)
+{
+	data->curs->coords.x = 1;
+	data->curs->cur_relative_y++;
+}
+
 void		input_print_str(t_vshdata *data, char *str)
 {
 	int		i;
@@ -56,14 +62,13 @@ void		input_print_str(t_vshdata *data, char *str)
 	while (str[i] != '\0')
 	{
 		ft_putchar(str[i]);
+		data->curs->coords.x++;
 		if (str[i] == '\n')
 		{
-			data->curs->coords.x = 1;
-			data->curs->coords.y++;
-			data->curs->cur_relative_y++;
+			update_newline_coords(data);
+			if (data->curs->coords.y < data->curs->cur_ws_row)
+				data->curs->coords.y++;
 		}
-		i++;
-		data->curs->coords.x++;
 		if (data->curs->coords.x > data->curs->cur_ws_col)
 		{
 			if (data->curs->coords.y == data->curs->cur_ws_row)
@@ -71,8 +76,8 @@ void		input_print_str(t_vshdata *data, char *str)
 			else
 				data->curs->coords.y++;
 			ft_printf("\e[B\e[%iD", data->curs->cur_ws_col);
-			data->curs->coords.x = 1;
-			data->curs->cur_relative_y++;
+			update_newline_coords(data);
 		}
+		i++;
 	}
 }
