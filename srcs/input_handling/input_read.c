@@ -17,22 +17,21 @@
 void		input_reset_cursor_pos(void)
 {
 	size_t		i;
+	size_t		len;
 	int			output;
-	size_t		answer_len;
 	char		answer[TC_MAXRESPONSESIZE];
 
-	answer_len = 0;
+	len = 0;
 	write(STDIN_FILENO, TC_GETCURSORPOS, 4);
-	while (answer_len < sizeof(answer) - 1 &&
-		read(1, answer + answer_len, 1) == 1)
+	while (len < sizeof(answer) - 1 && read(1, answer + len, 1) == 1)
 	{
-		if (answer[answer_len] == 'R')
+		if (answer[len] == 'R')
 			break ;
-		answer_len++;
+		len++;
 	}
-	answer[answer_len] = '\0';
+	answer[len] = '\0';
 	i = 1;
-	while (i < answer_len && answer[i] != ';')
+	while (i < len && answer[i] != ';')
 		i++;
 	if (answer[i] != '\0')
 	{
@@ -41,6 +40,7 @@ void		input_reset_cursor_pos(void)
 		if (output > 1)
 			ft_putstr("\e[47;30m%\e[0m\n");
 	}
+	g_data->curs->coords.x = 1;
 }
 
 static int	find_start(t_history **history)
@@ -70,7 +70,6 @@ static int	reset_input_read_return(t_vshdata *data, int ret)
 	data->line->index = 0;
 	data->line->len_max = 64;
 	data->line->len_cur = 0;
-	data->curs->coords.x = data->prompt->prompt_len + 1;
 	if (input_empty_buffer(data, 0) > 0)
 	{
 		input_print_str(data, data->line->line);
