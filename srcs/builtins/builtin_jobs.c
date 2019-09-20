@@ -6,7 +6,7 @@
 /*   By: omulder <omulder@student.codam.nl>           +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2019/04/17 14:03:16 by rkuijper       #+#    #+#                */
-/*   Updated: 2019/09/19 12:38:36 by tde-jong      ########   odam.nl         */
+/*   Updated: 2019/09/20 14:57:28 by tde-jong      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -60,34 +60,68 @@ static bool		is_previous_job(t_job *job, t_job *joblist)
 	return (false);
 }
 
+static t_job	*find_job_contains_str(char *str, t_job *joblist)
+{
+	t_job *job;
+
+	job = joblist;
+	while (job != NULL)
+	{
+		if (ft_strstr(job->command_name, str) != NULL)
+			return (job);
+		job = job->next;
+	}
+	return (NULL);
+}
+
+static t_job	*find_job_startswith_str(char *str, t_job *joblist)
+{
+	t_job *job;
+
+	job = joblist;
+	while (job != NULL)
+	{
+		if (ft_strstr(job->command_name, str) == job->command_name)
+			return (job);
+		job = job->next;
+	}
+	return (NULL);
+}
+
+static t_job	*find_job_n(char *n, t_job *joblist)
+{
+	t_job *job;
+
+	job = joblist;
+	while (job != NULL)
+	{
+		if (ft_atoi(n) == job->job_id)
+			return (job);
+		job = job->next;
+	}
+	return (NULL);
+}
+
 t_job			*builtin_jobs_find_job(char *job_id, t_job *joblist)
 {
 	if (job_id != NULL && job_id[0] != '\0' && job_id[1] != '\0')
 	{
-		ft_printf("job_id: %s\n", job_id);
 		job_id++;
-		ft_printf("job_id part 2: %s\n", job_id);
 		/* In this case we return Current Job */
-		if (*job_id == '%' || *job_id == '+')
+		if ((*job_id == '%' || *job_id == '+') && *(job_id + 1) == '\0')
 			return (find_current_job(joblist));
 		/* In this case we return Previous job. */
-		else if (*job_id == '-')
+		else if (*job_id == '-' && *(job_id + 1) == '\0')
 			return (find_previous_job(joblist));
 		/* In this case we return Job whose command contains string. */
 		else if (*job_id == '?')
-		{
-
-		}
+			return (find_job_contains_str(job_id + 1, joblist));
 		/* In this case we return Job number n. */
 		else if (ft_isdigit(*job_id))
-		{
-
-		}
+			return (find_job_n(job_id, joblist));
 		/* In this case we return Job whose command begins with string. */
 		else
-		{
-
-		}
+			return (find_job_startswith_str(job_id, joblist));
 	}
 	return (NULL);
 }
@@ -101,7 +135,7 @@ static void	print_job_info(t_job *job, int options, t_job *joblist)
 		current = '+';
 	if (is_previous_job(job, joblist))
 		current = '-';
-	ft_printf("[%i]  %c ", job->job_id, current);
+	ft_printf("[%i] %c ", job->job_id, current);
 	if (options & JOB_OPT_L || options & JOB_OPT_P)
 		ft_printf("%i ", job->process_id);
 	ft_printf("%s ", jobs_get_job_state(job) == JOB_RUNNING ?
@@ -149,7 +183,6 @@ static int	jobs_log_args(t_datajobs *jobs, int options, char **args)
 	i = 0;
 	while (args[i] != NULL)
 	{
-		ft_printf("arg: %s\n", args[i]);
 		toprint = builtin_jobs_find_job(args[i], jobs->joblist);
 		if (toprint == NULL)
 			return (FUNCT_FAILURE);
