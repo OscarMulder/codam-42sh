@@ -6,7 +6,7 @@
 /*   By: omulder <omulder@student.codam.nl>           +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2019/09/12 18:16:01 by omulder        #+#    #+#                */
-/*   Updated: 2019/09/19 19:13:30 by omulder       ########   odam.nl         */
+/*   Updated: 2019/09/20 20:42:46 by omulder       ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -70,25 +70,24 @@ static void	find_history_item_num(t_datahistory *history, int num, int *index)
 
 static void	find_hist_num_neg(t_datahistory *history, int num, int *index)
 {
-	int hist_total;
+	int total;
 
-	hist_total = history->history[history->hist_start]->number;
+	total = history->history[history->hist_start]->number;
 	if (num == 0 || num == -1)
-	{
 		*index = history->hist_start;
+	if (num == 0 || num == -1)
 		return ;
-	}
 	if (num < 0)
-		num = hist_total + 1 + num;
+		num = total + 1 + num;
 	if (num <= 0)
 	{
-		if (hist_total < HISTORY_MAX)
+		if (total < HISTORY_MAX)
 			*index = 0;
 		else
 		{
 			if (history->hist_start == (HISTORY_MAX - 1))
 				*index = 0;
-			else if (hist_total > history->history[history->hist_start + 1]->number)
+			else if (total > history->history[history->hist_start + 1]->number)
 				*index = history->hist_start + 1;
 			else
 				*index = history->hist_start + 2;
