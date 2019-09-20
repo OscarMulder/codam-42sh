@@ -291,6 +291,7 @@ typedef struct	s_fcdata
 # define INPUT_CTRL_U 21
 # define INPUT_CTRL_Y 25
 # define TC_MAXRESPONSESIZE 16
+# define INPUT_BUF_READ_SIZE 100
 
 /*
 **=================================pipe defines=================================
@@ -671,6 +672,9 @@ void			input_parse_tab(t_vshdata *data);
 int				get_curs_row();
 void			input_reset_cursor_pos();
 void			resize_window_check(int sig);
+int				input_add_chunk(t_vshdata *data, char *chunk,
+				int chunk_len, int index);
+int				input_empty_buffer(t_vshdata *data, int n);
 
 /*
 **----------------------------------shell---------------------------------------
