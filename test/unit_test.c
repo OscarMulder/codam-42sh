@@ -6,7 +6,7 @@
 /*   By: omulder <omulder@student.codam.nl>           +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2019/04/18 16:37:32 by omulder        #+#    #+#                */
-/*   Updated: 2019/09/16 18:41:36 by mavan-he      ########   odam.nl         */
+/*   Updated: 2019/09/21 22:58:18 by omulder       ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -501,7 +501,7 @@ Test(history_check, history_to_file)
 	data->history->history_file = ft_strdup("/tmp/.vsh_history1");
 	i = 0;
 	data->history->history = (t_history**)ft_memalloc(sizeof(t_history *) * HISTORY_MAX);
-	while (i < HISTORY_MAX - 1)
+	while (i < HISTORY_MAX)
 	{
 		data->history->history[i] = (t_history*)ft_memalloc(sizeof(t_history));
 		i++;
