@@ -6,7 +6,7 @@
 /*   By: omulder <omulder@student.codam.nl>           +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2019/09/12 18:16:01 by omulder        #+#    #+#                */
-/*   Updated: 2019/09/20 20:42:46 by omulder       ########   odam.nl         */
+/*   Updated: 2019/09/21 18:43:38 by omulder       ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,23 +15,24 @@
 static int	find_history_item_str(t_datahistory *history, char *match,
 int *index)
 {
-	int i;
+	int		i;
+	size_t	len;
 
 	i = history->hist_start;
+	len = ft_strlen(match);
 	while (i >= 0 && history->history[i]->str != NULL)
 	{
-		if (ft_strncmp(history->history[i]->str, match, ft_strlen(match)) == 0)
+		if (ft_strncmp(history->history[i]->str, match, len) == 0)
 		{
 			*index = i;
 			return (FUNCT_SUCCESS);
 		}
 		i--;
 	}
-	if (i <= 0)
-		i = (HISTORY_MAX - 1);
+	i = (HISTORY_MAX - 1);
 	while (i > history->hist_start && history->history[i]->str != NULL)
 	{
-		if (ft_strncmp(history->history[i]->str, match, ft_strlen(match)) == 0)
+		if (ft_strncmp(history->history[i]->str, match, len) == 0)
 		{
 			*index = i;
 			return (FUNCT_SUCCESS);
