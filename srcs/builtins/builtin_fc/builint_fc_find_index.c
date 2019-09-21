@@ -6,7 +6,7 @@
 /*   By: omulder <omulder@student.codam.nl>           +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2019/09/12 18:16:01 by omulder        #+#    #+#                */
-/*   Updated: 2019/09/21 18:43:38 by omulder       ########   odam.nl         */
+/*   Updated: 2019/09/21 23:05:28 by omulder       ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -104,7 +104,8 @@ char *str, int *index)
 	int	num;
 
 	num = 0;
-	if (ft_isdigit(str[0]) || str[0] == '+' || str[0] == '-')
+	if (ft_isdigit(str[0]) || ((str[0] == '+' || str[0] == '-') &&
+	ft_isdigit(str[1])))
 	{
 		num = ft_atoi(str);
 		if (str == fc->first && num <= 0)
