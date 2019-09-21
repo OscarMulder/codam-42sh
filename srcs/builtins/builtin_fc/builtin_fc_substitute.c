@@ -6,7 +6,7 @@
 /*   By: omulder <omulder@student.codam.nl>           +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2019/09/21 15:22:42 by omulder        #+#    #+#                */
-/*   Updated: 2019/09/21 16:06:52 by omulder       ########   odam.nl         */
+/*   Updated: 2019/09/21 16:26:39 by omulder       ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,10 +15,10 @@
 static int	find_index(t_datahistory *history, t_fcdata *fc, int *index)
 {
 	if (fc->first == NULL)
-		index = history->hist_start;
+		*index = history->hist_start;
 	else
 	{
-		if (fc_find_index(history, fc, fc->first, &index) == FUNCT_FAILURE)
+		if (fc_find_index(history, fc, fc->first, index) == FUNCT_FAILURE)
 			return (FUNCT_FAILURE);
 	}
 	return (FUNCT_SUCCESS);

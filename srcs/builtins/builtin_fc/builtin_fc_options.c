@@ -6,7 +6,7 @@
 /*   By: omulder <omulder@student.codam.nl>           +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2019/09/11 12:38:27 by omulder        #+#    #+#                */
-/*   Updated: 2019/09/21 15:43:17 by omulder       ########   odam.nl         */
+/*   Updated: 2019/09/21 16:24:51 by omulder       ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -29,17 +29,9 @@ int		fc_option_editor(int i, char **args, t_fcdata *fc)
 int		fc_option_list(int i, char **args, t_fcdata *fc)
 {
 	fc->options |= FC_OPT_L;
-	i++;
-	if (args[i] == NULL || (args[i][0] == '-' &&
-	ft_isdigit(args[i][1]) == false))
-		return (0);
-	fc->first = args[i];
-	i++;
-	if (args[i] == NULL || (args[i][0] == '-' &&
-	ft_isdigit(args[i][1]) == false))
-		return (1);
-	fc->last = args[i];
-	return (2);
+	if (fc->first == NULL)
+		return (fc_handle_first_last(i, args, fc));
+	return (0);
 }
 
 void	fc_option_suppress(t_fcdata *fc)
@@ -55,6 +47,8 @@ void	fc_option_reverse(t_fcdata *fc)
 int		fc_option_substitute(int i, char **args, t_fcdata *fc)
 {
 	fc->options |= FC_OPT_S;
+	if (fc->first != NULL)
+		return (0);
 	i++;
 	if (args[i] == NULL || (args[i][0] == '-' &&
 	ft_isdigit(args[i][1]) == false))

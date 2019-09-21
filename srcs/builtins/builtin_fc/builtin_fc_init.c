@@ -6,7 +6,7 @@
 /*   By: omulder <omulder@student.codam.nl>           +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2019/09/11 12:45:01 by omulder        #+#    #+#                */
-/*   Updated: 2019/09/20 20:44:28 by omulder       ########   odam.nl         */
+/*   Updated: 2019/09/21 16:26:05 by omulder       ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,6 +17,21 @@ static int	fc_arg_error(char c)
 	ft_eprintf(E_FC_INV_OPT, c);
 	ft_eprintf(U_FC);
 	return (FUNCT_FAILURE);
+}
+
+int			fc_handle_first_last(int i, char **args, t_fcdata *fc)
+{
+	i++;
+	if (args[i] == NULL || (args[i][0] == '-' &&
+	ft_isdigit(args[i][1]) == false))
+		return (0);
+	fc->first = args[i];
+	i++;
+	if (args[i] == NULL || (args[i][0] == '-' &&
+	ft_isdigit(args[i][1]) == false))
+		return (1);
+	fc->last = args[i];
+	return (2);
 }
 
 int			fc_handle_option(char c, int *i, char **args, t_fcdata *fc)
@@ -31,6 +46,8 @@ int			fc_handle_option(char c, int *i, char **args, t_fcdata *fc)
 		fc_option_reverse(fc);
 	else if (c == 's')
 		(*i) += fc_option_substitute(*i, args, fc);
+	else if (ft_isdigit(c))
+		(*i) += fc_handle_first_last(*i, args, fc);
 	else
 		return (FUNCT_FAILURE);
 	return (FUNCT_SUCCESS);
@@ -58,6 +75,8 @@ int			fc_set_options(char **args, t_fcdata *fc)
 			}
 			i = new_i;
 		}
+		if (fc->first == NULL)
+			i += fc_handle_first_last(i, args, fc);
 		i++;
 	}
 	return (FUNCT_SUCCESS);
