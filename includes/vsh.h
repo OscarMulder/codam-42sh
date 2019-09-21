@@ -6,7 +6,7 @@
 /*   By: omulder <omulder@student.codam.nl>           +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2019/04/10 20:29:42 by jbrinksm       #+#    #+#                */
-/*   Updated: 2019/09/21 17:49:01 by omulder       ########   odam.nl         */
+/*   Updated: 2019/09/21 18:22:00 by omulder       ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -831,7 +831,7 @@ void			fc_init_fcdata(t_fcdata **fc);
 void			fc_set_default_editor(t_vshdata *data, t_fcdata *fc);
 int				fc_set_options(char **args, t_fcdata *fc);
 int				fc_option_editor(int i, char **args, t_fcdata *fc);
-int				fc_option_list(int i, char **args, t_fcdata *fc);
+void			fc_option_list(t_fcdata *fc);
 int				fc_option_substitute(int i, char **args, t_fcdata *fc);
 void			fc_option_suppress(t_fcdata *fc);
 void			fc_option_reverse(t_fcdata *fc);
@@ -845,7 +845,7 @@ int				fc_find_index(t_datahistory *history, t_fcdata *fc,
 				char *str, int *index);
 int				fc_substitute(t_vshdata *data, t_datahistory *history,
 				t_fcdata *fc);
-int				fc_handle_first_last(int i, char **args, t_fcdata *fc);
+
 /*
 **---------------------------------tools----------------------------------------
 */
