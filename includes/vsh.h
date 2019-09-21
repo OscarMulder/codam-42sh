@@ -6,7 +6,7 @@
 /*   By: omulder <omulder@student.codam.nl>           +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2019/04/10 20:29:42 by jbrinksm       #+#    #+#                */
-/*   Updated: 2019/09/20 19:43:18 by omulder       ########   odam.nl         */
+/*   Updated: 2019/09/21 16:00:42 by omulder       ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -843,6 +843,7 @@ void			fc_print_reverse(int start, int end, t_history **history,
 				t_fcdata *fc);
 int				fc_find_index(t_datahistory *history, t_fcdata *fc,
 				char *str, int *index);
+int				fc_substitute(t_datahistory *history, t_fcdata *fc);
 
 /*
 **---------------------------------tools----------------------------------------
@@ -964,6 +965,7 @@ int				error_return(int ret, int error, char *opt_str);
 int				err_ret_exit(char *str, int exitcode);
 void			err_void_exit(char *str, int exitcode);
 int				err_ret(char *str);
+int				err_ret_exitcode(char *str, int exitcode);
 
 /*
 **--------------------------------autocomplete----------------------------------

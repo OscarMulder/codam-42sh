@@ -6,7 +6,7 @@
 /*   By: omulder <omulder@student.codam.nl>           +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2019/09/11 12:38:27 by omulder        #+#    #+#                */
-/*   Updated: 2019/09/12 15:17:24 by omulder       ########   odam.nl         */
+/*   Updated: 2019/09/21 15:43:17 by omulder       ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -56,7 +56,8 @@ int		fc_option_substitute(int i, char **args, t_fcdata *fc)
 {
 	fc->options |= FC_OPT_S;
 	i++;
-	if (args[i] == NULL || args[i][0] == '-')
+	if (args[i] == NULL || (args[i][0] == '-' &&
+	ft_isdigit(args[i][1]) == false))
 		return (0);
 	if (ft_strchr(args[i], '=') != NULL)
 		fc->replace = args[i];
@@ -66,7 +67,8 @@ int		fc_option_substitute(int i, char **args, t_fcdata *fc)
 		return (1);
 	}
 	i++;
-	if (args[i] == NULL || args[i][0] == '-')
+	if (args[i] == NULL || (args[i][0] == '-' &&
+	ft_isdigit(args[i][1]) == false))
 		return (1);
 	fc->first = args[i];
 	return (2);
