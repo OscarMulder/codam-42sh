@@ -6,7 +6,7 @@
 /*   By: omulder <omulder@student.codam.nl>           +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2019/09/21 15:22:42 by omulder        #+#    #+#                */
-/*   Updated: 2019/09/21 17:57:11 by omulder       ########   odam.nl         */
+/*   Updated: 2019/09/21 19:17:43 by omulder       ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -69,6 +69,7 @@ int			fc_substitute(t_vshdata *data, t_datahistory *history, t_fcdata *fc)
 	}
 	data->line->line = cmd;
 	history_replace_last(history->history, &cmd);
+	ft_printf(cmd);
 	shell_one_line(data);
 	return (EXIT_SUCCESS);
 }
