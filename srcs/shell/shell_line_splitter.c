@@ -6,7 +6,7 @@
 /*   By: mavan-he <mavan-he@student.codam.nl>         +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2019/09/19 17:44:26 by mavan-he       #+#    #+#                */
-/*   Updated: 2019/09/19 21:45:54 by mavan-he      ########   odam.nl         */
+/*   Updated: 2019/09/20 18:05:22 by mavan-he      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -29,6 +29,8 @@ int		shell_line_count(char *line)
 	int		line_count;
 
 	quote = '\0';
+	i = 0;
+	line_count = 0;
 	while (line[i] != '\0')
 	{
 		if (line[i] == '\\' && quote != '\'' && line[i + 1] != '\0')
