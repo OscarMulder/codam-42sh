@@ -6,7 +6,7 @@
 /*   By: omulder <omulder@student.codam.nl>           +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2019/09/10 12:23:10 by omulder        #+#    #+#                */
-/*   Updated: 2019/09/21 15:39:08 by omulder       ########   odam.nl         */
+/*   Updated: 2019/09/21 17:27:29 by omulder       ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -38,5 +38,5 @@ void	builtin_fc(char **args, t_vshdata *data)
 	if (fc->options & FC_OPT_L)
 		g_state->exit_code = fc_list(data->history, fc);
 	else if (fc->options & FC_OPT_S)
-		g_state->exit_code = fc_substitute(data->history, fc);
+		g_state->exit_code = fc_substitute(data, data->history, fc);
 }

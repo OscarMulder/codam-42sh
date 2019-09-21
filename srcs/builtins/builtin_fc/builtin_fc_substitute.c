@@ -6,7 +6,7 @@
 /*   By: omulder <omulder@student.codam.nl>           +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2019/09/21 15:22:42 by omulder        #+#    #+#                */
-/*   Updated: 2019/09/21 16:26:39 by omulder       ########   odam.nl         */
+/*   Updated: 2019/09/21 17:57:11 by omulder       ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -29,35 +29,46 @@ char **cmd)
 {
 	char	*find;
 	char	*replace;
+	char	*tmp;
 
 	find = NULL;
 	replace = NULL;
+	*cmd = ft_strjoin(history->history[index]->str, "\n");
+	if (*cmd == NULL)
+		return (FUNCT_FAILURE);
 	if (fc->replace != NULL)
 	{
 		replace = (ft_strchr(fc->replace, '=') + 1);
+		if (replace == NULL)
+			return (FUNCT_FAILURE);
 		find = ft_strsub(fc->replace, 0, ((replace - 1) - fc->replace));
 		if (find == NULL)
 			return (err_ret_exitcode(E_ALLOC_STR, FUNCT_FAILURE));
-		*cmd = ft_strreplace(history->history[index]->str, find, replace);
-		if (*cmd == NULL)
+		tmp = ft_strreplace(*cmd, find, replace);
+		ft_strdel(&find);
+		if (tmp == NULL)
 			return (err_ret_exitcode(E_ALLOC_STR, FUNCT_FAILURE));
+		ft_strdel(cmd);
+		*cmd = tmp;
 	}
-	else
-		*cmd = ft_strdup(history->history[index]->str);
 	return (FUNCT_SUCCESS);
 }
 
-int		fc_substitute(t_datahistory *history, t_fcdata *fc)
+int			fc_substitute(t_vshdata *data, t_datahistory *history, t_fcdata *fc)
 {
 	int		index;
 	char	*cmd;
 
 	index = 0;
 	cmd = NULL;
-	if (find_index(history, fc, &index) == FUNCT_FAILURE)
+	if (find_index(history, fc, &index) == FUNCT_FAILURE ||
+	replace_cmd(history, fc, index, &cmd) == FUNCT_FAILURE)
+	{
+		ft_strdel(&cmd);
 		return (EXIT_FAILURE);
-	if (replace_cmd(history, fc, index, &cmd) == FUNCT_FAILURE)
-		return (EXIT_FAILURE);
-	// EXECUTE CMD HERE
+	}
+	data->line->line = cmd;
+	history_replace_last(history->history, &cmd);
+	shell_one_line(data);
 	return (EXIT_SUCCESS);
 }

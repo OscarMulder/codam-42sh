@@ -6,7 +6,7 @@
 /*   By: omulder <omulder@student.codam.nl>           +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2019/05/30 18:55:25 by mavan-he       #+#    #+#                */
-/*   Updated: 2019/08/22 11:34:41 by omulder       ########   odam.nl         */
+/*   Updated: 2019/09/21 17:50:02 by omulder       ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -46,6 +46,32 @@ static void	history_find_start(t_history **history, int *number, int *start)
 	}
 }
 
+int			history_replace_last(t_history **history, char **line)
+{
+	int start;
+	int number;
+	int i;
+
+	if (ft_strlen(*line) <= 1)
+		return (FUNCT_SUCCESS);
+	number = -1;
+	start = 0;
+	history_find_start(history, &number, &start);
+	if (start > 0)
+		i = start - 1;
+	else
+		i = HISTORY_MAX - 1;
+	if (history[i]->str != NULL)
+		ft_strdel(&history[i]->str);
+	history[i]->str = ft_strsub(*line, 0, ft_strlen(*line) - 1);
+	if (history[i]->str == NULL)
+	{
+		ft_eprintf(E_N_ALLOC_STR, "history");
+		return (FUNCT_ERROR);
+	}
+	return (FUNCT_SUCCESS);
+}
+
 int			history_line_to_array(t_history **history, char **line)
 {
 	int start;
@@ -64,7 +90,6 @@ int			history_line_to_array(t_history **history, char **line)
 	history[i]->str = ft_strsub(*line, 0, ft_strlen(*line) - 1);
 	if (history[i]->str == NULL)
 	{
-		ft_strdel(line);
 		ft_eprintf(E_N_ALLOC_STR, "history");
 		return (FUNCT_ERROR);
 	}

@@ -6,7 +6,7 @@
 /*   By: omulder <omulder@student.codam.nl>           +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2019/04/10 20:29:42 by jbrinksm       #+#    #+#                */
-/*   Updated: 2019/09/21 16:25:34 by omulder       ########   odam.nl         */
+/*   Updated: 2019/09/21 17:49:01 by omulder       ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -843,7 +843,8 @@ void			fc_print_reverse(int start, int end, t_history **history,
 				t_fcdata *fc);
 int				fc_find_index(t_datahistory *history, t_fcdata *fc,
 				char *str, int *index);
-int				fc_substitute(t_datahistory *history, t_fcdata *fc);
+int				fc_substitute(t_vshdata *data, t_datahistory *history,
+				t_fcdata *fc);
 int				fc_handle_first_last(int i, char **args, t_fcdata *fc);
 /*
 **---------------------------------tools----------------------------------------
@@ -944,7 +945,7 @@ char			*history_match_line(t_datahistory *history,
 int				history_insert_into_line(char **line,
 				char *hist_line, size_t i);
 size_t			history_get_match_len(char *line, size_t i);
-
+int				history_replace_last(t_history **history, char **line);
 /*
 **--------------------------------hashtable-------------------------------------
 */
