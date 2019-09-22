@@ -33,9 +33,10 @@ int			shell_dless_read_till_stop(char **heredoc, char *heredoc_delim,
 		ret = input_read(data);
 		if (ret == FUNCT_ERROR || ret == NEW_PROMPT)
 			return (ret);
+		if (ret != IR_EOF)
+			ft_putchar('\n');
 		if (ft_strequ(data->line->line, heredoc_delim) == true || ret == IR_EOF)
 			break ;
-		ft_putchar('\n');
 		if (*heredoc == NULL)
 			*heredoc = ft_strdup(data->line->line);
 		else
@@ -66,7 +67,7 @@ int			shell_dless_set_tk_val(t_tokenlst *probe, char **heredoc,
 	}
 	if (probe->value == NULL || ret == NEW_PROMPT || ret == FUNCT_ERROR)
 	{
-		if (probe->value == NULL)
+		if (probe->value == NULL && ret != NEW_PROMPT)
 			ft_eprintf(E_ALLOC_STR, "heredoc");
 		ft_strdel(heredoc);
 		ft_strdel(&heredoc_delim);
