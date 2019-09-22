@@ -1,8 +1,10 @@
+name: 42sh tests
+
 on: [push]
 
 jobs:
   build:
-    name: 42sh Build and test on ${{ matrix.os }}
+    name: ${{ matrix.os }}
     timeout-minutes: 5
     runs-on: ${{ matrix.os }}
     strategy:
