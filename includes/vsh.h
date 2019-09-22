@@ -6,7 +6,7 @@
 /*   By: omulder <omulder@student.codam.nl>           +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2019/04/10 20:29:42 by jbrinksm       #+#    #+#                */
-/*   Updated: 2019/09/22 18:31:31 by omulder       ########   odam.nl         */
+/*   Updated: 2019/09/22 19:48:42 by omulder       ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -202,6 +202,7 @@ typedef struct	s_fcdata
 	char	*editor;
 	char	*replace;
 	char	*match;
+	int		fd;
 }				t_fcdata;
 
 /*
@@ -845,7 +846,14 @@ int				fc_find_index(t_datahistory *history, t_fcdata *fc,
 				char *str, int *index);
 int				fc_substitute(t_vshdata *data, t_datahistory *history,
 				t_fcdata *fc);
-
+void			fc_find_start_end_no_param(t_datahistory *history, int *start,
+				int *end);
+int				fc_find_start_end(t_datahistory *history, t_fcdata *fc,
+				int *start, int *end);
+int				fc_get_indexes(t_datahistory *history, t_fcdata *fc, int *start,
+				int *end);
+void			fc_print(t_datahistory *history, t_fcdata *fc, int start,
+				int end)
 /*
 **---------------------------------tools----------------------------------------
 */
