@@ -6,7 +6,7 @@
 /*   By: omulder <omulder@student.codam.nl>           +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2019/09/11 13:03:14 by omulder        #+#    #+#                */
-/*   Updated: 2019/09/20 20:35:00 by omulder       ########   odam.nl         */
+/*   Updated: 2019/09/22 18:29:30 by omulder       ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -53,22 +53,29 @@ static int	add_tabs_after_newlines(char *str, char **new)
 	}
 	*new = ft_strnew(i + tab_count);
 	if (*new == NULL)
-		return (false);
+	{
+		ft_eprintf(E_N_ALLOC_STR, "fc");
+		g_state->exit_code = EXIT_FAILURE;
+		return (FUNCT_ERROR);
+	}
 	return (add_tabs(str, *new));
 }
 
-void		fc_list_print_line(t_history *history, t_fcdata *fc)
+int			fc_list_print_line(t_history *history, t_fcdata *fc)
 {
 	int		ret;
 	char	*tmp;
 
 	ret = add_tabs_after_newlines(history->str, &tmp);
+	if (ret == FUNCT_ERROR)
+		return (FUNCT_FAILURE);
 	if (fc->options & FC_OPT_N)
 		ft_printf("\t%s\n", tmp);
 	else
 		ft_printf("%d\t%s\n", history->number, tmp);
 	if (ret == true)
 		ft_strdel(&tmp);
+	return (FUNCT_SUCCESS);
 }
 
 /*
@@ -85,7 +92,8 @@ t_fcdata *fc)
 	((end >= start && (start + i) <= end) || end < start) &&
 	history[start + i]->str != NULL)
 	{
-		fc_list_print_line(history[(start + i)], fc);
+		if (fc_list_print_line(history[(start + i)], fc) == FUNCT_FAILURE)
+			return ;
 		i++;
 	}
 	if ((start + i) >= HISTORY_MAX && end < start)
@@ -93,7 +101,8 @@ t_fcdata *fc)
 		i = 0;
 		while (i <= end && history[i]->str != NULL)
 		{
-			fc_list_print_line(history[i], fc);
+			if (fc_list_print_line(history[i], fc) == FUNCT_FAILURE)
+				return ;
 			i++;
 		}
 	}
@@ -115,7 +124,8 @@ t_fcdata *fc)
 	((end - i) >= start || start > end) &&
 	history[end - i]->str != NULL)
 	{
-		fc_list_print_line(history[end - i], fc);
+		if (fc_list_print_line(history[end - i], fc) == FUNCT_FAILURE)
+			return ;
 		i++;
 	}
 	if ((end - i) <= 0 && start > end)
@@ -123,7 +133,8 @@ t_fcdata *fc)
 		i = HISTORY_MAX - 1;
 		while (i >= start && history[i]->str != NULL)
 		{
-			fc_list_print_line(history[i], fc);
+			if (fc_list_print_line(history[i], fc) == FUNCT_FAILURE)
+				return ;
 			i--;
 		}
 	}

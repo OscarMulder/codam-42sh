@@ -6,7 +6,7 @@
 /*   By: omulder <omulder@student.codam.nl>           +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2019/04/18 16:37:32 by omulder        #+#    #+#                */
-/*   Updated: 2019/09/21 15:20:29 by omulder       ########   odam.nl         */
+/*   Updated: 2019/09/22 18:24:35 by omulder       ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -501,7 +501,7 @@ Test(history_check, history_to_file)
 	data->history->history_file = ft_strdup("/tmp/.vsh_history1");
 	i = 0;
 	data->history->history = (t_history**)ft_memalloc(sizeof(t_history *) * HISTORY_MAX);
-	while (i < HISTORY_MAX - 1)
+	while (i < HISTORY_MAX)
 	{
 		data->history->history[i] = (t_history*)ft_memalloc(sizeof(t_history));
 		i++;
@@ -554,6 +554,7 @@ Test(history_overfivehundred, basic)
 	t_vshdata	*data;
 	int			i;
 	char		*str = ft_strdup("echo codam\n");
+	char		*str2 = ft_strdup("echo hoi\n");
 
 	i = 0;
 	
@@ -570,10 +571,13 @@ Test(history_overfivehundred, basic)
 	i = 0;
 	while (i < (HISTORY_MAX + 10))
 	{
-		history_line_to_array(data->history->history, &str);
+		if (i % 2)
+			history_line_to_array(data->history->history, &str);
+		else
+			history_line_to_array(data->history->history, &str2);
 		i++;
 	}
-	cr_expect_str_eq(data->history->history[0]->str, "echo codam");
+	cr_expect_str_eq(data->history->history[0]->str, "echo hoi");
 	cr_expect_str_eq(data->history->history[(HISTORY_MAX - 1)]->str, "echo codam");
 	cr_expect(data->history->history[0]->number == (HISTORY_MAX + 1));
 	cr_expect(data->history->history[9]->number == (HISTORY_MAX + 10));
@@ -1253,7 +1257,10 @@ Test(builtin_fc_list, basic_test_overflow, .init=redirect_all_stdout)
 	i = 0;
 	while (i < (HISTORY_MAX))
 	{
-		history_line_to_array(data->history->history, &str1);
+		if (i % 2)
+			history_line_to_array(data->history->history, &str1);
+		else
+			history_line_to_array(data->history->history, &str2);
 		i++;
 	}
 	data->history->history_file = ft_strdup("/tmp/.vsh_history6");
@@ -1373,12 +1380,15 @@ Test(builtin_fc_list, neg_test_over_max, .init=redirect_all_stdout)
 	i = 0;
 	while (i < (HISTORY_MAX))
 	{
-		history_line_to_array(data->history->history, &str1);
+		if (i % 2)
+			history_line_to_array(data->history->history, &str1);
+		else
+			history_line_to_array(data->history->history, &str2);
 		i++;
 	}
+	history_line_to_array(data->history->history, &str3);
 	history_line_to_array(data->history->history, &str1);
 	history_line_to_array(data->history->history, &str2);
-	history_line_to_array(data->history->history, &str3);
 	data->history->hist_index = find_start(data->history->history);
 	data->history->hist_start = data->history->hist_index - 1;
 	data->history->hist_isfirst = true;
@@ -1389,7 +1399,7 @@ Test(builtin_fc_list, neg_test_over_max, .init=redirect_all_stdout)
 	args[3] = ft_strdup("-3");
 	fflush(NULL);
 	builtin_fc(args, data);
-	cr_expect_stdout_eq_str("503\techo wauw\n502\techo bonjour\n501\techo first\n");
+	cr_expect_stdout_eq_str("503\techo bonjour\n502\techo first\n501\techo wauw\n");
 	ft_strarrdel(&args);
 	remove(data->history->history_file);
 }
@@ -1450,12 +1460,15 @@ Test(builtin_fc_list, neg_test_rev, .init=redirect_all_stdout)
 	i = 0;
 	while (i < (HISTORY_MAX))
 	{
-		history_line_to_array(data->history->history, &str1);
+		if (i % 2)
+			history_line_to_array(data->history->history, &str1);
+		else
+			history_line_to_array(data->history->history, &str2);
 		i++;
 	}
+	history_line_to_array(data->history->history, &str3);
 	history_line_to_array(data->history->history, &str1);
 	history_line_to_array(data->history->history, &str2);
-	history_line_to_array(data->history->history, &str3);
 	data->history->hist_index = find_start(data->history->history);
 	data->history->hist_start = data->history->hist_index - 1;
 	data->history->hist_isfirst = true;
@@ -1466,7 +1479,7 @@ Test(builtin_fc_list, neg_test_rev, .init=redirect_all_stdout)
 	args[3] = ft_strdup("-1");
 	fflush(NULL);
 	builtin_fc(args, data);
-	cr_expect_stdout_eq_str("501\techo first\n502\techo bonjour\n503\techo wauw\n");
+	cr_expect_stdout_eq_str("501\techo wauw\n502\techo first\n503\techo bonjour\n");
 	ft_strarrdel(&args);
 	remove(data->history->history_file);
 }
