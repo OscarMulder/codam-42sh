@@ -6,13 +6,11 @@
 /*   By: mavan-he <mavan-he@student.codam.nl>         +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2019/09/19 17:44:26 by mavan-he       #+#    #+#                */
-/*   Updated: 2019/09/20 18:05:22 by mavan-he      ########   odam.nl         */
+/*   Updated: 2019/09/22 16:27:51 by mavan-he      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "vsh.h"
-
-
 
 static void	update_quote_status(char c, char *quote)
 {
@@ -41,6 +39,8 @@ int		shell_line_count(char *line)
 			line_count++;
 		i++;
 	}
+	if (i > 0 && line[i -1] != '\n')
+		line_count++;
 	return (line_count);
 }
 
