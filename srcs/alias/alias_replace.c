@@ -55,7 +55,7 @@ static void	alias_combine_tokenlsts(t_tokenlst *probe, t_tokenlst *new_tokenlst)
 	new_tokenlst = new_tokenlst->next;
 	ft_memdel((void**)&start_end);
 	start_end = new_tokenlst;
-	while (start_end->next->type != NEWLINE)
+	while (start_end->next->type != NEWLINE && start_end->next->type != END)
 		start_end = start_end->next;
 	ft_memdel((void**)&start_end->next->next);
 	ft_memdel((void**)&start_end->next);
@@ -64,10 +64,6 @@ static void	alias_combine_tokenlsts(t_tokenlst *probe, t_tokenlst *new_tokenlst)
 	ft_memdel((void**)&probe->next);
 	probe->next = new_tokenlst;
 }
-
-/*
-**	int status had the comment: This may or may not need to get fixed
-*/
 
 int			alias_error(char **line, t_tokenlst **tokenlst, char ***expanded)
 {
@@ -90,7 +86,7 @@ int			alias_replace(t_vshdata *data, t_tokenlst *probe, char *alias,
 
 	alias_equal = ft_strchr(alias, '=');
 	ft_strdel(&data->line->line);
-	data->line->line = ft_strjoin(alias_equal + 1, "\n");
+	data->line->line = ft_strdup(alias_equal + 1);
 	new_tokenlst = NULL;
 	if (data->line->line == NULL || shell_close_quote_and_esc(data)
 		== FUNCT_ERROR || lexer(&data->line->line, &new_tokenlst)

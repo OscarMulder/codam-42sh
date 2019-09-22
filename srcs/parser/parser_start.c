@@ -71,7 +71,8 @@ static bool	parser_list(t_tokenlst **token_lst, t_ast **ast)
 
 static bool	parser_complete_command(t_tokenlst **token_lst, t_ast **ast)
 {
-	if (parser_list(token_lst, ast) == true && TK_TYPE == NEWLINE)
+	if (parser_list(token_lst, ast) == true && (TK_TYPE == NEWLINE
+		|| TK_TYPE == END))
 		return (true);
 	return (parser_return_del(ast));
 }
