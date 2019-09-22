@@ -6,7 +6,7 @@
 /*   By: omulder <omulder@student.codam.nl>           +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2019/09/12 18:16:01 by omulder        #+#    #+#                */
-/*   Updated: 2019/09/21 23:05:28 by omulder       ########   odam.nl         */
+/*   Updated: 2019/09/22 18:35:02 by omulder       ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -22,7 +22,7 @@ int *index)
 	len = ft_strlen(match);
 	while (i >= 0 && history->history[i]->str != NULL)
 	{
-		if (ft_strncmp(history->history[i]->str, match, len) == 0)
+		if (ft_strnequ(history->history[i]->str, match, len) == true)
 		{
 			*index = i;
 			return (FUNCT_SUCCESS);
@@ -32,7 +32,7 @@ int *index)
 	i = (HISTORY_MAX - 1);
 	while (i > history->hist_start && history->history[i]->str != NULL)
 	{
-		if (ft_strncmp(history->history[i]->str, match, len) == 0)
+		if (ft_strnequ(history->history[i]->str, match, len) == true)
 		{
 			*index = i;
 			return (FUNCT_SUCCESS);
