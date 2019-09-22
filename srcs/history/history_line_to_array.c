@@ -51,6 +51,7 @@ int			history_line_to_array(t_history **history, char **line)
 	int start;
 	int number;
 	int i;
+	int	linelen;
 
 	if (ft_strlen(*line) <= 1)
 		return (FUNCT_SUCCESS);
@@ -61,7 +62,10 @@ int			history_line_to_array(t_history **history, char **line)
 	if (history[i]->str != NULL)
 		ft_strdel(&history[i]->str);
 	history[i]->number = number + 1;
-	history[i]->str = ft_strsub(*line, 0, ft_strlen(*line) - 1);
+	linelen = ft_strlen(*line);
+	if ((*line)[linelen - 1] == '\n')
+		linelen--;
+	history[i]->str = ft_strsub(*line, 0, linelen);
 	if (history[i]->str == NULL)
 	{
 		ft_strdel(line);
