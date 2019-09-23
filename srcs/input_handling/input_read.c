@@ -70,17 +70,16 @@ static int	reset_input_read_return(t_vshdata *data, int ret)
 	data->line->index = 0;
 	data->line->len_max = 64;
 	data->line->len_cur = 0;
-	if (input_empty_buffer(data, 0) > 0)
-	{
-		input_print_str(data, data->line->line);
-		data->line->index = data->line->len_cur;
-	}
-	data->curs->coords.y = get_curs_row();
+	input_empty_buffer(data, 0);
+	if (ret == 0)
+		data->curs->coords.y = get_curs_row();
 	data->curs->cur_relative_y = 1;
 	data->history->hist_index = find_start(data->history->history);
 	data->history->hist_start = data->history->hist_index - 1;
 	data->history->hist_first = true;
 	signal(SIGWINCH, SIG_DFL);
+	if (ret == 0)
+		resize_window_check(SIGWINCH);
 	return (ret);
 }
 
@@ -116,11 +115,11 @@ int			input_read(t_vshdata *data)
 	if (data->line->line == NULL)
 		return (reset_input_read_return(data, FUNCT_ERROR));
 	reset_input_read_return(data, 0);
-	resize_window_check(SIGWINCH);
 	term_disable_isig(data->term->termios_p);
 	while (true)
 	{
-		if (read(STDIN_FILENO, &data->input->c, 1) == -1)
+		if (input_read_from_buffer(data) != FUNCT_SUCCESS &&
+			read(STDIN_FILENO, &data->input->c, 1) == -1)
 			return (reset_input_read_return(data, FUNCT_ERROR));
 		ret = input_parse(data);
 		if (ret == NEW_PROMPT || ret == FUNCT_ERROR || ret == IR_EOF)
