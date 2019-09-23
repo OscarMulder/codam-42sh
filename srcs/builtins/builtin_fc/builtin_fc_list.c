@@ -6,18 +6,18 @@
 /*   By: omulder <omulder@student.codam.nl>           +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2019/09/11 12:54:36 by omulder        #+#    #+#                */
-/*   Updated: 2019/09/23 16:35:09 by omulder       ########   odam.nl         */
+/*   Updated: 2019/09/23 16:40:02 by omulder       ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "vsh.h"
 
 /*
-** These 3/4 functions are also used in fc_edit(), so think about that before
-** changing them. Maybe I should move them to another file.. <- omulder
+**  You see the *end - 15? It's because normaly fc -l prints 16 history items.
+**  So it's not magic, I just want 16 items.
 */
 
-void	fc_find_start_end_no_param(t_datahistory *history, int *start, int *end)
+void	find_start_end_no_param(t_datahistory *history, int *start, int *end)
 {
 	*end = history->hist_start;
 	*start = *end - 15;
