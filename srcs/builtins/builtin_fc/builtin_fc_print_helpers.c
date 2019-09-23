@@ -6,7 +6,7 @@
 /*   By: omulder <omulder@student.codam.nl>           +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2019/09/11 13:03:14 by omulder        #+#    #+#                */
-/*   Updated: 2019/09/22 20:10:06 by omulder       ########   odam.nl         */
+/*   Updated: 2019/09/23 16:28:59 by omulder       ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -53,11 +53,7 @@ static int	add_tabs_after_newlines(char *str, char **new)
 	}
 	*new = ft_strnew(i + tab_count);
 	if (*new == NULL)
-	{
-		ft_eprintf(E_N_ALLOC_STR, "fc");
-		g_state->exit_code = EXIT_FAILURE;
-		return (FUNCT_ERROR);
-	}
+		return (err_ret_exit(E_ALLOC_STR, EXIT_FAILURE));
 	return (add_tabs(str, *new));
 }
 

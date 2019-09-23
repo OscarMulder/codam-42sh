@@ -6,7 +6,7 @@
 /*   By: mavan-he <mavan-he@student.codam.nl>         +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2019/05/30 20:47:41 by mavan-he       #+#    #+#                */
-/*   Updated: 2019/09/22 18:31:50 by omulder       ########   odam.nl         */
+/*   Updated: 2019/09/23 16:15:58 by omulder       ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -59,11 +59,7 @@ static int	add_tabs_after_newlines(char *str, char **new)
 	}
 	*new = ft_strnew(i + tab_count);
 	if (*new == NULL)
-	{
-		ft_eprintf(E_N_ALLOC_STR, "history");
-		g_state->exit_code = EXIT_FAILURE;
-		return (FUNCT_ERROR);
-	}
+		return (err_ret_exit(E_ALLOC_STR, EXIT_FAILURE));
 	return (add_tabs(str, *new));
 }
 

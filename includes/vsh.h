@@ -6,7 +6,7 @@
 /*   By: omulder <omulder@student.codam.nl>           +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2019/04/10 20:29:42 by jbrinksm       #+#    #+#                */
-/*   Updated: 2019/09/22 20:05:58 by omulder       ########   odam.nl         */
+/*   Updated: 2019/09/23 16:25:58 by omulder       ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -188,8 +188,8 @@
 # define FC_OPT_S			(1 << 4)
 # define FC_FIRST_NEG		(1 << 5)
 # define FC_LAST_NEG		(1 << 6)
-# define U_FC 				"fc: usage: fc [-e ename] [-nlr] [first] [last] or \
-fc -s [pat=rep] [cmd]\n"
+# define U_FC 				"fc: usage: fc [-e ename] [-nlr] [first] [last] or"\
+							"fc -s [pat=rep] [cmd]\n"
 # define E_FC_REQARG		SHELL "fc: %s: option requires an argument\n"
 # define E_FC_INV_OPT		SHELL ": fc: -%c: invalid option\n"
 # define E_FC_OUT_RANGE		SHELL ": fc: history specification out of range\n"
@@ -223,6 +223,8 @@ typedef struct	s_fcdata
 # define T_STATE_DQUOTE (1 << 2)
 # define T_FLAG_ISASSIGN (1 << 3)
 # define T_MALLOC_ERROR (1 << 4)
+# define T_FLAG_HEREDOC_NOEXP (1 << 5)
+# define T_FLAG_ISHEREDOC (1 << 6)
 
 /*
 **-----------------------------------executor-----------------------------------
@@ -836,7 +838,7 @@ void			fc_option_list(t_fcdata *fc);
 int				fc_option_substitute(int i, char **args, t_fcdata *fc);
 void			fc_option_suppress(t_fcdata *fc);
 void			fc_option_reverse(t_fcdata *fc);
-int				fc_list(t_datahistory *history, t_fcdata *fc);
+void			fc_list(t_datahistory *history, t_fcdata *fc);
 int				fc_list_print_line(t_history *history, t_fcdata *fc);
 void			fc_print_regular(int start, int end, t_history **history,
 				t_fcdata *fc);
@@ -873,7 +875,9 @@ bool			tool_is_special(char c);
 bool			tool_check_for_special(char *str);
 bool			tool_check_for_whitespace(char *str);
 int				tool_get_paths(t_envlst *envlst, char ***paths);
+void			tools_remove_quotes_etc(char *str, bool is_heredoc);
 int				tools_get_pid_state(pid_t pid);
+bool			tools_contains_quoted_chars(char *str);
 
 /*
 **----------------------------------execution-----------------------------------
@@ -977,6 +981,7 @@ int				err_ret_exit(char *str, int exitcode);
 void			err_void_exit(char *str, int exitcode);
 int				err_ret(char *str);
 int				err_ret_exitcode(char *str, int exitcode);
+void			err_void_prog_exit(char *error, char *prog, int exitcode);
 
 /*
 **--------------------------------autocomplete----------------------------------

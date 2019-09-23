@@ -6,7 +6,7 @@
 /*   By: omulder <omulder@student.codam.nl>           +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2019/09/11 12:54:36 by omulder        #+#    #+#                */
-/*   Updated: 2019/09/22 19:48:13 by omulder       ########   odam.nl         */
+/*   Updated: 2019/09/23 16:28:45 by omulder       ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -49,8 +49,8 @@ int *end)
 		fc_find_start_end_no_param(history, start, end);
 	else
 	{
-		if (fc_find_start_end(history, fc, start, end) == FUNCT_FAILURE)
-			return (FUNCT_FAILURE);
+		if (find_start_end(history, fc, &start, &end) == FUNCT_FAILURE)
+			return ;
 	}
 	return (FUNCT_SUCCESS);
 }
@@ -67,13 +67,13 @@ int end)
 		fc_print_regular(start, end, history->history, fc);
 }
 
-int		fc_list(t_datahistory *history, t_fcdata *fc)
+void	fc_list(t_datahistory *history, t_fcdata *fc)
 {
 	int start;
 	int end;
 
 	if (fc_get_indexes(history, fc, &start, &end) == FUNCT_FAILURE)
-		return (EXIT_FAILURE);
+		return ;
 	fc_print(history, fc, start, end);
-	return (EXIT_SUCCESS);
+	return ;
 }
