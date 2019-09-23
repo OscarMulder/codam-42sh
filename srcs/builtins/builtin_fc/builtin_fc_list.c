@@ -6,14 +6,14 @@
 /*   By: omulder <omulder@student.codam.nl>           +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2019/09/11 12:54:36 by omulder        #+#    #+#                */
-/*   Updated: 2019/09/23 16:28:45 by omulder       ########   odam.nl         */
+/*   Updated: 2019/09/23 16:35:09 by omulder       ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "vsh.h"
 
 /*
-** These 3 functions are also used in fc_edit(), so think about that before
+** These 3/4 functions are also used in fc_edit(), so think about that before
 ** changing them. Maybe I should move them to another file.. <- omulder
 */
 
@@ -50,7 +50,7 @@ int *end)
 	else
 	{
 		if (find_start_end(history, fc, &start, &end) == FUNCT_FAILURE)
-			return ;
+			return (FUNCT_FAILURE);
 	}
 	return (FUNCT_SUCCESS);
 }

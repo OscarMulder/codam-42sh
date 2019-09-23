@@ -6,7 +6,7 @@
 /*   By: omulder <omulder@student.codam.nl>           +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2019/09/21 15:22:42 by omulder        #+#    #+#                */
-/*   Updated: 2019/09/21 19:17:43 by omulder       ########   odam.nl         */
+/*   Updated: 2019/09/23 16:32:11 by omulder       ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -43,18 +43,18 @@ char **cmd)
 			return (FUNCT_FAILURE);
 		find = ft_strsub(fc->replace, 0, ((replace - 1) - fc->replace));
 		if (find == NULL)
-			return (err_ret_exitcode(E_ALLOC_STR, FUNCT_FAILURE));
+			return (err_ret_exit(E_ALLOC_STR, EXIT_FAILURE));
 		tmp = ft_strreplace(*cmd, find, replace);
 		ft_strdel(&find);
 		if (tmp == NULL)
-			return (err_ret_exitcode(E_ALLOC_STR, FUNCT_FAILURE));
+			return (err_ret_exit(E_ALLOC_STR, EXIT_FAILURE));
 		ft_strdel(cmd);
 		*cmd = tmp;
 	}
 	return (FUNCT_SUCCESS);
 }
 
-int			fc_substitute(t_vshdata *data, t_datahistory *history, t_fcdata *fc)
+void		fc_substitute(t_vshdata *data, t_datahistory *history, t_fcdata *fc)
 {
 	int		index;
 	char	*cmd;
@@ -62,14 +62,14 @@ int			fc_substitute(t_vshdata *data, t_datahistory *history, t_fcdata *fc)
 	index = 0;
 	cmd = NULL;
 	if (find_index(history, fc, &index) == FUNCT_FAILURE ||
-	replace_cmd(history, fc, index, &cmd) == FUNCT_FAILURE)
+	replace_cmd(history, fc, index, &cmd) == FUNCT_ERROR)
 	{
 		ft_strdel(&cmd);
-		return (EXIT_FAILURE);
+		return ;
 	}
 	data->line->line = cmd;
 	history_replace_last(history->history, &cmd);
 	ft_printf(cmd);
 	shell_one_line(data);
-	return (EXIT_SUCCESS);
+	g_state->exit_code = EXIT_SUCCESS;
 }

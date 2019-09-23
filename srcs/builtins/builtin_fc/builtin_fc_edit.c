@@ -6,7 +6,7 @@
 /*   By: omulder <omulder@student.codam.nl>           +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2019/09/22 18:54:24 by omulder        #+#    #+#                */
-/*   Updated: 2019/09/22 20:07:56 by omulder       ########   odam.nl         */
+/*   Updated: 2019/09/23 16:34:09 by omulder       ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -28,6 +28,7 @@ static int	fc_open_temp(t_fcdata *fc)
 	if (fd < 0)
 	{
 		ft_eprintf("vsh: fc: failed to open temporary file\n"); // replace define
+		g_state->exit_code = EXIT_FAILURE;
 		return (FUNCT_FAILURE);
 	}
 	fc->fd = fd;
@@ -60,5 +61,5 @@ int			fc_edit(t_vshdata *data, t_datahistory *history, t_fcdata *fc)
 	shell_one_line(data);
 	// shell execute file etc etc ...
 	remove("/tmp/vsh-fc-tmp123");
-	return (EXIT_SUCCESS);
+	g_state->exit_code = EXIT_SUCCESS;
 }
