@@ -6,7 +6,7 @@
 /*   By: omulder <omulder@student.codam.nl>           +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2019/04/10 20:29:42 by jbrinksm       #+#    #+#                */
-/*   Updated: 2019/09/23 19:25:14 by mavan-he      ########   odam.nl         */
+/*   Updated: 2019/09/23 20:29:39 by mavan-he      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -707,6 +707,7 @@ void			shell_clear_input_data(char **line, t_ast **ast,
 				t_tokenlst **token_lst);
 char			**shell_line_splitter(t_vshdata *data);
 void			shell_lines_exec(t_vshdata *data, char **lines);
+int				shell_split_line(char *line, char **lines);
 
 t_datatermcaps	*shell_init_vshdatatermcaps(void);
 t_dataalias		*shell_init_vshdataalias(void);

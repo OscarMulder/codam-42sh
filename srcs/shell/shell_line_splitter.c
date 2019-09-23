@@ -6,7 +6,7 @@
 /*   By: mavan-he <mavan-he@student.codam.nl>         +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2019/09/19 17:44:26 by mavan-he       #+#    #+#                */
-/*   Updated: 2019/09/22 17:08:28 by mavan-he      ########   odam.nl         */
+/*   Updated: 2019/09/23 20:34:00 by mavan-he      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -20,43 +20,58 @@ static void	update_quote_status(char c, char *quote)
 		*quote = '\0';
 }
 
-int		shell_line_count(char *line)
+static void	line_copy_increment(char *line, int *i)
+{
+	static int new_index;
+
+	line[new_index] = line[*i];
+	new_index++;
+	(*i)++;
+}
+
+/*
+**	shell_remove_escaped_newline removes escaped newlines
+**	it also sets line_count
+*/
+
+static void	shell_remove_escaped_newline(char *line, int *line_count)
 {
 	char	quote;
 	int		i;
-	int		line_count;
 
 	quote = '\0';
 	i = 0;
-	line_count = 0;
 	while (line[i] != '\0')
 	{
-		if (line[i] == '\\' && quote != '\'' && line[i + 1] != '\0')
-			i++;
+		if (line[i] == '\\' && quote == '\0' && line[i + 1] == '\n')
+		{
+			i +=2;
+			continue ;
+		}
+		else if (line[i] == '\\' && quote != '\'' && line[i + 1] != '\0')
+			line_copy_increment(line, &i);
 		else if (line[i] == '\'' || line[i] == '\"')
 			update_quote_status(line[i], &quote);
 		else if (line[i] == '\n' && quote == '\0')
-			line_count++;
-		i++;
+			(*line_count)++;
+		line_copy_increment(line, &i);
 	}
+	line_copy_increment(line, &i);
 	if (i > 0 && line[i -1] != '\n')
-		line_count++;
-	return (line_count);
+		(*line_count)++;
 }
 
 char	**shell_line_splitter(t_vshdata *data)
 {
 	char	**lines;
-	int		i;
 	int		line_count;
 
-	line_count = shell_line_count(data->line->line);
-	lines = ft_strsplit(data->line->line, '\n');
-	i = 0;
-	while (lines[i])
-	{
-		lines[i] = ft_strjoin(lines[i], "\n");
-		i++;
-	}
+	line_count = 0;
+	shell_remove_escaped_newline(data->line->line, &line_count);
+	lines = (char **)ft_memalloc(sizeof(char*) * (line_count + 1));
+	if (lines == NULL || shell_split_line(data->line->line, lines) 
+		== FUNCT_ERROR)
+		return (NULL); // alloc error exit status
+	ft_strdel(&data->line->line);
 	return (lines);
 }
