@@ -6,7 +6,7 @@
 /*   By: omulder <omulder@student.codam.nl>           +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2019/09/11 12:54:36 by omulder        #+#    #+#                */
-/*   Updated: 2019/09/23 16:41:27 by omulder       ########   odam.nl         */
+/*   Updated: 2019/09/23 17:31:44 by omulder       ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,7 +17,7 @@
 **  So it's not magic, I just want 16 items.
 */
 
-void	find_start_end_no_param(t_datahistory *history, int *start, int *end)
+void	fc_find_start_end_no_param(t_datahistory *history, int *start, int *end)
 {
 	*end = history->hist_start;
 	*start = *end - 15;

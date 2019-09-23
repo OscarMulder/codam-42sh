@@ -6,7 +6,7 @@
 /*   By: omulder <omulder@student.codam.nl>           +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2019/09/22 18:54:24 by omulder        #+#    #+#                */
-/*   Updated: 2019/09/23 16:41:50 by omulder       ########   odam.nl         */
+/*   Updated: 2019/09/23 18:01:48 by omulder       ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -51,15 +51,15 @@ void		fc_edit(t_vshdata *data, t_datahistory *history, t_fcdata *fc)
 	int		start;
 	int		end;
 
+	g_state->exit_code = EXIT_SUCCESS;
 	if (fc_get_indexes(history, fc, &start, &end) == FUNCT_FAILURE)
 		return ;
 	if (fc_open_temp(fc) == FUNCT_FAILURE)
 		return ;
 	fc_print(history, fc, start, end);
 	close(fc->fd);
-	data->line->line = ft_strdup("vim /tmp/vsh-fc-tmp123\n");
+	data->line->line = ft_strdup("fc \n");
 	shell_one_line(data);
 	// shell execute file etc etc ...
 	remove("/tmp/vsh-fc-tmp123");
-	g_state->exit_code = EXIT_SUCCESS;
 }
