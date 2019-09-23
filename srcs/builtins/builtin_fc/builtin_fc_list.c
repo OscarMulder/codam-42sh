@@ -6,7 +6,7 @@
 /*   By: omulder <omulder@student.codam.nl>           +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2019/09/11 12:54:36 by omulder        #+#    #+#                */
-/*   Updated: 2019/09/23 16:40:02 by omulder       ########   odam.nl         */
+/*   Updated: 2019/09/23 16:41:27 by omulder       ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -49,7 +49,7 @@ int *end)
 		fc_find_start_end_no_param(history, start, end);
 	else
 	{
-		if (find_start_end(history, fc, &start, &end) == FUNCT_FAILURE)
+		if (fc_find_start_end(history, fc, start, end) == FUNCT_FAILURE)
 			return (FUNCT_FAILURE);
 	}
 	return (FUNCT_SUCCESS);

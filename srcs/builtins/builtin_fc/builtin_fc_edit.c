@@ -6,7 +6,7 @@
 /*   By: omulder <omulder@student.codam.nl>           +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2019/09/22 18:54:24 by omulder        #+#    #+#                */
-/*   Updated: 2019/09/23 16:34:09 by omulder       ########   odam.nl         */
+/*   Updated: 2019/09/23 16:41:50 by omulder       ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -46,15 +46,15 @@ static int	fc_open_temp(t_fcdata *fc)
 ** - Remove file
 */
 
-int			fc_edit(t_vshdata *data, t_datahistory *history, t_fcdata *fc)
+void		fc_edit(t_vshdata *data, t_datahistory *history, t_fcdata *fc)
 {
 	int		start;
 	int		end;
 
 	if (fc_get_indexes(history, fc, &start, &end) == FUNCT_FAILURE)
-		return (EXIT_FAILURE);
+		return ;
 	if (fc_open_temp(fc) == FUNCT_FAILURE)
-		return (EXIT_FAILURE);
+		return ;
 	fc_print(history, fc, start, end);
 	close(fc->fd);
 	data->line->line = ft_strdup("vim /tmp/vsh-fc-tmp123\n");
