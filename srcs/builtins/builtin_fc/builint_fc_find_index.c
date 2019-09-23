@@ -6,7 +6,7 @@
 /*   By: omulder <omulder@student.codam.nl>           +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2019/09/12 18:16:01 by omulder        #+#    #+#                */
-/*   Updated: 2019/09/22 18:35:02 by omulder       ########   odam.nl         */
+/*   Updated: 2019/09/23 16:20:56 by omulder       ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -121,7 +121,7 @@ char *str, int *index)
 	{
 		if (find_history_item_str(history, str, index) == FUNCT_FAILURE)
 		{
-			ft_eprintf(E_FC_OUT_RANGE);
+			err_void_exit(E_FC_OUT_RANGE, EXIT_FAILURE);
 			return (FUNCT_FAILURE);
 		}
 	}
