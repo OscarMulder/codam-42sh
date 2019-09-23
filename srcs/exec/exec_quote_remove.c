@@ -6,7 +6,7 @@
 /*   By: mavan-he <mavan-he@student.codam.nl>         +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2019/07/13 11:20:18 by mavan-he       #+#    #+#                */
-/*   Updated: 2019/08/05 13:21:34 by mavan-he      ########   odam.nl         */
+/*   Updated: 2019/09/23 15:53:11 by jbrinksm      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -76,6 +76,8 @@ void	tools_remove_quotes_etc(char *str, bool is_heredoc)
 
 	i = 0;
 	i_new = 0;
+	if (str == NULL)
+		return ;
 	while (str[i] != '\0')
 	{
 		if (str[i] == '\\' && is_heredoc == false)
@@ -113,11 +115,7 @@ void		exec_quote_remove(t_ast *node)
 			is_heredoc = true;
 		str = node->value;
 		if (node->type == ASSIGN)
-		{
-			while (str[0] != '=')
-				str++;
-			str++;
-		}
+			str = ft_strchr(str, '=');
 		tools_remove_quotes_etc(str, is_heredoc);
 	}
 }

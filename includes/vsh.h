@@ -6,7 +6,7 @@
 /*   By: omulder <omulder@student.codam.nl>           +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2019/04/10 20:29:42 by jbrinksm       #+#    #+#                */
-/*   Updated: 2019/09/17 13:27:00 by mavan-he      ########   odam.nl         */
+/*   Updated: 2019/09/23 15:50:06 by jbrinksm      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -815,6 +815,7 @@ bool			tool_check_for_whitespace(char *str);
 int				tool_get_paths(t_envlst *envlst, char ***paths);
 void			tools_remove_quotes_etc(char *str, bool is_heredoc);
 int				tools_get_pid_state(pid_t pid);
+bool			tools_contains_quoted_chars(char *str);
 
 /*
 **----------------------------------execution-----------------------------------

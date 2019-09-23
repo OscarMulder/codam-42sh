@@ -6,7 +6,7 @@
 /*   By: jbrinksm <jbrinksm@student.codam.nl>         +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2019/06/02 13:23:16 by jbrinksm       #+#    #+#                */
-/*   Updated: 2019/09/17 16:49:28 by jbrinksm      ########   odam.nl         */
+/*   Updated: 2019/09/23 15:49:31 by jbrinksm      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -77,19 +77,6 @@ int			shell_dless_set_tk_val(t_tokenlst *probe, char **heredoc,
 	if (tool_check_for_special(probe->value) == true)
 		probe->flags |= T_FLAG_HASSPECIAL;
 	return (FUNCT_SUCCESS);
-}
-
-static bool	tools_contains_quoted_chars(char *str)
-{
-	if (str == NULL)
-		return (false);
-	while (*str != '\0')
-	{
-		if (*str == '"' || *str == '\'' || *str == '\\')
-			return (true);
-		str++;
-	}
-	return (false);
 }
 
 static bool	is_valid_heredoc_delim(t_tokenlst *token)
