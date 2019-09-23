@@ -6,11 +6,16 @@
 /*   By: omulder <omulder@student.codam.nl>           +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2019/09/11 12:54:36 by omulder        #+#    #+#                */
-/*   Updated: 2019/09/23 16:21:10 by omulder       ########   odam.nl         */
+/*   Updated: 2019/09/23 16:39:08 by omulder       ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "vsh.h"
+
+/*
+**  You see the *end - 15? It's because normaly fc -l prints 16 history items.
+**  So it's not magic, I just want 16 items.
+*/
 
 static void	find_start_end_no_param(t_datahistory *history, int *start,
 int *end)
