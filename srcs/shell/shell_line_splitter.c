@@ -6,7 +6,7 @@
 /*   By: mavan-he <mavan-he@student.codam.nl>         +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2019/09/19 17:44:26 by mavan-he       #+#    #+#                */
-/*   Updated: 2019/09/22 16:27:51 by mavan-he      ########   odam.nl         */
+/*   Updated: 2019/09/22 17:08:28 by mavan-he      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -50,8 +50,8 @@ char	**shell_line_splitter(t_vshdata *data)
 	int		i;
 	int		line_count;
 
+	line_count = shell_line_count(data->line->line);
 	lines = ft_strsplit(data->line->line, '\n');
-	line_count = 
 	i = 0;
 	while (lines[i])
 	{
