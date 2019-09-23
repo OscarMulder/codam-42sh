@@ -6,7 +6,7 @@
 /*   By: omulder <omulder@student.codam.nl>           +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2019/09/11 12:54:36 by omulder        #+#    #+#                */
-/*   Updated: 2019/09/23 16:39:08 by omulder       ########   odam.nl         */
+/*   Updated: 2019/09/23 16:55:15 by jbrinksm      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -48,7 +48,6 @@ void		fc_list(t_datahistory *history, t_fcdata *fc)
 	int start;
 	int end;
 
-	g_state->exit_code = FUNCT_SUCCESS;
 	if (fc->first == NULL)
 		find_start_end_no_param(history, &start, &end);
 	else

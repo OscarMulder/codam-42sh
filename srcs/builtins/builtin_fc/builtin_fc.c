@@ -6,7 +6,7 @@
 /*   By: omulder <omulder@student.codam.nl>           +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2019/09/10 12:23:10 by omulder        #+#    #+#                */
-/*   Updated: 2019/09/23 16:15:26 by omulder       ########   odam.nl         */
+/*   Updated: 2019/09/23 16:55:20 by jbrinksm      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -28,6 +28,7 @@ void	builtin_fc(char **args, t_vshdata *data)
 {
 	t_fcdata	*fc;
 
+	g_state->exit_code = EXIT_SUCCESS;
 	fc = (t_fcdata*)ft_memalloc(sizeof(t_fcdata));
 	if (fc == NULL)
 		return (err_void_prog_exit(E_N_ALLOC_STR, "fc", EXIT_FAILURE));
