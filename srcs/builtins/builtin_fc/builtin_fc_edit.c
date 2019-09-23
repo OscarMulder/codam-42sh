@@ -6,11 +6,12 @@
 /*   By: omulder <omulder@student.codam.nl>           +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2019/09/22 18:54:24 by omulder        #+#    #+#                */
-/*   Updated: 2019/09/22 20:04:07 by omulder       ########   odam.nl         */
+/*   Updated: 2019/09/22 20:07:56 by omulder       ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "vsh.h"
+#include <stdio.h>
 
 /*
 ** This function should open a random tmp file, so it doesn't run into issues
@@ -55,8 +56,9 @@ int			fc_edit(t_vshdata *data, t_datahistory *history, t_fcdata *fc)
 		return (EXIT_FAILURE);
 	fc_print(history, fc, start, end);
 	close(fc->fd);
-	data->line->line = ft_strdup("vim /tmp/vsh-fc-tmp123");
+	data->line->line = ft_strdup("vim /tmp/vsh-fc-tmp123\n");
 	shell_one_line(data);
 	// shell execute file etc etc ...
 	remove("/tmp/vsh-fc-tmp123");
+	return (EXIT_SUCCESS);
 }

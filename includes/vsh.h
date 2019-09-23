@@ -6,7 +6,7 @@
 /*   By: omulder <omulder@student.codam.nl>           +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2019/04/10 20:29:42 by jbrinksm       #+#    #+#                */
-/*   Updated: 2019/09/22 19:48:42 by omulder       ########   odam.nl         */
+/*   Updated: 2019/09/22 20:05:58 by omulder       ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -853,7 +853,9 @@ int				fc_find_start_end(t_datahistory *history, t_fcdata *fc,
 int				fc_get_indexes(t_datahistory *history, t_fcdata *fc, int *start,
 				int *end);
 void			fc_print(t_datahistory *history, t_fcdata *fc, int start,
-				int end)
+				int end);
+int				fc_edit(t_vshdata *data, t_datahistory *history, t_fcdata *fc);
+
 /*
 **---------------------------------tools----------------------------------------
 */
