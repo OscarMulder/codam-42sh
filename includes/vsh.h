@@ -6,7 +6,7 @@
 /*   By: omulder <omulder@student.codam.nl>           +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2019/04/10 20:29:42 by jbrinksm       #+#    #+#                */
-/*   Updated: 2019/09/23 16:13:38 by omulder       ########   odam.nl         */
+/*   Updated: 2019/09/23 16:23:06 by omulder       ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -188,8 +188,8 @@
 # define FC_OPT_S			(1 << 4)
 # define FC_FIRST_NEG		(1 << 5)
 # define FC_LAST_NEG		(1 << 6)
-# define U_FC 				"fc: usage: fc [-e ename] [-nlr] [first] [last] or \
-fc -s [pat=rep] [cmd]\n"
+# define U_FC 				"fc: usage: fc [-e ename] [-nlr] [first] [last] or"\
+							"fc -s [pat=rep] [cmd]\n"
 # define E_FC_REQARG		SHELL "fc: %s: option requires an argument\n"
 # define E_FC_INV_OPT		SHELL ": fc: -%c: invalid option\n"
 # define E_FC_OUT_RANGE		SHELL ": fc: history specification out of range\n"
