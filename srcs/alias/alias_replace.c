@@ -6,7 +6,7 @@
 /*   By: mavan-he <mavan-he@student.codam.nl>         +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2019/07/26 20:29:50 by mavan-he       #+#    #+#                */
-/*   Updated: 2019/09/03 17:31:00 by mavan-he      ########   odam.nl         */
+/*   Updated: 2019/09/23 16:32:07 by mavan-he      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -76,6 +76,13 @@ int			alias_error(char **line, t_tokenlst **tokenlst, char ***expanded)
 		ft_strdel(line);
 	return (FUNCT_ERROR);
 }
+
+/*
+**	alias_replace will lex the string of alias='string' and
+**	insert it into the old token list
+**	it also adds the expanded alias to the expanded list
+**	so it won't be expanded again
+*/
 
 int			alias_replace(t_vshdata *data, t_tokenlst *probe, char *alias,
 			char **expanded)
