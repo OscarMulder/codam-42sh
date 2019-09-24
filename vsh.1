@@ -1,0 +1,268 @@
+.TH man 1 "03 April 2019" "1.0" "vsh man page"
+.SH NAME
+vsh
+.SH SYNOPSIS
+.B 21sh
+[file]
+.SH DESCRIPTION
+\fBVsh\fP is a beautiful command language interpreter that executes
+commands read from the standard input or from a file.
+.SH OPTIONS
+vsh does not take any options.
+.SH ARGUMENTS
+The first argument is assumed to be the name of a file containing shell
+commands.
+.\" /*
+.\" **   THIS FOLLOWING PART IS SOMETHING WE MIGHT WANT TO ADD
+.\" **
+.\" **   If
+.\" **   .B vsh
+.\" **   is invoked in this fashion, $0 is set to the name of the file, and the
+.\" **   positional parameters  are  set  to  the  remaining arguments.
+.\" */
+\fBVsh\fP reads and executes commands from this file and then exits.
+If no commands are executed, the exit status is 0.
+.\" /*
+.\" **   THIS FOLLOWING PART
+.\" */
+An attempt will be made to open the file in the current directory.
+If any of the files exist but cannot be read,
+.B vsh
+reports an error.
+.\" /*
+.\" **   Could be replaced by this below if we want to do so.
+.\" **
+.\" **   An attempt is first made to open the file in the current directory,
+.\" **   and, if no file is found, then the shell searches the directories
+.\" **   in
+.\" **   .B PATH
+.\" **   for the script.
+.\" */
+.SH INVOCATION
+An \fIinteractive\fP shell is one started without non-option arguments whose
+standard input and error are both connected to terminals (as determined by
+.IR isatty (3)).
+.SH DEFINITIONS
+The following definitions are used throughout the rest of this document.
+.TP
+.PD 0
+.B blank
+A space or tab.
+.TP
+.B word
+A sequence of characters considered as a single unit by the shell (also known
+as a \fBtoken\fP) that does not contain unquoted \fBmetacharacters\fP or
+unquoted control operators (see section on \fBQUOTING\fP).
+.TP
+.B identifier
+A \fIword\fP consisting of only alphanumeric characters and underscores,
+and beginning with an alphabetic character or an underscore.
+.TP
+.B metacharacter
+A character that, when unquoted, seperates words. One of the following:
+.br
+\fB| & ; < > space newline\fP
+.TP
+.B control operator
+A \fItoken\fP that performs a control function. One of the following:
+.br
+\fB| || & && ; ;; <newline>\fP
+.PD
+.SH INTRODUCTION
+.PP
+The shell operates according to the following general overview of operations.
+The specific details are included in the cited sections of this document.
+.PP
+.RS
+\fB <INSERT GENERAL OPERATIONAL STRUCTURE OF VSH>
+.RE
+.SH "RESERVED WORDS"
+\fIReserved words\fP are words that have a special meaning to the shell.
+We currently do not have any reserved words, but if we did they would be
+recognized as reserved when unquoted and the first word
+of a simple command (see \fBSHELL GRAMMAR\fP below).
+.SH "SHELL GRAMMAR"
+.SS Simple Commands
+.PP
+A \fIsimple command\fP is a sequence of optional variable assignments
+followed by \fBblank\fP-separated words and redirections, and
+terminated by a \fIcontrol operator\fP.  The first word
+specifies the command to be executed, and is passed as argument zero.
+The remaining words are passed as arguments to the invoked command.
+.PP
+The return value of a \fIsimple command\fP is its exit status, or
+128+\fIn\^\fP if the command is terminated by signal \fIn\fP.
+.SS Pipelines
+.PP
+A \fIpipeline\fP is a sequence of one or more commands separated by
+the \fIcontrol operator\fP \fBI\fP.
+.br
+The format for a pipeline is:
+.RS
+.PP
+[ \fIcommand1\fP [ [ \fB|\fP ] \fIcommand2\fP ... ]
+.RE
+.PP
+The standard output of \fIcommand\fP is connected via a pipe to the standard
+input of \fIcommand2\fP. This connection is performed before any redirections
+specified by the command (see \fBREDIRECTION\fP below).
+.PP
+The return status of a pipeline is the exit status of the last command. The
+shell waits for all commands in the pipeline to terminate before returning a
+value.
+.PP Each command in a pipeline is executed as a seperate process. 
+.SS Lists
+.PP
+A \fIlist\fP is a sequence of one or more pipelines separated by one of the
+following \fIcontrol operators\fP:
+.br
+\fB; && ||\fP
+.PP
+It is optionally terminated by one of the following \fIcontrol operators\fP:
+.br
+\fB; & <newline>
+.PP
+Of these list operators, \fB;\fP and \fB&\fP equally have the highest
+precedence, followed by \fB&&\fP and \fB||\fP which also have equal precedence.
+.PP
+A sequence of one or more \fB<newline>\fP tokens may appear in a \fIlist\fP
+instead of a semicolon to delimit commands.
+.PP
+.\" /*
+.\" **   THE FOLLOWING STILL HAS TO BE IMPLEMENTED BY JOBS
+.\" **   
+.\" **   If a command is terminated by the control operator &, the shell
+.\" **   executes the command in  the  background  in a subshell.  The shell
+.\" **   does not wait for the command to finish, and the return status is 
+.\" **   0.  These are referred to as \fIasynchronous\fP commands.
+.\" */
+Commands separated by a \fB;\fP are executed sequentially; the shell waits
+for each command to terminate in turn. The return status is the exit
+status of the last command executed.
+.PP
+AND and OR lists are sequences of one or more pipelines separated by the
+\fB&&\fP and \fB||\fP \fIcontrol operator\fP respectively. AND and OR lists are
+executed with left associativity.
+.PP
+The format for an AND list is:
+.RS
+.PP
+\fIcommand1 \fP[ \fB&& \fP \fIcommand2 \fP... ]
+.RE
+.PP
+\fIcommand2\fP is executed only if \fIcommand1\fP returns an exit status of zero
+(success).
+.PP
+The format for an OR list is:
+.PP
+.RS
+\fIcommand1 \fP[ \fB|| \fP \fIcommand2 \fP... ]
+.RE
+.PP
+\fIcommand2\fP is executed only if \fIcommand1\fP returns a non-zero exit status.
+The return status of AND and OR lists is the exit status of the last command
+executed in the list.
+.\" /*
+.\" **   START OF SHELL BUILTIN COMMANDS
+.\" */
+.SH SHELL BUILTIN COMMANDS
+.PP
+vsh supports a total of 7 builtin commands.
+.TP
+.B echo
+[-neE] [arg ...]
+.br
+Output the args, seperated by spaces, followed by a newline. If -n is specified,
+the trailing newline is not printed. The -e option will enable interpretation of
+these escape characters: \\a \\b \\E \\e \\f \\n \\r \\t \\v \\. Option -E
+disables interpretation of escape characters.
+.TP
+.B cd
+[dir]
+.br
+Change the current directory to 'dir'. The variable environment variable HOME
+is default to 'dir'
+.TP
+.B env
+[REFRESH]
+.br
+Display the current environment. If supplied with argument 'REFRESH', it will
+refresh your whole environment.
+.TP
+.B set
+[name] [value]
+.br
+Set a environment variable 'name' to 'value'. If no 'value' is specified, 'name'
+will be set to NULL. If no 'name' is specified, setenv will behave like the env
+builtin.
+.TP
+.B unset
+[name]
+.br
+Unset environment variable 'name'.
+.TP
+.B exit
+[\fIexit_code\fP]
+.br
+Exits the current running shell (same as ctrl+d input).
+.TP
+.B export
+.br
+??
+.TP
+.B history
+.br
+Displays all current history entries.
+.TP
+.B alias
+.br
+??
+.TP
+.B unalias
+.br
+??
+.TP
+.B type
+.br
+??
+.\" /*
+.\" **   THE FOLLOWING STILL HAS TO BE IMPLEMENTED
+.\" **   .TP
+.\" **   .B vela
+.\" **   Display our mighty vela logo in ascii art, and continue with business
+.\" **   as usual.
+.\" */
+.SH REDIRECTION
+.PP
+The following section explains how we handle redirections.
+.SS Here-document
+The redirection operator \fB<<\fP allows redirection of lines contained in a shell
+input file, known as a \fIhere-document\fP, to the standard input of a command.
+
+The \fIhere-document\fP is treated as a single word that begins after the next newline
+character (if there are unescaped quotes) and continues until there is a line
+containing only the delimiter, with no trailing blank characters. Then the next
+\fIhere-document\fP starts, if there is one.
+.RS
+.PP
+\fIcommand<<word
+.br
+ 	here-document
+.br
+delimiter\fP
+.RE
+.PP
+If any character in word is quoted, the delimiter is formed by performing quote
+removal on word, and the \fIhere-document\fP lines will not be expanded.
+Otherwise, the delimiter is the word itself. 
+
+If no characters in word are quoted, all lines of the \fIhere-document\fP will
+be expanded for parameter expansion. In this case, the backslash in the input
+will behave as the backslash inside double-quotes. However, the double-quote
+character (") will not be treated specially within a \fIhere-document\fP. 
+
+.po 0
+.SH KNOWN BUGS
+None.
+.SH AUTHOR
+Jorn Brinksma, Marijn van Heesewijk, Oscar Mulder, Thijs de Jong, Rob Kuijper
