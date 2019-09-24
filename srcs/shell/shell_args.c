@@ -6,7 +6,7 @@
 /*   By: mavan-he <mavan-he@student.codam.nl>         +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2019/09/15 14:41:31 by mavan-he       #+#    #+#                */
-/*   Updated: 2019/09/22 16:22:51 by mavan-he      ########   odam.nl         */
+/*   Updated: 2019/09/24 14:38:44 by mavan-he      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -36,11 +36,12 @@ static int	shell_check_file(char *filepath)
 }
 
 /*
-**	shell_args gets called when argc > 1 
-**	shell_check_file will check if arg 1 is a valid file 
+**	shell_args gets called when argc > 1
+**	shell_check_file will check if arg 1 is a valid file
 **	shell_init_line will read the input from file into line
-**	shell_lines_exec will split the file input at line into cmd lines
-**	and execute each cmd line one by one 
+**	shell_line_splitter will split the line into cmd lines
+**	shell_lines_exec will execute each line until end or
+**	until syntac error
 */
 
 void		shell_args(t_vshdata *data, char *filepath)

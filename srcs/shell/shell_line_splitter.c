@@ -6,7 +6,7 @@
 /*   By: mavan-he <mavan-he@student.codam.nl>         +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2019/09/19 17:44:26 by mavan-he       #+#    #+#                */
-/*   Updated: 2019/09/23 20:34:00 by mavan-he      ########   odam.nl         */
+/*   Updated: 2019/09/24 14:43:05 by mavan-he      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -45,7 +45,7 @@ static void	shell_remove_escaped_newline(char *line, int *line_count)
 	{
 		if (line[i] == '\\' && quote == '\0' && line[i + 1] == '\n')
 		{
-			i +=2;
+			i += 2;
 			continue ;
 		}
 		else if (line[i] == '\\' && quote != '\'' && line[i + 1] != '\0')
@@ -57,11 +57,11 @@ static void	shell_remove_escaped_newline(char *line, int *line_count)
 		line_copy_increment(line, &i);
 	}
 	line_copy_increment(line, &i);
-	if (i > 0 && line[i -1] != '\n')
+	if (i > 0 && line[i - 1] != '\n')
 		(*line_count)++;
 }
 
-char	**shell_line_splitter(t_vshdata *data)
+char		**shell_line_splitter(t_vshdata *data)
 {
 	char	**lines;
 	int		line_count;
@@ -69,9 +69,12 @@ char	**shell_line_splitter(t_vshdata *data)
 	line_count = 0;
 	shell_remove_escaped_newline(data->line->line, &line_count);
 	lines = (char **)ft_memalloc(sizeof(char*) * (line_count + 1));
-	if (lines == NULL || shell_split_line(data->line->line, lines) 
+	if (lines == NULL || shell_split_line(data->line->line, lines)
 		== FUNCT_ERROR)
-		return (NULL); // alloc error exit status
+	{
+		err_void_exit(E_ALLOC_STR, EXIT_FAILURE);
+		return (NULL);
+	}
 	ft_strdel(&data->line->line);
 	return (lines);
 }

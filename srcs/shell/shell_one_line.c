@@ -6,14 +6,14 @@
 /*   By: mavan-he <mavan-he@student.codam.nl>         +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2019/09/15 21:53:03 by mavan-he       #+#    #+#                */
-/*   Updated: 2019/09/22 16:53:09 by mavan-he      ########   odam.nl         */
+/*   Updated: 2019/09/24 14:39:51 by mavan-he      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "vsh.h"
 
 /*
-**	shell_one_line takes a line through history_expansion, 
+**	shell_one_line takes a line through history_expansion,
 **	lexer, alias_expansion, parser and executor
 */
 

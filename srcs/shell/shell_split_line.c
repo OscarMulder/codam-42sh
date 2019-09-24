@@ -6,7 +6,7 @@
 /*   By: mavan-he <mavan-he@student.codam.nl>         +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2019/09/23 20:05:50 by mavan-he       #+#    #+#                */
-/*   Updated: 2019/09/23 20:42:20 by mavan-he      ########   odam.nl         */
+/*   Updated: 2019/09/24 14:43:27 by mavan-he      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -20,7 +20,7 @@ static void	update_quote_status(char c, char *quote)
 		*quote = '\0';
 }
 
-int		shell_add_line(char *line, int i, char **lines)
+static int	shell_add_line(char *line, int i, char **lines)
 {
 	static int line_index;
 	static int line_count;
@@ -33,7 +33,11 @@ int		shell_add_line(char *line, int i, char **lines)
 	return (FUNCT_SUCCESS);
 }
 
-int		shell_split_line(char *line, char **lines)
+/*
+**	shell_split_line copies substrings (a completed command) of line to lines
+*/
+
+int			shell_split_line(char *line, char **lines)
 {
 	char	quote;
 	int		i;
