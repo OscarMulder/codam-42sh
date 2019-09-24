@@ -6,7 +6,7 @@
 /*   By: omulder <omulder@student.codam.nl>           +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2019/04/10 20:29:42 by jbrinksm       #+#    #+#                */
-/*   Updated: 2019/09/23 20:29:39 by mavan-he      ########   odam.nl         */
+/*   Updated: 2019/09/24 16:06:13 by mavan-he      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -132,8 +132,8 @@
 /*
 **---------------------------------shell types----------------------------------
 */
-# define SHELL_NORMAL		0
-# define SHELL_PIPED		1
+# define SHELL_NON_INTERACT	0
+# define SHELL_INTERACT		1
 
 /*
 **------------------------------------echo--------------------------------------

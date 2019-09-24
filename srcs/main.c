@@ -6,12 +6,20 @@
 /*   By: jbrinksm <jbrinksm@student.codam.nl>         +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2019/04/10 20:29:49 by jbrinksm       #+#    #+#                */
-/*   Updated: 2019/09/24 14:28:54 by mavan-he      ########   odam.nl         */
+/*   Updated: 2019/09/24 16:10:38 by mavan-he      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "vsh.h"
 #include <signal.h>	
+
+void	init_g_state(void)
+{
+	g_state = (t_state*)ft_memalloc(sizeof(t_state));
+	if (g_state == NULL)
+		exit(EXIT_FAILURE);
+	g_state->shell_type = SHELL_INTERACT;
+}
 
 int		main(int argc, char **argv)
 {
@@ -19,9 +27,7 @@ int		main(int argc, char **argv)
 
 	signal(SIGCHLD, signal_handle_child_death);
 	signal(SIGINT, SIG_IGN);
-	g_state = (t_state*)ft_memalloc(sizeof(t_state));
-	if (g_state == NULL)
-		return (EXIT_FAILURE);
+	init_g_state();
 	data = shell_init_vshdata();
 	if (data == NULL)
 		return (EXIT_FAILURE);
@@ -29,7 +35,7 @@ int		main(int argc, char **argv)
 		return (EXIT_FAILURE);
 	if (argc > 1 || isatty(STDIN_FILENO) != 1)
 	{
-		g_state->shell_type = SHELL_PIPED;
+		g_state->shell_type = SHELL_NON_INTERACT;
 		if (argc > 1)
 			shell_args(data, argv[1]);
 		else
