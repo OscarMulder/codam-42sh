@@ -6,7 +6,7 @@
 /*   By: omulder <omulder@student.codam.nl>           +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2019/04/10 20:29:42 by jbrinksm       #+#    #+#                */
-/*   Updated: 2019/09/24 16:06:13 by mavan-he      ########   odam.nl         */
+/*   Updated: 2019/09/24 16:30:10 by mavan-he      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -124,14 +124,6 @@
 **------------------------------------shell-------------------------------------
 */
 
-
-# define SHELL_STDIN		1
-# define SHELL_STANDARD		2
-# define SHELL_ARG			3
-
-/*
-**---------------------------------shell types----------------------------------
-*/
 # define SHELL_NON_INTERACT	0
 # define SHELL_INTERACT		1
 
