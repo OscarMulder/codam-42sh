@@ -130,6 +130,12 @@
 # define SHELL_ARG			3
 
 /*
+**---------------------------------shell types----------------------------------
+*/
+# define SHELL_NORMAL		0
+# define SHELL_PIPED		1
+
+/*
 **------------------------------------echo--------------------------------------
 */
 
@@ -335,6 +341,7 @@ typedef struct	s_fcdata
 typedef struct	s_state
 {
 	int			exit_code;
+	int			shell_type;
 }				t_state;
 
 t_state *g_state;

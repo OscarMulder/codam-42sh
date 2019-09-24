@@ -21,23 +21,23 @@ int		main(int argc, char **argv)
 	signal(SIGINT, SIG_IGN);
 	g_state = (t_state*)ft_memalloc(sizeof(t_state));
 	if (g_state == NULL)
-		exit(EXIT_FAILURE);
-	g_state->exit_code = EXIT_SUCCESS;
+		return (EXIT_FAILURE);
 	data = shell_init_vshdata();
 	if (data == NULL)
-		exit(EXIT_FAILURE);
+		return (EXIT_FAILURE);
 	if (redir_save_stdfds(data) == FUNCT_ERROR)
-		exit(EXIT_FAILURE);
+		return (EXIT_FAILURE);
 	if (argc > 1 || isatty(STDIN_FILENO) != 1)
 	{
+		g_state->shell_type = SHELL_PIPED;
 		if (argc > 1)
 			shell_args(data, argv[1]);
 		else
 			shell_stdin(data);
-		exit(g_state->exit_code);
+		return (g_state->exit_code);
 	}
 	if (shell_init_term(data) == FUNCT_ERROR)
 		exit(EXIT_FAILURE);
 	shell_start(data);
-	exit(g_state->exit_code);
+	return (g_state->exit_code);
 }

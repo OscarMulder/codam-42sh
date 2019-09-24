@@ -18,12 +18,16 @@
 
 static void		term_flags_init(t_termios *termios_p)
 {
+	if (g_state->shell_type == SHELL_PIPED)
+		return ;
 	termios_p->c_lflag |= (ECHO | ICANON | ISIG);
 	tcsetattr(STDIN_FILENO, TCSANOW, termios_p);
 }
 
 static void		term_flags_destroy(t_termios *termios_p)
 {
+	if (g_state->shell_type == SHELL_PIPED)
+		return ;
 	termios_p->c_lflag &= ~(ECHO | ICANON | ISIG);
 	tcsetattr(STDIN_FILENO, TCSANOW, termios_p);
 }

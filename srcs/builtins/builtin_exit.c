@@ -14,7 +14,8 @@
 
 static void	reset_exit(int exit_code, t_vshdataterm *term_p)
 {
-	if (term_reset(term_p) == FUNCT_FAILURE)
+	if (g_state->shell_type == SHELL_NORMAL &&
+		term_reset(term_p) == FUNCT_FAILURE)
 		ft_eprintf(E_NOT_RESET);
 	exit(exit_code);
 }
