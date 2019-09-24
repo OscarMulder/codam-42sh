@@ -6,7 +6,7 @@
 /*   By: omulder <omulder@student.codam.nl>           +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2019/09/22 18:54:24 by omulder        #+#    #+#                */
-/*   Updated: 2019/09/23 18:01:48 by omulder       ########   odam.nl         */
+/*   Updated: 2019/09/24 11:29:35 by omulder       ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,20 +14,34 @@
 #include <stdio.h>
 
 /*
-** This function should open a random tmp file, so it doesn't run into issues
-** when there are multiple files opened.
+** This function will try to open a tmp file ending with it 0. When it fails
+** (most likely because the file exists, it won't open the existing file
+** because of O_EXCL) it will increment and try again the number until 99.
+** If it still fails at 99 there must be another reason (or 100 editors opened)
+** so it will return an error. Since we are not allowed to use errno this is
+** a bit hacky.
 */
 
 static int	fc_open_temp(t_fcdata *fc)
 {
-	char	*tempfile;
 	int		fd;
+	int		i;
 
-	tempfile = "/tmp/vsh-fc-tmp123";
-	fd = open(tempfile, (O_CREAT | O_RDWR | O_APPEND | O_EXCL));
+	i = 0;
+	fc->tmpfile = ft_strjoinfree_s2(FC_TMP_FILE, ft_itoa(i));
+	fd = open(fc->tmpfile, (O_CREAT | O_RDWR | O_APPEND | O_EXCL),
+		S_IRWXU | S_IRWXG | S_IRWXO);
+	while (fd < 0 && i < 100)
+	{
+		i++;
+		ft_strdel(&fc->tmpfile);
+		fc->tmpfile = ft_strjoinfree_s2(FC_TMP_FILE, ft_itoa(i));
+		fd = open(fc->tmpfile, (O_CREAT | O_RDWR | O_APPEND | O_EXCL),
+			S_IRWXU | S_IRWXG | S_IRWXO);
+	}
 	if (fd < 0)
 	{
-		ft_eprintf("vsh: fc: failed to open temporary file\n"); // replace define
+		ft_eprintf(U_FC);
 		g_state->exit_code = EXIT_FAILURE;
 		return (FUNCT_FAILURE);
 	}
@@ -58,8 +72,9 @@ void		fc_edit(t_vshdata *data, t_datahistory *history, t_fcdata *fc)
 		return ;
 	fc_print(history, fc, start, end);
 	close(fc->fd);
-	data->line->line = ft_strdup("fc \n");
+	data->line->line = ft_strjoinfree_all(
+		ft_strjoinchr(fc->editor, ' '), ft_strjoinchr(fc->tmpfile, '\n'));
 	shell_one_line(data);
 	// shell execute file etc etc ...
-	remove("/tmp/vsh-fc-tmp123");
+	remove(fc->tmpfile);
 }

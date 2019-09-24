@@ -6,7 +6,7 @@
 /*   By: omulder <omulder@student.codam.nl>           +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2019/04/10 20:29:42 by jbrinksm       #+#    #+#                */
-/*   Updated: 2019/09/23 16:41:59 by omulder       ########   odam.nl         */
+/*   Updated: 2019/09/24 11:02:32 by omulder       ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -188,12 +188,13 @@
 # define FC_OPT_S			(1 << 4)
 # define FC_FIRST_NEG		(1 << 5)
 # define FC_LAST_NEG		(1 << 6)
-# define U_FC 				"fc: usage: fc [-e ename] [-nlr] [first] [last] or"\
-							"fc -s [pat=rep] [cmd]\n"
+# define FC_TMP_FILE		"/tmp/vsh-fc-tmp"
+# define U_FC_2				"[-nlr] [first] [last] or fc -s [pat=rep] [cmd]\n"
+# define U_FC 				"fc: usage: fc [-e ename] " U_FC_2
 # define E_FC_REQARG		SHELL "fc: %s: option requires an argument\n"
 # define E_FC_INV_OPT		SHELL ": fc: -%c: invalid option\n"
 # define E_FC_OUT_RANGE		SHELL ": fc: history specification out of range\n"
-
+# define E_FC_F_OPEN		SHELL ": fc: failed to open temporary file\n"
 typedef struct	s_fcdata
 {
 	char	options;
@@ -202,6 +203,7 @@ typedef struct	s_fcdata
 	char	*editor;
 	char	*replace;
 	char	*match;
+	char	*tmpfile;
 	int		fd;
 }				t_fcdata;
 
