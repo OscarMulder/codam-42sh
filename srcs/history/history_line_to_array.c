@@ -6,7 +6,7 @@
 /*   By: omulder <omulder@student.codam.nl>           +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2019/05/30 18:55:25 by mavan-he       #+#    #+#                */
-/*   Updated: 2019/09/22 18:41:43 by omulder       ########   odam.nl         */
+/*   Updated: 2019/09/24 14:05:20 by omulder       ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -56,7 +56,9 @@ static int	is_same_cmd(t_history **history, char *line, int index, int len)
 		prev = HISTORY_MAX - 1;
 	if (history[prev]->str == NULL)
 		return (false);
-	if (ft_strnequ(history[prev]->str, line, len - 1) == true)
+	if (line[len - 1] == '\n')
+		len--;
+	if (ft_strnequ(history[prev]->str, line, len) == true)
 		return (true);
 	return (false);
 }
@@ -91,10 +93,10 @@ int			history_line_to_array(t_history **history, char **line)
 {
 	int start;
 	int number;
-	int line_len;
+	int	line_len;
 
 	line_len = ft_strlen(*line);
-	if (line_len <= 1)
+	if (line_len < 1 || (line_len == 1 && (*line)[0] == '\n'))
 		return (FUNCT_SUCCESS);
 	number = -1;
 	start = 0;
@@ -104,7 +106,9 @@ int			history_line_to_array(t_history **history, char **line)
 	if (history[start]->str != NULL)
 		ft_strdel(&history[start]->str);
 	history[start]->number = number + 1;
-	history[start]->str = ft_strsub(*line, 0, line_len - 1);
+	if ((*line)[line_len - 1] == '\n')
+		line_len--;
+	history[start]->str = ft_strsub(*line, 0, line_len);
 	if (history[start]->str == NULL)
 	{
 		ft_eprintf(E_N_ALLOC_STR, "history");

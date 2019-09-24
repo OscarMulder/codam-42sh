@@ -6,7 +6,7 @@
 /*   By: omulder <omulder@student.codam.nl>           +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2019/09/11 12:45:01 by omulder        #+#    #+#                */
-/*   Updated: 2019/09/24 11:55:13 by omulder       ########   odam.nl         */
+/*   Updated: 2019/09/24 13:46:10 by omulder       ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -32,7 +32,6 @@ static void	fc_handle_first_last(int i, char **args, t_fcdata *fc)
 	fc->last = args[i];
 	return ;
 }
-
 
 static int	fc_handle_option(char c, int *i, char **args, t_fcdata *fc)
 {
