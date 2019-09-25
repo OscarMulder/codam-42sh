@@ -16,28 +16,26 @@
 
 int			get_curs_row(void)
 {
-	int		i;
-	int		row;
-	char	*buf;
+	size_t		i;
+	size_t		len;
+	int			row;
+	char		answer[TC_MAXRESPONSESIZE];
 
-	i = 0;
-	buf = ft_strnew(TC_MAXRESPONSESIZE);
-	if (buf == NULL)
-		return (err_ret(E_ALLOC_STR));
-	ft_putstr("\e[6n");
-	if (read(STDIN_FILENO, buf, TC_MAXRESPONSESIZE) == -1)
-		ft_free_return(buf, FUNCT_ERROR);
-	while (buf[i] != '[' && buf[i] != '\0')
+	len = 0;
+	write(STDIN_FILENO, TC_GETCURSORPOS, 4);
+	while (len < sizeof(answer) - 1 && read(1, answer + len, 1) == 1)
+	{
+		if (answer[len] == 'R')
+			break ;
+		len++;
+	}
+	i = 1;
+	answer[len] = '\0';
+	while (answer[i - 1] != '[' && answer[i] != '\0')
 		i++;
-	if (buf[i] == '[')
-		i++;
-	#ifdef DEBUG
-	ft_eprintf("curs: <%s>\n", &buf[1]);
-	#endif
-	if (ft_isdigit(buf[i]) == false)
-		return (ft_free_return(buf, FUNCT_ERROR));
-	row = ft_atoi(&buf[i]);
-	ft_strdel(&buf);
+	if (ft_isdigit(answer[i]) == false)
+		return (-1);
+	row = ft_atoi(&answer[i]);
 	return (row);
 }
 

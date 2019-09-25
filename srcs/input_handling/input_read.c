@@ -70,7 +70,6 @@ static int	reset_input_read_return(t_vshdata *data, int ret)
 	data->line->index = 0;
 	data->line->len_max = 64;
 	data->line->len_cur = 0;
-	input_empty_buffer(data, 0);
 	if (ret == 0)
 		data->curs->coords.y = get_curs_row();
 	data->curs->cur_relative_y = 1;
