@@ -23,7 +23,7 @@ void		input_reset_cursor_pos(void)
 
 	len = 0;
 	write(STDIN_FILENO, TC_GETCURSORPOS, 4);
-	while (len < sizeof(answer) - 1 && read(1, answer + len, 1) == 1)
+	while (len < TC_MAXRESPONSESIZE - 1 && read(1, answer + len, 1) == 1)
 	{
 		if (answer[len] == 'R')
 			break ;
