@@ -66,7 +66,7 @@ void			curs_move_up(t_vshdata *data)
 
 	if (data->line->index == 0)
 		return ;
-	newline_str = ft_strrnchr(data->line->line, '\n', data->line->index);
+	newline_str = ft_strrnchr(data->line->line, '\n', data->line->index - 1);
 	if (newline_str != NULL)
 		move_up_handle_newline(data);
 	else if (data->line->index < (unsigned)data->curs->cur_ws_col)
