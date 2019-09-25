@@ -42,7 +42,7 @@ static void	move_left_to_colmax(t_vshdata *data, int colmax, size_t *n)
 		data->curs->coords.y--;
 		data->curs->cur_relative_y--;
 		ft_printf("\e[A\e[%iC", data->curs->coords.x);
-		data->line->index--;;
+		data->line->index--;
 		(*n)--;
 	}
 	else
