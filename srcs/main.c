@@ -6,7 +6,7 @@
 /*   By: jbrinksm <jbrinksm@student.codam.nl>         +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2019/04/10 20:29:49 by jbrinksm       #+#    #+#                */
-/*   Updated: 2019/09/24 16:10:38 by mavan-he      ########   odam.nl         */
+/*   Updated: 2019/09/25 11:59:28 by mavan-he      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -43,7 +43,7 @@ int		main(int argc, char **argv)
 		return (g_state->exit_code);
 	}
 	if (shell_init_term(data) == FUNCT_ERROR)
-		exit(EXIT_FAILURE);
+		return (EXIT_FAILURE);
 	shell_start(data);
 	return (g_state->exit_code);
 }
