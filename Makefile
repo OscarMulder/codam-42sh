@@ -6,7 +6,7 @@
 #    By: omulder <omulder@student.codam.nl>           +#+                      #
 #                                                    +#+                       #
 #    Created: 2019/04/10 20:30:07 by jbrinksm       #+#    #+#                 #
-#    Updated: 2019/09/23 15:49:51 by jbrinksm      ########   odam.nl          #
+#    Updated: 2019/09/23 16:08:44 by omulder       ########   odam.nl          #
 #                                                                              #
 # **************************************************************************** #
 
@@ -24,7 +24,8 @@ VPATH = ./test ./libft ./srcs ./srcs/builtins ./srcs/input_handling \
 ./srcs/tools ./srcs/alias ./test/parser ./test/tools ./test/builtins \
 ./test/environment_handling ./srcs/lexer ./srcs/parser ./srcs/history \
 ./srcs/expan ./srcs/autocomplete ./srcs/hashtable ./srcs/signal \
-./srcs/exec ./srcs/redir ./srcs/error_handling ./srcs/exec ./includes
+./srcs/exec ./srcs/redir ./srcs/error_handling ./srcs/exec ./includes \
+./srcs/builtins/builtin_fc
 SRCS = shell_start shell_prompt shell_quote_checker shell_dless_input \
 shell_init_files shell_init_vshdata shell_getcurrentdir \
 shell_handle_escaped_newlines shell_init_input shell_init_features \
@@ -46,6 +47,7 @@ tools_is_char_escaped tool_is_redirect_tk tools_is_valid_identifier \
 tools_is_builtin tool_is_special tool_check_for_special tools_is_fdnumstr \
 tools_isidentifierchar tool_check_for_whitespace tool_get_paths \
 tools_isprintnotblank tools_get_pid_state tools_contains_quoted_chars \
+tools_is_cmd_seperator \
 builtin_echo builtin_echo_set_flags builtin_exit builtin_assign \
 builtin_export builtin_export_print builtin_set builtin_unset \
 builtin_alias builtin_alias_set builtin_alias_lstdel builtin_unalias \
@@ -72,6 +74,8 @@ auto_get_cmdlst auto_match_builtins auto_get_filelst auto_get_varlst \
 auto_find_state auto_start auto_add_match_toline auto_find_matches \
 auto_handle_matchlst auto_small_lst auto_big_lst auto_lst_print \
 auto_lst_print_helpers auto_check_dups \
+builtin_fc builtin_fc_options builtin_fc_init builtin_fc_list \
+builtin_fc_print_helpers builint_fc_find_index \
 signal_handle_child_death
 TESTS = unit_test builtin_assign_test
 OBJECTS := $(SRCS:%=%.o)
