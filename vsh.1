@@ -22,22 +22,10 @@ commands.
 .\" */
 \fBVsh\fP reads and executes commands from this file and then exits.
 If no commands are executed, the exit status is 0.
-.\" /*
-.\" **   THIS FOLLOWING PART
-.\" */
-An attempt will be made to open the file in the current directory.
-If any of the files exist but cannot be read,
-.B vsh
-reports an error.
-.\" /*
-.\" **   Could be replaced by this below if we want to do so.
-.\" **
-.\" **   An attempt is first made to open the file in the current directory,
-.\" **   and, if no file is found, then the shell searches the directories
-.\" **   in
-.\" **   .B PATH
-.\" **   for the script.
-.\" */
+An attempt is first made to open the file in the current directory,
+and, if no file is found, then the shell searches the directories
+in \fBPATH\fP for the script. If any of the files exist but cannot be read,
+\fBvsh\fP reports an error.
 .SH INVOCATION
 An \fIinteractive\fP shell is one started without non-option arguments whose
 standard input and error are both connected to terminals (as determined by
@@ -95,7 +83,7 @@ The return value of a \fIsimple command\fP is its exit status, or
 .SS Pipelines
 .PP
 A \fIpipeline\fP is a sequence of one or more commands separated by
-the \fIcontrol operator\fP \fBI\fP.
+the \fIcontrol operator\fP \fB|\fP.
 .br
 The format for a pipeline is:
 .RS
@@ -116,7 +104,7 @@ value.
 A \fIlist\fP is a sequence of one or more pipelines separated by one of the
 following \fIcontrol operators\fP:
 .br
-\fB; && ||\fP
+\fB; & && ||\fP
 .PP
 It is optionally terminated by one of the following \fIcontrol operators\fP:
 .br
