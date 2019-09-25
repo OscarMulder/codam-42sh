@@ -8,7 +8,7 @@ vsh
 \fBVsh\fP is a beautiful command language interpreter that executes
 commands read from the standard input or from a file.
 .SH OPTIONS
-vsh does not take any options.
+\fBVsh\fP does not take any options.
 .PD
 .\" /*
 .\" **
@@ -45,8 +45,7 @@ commands.
 .\" /*
 .\" **   THIS FOLLOWING PART IS SOMETHING WE MIGHT WANT TO ADD
 .\" **
-.\" **   If
-.\" **   .B vsh
+.\" **   If \fBvsh\fP
 .\" **   is invoked in this fashion, $0 is set to the name of the file, and the
 .\" **   positional parameters  are  set  to  the  remaining arguments.
 .\" */
@@ -144,7 +143,25 @@ A character that, when unquoted, seperates words. One of the following:
 .B control operator
 A \fItoken\fP that performs a control function. One of the following:
 .br
-\fB| || & && ; ;; <newline>\fP
+\fB| || & && ; <newline>\fP
+.TP
+.B tilde expansion character
+A character that, when unquoted, and the first char of a \fIword\fP, will expand
+into the \fIenvironment variable\f \fBHOME\f. The following:
+.br
+\fB~\fP
+.TP
+.B variable expansion character
+A character that, when unquoted, and the first char of a \fIword\fP, will expand
+into the \fIenvironment variable\f that is given right after it. The following:
+.br
+\fB$\fP
+.TP
+.B history expansion character
+A character that, when unquoted, and used according to \fBHISTORY EXPANSION\fP,
+will expand into a valid history item if there is one. The following:
+.br
+\fB!\fP
 .PD
 .\" /*
 .\" **
@@ -360,6 +377,38 @@ executed in the list.
 .\" **
 .\" **
 .\" */
+.SH COMMENTS
+.PP
+\fBVsh\fP does not support comments.
+.\" /*
+.\" **
+.\" **
+.\" **
+.\" **
+.\" **
+.\" **
+.\" **
+.\" **
+.\" **
+.\" **
+.\" **
+.\" **
+.\" **
+.\" **   QUOTING
+.\" **
+.\" **
+.\" **
+.\" **
+.\" **
+.\" **
+.\" **
+.\" **
+.\" **
+.\" **
+.\" **
+.\" **
+.\" **
+.\" */
 .SH QUOTING
 .PP
 \fIQuoting\fP is used to remove the special meaning of certain characters or
@@ -368,8 +417,32 @@ characters, and to prevent parameter expansion. (If we had reserved words they
 could also be prevented from being recognized as such.)
 .PP
 Each of the \fImetacharacters\fP listed above under \fBDEFINITIONS\fP has a
-special meaning to the shell and must be quoted if this special meaning is to
-be removed.
+special meaning to the shell and must be quoted if the literal value is to be
+used.
+.PP
+The \fIhistory expansion\fP character \fB!\fP must be quoted to prevent
+history expansion.
+.PP
+There are three quoting mechanisms: the \fIescape character\fP, single quotes,
+and double quotes.
+.PP
+A non-quoted backslash \fB\\\fP is the \fBescape character\fP. It removes
+preserves the literal value of the next character that follows, with the
+exception of \fB<newline>\fP. If a \fB\\<newline>\fP pair appears, and the
+backslash is not itself quoted, the \fB\\<newline>\fP pair is treated as a
+line continuation (that is, it is removed from the input stream and effectively
+ignored).
+.PP
+Enclosing characters in single quotes preserves the literal value
+of each character within the quotes. A single quote may not occur
+between single quotes, even when preceded by a backslash.
+.PP
+Enclosing characters in double quotes preserves the literal value of all
+characters within the quotes, with the exception of the following characters:
+.br
+\fB$ \\ !\fP
+.br
+When the hi
 .\" /*
 .\" **
 .\" **
@@ -401,7 +474,7 @@ be removed.
 .\" */
 .SH SHELL BUILTIN COMMANDS
 .PP
-vsh supports a total of 7 builtin commands.
+\fBvsh\fP supports a total of 7 builtin commands.
 .TP
 .B echo
 [-neE] [arg ...]
