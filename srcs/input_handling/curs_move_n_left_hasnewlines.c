@@ -47,7 +47,7 @@ static void	move_left_to_colmax(t_vshdata *data, int colmax, size_t *n)
 	}
 	else
 	{
-		if (*n > data->curs->coords.x)
+		if (*n > (size_t)data->curs->coords.x)
 			amt = data->curs->coords.x - 1;
 		else
 			amt = *n;
