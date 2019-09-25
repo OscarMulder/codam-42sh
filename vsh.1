@@ -267,7 +267,7 @@ the \fIcontrol operator\fP \fB|\fP.
 The format for a pipeline is:
 .RS
 .PP
-[ \fIcommand1\fP [ [ \fB|\fP ] \fIcommand2\fP ... ]
+\fIcommand1\fP [ \fB|\fP \fIcommand2\fP ... ]
 .RE
 .PP
 The standard output of \fIcommand\fP is connected via a pipe to the standard
@@ -277,7 +277,8 @@ specified by the command (see \fBREDIRECTION\fP below).
 The return status of a pipeline is the exit status of the last command. The
 shell waits for all commands in the pipeline to terminate before returning a
 value.
-.PP Each command in a pipeline is executed as a seperate process. 
+.PP
+Each command in a pipeline is executed as a seperate process. 
 .SS Lists
 .PP
 A \fIlist\fP is a sequence of one or more pipelines separated by one of the
