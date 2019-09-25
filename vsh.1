@@ -9,6 +9,36 @@ vsh
 commands read from the standard input or from a file.
 .SH OPTIONS
 vsh does not take any options.
+.PD
+.\" /*
+.\" **
+.\" **
+.\" **
+.\" **
+.\" **
+.\" **
+.\" **
+.\" **
+.\" **
+.\" **
+.\" **
+.\" **
+.\" **
+.\" **   ARGUMENTS
+.\" **
+.\" **
+.\" **
+.\" **
+.\" **
+.\" **
+.\" **
+.\" **
+.\" **
+.\" **
+.\" **
+.\" **
+.\" **
+.\" */
 .SH ARGUMENTS
 The first argument is assumed to be the name of a file containing shell
 commands.
@@ -26,10 +56,70 @@ An attempt is first made to open the file in the current directory,
 and, if no file is found, then the shell searches the directories
 in \fBPATH\fP for the script. If any of the files exist but cannot be read,
 \fBvsh\fP reports an error.
+.PD
+.\" /*
+.\" **
+.\" **
+.\" **
+.\" **
+.\" **
+.\" **
+.\" **
+.\" **
+.\" **
+.\" **
+.\" **
+.\" **
+.\" **
+.\" **   INVOCATION
+.\" **
+.\" **
+.\" **
+.\" **
+.\" **
+.\" **
+.\" **
+.\" **
+.\" **
+.\" **
+.\" **
+.\" **
+.\" **
+.\" */
 .SH INVOCATION
 An \fIinteractive\fP shell is one started without non-option arguments whose
 standard input and error are both connected to terminals (as determined by
 .IR isatty (3)).
+.PD
+.\" /*
+.\" **
+.\" **
+.\" **
+.\" **
+.\" **
+.\" **
+.\" **
+.\" **
+.\" **
+.\" **
+.\" **
+.\" **
+.\" **
+.\" **   DEFINITIONS
+.\" **
+.\" **
+.\" **
+.\" **
+.\" **
+.\" **
+.\" **
+.\" **
+.\" **
+.\" **
+.\" **
+.\" **
+.\" **
+.\" */
 .SH DEFINITIONS
 The following definitions are used throughout the rest of this document.
 .TP
@@ -56,6 +146,35 @@ A \fItoken\fP that performs a control function. One of the following:
 .br
 \fB| || & && ; ;; <newline>\fP
 .PD
+.\" /*
+.\" **
+.\" **
+.\" **
+.\" **
+.\" **
+.\" **
+.\" **
+.\" **
+.\" **
+.\" **
+.\" **
+.\" **
+.\" **
+.\" **   INTRODUCTION
+.\" **
+.\" **
+.\" **
+.\" **
+.\" **
+.\" **
+.\" **
+.\" **
+.\" **
+.\" **
+.\" **
+.\" **
+.\" **
+.\" */
 .SH INTRODUCTION
 .PP
 The shell operates according to the following general overview of operations.
@@ -64,11 +183,71 @@ The specific details are included in the cited sections of this document.
 .RS
 \fB <INSERT GENERAL OPERATIONAL STRUCTURE OF VSH>
 .RE
+.PD
+.\" /*
+.\" **
+.\" **
+.\" **
+.\" **
+.\" **
+.\" **
+.\" **
+.\" **
+.\" **
+.\" **
+.\" **
+.\" **
+.\" **
+.\" **   RESERVED WORDS
+.\" **
+.\" **
+.\" **
+.\" **
+.\" **
+.\" **
+.\" **
+.\" **
+.\" **
+.\" **
+.\" **
+.\" **
+.\" **
+.\" */
 .SH "RESERVED WORDS"
 \fIReserved words\fP are words that have a special meaning to the shell.
 We currently do not have any reserved words, but if we did they would be
 recognized as reserved when unquoted and the first word
 of a simple command (see \fBSHELL GRAMMAR\fP below).
+.PD
+.\" /*
+.\" **
+.\" **
+.\" **
+.\" **
+.\" **
+.\" **
+.\" **
+.\" **
+.\" **
+.\" **
+.\" **
+.\" **
+.\" **
+.\" **   SHELL GRAMMAR
+.\" **
+.\" **
+.\" **
+.\" **
+.\" **
+.\" **
+.\" **
+.\" **
+.\" **
+.\" **
+.\" **
+.\" **
+.\" **
+.\" */
 .SH "SHELL GRAMMAR"
 .SS Simple Commands
 .PP
@@ -108,7 +287,7 @@ following \fIcontrol operators\fP:
 .PP
 It is optionally terminated by one of the following \fIcontrol operators\fP:
 .br
-\fB; & <newline>
+\fB; & <newline>\fP
 .PP
 Of these list operators, \fB;\fP and \fB&\fP equally have the highest
 precedence, followed by \fB&&\fP and \fB||\fP which also have equal precedence.
@@ -150,8 +329,74 @@ The format for an OR list is:
 \fIcommand2\fP is executed only if \fIcommand1\fP returns a non-zero exit status.
 The return status of AND and OR lists is the exit status of the last command
 executed in the list.
+.PD
 .\" /*
-.\" **   START OF SHELL BUILTIN COMMANDS
+.\" **
+.\" **
+.\" **
+.\" **
+.\" **
+.\" **
+.\" **
+.\" **
+.\" **
+.\" **
+.\" **
+.\" **
+.\" **
+.\" **   QUOTING
+.\" **
+.\" **
+.\" **
+.\" **
+.\" **
+.\" **
+.\" **
+.\" **
+.\" **
+.\" **
+.\" **
+.\" **
+.\" **
+.\" */
+.SH QUOTING
+.PP
+\fIQuoting\fP is used to remove the special meaning of certain characters or
+words to the shell. Quoting can be used to disable special treatment for special
+characters, and to prevent parameter expansion. (If we had reserved words they
+could also be prevented from being recognized as such.)
+.PP
+Each of the \fImetacharacters\fP listed above under \fBDEFINITIONS\fP has a
+special meaning to the shell and must be quoted if this special meaning is to
+be removed.
+.\" /*
+.\" **
+.\" **
+.\" **
+.\" **
+.\" **
+.\" **
+.\" **
+.\" **
+.\" **
+.\" **
+.\" **
+.\" **
+.\" **
+.\" **   SHELL BUILTIN COMMANDS
+.\" **
+.\" **
+.\" **
+.\" **
+.\" **
+.\" **
+.\" **
+.\" **
+.\" **
+.\" **
+.\" **
+.\" **
+.\" **
 .\" */
 .SH SHELL BUILTIN COMMANDS
 .PP
@@ -220,13 +465,44 @@ Displays all current history entries.
 .\" **   Display our mighty vela logo in ascii art, and continue with business
 .\" **   as usual.
 .\" */
+.PD
+.\" /*
+.\" **
+.\" **
+.\" **
+.\" **
+.\" **
+.\" **
+.\" **
+.\" **
+.\" **
+.\" **
+.\" **
+.\" **
+.\" **
+.\" **   REDIRECTION
+.\" **
+.\" **
+.\" **
+.\" **
+.\" **
+.\" **
+.\" **
+.\" **
+.\" **
+.\" **
+.\" **
+.\" **
+.\" **
+.\" */
 .SH REDIRECTION
 .PP
 The following section explains how we handle redirections.
 .SS Here-document
+.PP
 The redirection operator \fB<<\fP allows redirection of lines contained in a shell
 input file, known as a \fIhere-document\fP, to the standard input of a command.
-
+.PP
 The \fIhere-document\fP is treated as a single word that begins after the next newline
 character (if there are unescaped quotes) and continues until there is a line
 containing only the delimiter, with no trailing blank characters. Then the next
