@@ -49,32 +49,35 @@ void		curs_move_prev_word(t_vshdata *data)
 **	call a function with a slower method to reposition the cursor.
 */
 
-void		curs_move_n_left(t_vshdata *data, size_t n)
+static void	move_left_no_newlines(t_vshdata *data, size_t n)
 {
 	int		up;
 	int		x_offset;
 	int		curs_row_pos;
 
+	curs_row_pos = data->curs->cur_ws_col - data->curs->coords.x;
+	up = (curs_row_pos + n) / data->curs->cur_ws_col;
+	x_offset = curs_row_pos - ((curs_row_pos + n) % data->curs->cur_ws_col);
+	if (up > 0)
+		ft_printf("\e[%iA", up);
+	if (x_offset > 0)
+		ft_printf("\e[%iC", x_offset);
+	else if (x_offset < 0)
+		ft_printf("\e[%iD", x_offset * -1);
+	data->line->index -= n;
+	data->curs->coords.y -= up;
+	data->curs->cur_relative_y -= up;
+	data->curs->coords.x += x_offset;
+}
+
+void		curs_move_n_left(t_vshdata *data, size_t n)
+{
 	if (n <= 0 || data->line->index == 0)
 		return ;
 	if (n > data->line->index)
 		n = data->line->index;
 	if (ft_strchr(data->line->line, '\n') == NULL)
-	{
-		curs_row_pos = data->curs->cur_ws_col - data->curs->coords.x;
-		up = (curs_row_pos + n) / data->curs->cur_ws_col;
-		x_offset = curs_row_pos - ((curs_row_pos + n) % data->curs->cur_ws_col);
-		if (up > 0)
-			ft_printf("\e[%iA", up);
-		if (x_offset > 0)
-			ft_printf("\e[%iC", x_offset);
-		else if (x_offset < 0)
-			ft_printf("\e[%iD", x_offset * -1);
-		data->line->index -= n;
-		data->curs->coords.y -= up;
-		data->curs->cur_relative_y -= up;
-		data->curs->coords.x += x_offset;
-	}
+		move_left_no_newlines(data, n);
 	else
 		curs_move_n_left_hasnewlines(data, n);
 }
