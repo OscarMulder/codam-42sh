@@ -6,7 +6,7 @@
 /*   By: jbrinksm <jbrinksm@student.codam.nl>         +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2019/06/02 13:23:16 by jbrinksm       #+#    #+#                */
-/*   Updated: 2019/09/26 13:15:05 by tde-jong      ########   odam.nl         */
+/*   Updated: 2019/09/23 15:49:31 by jbrinksm      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,7 +19,7 @@ static int	return_heredoc_error(void)
 	return (FUNCT_ERROR);
 }
 
-static int	shell_dless_read_till_stop(char **heredoc, char *heredoc_delim,
+int			shell_dless_read_till_stop(char **heredoc, char *heredoc_delim,
 			t_vshdata *data)
 {
 	char	*line_tmp;
@@ -37,10 +37,7 @@ static int	shell_dless_read_till_stop(char **heredoc, char *heredoc_delim,
 			ft_putchar('\n');
 		if (ft_strequ(data->line->line, heredoc_delim) == true || ret == IR_EOF)
 			break ;
-		if (*heredoc == NULL)
-			*heredoc = ft_strdup(data->line->line);
-		else
-			*heredoc = ft_strjoinfree_s1(*heredoc, data->line->line);
+		*heredoc = ft_strjoinfree_s1(*heredoc, data->line->line);
 		ft_strdel(&data->line->line);
 		if (*heredoc == NULL)
 			return (return_heredoc_error());
@@ -50,21 +47,16 @@ static int	shell_dless_read_till_stop(char **heredoc, char *heredoc_delim,
 	return (ret);
 }
 
-static int	shell_dless_set_tk_val(t_tokenlst *probe, char **heredoc,
+int			shell_dless_set_tk_val(t_tokenlst *probe, char **heredoc,
 			char *heredoc_delim, t_vshdata *data)
 {
 	int	ret;
 
 	ft_strdel(&(probe->value));
-	*heredoc = NULL;
+	*heredoc = ft_strnew(0);
 	ret = shell_dless_read_till_stop(heredoc, heredoc_delim, data);
 	if (ret == FUNCT_SUCCESS || ret == IR_EOF)
-	{
-		if (*heredoc != NULL)
-			probe->value = ft_strdup(*heredoc);
-		else
-			probe->value = ft_strnew(0);
-	}
+		probe->value = ft_strdup(*heredoc);
 	if (probe->value == NULL || ret == NEW_PROMPT || ret == FUNCT_ERROR)
 	{
 		if (probe->value == NULL && ret != NEW_PROMPT)
