@@ -6,7 +6,7 @@
 /*   By: omulder <omulder@student.codam.nl>           +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2019/05/31 10:47:19 by tde-jong       #+#    #+#                */
-/*   Updated: 2019/09/24 16:12:09 by mavan-he      ########   odam.nl         */
+/*   Updated: 2019/09/26 15:39:34 by tde-jong      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -32,10 +32,11 @@ static void		term_flags_destroy(t_termios *termios_p)
 	tcsetattr(STDIN_FILENO, TCSANOW, termios_p);
 }
 
-static void		exec_bin_handlewait(pid_t pid)
+static void		exec_bin_handlewait(pid_t pid, char *arg)
 {
 	int		status;
 
+	status = 0;
 	waitpid(pid, &status, WUNTRACED);
 	if (WIFEXITED(status))
 		g_state->exit_code = WEXITSTATUS(status);
@@ -69,7 +70,7 @@ t_vshdata *data)
 		exit(EXIT_FAILURE);
 	}
 	if (data->exec_flags & EXEC_WAIT)
-		exec_bin_handlewait(pid);
+		exec_bin_handlewait(pid, args[0]);
 	term_flags_destroy(data->term->termios_p);
 }
 
