@@ -6,7 +6,7 @@
 /*   By: jbrinksm <jbrinksm@student.codam.nl>         +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2019/06/02 13:23:16 by jbrinksm       #+#    #+#                */
-/*   Updated: 2019/09/26 14:25:15 by tde-jong      ########   odam.nl         */
+/*   Updated: 2019/09/26 14:28:05 by tde-jong      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -40,7 +40,7 @@ static int	shell_dless_read_till_stop(char **heredoc, char *heredoc_delim,
 		*heredoc = ft_strjoinfree_s1(*heredoc, data->line->line);
 		ft_strdel(&data->line->line);
 		if (*heredoc == NULL)
-			return (return_heredoc_error());
+			return (FUNCT_ERROR);
 	}
 	ft_strdel(&data->line->line);
 	data->line->line = line_tmp;
