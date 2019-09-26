@@ -147,13 +147,13 @@ A \fItoken\fP that performs a control function. One of the following:
 .TP
 .B tilde expansion character
 A character that, when unquoted, and the first char of a \fIword\fP, will expand
-into the \fIenvironment variable\f \fBHOME\f. The following:
+into the \fIenvironment variable\fP \fBHOME\fP. The following:
 .br
 \fB~\fP
 .TP
 .B variable expansion character
 A character that, when unquoted, and the first char of a \fIword\fP, will expand
-into the \fIenvironment variable\f that is given right after it. The following:
+into the \fIenvironment variable\fP that is given right after it. The following:
 .br
 \fB$\fP
 .TP
@@ -441,8 +441,50 @@ Enclosing characters in double quotes preserves the literal value of all
 characters within the quotes, with the exception of the following characters:
 .br
 \fB$ \\ !\fP
+.PP
+The \fIescape character\fP retains its special meaning only when followed by one
+of the following characters:
 .br
-When the hi
+\fB$ " \\ <newline>\fP
+.PP
+A double quote may be quoted within double quotes by preceding it with the
+\fIescape character\fP. History expansion through the
+\fIhistory expansion character\fP will be performed unless the
+\fIhistory expansion character\fP
+appearing in double quotes is escaped using an \fIescape character\fP. The
+\fIescape character\fP preceding the \fIhistory expansion character\fP is not
+removed.
+.\" /*
+.\" **
+.\" **
+.\" **
+.\" **
+.\" **
+.\" **
+.\" **
+.\" **
+.\" **
+.\" **
+.\" **
+.\" **
+.\" **
+.\" **   SHELL BUILTIN COMMANDS
+.\" **
+.\" **
+.\" **
+.\" **
+.\" **
+.\" **
+.\" **
+.\" **
+.\" **
+.\" **
+.\" **
+.\" **
+.\" **
+.\" */
+.SH parameters
+.PP A \fIparameter\fP is an entity that stores a value.
 .\" /*
 .\" **
 .\" **
