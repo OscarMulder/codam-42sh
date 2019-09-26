@@ -6,13 +6,14 @@
 /*   By: mavan-he <mavan-he@student.codam.nl>         +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2019/08/10 20:15:06 by mavan-he       #+#    #+#                */
-/*   Updated: 2019/09/13 17:09:20 by mavan-he      ########   odam.nl         */
+/*   Updated: 2019/09/26 11:42:28 by tde-jong      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "vsh.h"
 
-static int	auto_match_builtins_continued(char *match, t_list **matchlst, int match_len)
+static int	auto_match_builtins_continued(char *match, t_list **matchlst,
+				int match_len)
 {
 	int ret;
 
@@ -28,13 +29,14 @@ static int	auto_match_builtins_continued(char *match, t_list **matchlst, int mat
 	return (ret);
 }
 
-int			auto_match_builtins(char *match, t_list **matchlst, int match_len)
+int			auto_match_builtins(char *match, t_list **matchlst,
+				int match_len)
 {
 	int ret;
 
 	ret = FUNCT_FAILURE;
 	if (ret != FUNCT_ERROR && ft_strnequ(match, "echo", match_len))
-		ret = auto_add_tolst(matchlst, "echo");	
+		ret = auto_add_tolst(matchlst, "echo");
 	if (ret != FUNCT_ERROR && ft_strnequ(match, "exit", match_len))
 		ret = auto_add_tolst(matchlst, "exit");
 	if (ret != FUNCT_ERROR && ft_strnequ(match, "cd", match_len))

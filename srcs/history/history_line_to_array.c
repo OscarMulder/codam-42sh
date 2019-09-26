@@ -6,7 +6,7 @@
 /*   By: omulder <omulder@student.codam.nl>           +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2019/05/30 18:55:25 by mavan-he       #+#    #+#                */
-/*   Updated: 2019/09/22 12:16:17 by mavan-he      ########   odam.nl         */
+/*   Updated: 2019/09/26 11:43:41 by tde-jong      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -46,7 +46,8 @@ static void	history_find_start(t_history **history, int *number, int *start)
 	}
 }
 
-static int	is_same_cmd(t_history **history, char *line, int index, int line_len)
+static int	is_same_cmd(t_history **history, char *line, int index,
+						int line_len)
 {
 	int prev;
 

@@ -6,12 +6,12 @@
 /*   By: jbrinksm <jbrinksm@student.codam.nl>         +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2019/04/10 20:29:49 by jbrinksm       #+#    #+#                */
-/*   Updated: 2019/09/25 11:59:28 by mavan-he      ########   odam.nl         */
+/*   Updated: 2019/09/26 11:44:49 by tde-jong      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "vsh.h"
-#include <signal.h>	
+#include <signal.h>
 
 void	init_g_state(void)
 {
