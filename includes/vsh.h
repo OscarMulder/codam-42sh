@@ -6,7 +6,7 @@
 /*   By: omulder <omulder@student.codam.nl>           +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2019/04/10 20:29:42 by jbrinksm       #+#    #+#                */
-/*   Updated: 2019/09/24 16:30:10 by mavan-he      ########   odam.nl         */
+/*   Updated: 2019/09/26 11:50:44 by tde-jong      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -175,6 +175,18 @@
 # define HASH_NO_HIT		0
 
 /*
+**===============================personal headers===============================
+*/
+
+# include "libft.h"
+
+/*
+**==================================headers=====================================
+*/
+
+# include <stdbool.h>
+
+/*
 **-----------------------------------fc-----------------------------------------
 */
 
@@ -186,8 +198,8 @@
 # define FC_OPT_S			(1 << 4)
 # define FC_FIRST_NEG		(1 << 5)
 # define FC_LAST_NEG		(1 << 6)
-# define U_FC 				"fc: usage: fc [-e ename] [-nlr] [first] [last] or"\
-							"fc -s [pat=rep] [cmd]\n"
+# define U_FC 				U_FC_" fc -s [pat=rep] [cmd]\n"
+# define U_FC_				"fc: usage: fc [-e ename] [-nlr] [first] [last] or"
 # define E_FC_REQARG		SHELL "fc: %s: option requires an argument\n"
 # define E_FC_INV_OPT		SHELL ": fc: -%c: invalid option\n"
 # define E_FC_OUT_RANGE		SHELL ": fc: history specification out of range\n"
@@ -313,18 +325,6 @@ typedef struct	s_fcdata
 # define HISTFILENAME	".vsh_history"
 # define HIST_SEPARATE	-1
 # define HIST_EXPANDED	(1 << 2)
-
-/*
-**===============================personal headers===============================
-*/
-
-# include "libft.h"
-
-/*
-**==================================headers=====================================
-*/
-
-# include <stdbool.h>
 
 /*
 **=================================typedefs====================================
@@ -699,7 +699,7 @@ int				shell_close_quote_and_esc(t_vshdata *data);
 char			shell_quote_checker_find_quote(char *line);
 int				shell_handle_escaped_newlines(t_vshdata *data);
 void			shell_get_valid_prompt(t_vshdata *data, int prompt_type);
-int 			shell_init_term(t_vshdata *data);
+int				shell_init_term(t_vshdata *data);
 void			shell_args(t_vshdata *data, char *filepath);
 int				shell_get_path(t_vshdata *data, char **filepath);
 int				shell_init_line(t_vshdata *data, char *filepath);
