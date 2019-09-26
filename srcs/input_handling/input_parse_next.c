@@ -68,9 +68,6 @@ void		curs_move_n_right(t_vshdata *data, size_t n)
 	}
 	else
 		curs_move_n_right_hasnewlines(data, n);
-	#ifdef DEBUG
-	ft_eprintf("New cursor coordinates: [%d:%d]\n", data->curs->coords.x, data->curs->coords.y);
-	#endif
 }
 
 /*

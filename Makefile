@@ -55,9 +55,9 @@ builtin_alias builtin_alias_set builtin_alias_lstdel builtin_unalias \
 builtin_cd builtin_cd_error builtin_cd_pathparsing \
 builtin_cd_pathparsing_tools builtin_cd_changedir \
 builtin_type builtin_hash \
-lexer lexer_utils lexer_debug lexer_evaluator lexer_scanner \
+lexer lexer_utils lexer_evaluator lexer_scanner \
 lexer_state_if_else lexer_state_single lexer_state_start lexer_state_strings \
-parser_start parser_debug parser_utils parser_command parser_error \
+parser_start parser_utils parser_command parser_error \
 parser_astdel \
 alias_expansion alias_replace alias_read_file alias_add_expanded \
 alias_getvalue \
@@ -78,11 +78,8 @@ auto_lst_print_helpers auto_check_dups \
 builtin_fc builtin_fc_options builtin_fc_init builtin_fc_list \
 builtin_fc_print_helpers builint_fc_find_index \
 signal_handle_child_death
-TESTS = unit_test builtin_assign_test
 OBJECTS := $(SRCS:%=%.o)
-TESTOBJECTS := $(TESTS:%=%.o)
 SRCS := $(SRCS:%=%.c)
-TESTS := $(TESTS:%=%.c)
 
 all: $(OBJECTS) $(LIBFT) $(NAME)
 
@@ -97,46 +94,16 @@ $(LIBFT):
 	@$(MAKE) -C libft
 
 clean:
-	@rm -f $(OBJECTS) $(TESTOBJECTS) main.o
+	@rm -f $(OBJECTS) main.o
 	@$(MAKE) -C libft clean
 	@echo "[ - ] removed object files"
 	@rm -f *.gcno
 	@rm -f *.gcda
 
 fclean: clean
-	@rm -f $(NAME) test_coverage vsh_tests
+	@rm -f $(NAME)
 	@$(MAKE) -C libft fclean
 	@echo "[ - ] removed binaries"
 	@rm -f *.gcov
 
 re: fclean all
-
-run_valgrind_vsh: all
-	@valgrind --tool=memcheck --leak-check=full ./vsh
-
-test_norm: fclean
-	@echo "[ + ] cloning norminette+"
-	@git clone https://github.com/thijsdejong/codam-norminette-plus ~/norminette+
-	@echo "[...] running norminette+"
-	@sh ${TRAVIS_BUILD_DIR}/test/norminette.sh
-
-$(TESTOBJECTS): $(TESTS)
-	@$(CC) $(FLAGS) $^ $(INCLUDES) $(CRITERIONINCLUDES) -c
-
-build_test: $(TESTOBJECTS) $(OBJECTS)
-	@make re COVERAGE=$(COVERAGE)
-	@make $(TESTOBJECTS) COVERAGE=$(COVERAGE)
-	@$(CC) $(FLAGS) $^ $(COVERAGE) $(INCLUDES) $(CRITERION) $(LIB) -o vsh_tests
-
-test: build_test
-	@./vsh_tests
-
-test_valgrind: build_test
-	@valgrind --tool=memcheck --leak-check=full ./vsh_tests
-
-
-test_coverage: COVERAGE = -coverage
-test_coverage: test
-	@gcov $(SRCS)
-
-.PHONY: test_norm test_coverage all clean fclean re test $(TESTOBJECTS)
