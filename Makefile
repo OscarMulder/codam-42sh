@@ -6,11 +6,11 @@
 #    By: omulder <omulder@student.codam.nl>           +#+                      #
 #                                                    +#+                       #
 #    Created: 2019/04/10 20:30:07 by jbrinksm       #+#    #+#                 #
-#    Updated: 2019/09/23 20:29:49 by mavan-he      ########   odam.nl          #
+#    Updated: 2019/09/26 13:35:17 by tde-jong      ########   odam.nl          #
 #                                                                              #
 # **************************************************************************** #
 
-NAME = vsh
+NAME = 21sh
 CC = gcc
 FLAGS = -Wall -Werror -Wextra -Wunreachable-code -g
 COVERAGE =
