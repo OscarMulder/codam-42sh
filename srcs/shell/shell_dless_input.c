@@ -6,7 +6,7 @@
 /*   By: jbrinksm <jbrinksm@student.codam.nl>         +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2019/06/02 13:23:16 by jbrinksm       #+#    #+#                */
-/*   Updated: 2019/09/23 15:49:31 by jbrinksm      ########   odam.nl         */
+/*   Updated: 2019/09/26 13:13:27 by tde-jong      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,7 +19,7 @@ static int	return_heredoc_error(void)
 	return (FUNCT_ERROR);
 }
 
-int			shell_dless_read_till_stop(char **heredoc, char *heredoc_delim,
+static int			shell_dless_read_till_stop(char **heredoc, char *heredoc_delim,
 			t_vshdata *data)
 {
 	char	*line_tmp;
@@ -50,7 +50,7 @@ int			shell_dless_read_till_stop(char **heredoc, char *heredoc_delim,
 	return (ret);
 }
 
-int			shell_dless_set_tk_val(t_tokenlst *probe, char **heredoc,
+static int			shell_dless_set_tk_val(t_tokenlst *probe, char **heredoc,
 			char *heredoc_delim, t_vshdata *data)
 {
 	int	ret;

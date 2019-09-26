@@ -6,7 +6,7 @@
 /*   By: omulder <omulder@student.codam.nl>           +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2019/04/10 20:29:42 by jbrinksm       #+#    #+#                */
-/*   Updated: 2019/09/26 11:50:44 by tde-jong      ########   odam.nl         */
+/*   Updated: 2019/09/26 13:13:54 by tde-jong      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -685,10 +685,6 @@ int				input_read_from_buffer(t_vshdata *data);
 */
 
 void			shell_display_prompt(t_vshdata *data, int prompt_type);
-int				shell_dless_read_till_stop(char **heredoc, char *stop,
-					t_vshdata *data);
-int				shell_dless_set_tk_val(t_tokenlst *probe, char **heredoc,
-					char *stop, t_vshdata *data);
 int				shell_dless_input(t_vshdata *data, t_tokenlst **token_lst);
 int				shell_close_unclosed_quotes(t_vshdata *data);
 int				shell_init_files(t_vshdata *data);
