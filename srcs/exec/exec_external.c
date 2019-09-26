@@ -6,7 +6,7 @@
 /*   By: omulder <omulder@student.codam.nl>           +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2019/05/31 10:47:19 by tde-jong       #+#    #+#                */
-/*   Updated: 2019/09/26 15:39:34 by tde-jong      ########   odam.nl         */
+/*   Updated: 2019/09/26 15:45:02 by tde-jong      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -32,7 +32,7 @@ static void		term_flags_destroy(t_termios *termios_p)
 	tcsetattr(STDIN_FILENO, TCSANOW, termios_p);
 }
 
-static void		exec_bin_handlewait(pid_t pid, char *arg)
+static void		exec_bin_handlewait(pid_t pid)
 {
 	int		status;
 
@@ -70,7 +70,7 @@ t_vshdata *data)
 		exit(EXIT_FAILURE);
 	}
 	if (data->exec_flags & EXEC_WAIT)
-		exec_bin_handlewait(pid, args[0]);
+		exec_bin_handlewait(pid);
 	term_flags_destroy(data->term->termios_p);
 }
 
