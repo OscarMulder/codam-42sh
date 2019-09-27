@@ -22,15 +22,9 @@
 
 %start      complete_command
 %%
-<<<<<<< HEAD
-complete_command    ::=    list separator?
-
-list                ::=    and_or [[seperator and_or]*  
-=======
 complete_command    ::=    list
 
 list                ::=    and_or [separator_op and_or]* separator_op?
->>>>>>> 6d6dd89... Resolve grammar conflict with parser
 
 and_or              ::=    pipe_sequence [[AND_IF | OR_IF] pipe_sequence]*
 
