@@ -132,8 +132,12 @@ as a \fBtoken\fP) that does not contain unquoted \fBmetacharacters\fP or
 unquoted control operators (see section on \fBQUOTING\fP).
 .TP
 .B identifier
-A \fIword\fP consisting of only alphanumeric characters and underscores,
-and beginning with an alphabetic character or an underscore.
+A \fIword\fP consisting of only alphanumeric characters and underscores.
+.\" /*
+.\" **	ACTUALLY IT WILL BE THE FOLLOWING SOON:
+.\" **
+.\" **	, and beginning with an alphabetical character or an underscore.
+.\" */
 .TP
 .B metacharacter
 A character that, when unquoted, separates words. One of the following:
@@ -468,7 +472,7 @@ removed.
 .\" **
 .\" **
 .\" **
-.\" **   SHELL BUILTIN COMMANDS
+.\" **   PARAMETERS
 .\" **
 .\" **
 .\" **
@@ -484,7 +488,23 @@ removed.
 .\" **
 .\" */
 .SH parameters
-.PP A \fIparameter\fP is an entity that stores a value.
+.PP A \fIparameter\fP is an entity that stores a value. It can be an
+\fIidentifier\fP, or one of the special characters listed below under
+\fBSpecial Parameters\fP. We support the following parameters:
+.br
+.TP
+.B variable
+A parameter denoted by an \fIidentifier\fP. A variable has a \fIvalue\fP and
+belongs to a certain category: \fBLocal, External, or Temporary\fP.
+.br
+A \fILocal\fP variable is a parameter that can only be accessed in the shell
+instance that created it; it \fBwill Bnot\fP be inherited by child-processes.
+.br
+An \fIExternal\fP variable is a parameter that can be accessed in the shell
+instance that created it. It \fBwill\fP also be inherited by child-processes.
+.br
+A \fITemporary\fP variable is a parameter that will only exist during the
+execution of a \fIcomplete_command\fP (see the \fBGRAMMAR\fI file).
 .\" /*
 .\" **
 .\" **
