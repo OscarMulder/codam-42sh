@@ -15,8 +15,6 @@
 /*
 **	The lexer creates a token list which will be send to the parser.
 **	In the lexer, the scanner will create the list of tokens.
-**	After that, the lexer_evaluator will remove any unnecessary '\', '\''
-**	and '"'.
 */
 
 t_tokenlst	*lexer_tokenlstnew(t_tokens type, char *value, int flags)
