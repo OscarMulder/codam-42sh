@@ -27,7 +27,6 @@ t_tokenlst	*lexer_tokenlstnew(t_tokens type, char *value, int flags)
 	new->type = type;
 	new->value = value;
 	new->flags = flags;
-	new->next = NULL;
 	return (new);
 }
 
