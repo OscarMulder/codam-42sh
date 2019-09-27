@@ -6,7 +6,7 @@
 /*   By: omulder <omulder@student.codam.nl>           +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2019/05/31 10:47:19 by tde-jong       #+#    #+#                */
-/*   Updated: 2019/09/16 17:00:05 by mavan-he      ########   odam.nl         */
+/*   Updated: 2019/09/26 15:45:02 by tde-jong      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,12 +18,16 @@
 
 static void		term_flags_init(t_termios *termios_p)
 {
+	if (g_state->shell_type == SHELL_NON_INTERACT)
+		return ;
 	termios_p->c_lflag |= (ECHO | ICANON | ISIG);
 	tcsetattr(STDIN_FILENO, TCSANOW, termios_p);
 }
 
 static void		term_flags_destroy(t_termios *termios_p)
 {
+	if (g_state->shell_type == SHELL_NON_INTERACT)
+		return ;
 	termios_p->c_lflag &= ~(ECHO | ICANON | ISIG);
 	tcsetattr(STDIN_FILENO, TCSANOW, termios_p);
 }
@@ -32,6 +36,7 @@ static void		exec_bin_handlewait(pid_t pid)
 {
 	int		status;
 
+	status = 0;
 	waitpid(pid, &status, WUNTRACED);
 	if (WIFEXITED(status))
 		g_state->exit_code = WEXITSTATUS(status);

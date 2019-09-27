@@ -6,7 +6,7 @@
 /*   By: omulder <omulder@student.codam.nl>           +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2019/04/10 20:29:42 by jbrinksm       #+#    #+#                */
-/*   Updated: 2019/09/23 16:23:06 by omulder       ########   odam.nl         */
+/*   Updated: 2019/09/27 14:55:39 by jbrinksm      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -115,19 +115,20 @@
 **================================shell colors==================================
 */
 
-# define RESET		"\033[0m"
-# define RED		"\033[1;31m"
-# define YEL		"\033[1;33m"
-# define BLU		"\033[1;36m"
+# define RESET		"\e[0m"
+# define RED		"\e[1;31m"
+# define YEL		"\e[1;33m"
+# define BLU		"\e[1;36m"
+# define WHITE_BG	"\e[47m"
+# define BLACK		"\e[30m"
+
 
 /*
 **------------------------------------shell-------------------------------------
 */
 
-
-# define SHELL_STDIN		1
-# define SHELL_STANDARD		2
-# define SHELL_ARG			3
+# define SHELL_NON_INTERACT	0
+# define SHELL_INTERACT		1
 
 /*
 **------------------------------------echo--------------------------------------
@@ -215,6 +216,7 @@ typedef struct	s_fcdata
 **------------------------------------lexer-------------------------------------
 */
 
+# define NO_FLAGS 0
 # define CURRENT_CHAR (scanner->str)[scanner->str_index]
 # define SCANNER_CHAR scanner.str[scanner.str_index]
 # define T_FLAG_HASSPECIAL (1 << 0)
@@ -335,6 +337,7 @@ typedef struct	s_fcdata
 typedef struct	s_state
 {
 	int			exit_code;
+	int			shell_type;
 }				t_state;
 
 t_state *g_state;
@@ -431,6 +434,8 @@ typedef struct	s_dataline
 {
 	char		*line;
 	char		*line_copy;
+	char		*buffer;
+	unsigned	buffer_i;
 	unsigned	index;
 	unsigned	len_max;
 	unsigned	len_cur;
@@ -675,8 +680,9 @@ int				get_curs_row();
 void			input_reset_cursor_pos();
 void			resize_window_check(int sig);
 int				input_add_chunk(t_vshdata *data, char *chunk,
-				int chunk_len, int index);
+				int chunk_len);
 int				input_empty_buffer(t_vshdata *data, int n);
+int				input_read_from_buffer(t_vshdata *data);
 
 /*
 **----------------------------------shell---------------------------------------
@@ -701,9 +707,13 @@ int 			shell_init_term(t_vshdata *data);
 void			shell_args(t_vshdata *data, char *filepath);
 int				shell_get_path(t_vshdata *data, char **filepath);
 int				shell_init_line(t_vshdata *data, char *filepath);
-void			shell_one_line(t_vshdata *data);
+int				shell_one_line(t_vshdata *data, char *line);
 void			shell_stdin(t_vshdata *data);
-void			shell_clear_input_data(char **line, t_ast **ast, t_tokenlst **token_lst);
+void			shell_clear_input_data(char **line, t_ast **ast,
+				t_tokenlst **token_lst);
+char			**shell_line_splitter(t_vshdata *data);
+void			shell_lines_exec(t_vshdata *data, char **lines);
+int				shell_split_line(char *line, char **lines);
 
 t_datatermcaps	*shell_init_vshdatatermcaps(void);
 t_dataalias		*shell_init_vshdataalias(void);
@@ -728,7 +738,6 @@ bool			lexer_is_shellspec(char c);
 
 int				lexer(char **line, t_tokenlst **token_lst);
 int				lexer_error(char **line);
-void			lexer_evaluator(t_tokenlst *token_lst);
 int				lexer_scanner(char *line, t_tokenlst *token_lst);
 
 void			lexer_change_state(t_scanner *scanner,
@@ -971,7 +980,6 @@ int				error_return(int ret, int error, char *opt_str);
 int				err_ret_exit(char *str, int exitcode);
 void			err_void_exit(char *str, int exitcode);
 int				err_ret(char *str);
-int				err_ret_exitcode(char *str, int exitcode);
 void			err_void_prog_exit(char *error, char *prog, int exitcode);
 
 /*
