@@ -6,7 +6,7 @@
 /*   By: mavan-he <mavan-he@student.codam.nl>         +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2019/05/19 11:12:49 by mavan-he       #+#    #+#                */
-/*   Updated: 2019/09/27 13:43:40 by tde-jong      ########   odam.nl         */
+/*   Updated: 2019/09/27 14:52:45 by tde-jong      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,7 +14,7 @@
 
 static void	init_scanner(char *str, t_scanner *scanner)
 {
-	ft_bzero(scanner, sizeof(scanner));
+	ft_bzero(scanner, sizeof(t_scanner));
 	scanner->str = str;
 }
 
