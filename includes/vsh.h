@@ -216,6 +216,7 @@ typedef struct	s_fcdata
 **------------------------------------lexer-------------------------------------
 */
 
+# define NO_FLAGS 0
 # define CURRENT_CHAR (scanner->str)[scanner->str_index]
 # define SCANNER_CHAR scanner.str[scanner.str_index]
 # define T_FLAG_HASSPECIAL (1 << 0)
