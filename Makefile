@@ -116,7 +116,8 @@ run_valgrind_vsh: all
 
 test_norm: fclean
 	@echo "[ + ] cloning norminette+"
-	@git clone https://github.com/thijsdejong/codam-norminette-plus ~/norminette+
+	@git clone \
+	https://github.com/thijsdejong/codam-norminette-plus ~/norminette+
 	@echo "[...] running norminette+"
 	@sh ${TRAVIS_BUILD_DIR}/test/norminette.sh
 
