@@ -487,8 +487,9 @@ removed.
 .\" **
 .\" **
 .\" */
-.SH parameters
-.PP A \fIparameter\fP is an entity that stores a value. It can be an
+.SH PARAMETERS
+.PP
+A \fIparameter\fP is an entity that stores a value. It can be an
 \fIidentifier\fP, or one of the special characters listed below under
 \fBSpecial Parameters\fP. We support the following parameters:
 .br
@@ -497,14 +498,88 @@ removed.
 A parameter denoted by an \fIidentifier\fP. A variable has a \fIvalue\fP and
 belongs to a certain category: \fBLocal, External, or Temporary\fP.
 .br
-A \fILocal\fP variable is a parameter that can only be accessed in the shell
-instance that created it; it \fBwill Bnot\fP be inherited by child-processes.
+\fBLocal\fP variables are parameters that can only be accessed in the shell
+instance that created it; it \fBwill not\fP be inherited by child-processes.
+This variable can be created by assigning them in a \fIcommand\fP with only
+a \fIcmd_prefix\fP.
 .br
-An \fIExternal\fP variable is a parameter that can be accessed in the shell
-instance that created it. It \fBwill\fP also be inherited by child-processes.
+\fBExternal\fP
+variables are parameters that can be accessed within the shell process that
+created it. It \fBwill\fP also be inherited by child-processes.
+This variable can be created by using the \fBexport\fP builtin.
 .br
-A \fITemporary\fP variable is a parameter that will only exist during the
-execution of a \fIcomplete_command\fP (see the \fBGRAMMAR\fI file).
+\fBTemporary\fP
+variables are parameters that will only exist during the execution of a
+\fIcomplete_command\fP (see the \fBGRAMMAR\fP file).
+This variable can be created in a \fIcmd_prefix\fP of a \fIcommand\fP
+when the command contains atleast a \fIcmd_word\fP.
+.PP
+A parameter is set (and exists) only if it has been assigned a
+value. The NULL string is a valid value. Once a variable is set, it may be unset
+(and deleted) only by using the builtin \fBunset\fP command
+(see \fBSHELL BUILTIN COMMANDS\fP below).
+.PP
+A \fIvariable\fP may be assigned to by a statement of the form:
+.PP
+.RS
+\fIidentifier\fP=[\fIvalue\fP]
+.RE
+.PP
+If \fIvalue\fP is not given, the variable is assigned the null string. All
+\fIvalues\fP undergo tilde expansion, parameter expansion, and quote removal.
+Assignment statements may also appear as arguments to \fBalias\fP, and
+\fBexport\fP builtin commands.
+.SS "Special Parameters"
+.PP
+There are a few special parameters, these parameters may only be referenced;
+assignment to them is not allowed. The following:
+.TP
+.B ?
+Expands to the status fo the most recently executed foreground pipeline. A
+pipeline may contain only one command and thus no actual pipes.
+.SS "Shell Variables"
+.PP
+The following variables are set by the shell:
+.TP
+.B PWD
+The current working directory as set by the \fBcd\fP builtin command.
+.B OLDPWD
+The previous working directory as set by the \fBcd\fP builtin command.
+.\" /*
+.\" **
+.\" **
+.\" **
+.\" **
+.\" **
+.\" **
+.\" **
+.\" **
+.\" **
+.\" **
+.\" **
+.\" **
+.\" **
+.\" **   EXPANSION
+.\" **
+.\" **
+.\" **
+.\" **
+.\" **
+.\" **
+.\" **
+.\" **
+.\" **
+.\" **
+.\" **
+.\" **
+.\" **
+.\" */
+.SH EXPANSION
+.PP
+Expansion is performed on the command line after it has been split into tokens.
+There are 2 kinds of expansion performed: tilde expansion and parameter
+expansion.
+
 .\" /*
 .\" **
 .\" **
