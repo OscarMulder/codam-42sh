@@ -204,7 +204,18 @@ The specific details are included in the cited sections of this document.
 .RS
 \fB <INSERT GENERAL OPERATIONAL STRUCTURE OF VSH>
 .RE
-.PD
+.SS "Shell Initialization"
+.PP
+Sample text.
+.SS "Input Reading"
+.PP
+Sample text.
+.SS "Lexing"
+.PP
+Sample text.
+.SS "Parsing"
+.PP
+Sample text.
 .\" /*
 .\" **
 .\" **
@@ -543,6 +554,7 @@ The following variables are set by the shell:
 .TP
 .B PWD
 The current working directory as set by the \fBcd\fP builtin command.
+.TP
 .B OLDPWD
 The previous working directory as set by the \fBcd\fP builtin command.
 .\" /*
@@ -578,8 +590,90 @@ The previous working directory as set by the \fBcd\fP builtin command.
 .PP
 Expansion is performed on the command line after it has been split into tokens.
 There are 2 kinds of expansion performed: tilde expansion and parameter
-expansion.
-
+expansion. After these expansions, all unquoted occurrences of the characters
+\fB\\\fP, \fB'\fP, and \fB"\fP that did not result from one of the above
+expansions are removed.
+.PP
+The order of expansions is: tilde expansion, and parameter expansion.
+.SS "Tilde Expansion"
+.PP
+If the first character of a word is an unescaped tilde character ('~') and that
+is in fact the complete content of word, or it is directly followed by a slash
+('/'), the ~ is expanded into parameter \fBHOME\fP. Otherwise, the ~ is ignored.
+the tilde is ignored.
+.SS "Parameter Expansion"
+.PP
+The \fB$\fP character introduces parameter expansion. The parameter name or
+symbol to be expanded may be enclosed in braces, which are optional and serve to
+protect the variable to be expanded from characters immediately following it
+which could be interpreted as part of the name.
+.PP
+When braces are used, the matching ending brace is the first `}' not escaped by
+a backslash or within a quoted string, and not within a parameter expansion. The
+form for a parameter expansion is:
+.TP
+\fB${\fP\fIparameter\fP\fB}\fP
+The value of \fIparameter\fP is substituted. The braces are required when
+\fIparameter\fP is followed by a character which is not to be interpreted as
+part of its name.
+.\" /*
+.\" **
+.\" **
+.\" **
+.\" **
+.\" **
+.\" **
+.\" **
+.\" **
+.\" **
+.\" **
+.\" **
+.\" **
+.\" **
+.\" **   REDIRECTION
+.\" **
+.\" **
+.\" **
+.\" **
+.\" **
+.\" **
+.\" **
+.\" **
+.\" **
+.\" **
+.\" **
+.\" **
+.\" **
+.\" */
+.SH REDIRECTION
+.PP
+The following section explains how we handle redirections.
+.SS Here-document
+.PP
+The redirection operator \fB<<\fP allows redirection of lines contained in a shell
+input file, known as a \fIhere-document\fP, to the standard input of a command.
+.PP
+The \fIhere-document\fP is treated as a single word that begins after the next newline
+character (if there are unescaped quotes) and continues until there is a line
+containing only the delimiter, with no trailing blank characters. Then the next
+\fIhere-document\fP starts, if there is one.
+.RS
+.PP
+\fIcommand<<word
+.br
+ 	here-document
+.br
+delimiter\fP
+.RE
+.PP
+If any character in word is quoted, the delimiter is formed by performing quote
+removal on word, and the \fIhere-document\fP lines will not be expanded.
+Otherwise, the delimiter is the word itself.
+.PP
+If no characters in word are quoted, all lines of the \fIhere-document\fP will
+be expanded for parameter expansion. In this case, the backslash in the input
+will behave as the backslash inside double-quotes. However, the double-quote
+character (") will not be treated specially within a \fIhere-document\fP. 
 .\" /*
 .\" **
 .\" **
@@ -770,64 +864,6 @@ Displays all current history entries.
 .\" **   as usual.
 .\" */
 .PD
-.\" /*
-.\" **
-.\" **
-.\" **
-.\" **
-.\" **
-.\" **
-.\" **
-.\" **
-.\" **
-.\" **
-.\" **
-.\" **
-.\" **
-.\" **   REDIRECTION
-.\" **
-.\" **
-.\" **
-.\" **
-.\" **
-.\" **
-.\" **
-.\" **
-.\" **
-.\" **
-.\" **
-.\" **
-.\" **
-.\" */
-.SH REDIRECTION
-.PP
-The following section explains how we handle redirections.
-.SS Here-document
-.PP
-The redirection operator \fB<<\fP allows redirection of lines contained in a shell
-input file, known as a \fIhere-document\fP, to the standard input of a command.
-.PP
-The \fIhere-document\fP is treated as a single word that begins after the next newline
-character (if there are unescaped quotes) and continues until there is a line
-containing only the delimiter, with no trailing blank characters. Then the next
-\fIhere-document\fP starts, if there is one.
-.RS
-.PP
-\fIcommand<<word
-.br
- 	here-document
-.br
-delimiter\fP
-.RE
-.PP
-If any character in word is quoted, the delimiter is formed by performing quote
-removal on word, and the \fIhere-document\fP lines will not be expanded.
-Otherwise, the delimiter is the word itself. 
-
-If no characters in word are quoted, all lines of the \fIhere-document\fP will
-be expanded for parameter expansion. In this case, the backslash in the input
-will behave as the backslash inside double-quotes. However, the double-quote
-character (") will not be treated specially within a \fIhere-document\fP. 
 
 .po 0
 .SH KNOWN BUGS
