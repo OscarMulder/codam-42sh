@@ -6,7 +6,7 @@
 #    By: omulder <omulder@student.codam.nl>           +#+                      #
 #                                                    +#+                       #
 #    Created: 2019/04/10 20:30:07 by jbrinksm       #+#    #+#                 #
-#    Updated: 2019/09/30 12:16:15 by tde-jong      ########   odam.nl          #
+#    Updated: 2019/09/30 12:17:32 by tde-jong      ########   odam.nl          #
 #                                                                              #
 # **************************************************************************** #
 
@@ -119,7 +119,7 @@ test_norm: fclean
 	@git clone \
 	https://github.com/thijsdejong/codam-norminette-plus ${HOME}/norminette+
 	@echo "[...] running norminette+"
-	@sh ${HOME}/test/norminette.sh
+	@sh ${GITHUB_WORKSPACE}/test/norminette.sh
 
 $(TESTOBJECTS): $(TESTS)
 	@$(CC) $(FLAGS) $^ $(INCLUDES) $(CRITERIONINCLUDES) -c
