@@ -6,13 +6,13 @@
 /*   By: omulder <omulder@student.codam.nl>           +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2019/05/31 10:47:19 by tde-jong       #+#    #+#                */
-/*   Updated: 2019/08/22 11:25:02 by omulder       ########   odam.nl         */
+/*   Updated: 2019/09/30 16:12:42 by tde-jong      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "vsh.h"
 
-static t_job	*new_job(pid_t pid, int jid, char *command)
+static t_job	*new_job(pid_t pid, int jid, char *command, int current)
 {
 	t_job *new;
 
@@ -21,6 +21,7 @@ static t_job	*new_job(pid_t pid, int jid, char *command)
 	new->job_id = jid;
 	new->process_id = pid;
 	new->command_name = ft_strdup(command);
+	new->current = current;
 	return (new);
 }
 
@@ -49,7 +50,8 @@ int				jobs_add_job(t_vshdata *vshdata, pid_t pid, char *command)
 
 	if (vshdata->jobs->joblist == NULL)
 	{
-		vshdata->jobs->joblist = new_job(pid, 1, command);
+		vshdata->jobs->joblist = new_job(pid, 1, command,
+			builtin_jobs_new_current_val(vshdata->jobs->joblist));
 		if (vshdata->jobs->joblist == NULL)
 			return (FUNCT_ERROR);
 	}
@@ -63,7 +65,8 @@ int				jobs_add_job(t_vshdata *vshdata, pid_t pid, char *command)
 			if (job->job_id > jid)
 				jid = job->job_id;
 		}
-		job->next = new_job(pid, jid + 1, command);
+		job->next = new_job(pid, jid + 1, command,
+			builtin_jobs_new_current_val(vshdata->jobs->joblist));
 		if (job->next == NULL)
 			return (FUNCT_ERROR);
 	}

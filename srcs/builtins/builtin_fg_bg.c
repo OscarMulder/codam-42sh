@@ -47,6 +47,7 @@ int		builtin_fg(char **args, t_vshdata* data)
 		ft_eprintf("Checking job with pid: %i\n", job->process_id);
 		if (jobs_get_job_state(job) == JOB_SUSPEND)
 		{
+			job->current = builtin_jobs_new_current_val(data->jobs->joblist);
 			term_flags_init(data->term->termios_p);
 			kill(job->process_id, SIGCONT);
 			waitpid(job->process_id, &status, WUNTRACED);

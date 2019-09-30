@@ -6,7 +6,7 @@
 /*   By: omulder <omulder@student.codam.nl>           +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2019/04/10 20:29:42 by jbrinksm       #+#    #+#                */
-/*   Updated: 2019/09/27 14:55:39 by jbrinksm      ########   odam.nl         */
+/*   Updated: 2019/09/30 15:31:17 by tde-jong      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -405,6 +405,7 @@ typedef struct	s_job
 	pid_t			process_id;
 	char			*command_name;
 	int				state;
+	int 			current;
 	struct s_job	*next;
 }				t_job;
 
@@ -714,6 +715,7 @@ int				input_read_from_buffer(t_vshdata *data);
 int				jobs_get_job_state(t_job *job);
 t_job			*jobs_remove_job(t_job *job, pid_t pid);
 int				jobs_add_job(t_vshdata *vshdata, pid_t pid, char *command);
+t_job			*jobs_find_current_job(t_job *joblist);
 
 /*
 **----------------------------------shell---------------------------------------
@@ -854,10 +856,14 @@ void			builtin_alias_lstdel(t_aliaslst **lst);
 void			builtin_unalias(char **args, t_aliaslst **aliaslst);
 void			builtin_type(char **args, t_envlst *envlst,
 				t_aliaslst *aliaslst);
+
 int				builtin_jobs(char **args, t_vshdata *data);
 t_job			*builtin_jobs_find_job(char *job_id, t_job *joblist);
+int				builtin_jobs_new_current_val(t_job *joblist);
+
 int				builtin_fg(char **args, t_vshdata *data);
 int				builtin_bg(char **args, t_vshdata *data);
+
 int				builtin_cd(char **args, t_vshdata *data);
 void			builtin_cd_create_newpath(char **newpath, char *argpath);
 int				builtin_cd_change_dir(char *argpath, t_vshdata *data,

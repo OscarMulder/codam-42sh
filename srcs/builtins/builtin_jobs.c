@@ -6,7 +6,7 @@
 /*   By: omulder <omulder@student.codam.nl>           +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2019/04/17 14:03:16 by rkuijper       #+#    #+#                */
-/*   Updated: 2019/09/20 14:57:28 by tde-jong      ########   odam.nl         */
+/*   Updated: 2019/09/30 16:12:22 by tde-jong      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -25,25 +25,50 @@
 static t_job	*find_current_job(t_job *joblist)
 {
 	t_job *job;
+	t_job *toreturn;
 
 	job = joblist;
-	while (job != NULL && job->next != NULL)
+	toreturn = job;
+	while (job != NULL)
 	{
+		if (job->current > toreturn->current)
+			toreturn = job;
 		job = job->next;
 	}
-	return (job);
+	return (toreturn);
+}
+
+int				builtin_jobs_new_current_val(t_job *joblist)
+{
+	t_job *job;
+
+	job = find_current_job(joblist);
+	if (job == NULL)
+		return (0);
+	else
+		return (job->current + 1);
 }
 
 static t_job	*find_previous_job(t_job *joblist)
 {
 	t_job *job;
+	t_job *toreturn;
+	t_job *current_job;
 
+	current_job = find_current_job(joblist);
+	if (find_current_job(joblist) == joblist
+		|| (joblist != NULL && joblist->next == NULL))
+		return (NULL);
 	job = joblist;
-	while (job != NULL && job->next != NULL && job->next->next != NULL)
+	toreturn = job;
+	while (job != NULL && job->next != NULL)
 	{
+		if (job->current < current_job->current
+			&& job->current > toreturn->current)
+			toreturn = job;
 		job = job->next;
 	}
-	return (job);
+	return (toreturn);
 }
 
 static bool		is_current_job(t_job *job, t_job *joblist)
