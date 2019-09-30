@@ -6,7 +6,7 @@
 /*   By: omulder <omulder@student.codam.nl>           +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2019/04/10 20:29:42 by jbrinksm       #+#    #+#                */
-/*   Updated: 2019/09/19 11:16:27 by tde-jong      ########   odam.nl         */
+/*   Updated: 2019/09/27 14:55:39 by jbrinksm      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -25,11 +25,12 @@
 # define PROMPT_SEPERATOR	SEPERATOR " "
 # define FUNCT_FAILURE 0
 # define FUNCT_SUCCESS 1
+# define NEW_PROMPT 2
 # define FUNCT_ERROR -1
 # define PROG_FAILURE 1
 # define PROG_SUCCESS 0
+# define IR_EOF 3
 # define SHELL_BUF			42
-# define NEW_PROMPT FUNCT_ERROR
 # define U_ALIAS			"alias: usage: alias [-p] [name[=value] ... ]\n"
 # define U_CD				"cd: usage: cd [-L|-P] [dir]\n"
 # define U_EXPORT "export: usage: export [-n] [name[=value] ...] or export -p\n"
@@ -114,19 +115,20 @@
 **================================shell colors==================================
 */
 
-# define RESET		"\033[0m"
-# define RED		"\033[1;31m"
-# define YEL		"\033[1;33m"
-# define BLU		"\033[1;36m"
+# define RESET		"\e[0m"
+# define RED		"\e[1;31m"
+# define YEL		"\e[1;33m"
+# define BLU		"\e[1;36m"
+# define WHITE_BG	"\e[47m"
+# define BLACK		"\e[30m"
+
 
 /*
 **------------------------------------shell-------------------------------------
 */
 
-
-# define SHELL_STDIN		1
-# define SHELL_STANDARD		2
-# define SHELL_ARG			3
+# define SHELL_NON_INTERACT	0
+# define SHELL_INTERACT		1
 
 /*
 **------------------------------------echo--------------------------------------
@@ -176,6 +178,34 @@
 # define HASH_NO_HIT		0
 
 /*
+**-----------------------------------fc-----------------------------------------
+*/
+
+# define DEF_FCEDIT			"ed"
+# define FC_OPT_E			(1 << 0)
+# define FC_OPT_L			(1 << 1)
+# define FC_OPT_N			(1 << 2)
+# define FC_OPT_R			(1 << 3)
+# define FC_OPT_S			(1 << 4)
+# define FC_FIRST_NEG		(1 << 5)
+# define FC_LAST_NEG		(1 << 6)
+# define U_FC 				"fc: usage: fc [-e ename] [-nlr] [first] [last] or"\
+							"fc -s [pat=rep] [cmd]\n"
+# define E_FC_REQARG		SHELL "fc: %s: option requires an argument\n"
+# define E_FC_INV_OPT		SHELL ": fc: -%c: invalid option\n"
+# define E_FC_OUT_RANGE		SHELL ": fc: history specification out of range\n"
+
+typedef struct	s_fcdata
+{
+	char	options;
+	char	*first;
+	char	*last;
+	char	*editor;
+	char	*replace;
+	char	*match;
+}				t_fcdata;
+
+/*
 **-----------------------------------builtin------------------------------------
 */
 
@@ -186,6 +216,7 @@
 **------------------------------------lexer-------------------------------------
 */
 
+# define NO_FLAGS 0
 # define CURRENT_CHAR (scanner->str)[scanner->str_index]
 # define SCANNER_CHAR scanner.str[scanner.str_index]
 # define T_FLAG_HASSPECIAL (1 << 0)
@@ -193,6 +224,8 @@
 # define T_STATE_DQUOTE (1 << 2)
 # define T_FLAG_ISASSIGN (1 << 3)
 # define T_MALLOC_ERROR (1 << 4)
+# define T_FLAG_HEREDOC_NOEXP (1 << 5)
+# define T_FLAG_ISHEREDOC (1 << 6)
 
 /*
 **-----------------------------------executor-----------------------------------
@@ -262,6 +295,7 @@
 # define INPUT_CTRL_U 21
 # define INPUT_CTRL_Y 25
 # define TC_MAXRESPONSESIZE 16
+# define INPUT_BUF_READ_SIZE 100
 
 /*
 **=================================pipe defines=================================
@@ -303,6 +337,7 @@
 typedef struct	s_state
 {
 	int			exit_code;
+	int			shell_type;
 }				t_state;
 
 t_state *g_state;
@@ -409,13 +444,15 @@ typedef struct	s_datahistory
 	char		*history_file;
 	int			hist_index;
 	int			hist_start;
-	int			hist_first;
+	bool		hist_isfirst;
 }				t_datahistory;
 
 typedef struct	s_dataline
 {
 	char		*line;
 	char		*line_copy;
+	char		*buffer;
+	unsigned	buffer_i;
 	unsigned	index;
 	unsigned	len_max;
 	unsigned	len_cur;
@@ -453,6 +490,18 @@ typedef struct	s_vshdatajobs
 	int			current_job;
 }				t_datajobs;
 
+typedef struct	s_pipeseqlist
+{
+	pid_t					pid;
+	struct s_pipeseqlist	*next;
+}				t_pipeseqlist;
+
+# define EXEC_ISPIPED (1 << 0)
+# define EXEC_WAIT (1 << 1)
+# define PID_STATE_EXIT		0
+# define PID_STATE_RUNNING	1
+# define PID_STATE_SUSPEND	2
+
 typedef struct	s_vshdata
 {
 	t_envlst		*envlst;
@@ -467,14 +516,19 @@ typedef struct	s_vshdata
 	t_dataalias		*alias;
 	t_datatermcaps	*termcaps;
 	t_datajobs		*jobs;
+	t_pipeseqlist	*pipeseq;
+	short			exec_flags;
 }				t_vshdata;
+
 t_vshdata		*g_data;
 
 typedef enum	e_prompt_type
 {
 	REGULAR_PROMPT,
+	LINECONT_PROMPT,
 	QUOTE_PROMPT,
-	DQUOTE_PROMPT
+	DQUOTE_PROMPT,
+	DLESS_PROMPT
 }				t_prompt_type;
 
 /*
@@ -608,6 +662,8 @@ int				term_get_attributes(int fd, t_vshdataterm*term_p);
 int				term_set_attributes(t_vshdataterm*term_p);
 int				term_reset(t_vshdataterm*term_p);
 void			term_free_struct(t_vshdataterm**term_p);
+void			term_enable_isig(t_termios *termios_p);
+void			term_disable_isig(t_termios *termios_p);
 
 /*
 **-----------------------------------input--------------------------------------
@@ -646,6 +702,10 @@ void			input_parse_tab(t_vshdata *data);
 int				get_curs_row();
 void			input_reset_cursor_pos();
 void			resize_window_check(int sig);
+int				input_add_chunk(t_vshdata *data, char *chunk,
+				int chunk_len);
+int				input_empty_buffer(t_vshdata *data, int n);
+int				input_read_from_buffer(t_vshdata *data);
 
 /*
 **----------------------------------jobs----------------------------------------
@@ -678,9 +738,13 @@ int 			shell_init_term(t_vshdata *data);
 void			shell_args(t_vshdata *data, char *filepath);
 int				shell_get_path(t_vshdata *data, char **filepath);
 int				shell_init_line(t_vshdata *data, char *filepath);
-void			shell_one_line(t_vshdata *data);
+int				shell_one_line(t_vshdata *data, char *line);
 void			shell_stdin(t_vshdata *data);
-void			shell_clear_input_data(char **line, t_ast **ast, t_tokenlst **token_lst);
+void			shell_clear_input_data(char **line, t_ast **ast,
+				t_tokenlst **token_lst);
+char			**shell_line_splitter(t_vshdata *data);
+void			shell_lines_exec(t_vshdata *data, char **lines);
+int				shell_split_line(char *line, char **lines);
 
 t_datatermcaps	*shell_init_vshdatatermcaps(void);
 t_dataalias		*shell_init_vshdataalias(void);
@@ -706,7 +770,6 @@ bool			lexer_is_shellspec(char c);
 
 int				lexer(char **line, t_tokenlst **token_lst);
 int				lexer_error(char **line);
-void			lexer_evaluator(t_tokenlst *token_lst);
 int				lexer_scanner(char *line, t_tokenlst *token_lst);
 
 void			lexer_change_state(t_scanner *scanner,
@@ -807,6 +870,30 @@ int				cd_alloc_error(void);
 int				cd_invalid_option(char c);
 
 /*
+**----------------------------------builtin-fc----------------------------------
+*/
+
+void			builtin_fc(char **args, t_vshdata *data);
+void			fc_init_fcdata(t_fcdata **fc);
+void			fc_set_default_editor(t_vshdata *data, t_fcdata *fc);
+int				fc_set_options(char **args, t_fcdata *fc);
+int				fc_option_editor(int i, char **args, t_fcdata *fc);
+void			fc_option_list(t_fcdata *fc);
+int				fc_option_substitute(int i, char **args, t_fcdata *fc);
+void			fc_option_suppress(t_fcdata *fc);
+void			fc_option_reverse(t_fcdata *fc);
+void			fc_list(t_datahistory *history, t_fcdata *fc);
+int				fc_list_print_line(t_history *history, t_fcdata *fc);
+void			fc_print_regular(int start, int end, t_history **history,
+				t_fcdata *fc);
+void			fc_print_reverse(int start, int end, t_history **history,
+				t_fcdata *fc);
+int				fc_find_index(t_datahistory *history, t_fcdata *fc,
+				char *str, int *index);
+int				fc_substitute(t_vshdata *data, t_datahistory *history,
+				t_fcdata *fc);
+
+/*
 **---------------------------------tools----------------------------------------
 */
 
@@ -823,6 +910,10 @@ bool			tool_is_special(char c);
 bool			tool_check_for_special(char *str);
 bool			tool_check_for_whitespace(char *str);
 int				tool_get_paths(t_envlst *envlst, char ***paths);
+void			tools_remove_quotes_etc(char *str, bool is_heredoc);
+int				tools_get_pid_state(pid_t pid);
+bool			tools_contains_quoted_chars(char *str);
+bool			tools_is_cmd_seperator(t_tokens type);
 
 /*
 **----------------------------------execution-----------------------------------
@@ -833,7 +924,7 @@ int				exec_list(t_ast *ast, t_vshdata *data);
 int				exec_and_or(t_ast *ast, t_vshdata *data);
 int				exec_pipe_sequence(t_ast *ast, t_vshdata *data, t_pipes pipes);
 int				exec_command(t_ast *ast, t_vshdata *data, t_pipes pipes);
-void			exec_cmd(char **args, t_vshdata *data);
+void			exec_cmd(char **args, t_vshdata *data, t_pipes pipes);
 bool			exec_builtin(char **args, t_vshdata *data);
 void			exec_external(char **args, t_vshdata *data);
 int				exec_find_binary(char *filename, t_vshdata *data,
@@ -842,7 +933,13 @@ int				find_binary(char *filename, t_envlst *envlst, char **binary);
 void			exec_quote_remove(t_ast *node);
 int				exec_validate_binary(char *binary);
 int				exec_create_files(t_ast *ast);
-void			signal_print_newline(int signum);
+void			exec_add_pid_to_pipeseqlist(t_vshdata *data, pid_t pid);
+
+/*
+**-----------------------------------signals------------------------------------
+*/
+
+void			signal_handle_child_death(int signum);
 
 /*
 **------------------------------------expan-------------------------------------
@@ -898,7 +995,7 @@ char			*history_match_line(t_datahistory *history,
 int				history_insert_into_line(char **line,
 				char *hist_line, size_t i);
 size_t			history_get_match_len(char *line, size_t i);
-
+int				history_replace_last(t_history **history, char **line);
 /*
 **--------------------------------hashtable-------------------------------------
 */
@@ -919,6 +1016,7 @@ int				error_return(int ret, int error, char *opt_str);
 int				err_ret_exit(char *str, int exitcode);
 void			err_void_exit(char *str, int exitcode);
 int				err_ret(char *str);
+void			err_void_prog_exit(char *error, char *prog, int exitcode);
 
 /*
 **--------------------------------autocomplete----------------------------------

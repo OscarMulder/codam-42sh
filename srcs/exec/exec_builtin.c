@@ -12,7 +12,7 @@
 
 #include "vsh.h"
 
-static bool		exec_builtin_2(char **args, t_vshdata *data)
+static bool		exec_builtin_cont(char **args, t_vshdata *data)
 {
 	if (ft_strequ(args[0], "history"))
 		history_print(data->history->history);
@@ -28,12 +28,14 @@ static bool		exec_builtin_2(char **args, t_vshdata *data)
 		builtin_fg(args, data);
 	else if (ft_strequ(args[0], "bg"))
 		builtin_bg(args, data);
+	else if (ft_strequ(args[0], "hash"))
+		builtin_hash(args, data);
 	else
 		return (false);
 	return (true);
 }
 
-bool			exec_builtin(char **args, t_vshdata *data)
+bool		exec_builtin(char **args, t_vshdata *data)
 {
 	if (ft_strequ(args[0], "echo"))
 		builtin_echo(args);
@@ -41,15 +43,21 @@ bool			exec_builtin(char **args, t_vshdata *data)
 		builtin_exit(args, data);
 	else if (ft_strequ(args[0], "cd"))
 		builtin_cd(args, data);
+	else if (ft_strequ(args[0], "fc"))
+		builtin_fc(args, data);
 	else if (ft_strequ(args[0], "export"))
 		builtin_export(args, data);
 	else if (ft_strequ(args[0], "set"))
 		builtin_set(args, data->envlst);
 	else if (ft_strequ(args[0], "unset"))
 		builtin_unset(args, data->envlst);
-	else if (ft_strequ(args[0], "hash"))
-		builtin_hash(args, data);
-	else if (exec_builtin_2(args, data) == false)
-		return (false);
+	else if (ft_strequ(args[0], "type"))
+		builtin_type(args, data->envlst, data->alias->aliaslst);
+	else if (ft_strequ(args[0], "alias"))
+		builtin_alias(args, &data->alias->aliaslst);
+	else if (ft_strequ(args[0], "unalias"))
+		builtin_unalias(args, &data->alias->aliaslst);
+	else
+		return (exec_builtin_cont(args, data));
 	return (true);
 }

@@ -87,7 +87,6 @@ static int	add_newline(t_vshdata *data, char **line)
 		tmp[data->line->len_cur] = '\n';
 		*line = tmp;
 	}
-	data->line->len_cur++;
 	return (FUNCT_SUCCESS);
 }
 
@@ -99,7 +98,7 @@ static int	add_newline(t_vshdata *data, char **line)
 **	It starts off by setting an fd_set to STDIN so we can read the
 **	current status of our input. The timeval struct is basically
 **	arbitrary in this case, since we don't want any timeout
-**	before our 'status check'; input should already be available (if any). 
+**	before our 'status check'; input should already be available (if any).
 **	The select function returns a status of the given file descriptors
 **	which, in this case, is just the STDIN (the NULL, NULL
 **	parameters can be used to also include an out- and error fd,
@@ -111,11 +110,12 @@ static int	add_newline(t_vshdata *data, char **line)
 **	from the buffer (n - 1).
 */
 
-static int	empty_input_buffer(t_vshdata *data, int n)
+int			input_empty_buffer(t_vshdata *data, int n)
 {
-	char			c;
 	fd_set			readfds;
 	struct timeval	timeout;
+	int				bytes_read;
+	char			buf[INPUT_BUF_READ_SIZE + 1];
 
 	FD_ZERO(&readfds);
 	timeout.tv_sec = 0;
@@ -123,13 +123,10 @@ static int	empty_input_buffer(t_vshdata *data, int n)
 	FD_SET(STDIN_FILENO, &readfds);
 	if (select(1, &readfds, NULL, NULL, &timeout) != 0)
 	{
-		read(STDIN_FILENO, &c, 1);
-		if (c == '\t')
-			c = ' ';
-		if (add_char_at(data, data->line->index + n, c,
-			&data->line->line) == FUNCT_ERROR)
-			return (0);
-		return (empty_input_buffer(data, n + 1));
+		bytes_read = read(STDIN_FILENO, buf, INPUT_BUF_READ_SIZE);
+		buf[bytes_read] = '\0';
+		input_add_chunk(data, buf, bytes_read);
+		return (input_empty_buffer(data, n + bytes_read));
 	}
 	return (n - 1);
 }
@@ -143,7 +140,7 @@ int			input_parse_char(t_vshdata *data)
 		if (add_char_at(data, data->line->index, data->input->c,
 			&data->line->line) == FUNCT_ERROR)
 			return (FUNCT_ERROR);
-		old_index = data->line->index + empty_input_buffer(data, 1);
+		old_index = data->line->index;
 		input_print_str(data, data->line->line + data->line->index);
 		data->line->index = data->line->len_cur;
 		curs_move_n_left(data, data->line->index - old_index - 1);
