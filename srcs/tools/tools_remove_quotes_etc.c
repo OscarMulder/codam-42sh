@@ -1,12 +1,12 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        ::::::::            */
-/*   tools_remove_quotes_etc                            :+:    :+:            */
+/*   tools_remove_quotes_etc.c                          :+:    :+:            */
 /*                                                     +:+                    */
 /*   By: mavan-he <mavan-he@student.codam.nl>         +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2019/07/13 11:20:18 by mavan-he       #+#    #+#                */
-/*   Updated: 2019/09/26 11:42:54 by tde-jong      ########   odam.nl         */
+/*   Updated: 2019/09/30 15:43:50 by jbrinksm      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -43,7 +43,7 @@ static void	remove_heredoc_backslash(char *str, int *i, int *i_new)
 static void	remove_double_quote(char *str, int *i, int *i_new)
 {
 	(*i)++;
-	while (str[*i] != '"')
+	while (str[*i] != '"' && str[*i] != '\0')
 	{
 		if (str[*i] == '\\' && ft_strchr("\"\\$", str[(*i) + 1]))
 			remove_backslash(str, i, i_new);
@@ -60,7 +60,7 @@ static void	remove_double_quote(char *str, int *i, int *i_new)
 static void	remove_single_quote(char *str, int *i, int *i_new)
 {
 	(*i)++;
-	while (str[*i] != '\'')
+	while (str[*i] != '\'' && str[*i] != '\0')
 	{
 		str[*i_new] = str[*i];
 		(*i_new)++;
