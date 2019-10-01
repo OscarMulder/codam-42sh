@@ -6,7 +6,7 @@
 /*   By: omulder <omulder@student.codam.nl>           +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2019/09/22 18:54:24 by omulder        #+#    #+#                */
-/*   Updated: 2019/10/01 11:54:50 by omulder       ########   odam.nl         */
+/*   Updated: 2019/10/01 14:01:39 by omulder       ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -49,6 +49,12 @@ static int	fc_open_temp(t_fcdata *fc)
 	return (FUNCT_SUCCESS);
 }
 
+static void	set_flags(t_vshdata *data)
+{
+	data->fc_flags |= FC_PRINT_CMD;
+	data->fc_flags |= FC_SET_HIST;
+}
+
 /*
 ** So fc_edit has to do a lot of stuff:
 ** - Find start and end (the commands that need to be edited)
@@ -72,11 +78,12 @@ void		fc_edit(t_vshdata *data, t_datahistory *history, t_fcdata *fc)
 		return ;
 	fc_print(history, fc, start, end);
 	close(fc->fd);
-	data->line->line = ft_strjoinfree_all(
-		ft_strjoinchr(fc->editor, ' '), ft_strjoinchr(fc->tmpfile, '\n'));
-	shell_one_line(data);
+	shell_one_line(data, ft_strjoinfree_all(
+		ft_strjoinchr(fc->editor, ' '), ft_strjoinchr(fc->tmpfile, '\n')));
 	// remove last history entry
+	set_flags(data);
 	shell_args(data, ft_strdup(fc->tmpfile));
+	data->fc_flags = 0;
 	// shell execute file etc etc ...
 	remove(fc->tmpfile);
 }

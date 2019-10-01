@@ -6,7 +6,7 @@
 /*   By: omulder <omulder@student.codam.nl>           +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2019/04/10 20:29:42 by jbrinksm       #+#    #+#                */
-/*   Updated: 2019/10/01 11:58:13 by omulder       ########   odam.nl         */
+/*   Updated: 2019/10/01 12:12:02 by omulder       ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -189,6 +189,8 @@
 # define FC_OPT_S			(1 << 4)
 # define FC_FIRST_NEG		(1 << 5)
 # define FC_LAST_NEG		(1 << 6)
+# define FC_PRINT_CMD		(1 << 0)
+# define FC_SET_HIST		(1 << 1)
 # define FC_TMP_FILE		"/tmp/vsh-fc-tmp"
 # define U_FC_2				"[-nlr] [first] [last] or fc -s [pat=rep] [cmd]\n"
 # define U_FC 				"fc: usage: fc [-e ename] " U_FC_2
@@ -496,7 +498,8 @@ typedef struct	s_vshdata
 	t_dataalias		*alias;
 	t_datatermcaps	*termcaps;
 	t_pipeseqlist	*pipeseq;
-	short			exec_flags;
+	int				fc_flags;
+	int				exec_flags;
 }				t_vshdata;
 t_vshdata		*g_data;
 
@@ -708,7 +711,7 @@ int				shell_handle_escaped_newlines(t_vshdata *data);
 void			shell_get_valid_prompt(t_vshdata *data, int prompt_type);
 int 			shell_init_term(t_vshdata *data);
 void			shell_args(t_vshdata *data, char *filepath);
-int				shell_get_path(t_vshdata *data, char **filepath);
+int				shell_get_path(t_vshdata *data, char *filepath, char **path);
 int				shell_init_line(t_vshdata *data, char *filepath);
 int				shell_one_line(t_vshdata *data, char *line);
 void			shell_stdin(t_vshdata *data);
