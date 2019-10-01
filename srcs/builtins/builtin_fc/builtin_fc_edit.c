@@ -6,7 +6,7 @@
 /*   By: omulder <omulder@student.codam.nl>           +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2019/09/22 18:54:24 by omulder        #+#    #+#                */
-/*   Updated: 2019/09/24 14:05:48 by omulder       ########   odam.nl         */
+/*   Updated: 2019/10/01 11:54:50 by omulder       ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -75,6 +75,8 @@ void		fc_edit(t_vshdata *data, t_datahistory *history, t_fcdata *fc)
 	data->line->line = ft_strjoinfree_all(
 		ft_strjoinchr(fc->editor, ' '), ft_strjoinchr(fc->tmpfile, '\n'));
 	shell_one_line(data);
+	// remove last history entry
+	shell_args(data, ft_strdup(fc->tmpfile));
 	// shell execute file etc etc ...
 	remove(fc->tmpfile);
 }

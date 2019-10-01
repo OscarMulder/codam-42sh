@@ -6,7 +6,7 @@
 #    By: omulder <omulder@student.codam.nl>           +#+                      #
 #                                                    +#+                       #
 #    Created: 2019/04/10 20:30:07 by jbrinksm       #+#    #+#                 #
-#    Updated: 2019/09/24 13:46:31 by omulder       ########   odam.nl          #
+#    Updated: 2019/10/01 11:58:03 by omulder       ########   odam.nl          #
 #                                                                              #
 # **************************************************************************** #
 
@@ -30,6 +30,7 @@ SRCS = shell_start shell_prompt shell_quote_checker shell_dless_input \
 shell_init_files shell_init_vshdata shell_getcurrentdir \
 shell_handle_escaped_newlines shell_init_input shell_init_features \
 shell_args shell_get_path shell_init_line shell_one_line shell_stdin \
+shell_line_splitter shell_lines_exec shell_split_line \
 input_read input_parse_char input_parse_home \
 input_parse_end input_parse_prev input_parse_next input_parse_backspace \
 input_parse_delete input_parse_ctrl_c input_parse_ctrl_d input_parse_ctrl_k \
@@ -54,7 +55,7 @@ builtin_alias builtin_alias_set builtin_alias_lstdel builtin_unalias \
 builtin_cd builtin_cd_error builtin_cd_pathparsing \
 builtin_cd_pathparsing_tools builtin_cd_changedir \
 builtin_type builtin_hash \
-lexer lexer_utils lexer_debug lexer_evaluator lexer_scanner \
+lexer lexer_utils lexer_debug lexer_scanner \
 lexer_state_if_else lexer_state_single lexer_state_start lexer_state_strings \
 parser_start parser_debug parser_utils parser_command parser_error \
 parser_astdel \
@@ -116,9 +117,10 @@ run_valgrind_vsh: all
 
 test_norm: fclean
 	@echo "[ + ] cloning norminette+"
-	@git clone https://github.com/thijsdejong/codam-norminette-plus ~/norminette+
+	@git clone \
+	https://github.com/thijsdejong/codam-norminette-plus ${HOME}/norminette+
 	@echo "[...] running norminette+"
-	@sh ${TRAVIS_BUILD_DIR}/test/norminette.sh
+	@sh ${GITHUB_WORKSPACE}/test/norminette.sh
 
 $(TESTOBJECTS): $(TESTS)
 	@$(CC) $(FLAGS) $^ $(INCLUDES) $(CRITERIONINCLUDES) -c
