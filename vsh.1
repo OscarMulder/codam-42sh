@@ -647,7 +647,40 @@ part of its name.
 .\" */
 .SH REDIRECTION
 .PP
-The following section explains how we handle redirections.
+Before a command is executed, its input and output may be redirected using a
+special notation interpreted by the shell. Redirection may also be used to open
+and close files for the current shell  execution  environment. The following
+redirection operators may precede or appear anywhere within a
+\fIsimple command\fP or may follow a command. Redirections are processed in the
+order they appear, from left to right.
+.PP
+In the following descriptions, if the file descriptor number is omitted, and
+the first character of the redirection  operator  is  <, the redirection refers
+to the standard input (file descriptor 0). If the first character of the
+redirection operator is >, the redirection refers to the standard output
+(file descriptor 1).
+.PP
+The  word following the redirection operator in the following descriptions,
+unless otherwise noted, is subjected to tilde expansion, parameter expansion,
+and quote removal. If it expands to more than one word, \fBvsh\fP reports an
+error.
+.PP
+Note that the order of redirections is significant. For example, the command:
+.PP
+.RS
+ls > dirlist \fB2>&1\fP
+.RE
+.PP
+directs both standard output and standard error to the file dirlist, while the
+command:
+.PP
+.RS
+ls \fB2>&1\fP > dirlist
+.RE
+.PP
+directs only the standard output to file dirlist, because the standard error was
+duplicated as standard output before the standard output was redirected to
+dirlist.
 .SS Here-document
 .PP
 The redirection operator \fB<<\fP allows redirection of lines contained in a shell
