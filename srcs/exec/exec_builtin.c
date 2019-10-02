@@ -6,7 +6,7 @@
 /*   By: omulder <omulder@student.codam.nl>           +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2019/05/29 16:59:41 by omulder        #+#    #+#                */
-/*   Updated: 2019/09/10 12:25:09 by omulder       ########   odam.nl         */
+/*   Updated: 2019/10/01 15:36:45 by omulder       ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,6 +16,12 @@ static bool	exec_builtin_cont(char **args, t_vshdata *data)
 {
 	if (ft_strequ(args[0], "hash"))
 		builtin_hash(args, data);
+	else if (ft_strequ(args[0], "setenv"))
+		builtin_assign(args[1], data, ENV_EXTERN);
+	else if (ft_strequ(args[0], "unsetenv"))
+		builtin_unset(args, data->envlst);
+	else if (ft_strequ(args[0], "env"))
+		builtin_env(args, data->envlst);
 	else
 		return (false);
 	return (true);

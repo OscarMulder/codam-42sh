@@ -6,7 +6,7 @@
 /*   By: mavan-he <mavan-he@student.codam.nl>         +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2019/08/10 20:15:06 by mavan-he       #+#    #+#                */
-/*   Updated: 2019/09/26 11:42:28 by tde-jong      ########   odam.nl         */
+/*   Updated: 2019/10/02 10:09:13 by rkuijper      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -26,6 +26,12 @@ static int	auto_match_builtins_continued(char *match, t_list **matchlst,
 		ret = auto_add_tolst(matchlst, "hash");
 	if (ret != FUNCT_ERROR && ft_strnequ(match, "fc", match_len))
 		ret = auto_add_tolst(matchlst, "fc");
+	if (ret != FUNCT_ERROR && ft_strnequ(match, "setenv", match_len))
+		ret = auto_add_tolst(matchlst, "setenv");
+	if (ret != FUNCT_ERROR && ft_strnequ(match, "unsetenv", match_len))
+		ret = auto_add_tolst(matchlst, "unsetenv");
+	if (ret != FUNCT_ERROR && ft_strnequ(match, "env", match_len))
+		ret = auto_add_tolst(matchlst, "env");
 	return (ret);
 }
 

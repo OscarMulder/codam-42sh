@@ -10,6 +10,7 @@
 *.gcov
 
 # Executables
+21sh
 vsh
 vsh_tests
 test_coverage
