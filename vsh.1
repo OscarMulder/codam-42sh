@@ -973,18 +973,23 @@ The shell has an \fIexecution environment\fP, which consists of the following:
 .B \(bu
 The current working directory as set by \fBcd\fP, or inherited by the shell at
 invocation.
+.TP
 .B \(bu
 Shell parameters that are set by assignment or inherited by the shell at
 invocation.
+.TP
 .B \(bu
 Shell aliases defined with \fBalias\fP.
+.TP
 .B \(bu
 The list of processes running in the background through \fBjobs\fP.
 .PP
 When a simple command other than a builtin is to be executed, it is invoked in
 a seperate execution environment that consists of the following:
+.TP
 .B \(bu
 The current working directory.
+.TP
 .B \(bu
 Shell variables marked for export.
 .PP
