@@ -1,0 +1,699 @@
+.TH man 1 "03 April 2019" "1.0" "vsh man page"
+.SH NAME
+vsh
+.SH SYNOPSIS
+.B 21sh
+[file]
+.SH DESCRIPTION
+\fBVsh\fP is a beautiful command language interpreter that executes
+commands read from the standard input or from a file.
+.SH OPTIONS
+\fBVsh\fP does not take any options.
+.PD
+.\" /*
+.\" **
+.\" **
+.\" **
+.\" **
+.\" **
+.\" **
+.\" **
+.\" **
+.\" **
+.\" **
+.\" **
+.\" **
+.\" **
+.\" **   ARGUMENTS
+.\" **
+.\" **
+.\" **
+.\" **
+.\" **
+.\" **
+.\" **
+.\" **
+.\" **
+.\" **
+.\" **
+.\" **
+.\" **
+.\" */
+.SH ARGUMENTS
+The first argument is assumed to be the name of a file containing shell
+commands.
+.\" /*
+.\" **   THIS FOLLOWING PART IS SOMETHING WE MIGHT WANT TO ADD
+.\" **
+.\" **   If \fBvsh\fP
+.\" **   is invoked in this fashion, $0 is set to the name of the file, and the
+.\" **   positional parameters  are  set  to  the  remaining arguments.
+.\" */
+\fBVsh\fP reads and executes commands from this file and then exits.
+If no commands are executed, the exit status is 0.
+An attempt is first made to open the file in the current directory,
+and, if no file is found, then the shell searches the directories
+in \fBPATH\fP for the script. If any of the files exist but cannot be read,
+\fBvsh\fP reports an error.
+.PD
+.\" /*
+.\" **
+.\" **
+.\" **
+.\" **
+.\" **
+.\" **
+.\" **
+.\" **
+.\" **
+.\" **
+.\" **
+.\" **
+.\" **
+.\" **   INVOCATION
+.\" **
+.\" **
+.\" **
+.\" **
+.\" **
+.\" **
+.\" **
+.\" **
+.\" **
+.\" **
+.\" **
+.\" **
+.\" **
+.\" */
+.SH INVOCATION
+An \fIinteractive\fP shell is one started without non-option arguments whose
+standard input and error are both connected to terminals (as determined by
+.IR isatty (3)).
+.PD
+.\" /*
+.\" **
+.\" **
+.\" **
+.\" **
+.\" **
+.\" **
+.\" **
+.\" **
+.\" **
+.\" **
+.\" **
+.\" **
+.\" **
+.\" **   DEFINITIONS
+.\" **
+.\" **
+.\" **
+.\" **
+.\" **
+.\" **
+.\" **
+.\" **
+.\" **
+.\" **
+.\" **
+.\" **
+.\" **
+.\" */
+.SH DEFINITIONS
+The following definitions are used throughout the rest of this document.
+.TP
+.PD 0
+.B blank
+A space or tab.
+.TP
+.B word
+A sequence of characters considered as a single unit by the shell (also known
+as a \fBtoken\fP) that does not contain unquoted \fBmetacharacters\fP or
+unquoted control operators (see section on \fBQUOTING\fP).
+.TP
+.B identifier
+A \fIword\fP consisting of only alphanumeric characters and underscores,
+and beginning with an alphabetic character or an underscore.
+.TP
+.B metacharacter
+A character that, when unquoted, seperates words. One of the following:
+.br
+\fB| & ; < > space newline\fP
+.TP
+.B control operator
+A \fItoken\fP that performs a control function. One of the following:
+.br
+\fB| || & && ; <newline>\fP
+.TP
+.B tilde expansion character
+A character that, when unquoted, and the first char of a \fIword\fP, will expand
+into the \fIenvironment variable\fP \fBHOME\fP. The following:
+.br
+\fB~\fP
+.TP
+.B variable expansion character
+A character that, when unquoted, and the first char of a \fIword\fP, will expand
+into the \fIenvironment variable\f that is given right after it. The following:
+.br
+\fB$\fP
+.TP
+.B history expansion character
+A character that, when unquoted, and used according to \fBHISTORY EXPANSION\fP,
+will expand into a valid history item if there is one. The following:
+.br
+\fB!\fP
+.PD
+.\" /*
+.\" **
+.\" **
+.\" **
+.\" **
+.\" **
+.\" **
+.\" **
+.\" **
+.\" **
+.\" **
+.\" **
+.\" **
+.\" **
+.\" **   INTRODUCTION
+.\" **
+.\" **
+.\" **
+.\" **
+.\" **
+.\" **
+.\" **
+.\" **
+.\" **
+.\" **
+.\" **
+.\" **
+.\" **
+.\" */
+.SH INTRODUCTION
+.PP
+The shell operates according to the following general overview of operations.
+The specific details are included in the cited sections of this document.
+.PP
+.RS
+\fB <INSERT GENERAL OPERATIONAL STRUCTURE OF VSH>
+.RE
+.PD
+.\" /*
+.\" **
+.\" **
+.\" **
+.\" **
+.\" **
+.\" **
+.\" **
+.\" **
+.\" **
+.\" **
+.\" **
+.\" **
+.\" **
+.\" **   RESERVED WORDS
+.\" **
+.\" **
+.\" **
+.\" **
+.\" **
+.\" **
+.\" **
+.\" **
+.\" **
+.\" **
+.\" **
+.\" **
+.\" **
+.\" */
+.SH "RESERVED WORDS"
+\fIReserved words\fP are words that have a special meaning to the shell.
+We currently do not have any reserved words, but if we did they would be
+recognized as reserved when unquoted and the first word
+of a simple command (see \fBSHELL GRAMMAR\fP below).
+.PD
+.\" /*
+.\" **
+.\" **
+.\" **
+.\" **
+.\" **
+.\" **
+.\" **
+.\" **
+.\" **
+.\" **
+.\" **
+.\" **
+.\" **
+.\" **   SHELL GRAMMAR
+.\" **
+.\" **
+.\" **
+.\" **
+.\" **
+.\" **
+.\" **
+.\" **
+.\" **
+.\" **
+.\" **
+.\" **
+.\" **
+.\" */
+.SH "SHELL GRAMMAR"
+.SS Simple Commands
+.PP
+A \fIsimple command\fP is a sequence of optional variable assignments
+followed by \fBblank\fP-separated words and redirections, and
+terminated by a \fIcontrol operator\fP.  The first word
+specifies the command to be executed, and is passed as argument zero.
+The remaining words are passed as arguments to the invoked command.
+.PP
+The return value of a \fIsimple command\fP is its exit status, or
+128+\fIn\^\fP if the command is terminated by signal \fIn\fP.
+.SS Pipelines
+.PP
+A \fIpipeline\fP is a sequence of one or more commands separated by
+the \fIcontrol operator\fP \fB|\fP.
+.br
+The format for a pipeline is:
+.RS
+.PP
+\fIcommand1\fP [ \fB|\fP \fIcommand2\fP ... ]
+.RE
+.PP
+The standard output of \fIcommand\fP is connected via a pipe to the standard
+input of \fIcommand2\fP. This connection is performed before any redirections
+specified by the command (see \fBREDIRECTION\fP below).
+.PP
+The return status of a pipeline is the exit status of the last command. The
+shell waits for all commands in the pipeline to terminate before returning a
+value.
+.PP
+Each command in a pipeline is executed as a seperate process. 
+.SS Lists
+.PP
+A \fIlist\fP is a sequence of one or more pipelines separated by one of the
+following \fIcontrol operators\fP:
+.br
+\fB; & && ||\fP
+.PP
+It is optionally terminated by one of the following \fIcontrol operators\fP:
+.br
+\fB; & <newline>\fP
+.PP
+Of these list operators, \fB;\fP and \fB&\fP equally have the highest
+precedence, followed by \fB&&\fP and \fB||\fP which also have equal precedence.
+.PP
+A sequence of one or more \fB<newline>\fP tokens may appear in a \fIlist\fP
+instead of a semicolon to delimit commands.
+.PP
+.\" /*
+.\" **   THE FOLLOWING STILL HAS TO BE IMPLEMENTED BY JOBS
+.\" **   
+.\" **   If a command is terminated by the control operator &, the shell
+.\" **   executes the command in  the  background  in a subshell.  The shell
+.\" **   does not wait for the command to finish, and the return status is 
+.\" **   0.  These are referred to as \fIasynchronous\fP commands.
+.\" */
+Commands separated by a \fB;\fP are executed sequentially; the shell waits
+for each command to terminate in turn. The return status is the exit
+status of the last command executed.
+.PP
+AND and OR lists are sequences of one or more pipelines separated by the
+\fB&&\fP and \fB||\fP \fIcontrol operator\fP respectively. AND and OR lists are
+executed with left associativity.
+.PP
+The format for an AND list is:
+.RS
+.PP
+\fIcommand1 \fP[ \fB&& \fP \fIcommand2 \fP... ]
+.RE
+.PP
+\fIcommand2\fP is executed only if \fIcommand1\fP returns an exit status of zero
+(success).
+.PP
+The format for an OR list is:
+.PP
+.RS
+\fIcommand1 \fP[ \fB|| \fP \fIcommand2 \fP... ]
+.RE
+.PP
+\fIcommand2\fP is executed only if \fIcommand1\fP returns a non-zero exit status.
+The return status of AND and OR lists is the exit status of the last command
+executed in the list.
+.PD
+.\" /*
+.\" **
+.\" **
+.\" **
+.\" **
+.\" **
+.\" **
+.\" **
+.\" **
+.\" **
+.\" **
+.\" **
+.\" **
+.\" **
+.\" **   QUOTING
+.\" **
+.\" **
+.\" **
+.\" **
+.\" **
+.\" **
+.\" **
+.\" **
+.\" **
+.\" **
+.\" **
+.\" **
+.\" **
+.\" */
+.SH COMMENTS
+.PP
+\fBVsh\fP does not support comments.
+.\" /*
+.\" **
+.\" **
+.\" **
+.\" **
+.\" **
+.\" **
+.\" **
+.\" **
+.\" **
+.\" **
+.\" **
+.\" **
+.\" **
+.\" **   QUOTING
+.\" **
+.\" **
+.\" **
+.\" **
+.\" **
+.\" **
+.\" **
+.\" **
+.\" **
+.\" **
+.\" **
+.\" **
+.\" **
+.\" */
+.SH QUOTING
+.PP
+\fIQuoting\fP is used to remove the special meaning of certain characters or
+words to the shell. Quoting can be used to disable special treatment for special
+characters, and to prevent parameter expansion. (If we had reserved words they
+could also be prevented from being recognized as such.)
+.PP
+Each of the \fImetacharacters\fP listed above under \fBDEFINITIONS\fP has a
+special meaning to the shell and must be quoted if the literal value is to be
+used.
+.PP
+The \fIhistory expansion\fP character \fB!\fP must be quoted to prevent
+history expansion.
+.PP
+There are three quoting mechanisms: the \fIescape character\fP, single quotes,
+and double quotes.
+.PP
+A non-quoted backslash \fB\\\fP is the \fBescape character\fP. It removes
+preserves the literal value of the next character that follows, with the
+exception of \fB<newline>\fP. If a \fB\\<newline>\fP pair appears, and the
+backslash is not itself quoted, the \fB\\<newline>\fP pair is treated as a
+line continuation (that is, it is removed from the input stream and effectively
+ignored).
+.PP
+Enclosing characters in single quotes preserves the literal value
+of each character within the quotes. A single quote may not occur
+between single quotes, even when preceded by a backslash.
+.PP
+Enclosing characters in double quotes preserves the literal value of all
+characters within the quotes, with the exception of the following characters:
+.br
+\fB$ \\ !\fP
+.br
+When the hi
+.\" /*
+.\" **
+.\" **
+.\" **
+.\" **
+.\" **
+.\" **
+.\" **
+.\" **
+.\" **
+.\" **
+.\" **
+.\" **
+.\" **
+.\" **   SHELL BUILTIN COMMANDS
+.\" **
+.\" **
+.\" **
+.\" **
+.\" **
+.\" **
+.\" **
+.\" **
+.\" **
+.\" **
+.\" **
+.\" **
+.\" **
+.\" */
+.SH SHELL BUILTIN COMMANDS
+.PP
+\fBvsh\fP supports a total of 7 builtin commands.
+.TP
+.B echo
+[-neE] [arg ...]
+.br
+Output the args, seperated by spaces, followed by a newline. If -n is specified,
+the trailing newline is not printed. The -e option will enable interpretation of
+these escape characters: \\a \\b \\E \\e \\f \\n \\r \\t \\v \\. Option -E
+disables interpretation of escape characters.
+.TP
+.B cd
+[dir]
+.br
+Change the current directory to 'dir'. The variable environment variable HOME
+is default to 'dir'
+.TP
+\fBfc\fP [\fB\-e\fP \fIename\fP] [\fB\-nlr\fP] [\fIfirst\fP] [\fIlast\fP]
+.PD 0
+.TP
+\fBfc\fP \fB\-s\fP [\fIpat\fP=\fIrep\fP] [\fIcmd\fP]
+.PD
+Fix Command.  In the first form, a range of commands from
+.I first
+to
+.I last
+is selected from the history list.
+.I First
+and
+.I last
+may be specified as a string (to locate the last command beginning
+with that string) or as a number (an index into the history list,
+where a negative number is used as an offset from the current
+command number).  If 
+.I last
+is not specified it is set to
+the current command for listing (so that
+.if n ``fc \-l \-10''
+.if t \f(CWfc \-l \-10\fP
+prints the last 10 commands) and to
+.I first
+otherwise.
+If
+.I first
+is not specified it is set to the previous
+command for editing and \-16 for listing.
+.sp 1
+The
+.B \-n
+option suppresses
+the command numbers when listing.  The
+.B \-r
+option reverses the order of
+the commands.  If the
+.B \-l
+option is given,
+the commands are listed on
+standard output.  Otherwise, the editor given by
+.I ename
+is invoked
+on a file containing those commands.  If
+.I ename
+is not given, the
+value of the
+.SM
+.B FCEDIT
+variable is used, and
+the value of
+.SM
+.B EDITOR
+if
+.SM
+.B FCEDIT
+is not set.  If neither variable is set,
+'ed' is used.  When editing is complete, the edited commands are
+echoed and executed.
+.sp 1
+In the second form, \fIcommand\fP is re-executed after the first instance
+of \fIpat\fP is replaced by \fIrep\fP.
+A useful alias to use with this is
+.if n ``r="fc -s"'',
+.if t \f(CWr='fc \-s'\fP,
+so that typing
+.if n ``r cc''
+.if t \f(CWr cc\fP
+runs the last command beginning with
+.if n ``cc''
+.if t \f(CWcc\fP
+and typing
+.if n ``r''
+.if t \f(CWr\fP
+re-executes the last command.
+.sp 1
+If the first form is used, the return value is 0 unless an invalid
+option is encountered or
+.I first
+or
+.I last
+specify history lines out of range.
+If the
+.B \-e
+option is supplied, the return value is the value of the last
+command executed or failure if an error occurs with the temporary
+file of commands.  If the second form is used, the return status
+is that of the command re-executed, unless
+.I cmd
+does not specify a valid history line, in which case
+.B fc
+returns failure.
+.TP
+.B env
+[REFRESH]
+.br
+Display the current environment. If supplied with argument 'REFRESH', it will
+refresh your whole environment.
+.TP
+.B set
+[name] [value]
+.br
+Set a environment variable 'name' to 'value'. If no 'value' is specified, 'name'
+will be set to NULL. If no 'name' is specified, setenv will behave like the env
+builtin.
+.TP
+.B unset
+[name]
+.br
+Unset environment variable 'name'.
+.TP
+.B exit
+[\fIexit_code\fP]
+.br
+Exits the current running shell (same as ctrl+d input).
+.TP
+.B export
+.br
+??
+.TP
+.B history
+.br
+Displays all current history entries.
+.TP
+.B alias
+.br
+??
+.TP
+.B unalias
+.br
+??
+.TP
+.B type
+.br
+??
+.\" /*
+.\" **   THE FOLLOWING STILL HAS TO BE IMPLEMENTED
+.\" **   .TP
+.\" **   .B vela
+.\" **   Display our mighty vela logo in ascii art, and continue with business
+.\" **   as usual.
+.\" */
+.PD
+.\" /*
+.\" **
+.\" **
+.\" **
+.\" **
+.\" **
+.\" **
+.\" **
+.\" **
+.\" **
+.\" **
+.\" **
+.\" **
+.\" **
+.\" **   REDIRECTION
+.\" **
+.\" **
+.\" **
+.\" **
+.\" **
+.\" **
+.\" **
+.\" **
+.\" **
+.\" **
+.\" **
+.\" **
+.\" **
+.\" */
+.SH REDIRECTION
+.PP
+The following section explains how we handle redirections.
+.SS Here-document
+.PP
+The redirection operator \fB<<\fP allows redirection of lines contained in a shell
+input file, known as a \fIhere-document\fP, to the standard input of a command.
+.PP
+The \fIhere-document\fP is treated as a single word that begins after the next newline
+character (if there are unescaped quotes) and continues until there is a line
+containing only the delimiter, with no trailing blank characters. Then the next
+\fIhere-document\fP starts, if there is one.
+.RS
+.PP
+\fIcommand<<word
+.br
+ 	here-document
+.br
+delimiter\fP
+.RE
+.PP
+If any character in word is quoted, the delimiter is formed by performing quote
+removal on word, and the \fIhere-document\fP lines will not be expanded.
+Otherwise, the delimiter is the word itself. 
+
+If no characters in word are quoted, all lines of the \fIhere-document\fP will
+be expanded for parameter expansion. In this case, the backslash in the input
+will behave as the backslash inside double-quotes. However, the double-quote
+character (") will not be treated specially within a \fIhere-document\fP. 
+
+.po 0
+.SH KNOWN BUGS
+None.
+.SH AUTHOR
+Jorn Brinksma, Marijn van Heesewijk, Oscar Mulder, Thijs de Jong, Rob Kuijper
