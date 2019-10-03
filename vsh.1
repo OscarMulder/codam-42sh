@@ -831,9 +831,9 @@ in an alias name. The replacement text may contain any valid shell input,
 including shell metacharacters. The first word of the replacement text is tested
 for aliases, but a word that is identical to an alias being expanded is not
 expanded a second time. This means that one may alias \fBls\fP to \fBls -F\fP,
-for instance, and bash does not try to recursively expand the replacement text.
-If the last character of the alias value is a \fIblank\fP, then the next command
-word following the alias is also checked for alias expansion.
+for instance, and \fBvsh\fP does not try to recursively expand the replacement
+text. If the last character of the alias value is a \fIblank\fP, then the next
+command word following the alias is also checked for alias expansion.
 .PP
 Aliases are created and listed with the \fBalias\fP command, and removed with
 the \fBunalias\fP command.
@@ -1075,7 +1075,163 @@ These assignments only affect the environment for that specific
 .\" */
 .SH "EXIT STATUS"
 .PP
-
+A command which exists with a zero exit status has succeeded. A non-zero exit
+status indicates failure. When a command terminates on a fatal signal \fIN\fP,
+\fBvsh\fP uses the value of 128+\fIN\fP as the exit status.
+.PP
+If a command is not found, the exit code of the shell will be set to 127. If a
+command is found but is not executable the exit code will be set to 126.
+.PP
+If a command fails because of an error during expansion or redirection, the
+exit status is greater than zero.
+.PP
+Shell builtin commands set the exit code to zero if succesful, and non-zero if
+an error occurs while they execute. No distinction is made between usage
+and non-usage errors in terms of exit code.
+.PP
+\fBvsh\fP returns the exit status of the last command executed, unless a syntax
+error occurs, in which case it exits with a non-zero value (see the \fBexit\fP
+builtin command below).
+.\" /*
+.\" **
+.\" **
+.\" **
+.\" **
+.\" **
+.\" **
+.\" **
+.\" **
+.\" **
+.\" **
+.\" **
+.\" **
+.\" **
+.\" **   SIGNALS
+.\" **
+.\" **
+.\" **
+.\" **
+.\" **
+.\" **
+.\" **
+.\" **
+.\" **
+.\" **
+.\" **
+.\" **
+.\" **
+.\" */
+.SH SIGNALS
+.PP
+\fBVsh\fP does not ignore \fBSIGTERM\fP. It does ignore \fBSIGINT\fP, but
+responds to a '\fB\4\fP' character (\fBctrl+D\fP) as if it were a SIGINT. No
+other signals are ignored.
+.PP
+Non-builtin commands run by \fBvsh\fP will not inherit the \fBSIGINT\fP ignore.
+.PP
+Job control does not come with any special signal handling; \fBSIGTTIN\fP,
+\fBSIGTTOU\fP, and \fBSIGTSTP\fP are \fBnot\fP ignored. \fBSIGQUIT\fP is also
+\fBnot\fP ignored by \fBvsh\fP.
+.\" /*
+.\" **
+.\" **
+.\" **
+.\" **
+.\" **
+.\" **
+.\" **
+.\" **
+.\" **
+.\" **
+.\" **
+.\" **
+.\" **
+.\" **   JOB CONTROL
+.\" **
+.\" **
+.\" **
+.\" **
+.\" **
+.\" **
+.\" **
+.\" **
+.\" **
+.\" **
+.\" **
+.\" **
+.\" **
+.\" */
+.SH "JOB CONTROL"
+.PP
+\fB<content will be added by tde-jong>\fP
+.\" /*
+.\" **
+.\" **
+.\" **
+.\" **
+.\" **
+.\" **
+.\" **
+.\" **
+.\" **
+.\" **
+.\" **
+.\" **
+.\" **
+.\" **   HISTORY
+.\" **
+.\" **
+.\" **
+.\" **
+.\" **
+.\" **
+.\" **
+.\" **
+.\" **
+.\" **
+.\" **
+.\" **
+.\" **
+.\" */
+.SH HISTORY
+\fB<content will be added by omulder>\fP
+.\" /*
+.\" **
+.\" **
+.\" **
+.\" **
+.\" **
+.\" **
+.\" **
+.\" **
+.\" **
+.\" **
+.\" **
+.\" **
+.\" **
+.\" **   HISTORY EXPANSION
+.\" **
+.\" **
+.\" **
+.\" **
+.\" **
+.\" **
+.\" **
+.\" **
+.\" **
+.\" **
+.\" **
+.\" **
+.\" **
+.\" */
+.SH "HISTORY EXPANSION"
+.PP
+History expansions introduce words from the history list into the input stream,
+making it easy to repeat commands, insert the arguments to a previous command
+into the current input line. History expansion is performed immediately after a
+complete line is read, before the shell breaks it into words. It takes place in
+two parts. The first is to determine which line from the history list to use
+during substitution. The second is to insert it into the line.
 .\" /*
 .\" **
 .\" **
@@ -1109,16 +1265,14 @@ These assignments only affect the environment for that specific
 .PP
 \fBvsh\fP supports a total of 7 builtin commands.
 .TP
-.B echo
-[-neE] [arg ...]
+.B echo \fP[-neE] [arg ...]
 .br
 Output the args, separated by spaces, followed by a newline. If -n is specified,
 the trailing newline is not printed. The -e option will enable interpretation of
 these escape characters: \\a \\b \\E \\e \\f \\n \\r \\t \\v \\. Option -E
 disables interpretation of escape characters.
 .TP
-.B cd
-[dir]
+.B cd \fP[dir]
 .br
 Change the current directory to 'dir'. The variable environment variable HOME
 is default to 'dir'
@@ -1217,50 +1371,51 @@ does not specify a valid history line, in which case
 returns failure.
 .TP
 .B env
-[REFRESH]
 .br
-Display the current environment. If supplied with argument 'REFRESH', it will
-refresh your whole environment.
+Display the current environment.
 .TP
-.B set
-[name] [value]
+.B set \fP[name] [value]
 .br
 Set a environment variable 'name' to 'value'. If no 'value' is specified, 'name'
 will be set to NULL. If no 'name' is specified, setenv will behave like the env
 builtin.
 .TP
-.B unset
-[name]
+.B unset \fP[name]
 .br
 Unset environment variable 'name'.
+.br
+\fB<content will be added>\fP
 .TP
-.B exit
-[\fIexit_code\fP]
+.B exit \fP[\fIexit_code\fP]
 .br
 Exits the current running shell (same as ctrl+d input).
+.br
+\fB<content will be added>\fP
 .TP
 .B export
 .br
-??
+\fB<content will be added>\fP
 .TP
 .B history
-.br
 Displays all current history entries.
+.br
+\fB<content will be added>\fP
 .TP
 .B alias
 .br
-??
+\fB<content will be added>\fP
 .TP
 .B unalias
 .br
-??
+\fB<content will be added>\fP
 .TP
 .B type
 .br
-??
+\fB<content will be added>\fP
+.TP
 .B hash
 .br
-??
+\fB<content will be added>\fP
 .\" /*
 .\" **   THE FOLLOWING STILL HAS TO BE IMPLEMENTED
 .\" **   .TP
