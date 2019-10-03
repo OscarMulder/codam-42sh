@@ -6,7 +6,7 @@
 /*   By: mavan-he <mavan-he@student.codam.nl>         +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2019/05/19 12:12:00 by mavan-he       #+#    #+#                */
-/*   Updated: 2019/08/19 15:10:43 by mavan-he      ########   odam.nl         */
+/*   Updated: 2019/10/03 17:06:19 by jbrinksm      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -27,6 +27,10 @@ void	lexer_state_word_esc(t_scanner *scanner)
 	if (CURRENT_CHAR != '\0')
 		lexer_change_state(scanner, &lexer_state_word);
 }
+
+/*
+**	This big state is used to keep track of...
+*/
 
 void	lexer_state_word(t_scanner *scanner)
 {
