@@ -6,7 +6,7 @@
 /*   By: omulder <omulder@student.codam.nl>           +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2019/04/10 20:29:42 by jbrinksm       #+#    #+#                */
-/*   Updated: 2019/09/27 14:55:39 by jbrinksm      ########   odam.nl         */
+/*   Updated: 2019/10/01 12:25:19 by jbrinksm      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -495,7 +495,6 @@ typedef struct	s_vshdata
 	t_pipeseqlist	*pipeseq;
 	short			exec_flags;
 }				t_vshdata;
-t_vshdata		*g_data;
 
 t_vshdata		*g_data;
 
