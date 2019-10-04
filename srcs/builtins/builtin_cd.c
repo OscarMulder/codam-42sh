@@ -6,7 +6,7 @@
 /*   By: omulder <omulder@student.codam.nl>           +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2019/07/30 12:41:21 by omulder        #+#    #+#                */
-/*   Updated: 2019/10/03 17:42:15 by omulder       ########   odam.nl         */
+/*   Updated: 2019/10/04 14:08:31 by omulder       ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -83,6 +83,7 @@ void		builtin_cd(char **args, t_vshdata *data)
 	char	*newpath;
 	int		flags;
 
+	g_state->exit_code = EXIT_SUCCESS;
 	cd_flag = BUILTIN_CD_UL;
 	flags = 0;
 	if (cd_parse_flags(args, &cd_flag, &flags) == 0)
