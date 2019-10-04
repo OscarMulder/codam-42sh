@@ -22,6 +22,12 @@ void	lexer_state_ionum(t_scanner *scanner)
 		lexer_state_word(scanner);
 }
 
+/*
+**	Because lexer_change_state increments the line index, this state basically
+**	ignores any character that comes after the '\', and lets it remain in a
+**	WORD token.
+*/
+
 void	lexer_state_word_esc(t_scanner *scanner)
 {
 	if (CURRENT_CHAR != '\0')
@@ -29,7 +35,10 @@ void	lexer_state_word_esc(t_scanner *scanner)
 }
 
 /*
-**	This big state is used to keep track of...
+**	The reason this state is so complicated is because it has to keep track
+**	of all the different quoting states. A word token is ofcourse only
+**	finished when the lexer reaches an unescaped metacharacter or blank, a
+**	newline or a '\0'.
 */
 
 void	lexer_state_word(t_scanner *scanner)
