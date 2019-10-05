@@ -6,11 +6,17 @@
 /*   By: jbrinksm <jbrinksm@student.codam.nl>         +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2019/09/16 07:59:07 by jbrinksm       #+#    #+#                */
-/*   Updated: 2019/09/16 11:17:21 by jbrinksm      ########   odam.nl         */
+/*   Updated: 2019/10/05 09:54:15 by jbrinksm      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "vsh.h"
+
+/*
+**	Adds pids of a command when it is a part of a pipe sequence. This is done
+**	so that we can cancel processes like `base64` in a pipe sequence of
+**	`base64 /dev/urandom | head -c 1000`, so that it does not run for infinity.
+*/
 
 void		exec_add_pid_to_pipeseqlist(t_vshdata *data, pid_t pid)
 {
