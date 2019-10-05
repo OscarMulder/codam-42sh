@@ -24,7 +24,7 @@
 
 void		exec_cmd(char **args, t_vshdata *data, t_pipes pipes)
 {
-	if (exec_builtin(args, data) == false)
+	if (args[0][0] != '\0' && exec_builtin(args, data) == false)
 	{
 		if (pipes.currentpipe[0] == PIPE_UNINIT
 		&& pipes.currentpipe[1] == PIPE_UNINIT
