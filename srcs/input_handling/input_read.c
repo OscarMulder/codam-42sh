@@ -6,7 +6,7 @@
 /*   By: omulder <omulder@student.codam.nl>           +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2019/04/17 14:03:16 by jbrinksm       #+#    #+#                */
-/*   Updated: 2019/10/05 15:41:33 by jbrinksm      ########   odam.nl         */
+/*   Updated: 2019/10/05 16:29:26 by jbrinksm      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -63,6 +63,12 @@ static int	find_start(t_history **history)
 	}
 	return (start + 1);
 }
+
+/*
+**	Every time we return from input_read, we want to make sure that the content
+**	in the vshdata struct which is related to the current readloop and command
+**	line is cleared and/or reset or prepared for the next line.
+*/
 
 static int	reset_input_read_return(t_vshdata *data, int ret)
 {
