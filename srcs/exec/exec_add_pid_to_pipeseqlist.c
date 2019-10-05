@@ -6,7 +6,7 @@
 /*   By: jbrinksm <jbrinksm@student.codam.nl>         +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2019/09/16 07:59:07 by jbrinksm       #+#    #+#                */
-/*   Updated: 2019/10/05 09:54:15 by jbrinksm      ########   odam.nl         */
+/*   Updated: 2019/10/05 09:55:44 by jbrinksm      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -33,7 +33,8 @@ void		exec_add_pid_to_pipeseqlist(t_vshdata *data, pid_t pid)
 	if (data->pipeseq == NULL)
 	{
 		ft_eprintf(SHELL ": could not allocate memory to keep track of a pid in"
-		" a pipe sequence. You will have to manually cancel some processes.\n");
+		" a pipe sequence. You might have to manually cancel some"
+		" processes.\n");
 		return ;
 	}
 	data->pipeseq->pid = pid;
