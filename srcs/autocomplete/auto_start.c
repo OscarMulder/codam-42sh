@@ -6,11 +6,21 @@
 /*   By: mavan-he <mavan-he@student.codam.nl>         +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2019/08/12 14:09:10 by mavan-he       #+#    #+#                */
-/*   Updated: 2019/09/05 15:04:27 by mavan-he      ########   odam.nl         */
+/*   Updated: 2019/10/05 15:38:29 by mavan-he      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "vsh.h"
+
+/*
+**	Autocomplete is called when a tab is pressed in an interactive shell
+**	Autocomplete has different states depending on
+**	where the cursor is positioned in line
+**	The state is determined in auto_find_state
+**	Depending on the state, we look for the string to match
+**	We then create a list of options that match our match string
+**	This list gets handled in auto_handle_matchlst
+*/
 
 void	auto_lstdel(void *str, size_t size)
 {

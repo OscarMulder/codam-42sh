@@ -6,12 +6,19 @@
 /*   By: mavan-he <mavan-he@student.codam.nl>         +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2019/08/10 12:53:34 by mavan-he       #+#    #+#                */
-/*   Updated: 2019/09/02 17:12:26 by mavan-he      ########   odam.nl         */
+/*   Updated: 2019/10/05 15:53:14 by mavan-he      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "vsh.h"
 #include <dirent.h>
+
+/*
+**	auto_get_cmdlst creates a list of matching cmd's with match
+**	It first retrieves all directories from the PATH variable
+**	It then opens all directories and tries to find matches with match
+**	After that it also checks if any builtins match with match
+*/
 
 int			auto_add_tolst(t_list **matchlst, char *filename)
 {
