@@ -6,7 +6,7 @@
 /*   By: omulder <omulder@student.codam.nl>           +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2019/05/16 13:39:59 by rkuijper       #+#    #+#                */
-/*   Updated: 2019/10/05 17:31:45 by jbrinksm      ########   odam.nl         */
+/*   Updated: 2019/10/05 17:35:39 by jbrinksm      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -86,12 +86,6 @@ void		curs_move_n_left(t_vshdata *data, size_t n)
 	ft_eprintf("New cursor coordinates: [%d:%d]\n", data->curs->coords.x, data->curs->coords.y);
 	#endif
 }
-
-/*
-**	Moves the cursor (and index) one to the left (or up if necessary)
-**	If used after some weird screen clearing, make sure to compensate
-**	for the automatic `index` change if necessar
-*/
 
 void		curs_move_left(t_vshdata *data)
 {
