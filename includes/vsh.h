@@ -6,7 +6,7 @@
 /*   By: omulder <omulder@student.codam.nl>           +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2019/04/10 20:29:42 by jbrinksm       #+#    #+#                */
-/*   Updated: 2019/10/01 12:29:59 by omulder       ########   odam.nl         */
+/*   Updated: 2019/10/05 16:42:02 by jbrinksm      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -676,8 +676,8 @@ void			input_parse_ctrl_k(t_vshdata *data);
 void			input_parse_ctrl_u(t_vshdata *data);
 void			input_parse_ctrl_y(t_vshdata *data);
 void			input_parse_tab(t_vshdata *data);
-int				get_curs_row();
-void			input_reset_cursor_pos();
+int				get_curs_row(void);
+void			input_reset_cursor_pos(void);
 void			resize_window_check(int sig);
 int				input_add_chunk(t_vshdata *data, char *chunk,
 				int chunk_len);
