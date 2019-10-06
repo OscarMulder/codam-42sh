@@ -1,17 +1,31 @@
 # codam-42sh [![codecov](https://codecov.io/gh/OscarMulder/codam-42sh/branch/master/graph/badge.svg?token=hg6wEBSVIc)](https://codecov.io/gh/OscarMulder/codam-42sh)
 
 ## What is VelaSHell
-Velashell is a bash-styled shell school project completely written in C. We
-worked on it with 5 people for a total duration of around 6 months. The goal was
-to write a complete and solid UNIX shell.
+Velashell (<B>vsh</B>) is a bash-styled shell school project completely written
+from scratch in C with very limited access to libraries and tools. We worked on
+it with 5 people for a total duration of around 5 months.
 
-## The goal of the project
-\<insert content\>
+## The (learning) goals of the project:
+- To complete the final project in our school's pre-internship UNIX branch.
+- Learn a lot more about the inner workings of the UNIX system.
+- Learn about all the different type of shell implementations.
+- Learn how to write our own lexer from scratch in C (**no tools allowed**).
+- Learn how to write our own parser from scratch in C
+  (**again, no tools allowed**).
+- Learn how to write nice and clean code.
+- To create a stable and complete UNIX shell.
+
+## Installing and running VelaSHell
+Install:
+> `make && make clean`
+
+Run:
+> `./vsh`
 
 ## Project General Instructions
 1. The shell can not leak in any way.
 2. In no way can the shell quit in an unexpected manner (e.g. segfault).
-3. We may only use the following libc functions, anything else is
+3. We may only use the following `libc` functions, anything else is
    **prohibited**:
    1. the whole `man 2` section
    2. `malloc`, `free`, `opendir`, `readdir`, `opendir`, `getcwd`, `signal`,
@@ -19,36 +33,42 @@ to write a complete and solid UNIX shell.
       `tcgetattr`, `tgetent`, `tgetflag`, `tgetnum`, `tgetstr`, `tgoto` and
       `tputs`.
    3. `termcaps`
+   4. Instead of the standard `libc` library, we use our own library functions
+      (like `ft_printf` instead of `printf`). We made all these functions in
+      earlier projects at our school (you can check them out at `srcs/libft`).
 4. The terminal must be clean and not display gibberish.
 
 ## Functionality
 1. Error monitoring without using `errno`
 2. Prompt display
-3. (Multiline) line edition
-4. Redirection with the following operators:
+3. Complete management of input
+4. Handle terminal resizing
+5. (Multiline) line edition
+6. Redirection with the following operators:
    1. `>`
    2. `>>`
    3. `<`
    4. `<<`
    5. `>&`
    6. `<&`
-5. Control operators:
+7. Control operators:
    1. `|`
    2. `||`
    3. `&`
    4. `&&`
    5. `;`
-6. Internal shell variable monitoring
-8. Job control monitoring (WIP)
-9. Globing (WIP)
-10. Signal monitoring
-11. Quoting through `"`, `'`, and `\`
-12. Basic parameter expansion
-13. Complete management of command history (WIP)
-14. Alias management
-15. Hash table
-16. Autocomplete
-17. Builtins:
+8. Pipelines
+9. Internal shell variable monitoring
+10. Job control monitoring (WIP)
+11. Globing (WIP)
+12. Signal monitoring
+13. Quoting through `"`, `'`, and `\`
+14. Basic parameter expansion
+15. Complete management of command history (WIP)
+16. Alias management
+17. Hash table
+18. Autocomplete
+19. Builtins:
     1.  `echo`
     2.  `cd`
     3.  `fc`
@@ -62,39 +82,15 @@ to write a complete and solid UNIX shell.
     11. `unalias`
     12. `type`
     13. `hash`
-18. A manual page called `vsh.1`
+20. A manual page called `vsh.1`
 
-## The manual
-The VSH manual contains a thorough description of our shell. We have the following sections:\
+## Reading the manual
+The VSH manual contains a thorough description of our shell.
 \
-`NAME`\
-`SYNOPSIS`\
-`DESCRIPTION`\
-`OPTIONS`\
-`ARGUMENTS`\
-`INVOCATION`\
-`DEFINITIONS`\
-`INTRODUCTION`\
-`RESERVED WORDS`\
-`SHELL GRAMMAR`\
-`COMMENTS`\
-`QUOTING`\
-`PARAMETERS`\
-`EXPANSION`\
-`REDIRECTION`\
-`ALIAS`\
-`SIMPLE COMMAND EXPANSION`\
-`COMMAND EXECUTION`\
-`SHELL EXECUTION ENVIRONMENT`\
-`ENVIRONMENT`\
-`EXIT STATUS`\
-`SIGNALS`\
-`JOB CONTROL`\
-`HISTORY`\
-`HISTORY EXPANSION`\
-`SHELL BUILTIN COMMANDS`\
-`KNOWN BUGS`\
-`AUTHOR`
+\
+Run:
+> `man ./vsh.1`
+
 
 ## Github workflow
 Because we want to make sure we have a good experience working on this project together, we setup a more advanced github workflow. Please keep the following things in mind while pushing to github.
