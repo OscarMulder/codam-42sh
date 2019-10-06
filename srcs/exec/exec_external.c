@@ -44,6 +44,13 @@ static void		exec_bin_handlewait(pid_t pid)
 		g_state->exit_code = EXIT_FATAL + WTERMSIG(status);
 }
 
+/*
+**	Check if `char *binary` is valid.
+**	Set termios structure to default values.
+**	Run cmd_word, and wait for it to finish if the EXEC_WAIT flag is set.
+**	Set termios structure back to our special values.
+*/
+
 static void		exec_bin(char *binary, char **args, char **vshenviron,
 t_vshdata *data)
 {
@@ -73,6 +80,14 @@ t_vshdata *data)
 		exec_bin_handlewait(pid);
 	term_flags_destroy(data->term->termios_p);
 }
+
+/*
+**	Create the environment for the command about to be executed.
+**	Use the cmd_word (see GRAMMAR) as binary name (+ optional relative path),
+**	or if cmd_word contains one or more slashes ('/'), fetch the absolute path
+**	from the PATH variable, and set `char *binary` equal to that instead.
+**	Then: call `exec_bin`.
+*/
 
 void			exec_external(char **args, t_vshdata *data)
 {
