@@ -65,35 +65,36 @@ to write a complete and solid UNIX shell.
 18. A manual page called `vsh.1`
 
 ## The manual
-The VSH manual contains a thorough description of our shell. We have the following sections:</br></br>
-**NAME**</br>
-**SYNOPSIS**</br>
-**DESCRIPTION**</br>
-**OPTIONS**</br>
-**ARGUMENTS**</br>
-**INVOCATION**</br>
-**DEFINITIONS**</br>
-**INTRODUCTION**</br>
-**RESERVED WORDS**</br>
-**SHELL GRAMMAR**</br>
-**COMMENTS**</br>
-**QUOTING**</br>
-**PARAMETERS**</br>
-**EXPANSION**</br>
-**REDIRECTION**</br>
-**ALIAS**</br>
-**SIMPLE COMMAND EXPANSION**</br>
-**COMMAND EXECUTION**</br>
-**SHELL EXECUTION ENVIRONMENT**</br>
-**ENVIRONMENT**</br>
-**EXIT STATUS**</br>
-**SIGNALS**</br>
-**JOB CONTROL**</br>
-**HISTORY**</br>
-**HISTORY EXPANSION**</br>
-**SHELL BUILTIN COMMANDS**</br>
-**KNOWN BUGS**</br>
-**AUTHOR**</br>
+The VSH manual contains a thorough description of our shell. We have the following sections:\
+\
+`NAME`\
+`SYNOPSIS`\
+`DESCRIPTION`\
+`OPTIONS`\
+`ARGUMENTS`\
+`INVOCATION`\
+`DEFINITIONS`\
+`INTRODUCTION`\
+`RESERVED WORDS`\
+`SHELL GRAMMAR`\
+`COMMENTS`\
+`QUOTING`\
+`PARAMETERS`\
+`EXPANSION`\
+`REDIRECTION`\
+`ALIAS`\
+`SIMPLE COMMAND EXPANSION`\
+`COMMAND EXECUTION`\
+`SHELL EXECUTION ENVIRONMENT`\
+`ENVIRONMENT`\
+`EXIT STATUS`\
+`SIGNALS`\
+`JOB CONTROL`\
+`HISTORY`\
+`HISTORY EXPANSION`\
+`SHELL BUILTIN COMMANDS`\
+`KNOWN BUGS`\
+`AUTHOR`
 
 ## Github workflow
 Because we want to make sure we have a good experience working on this project together, we setup a more advanced github workflow. Please keep the following things in mind while pushing to github.
