@@ -6,11 +6,20 @@
 /*   By: mavan-he <mavan-he@student.codam.nl>         +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2019/05/25 19:13:12 by mavan-he       #+#    #+#                */
-/*   Updated: 2019/08/05 13:21:34 by mavan-he      ########   odam.nl         */
+/*   Updated: 2019/10/06 16:17:45 by mavan-he      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "vsh.h"
+
+/*
+**	Parser command does three things
+**	It looks for ASSIGN or redir tokens and they are set to prefix
+**	If there is a cmd, the prefix is added to the right of cmd
+**	If there is no cmd we just return prefix
+**	In cmd suffix regular WORDS are added to the left of cmd
+**	Any assigns or redirections are added to the end of prefix
+*/
 
 bool		parser_cmd_suffix(t_tokenlst **token_lst, t_ast **cmd,
 	t_ast **last_cmd_arg, t_ast **last_prefix)
