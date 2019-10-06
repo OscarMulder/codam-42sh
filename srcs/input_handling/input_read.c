@@ -6,7 +6,7 @@
 /*   By: omulder <omulder@student.codam.nl>           +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2019/04/17 14:03:16 by jbrinksm       #+#    #+#                */
-/*   Updated: 2019/10/05 16:55:41 by jbrinksm      ########   odam.nl         */
+/*   Updated: 2019/10/06 10:28:12 by jbrinksm      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -110,6 +110,27 @@ static int	input_parse(t_vshdata *data)
 		}
 	}
 	return (FUNCT_SUCCESS);
+}
+
+int			input_read_from_buffer(t_vshdata *data)
+{
+	if (data->line->buffer != NULL)
+	{
+		if (data->line->buffer[data->line->buffer_i] != '\0')
+		{
+			data->input->c = data->line->buffer[data->line->buffer_i];
+			data->line->buffer_i++;
+		}
+		else
+		{
+			ft_strdel(&data->line->buffer);
+			data->line->buffer = NULL;
+			data->line->buffer_i = 0;
+			return (FUNCT_FAILURE);
+		}
+		return (FUNCT_SUCCESS);
+	}
+	return (FUNCT_FAILURE);
 }
 
 /*
