@@ -15,10 +15,14 @@ it with 5 people for a total duration of around 5 months.
 
 ## Installing and running VelaSHell
 Install:
-> make && make clean
+```
+make && make clean
+```
 
 Run:
-> ./vsh
+```
+./vsh
+```
 
 ## Project General Instructions
 1. The shell can not leak in any way.
@@ -86,8 +90,9 @@ Run:
 The VSH manual contains a thorough description of our shell.
 \
 Run:
-> man ./vsh.1
-
+```
+man ./vsh.1
+```
 
 ## Github workflow
 Because we want to make sure we have a good experience working on this project together, we setup a more advanced github workflow. Please keep the following things in mind while pushing to github.
