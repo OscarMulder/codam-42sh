@@ -6,7 +6,7 @@
 /*   By: jbrinksm <jbrinksm@student.codam.nl>         +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2019/08/30 10:30:47 by jbrinksm       #+#    #+#                */
-/*   Updated: 2019/08/30 10:38:06 by jbrinksm      ########   odam.nl         */
+/*   Updated: 2019/10/06 10:22:46 by jbrinksm      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -56,6 +56,10 @@ int			input_add_chunk(t_vshdata *data, char *chunk, int chunk_len)
 	}
 	return (FUNCT_SUCCESS);
 }
+
+/*
+**	Removes the character at index from the command line internally.
+*/
 
 void		input_clear_char_at(char **line, unsigned index)
 {
