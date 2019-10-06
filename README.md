@@ -1,5 +1,3 @@
-# codam-42sh [![codecov](https://codecov.io/gh/OscarMulder/codam-42sh/branch/master/graph/badge.svg?token=hg6wEBSVIc)](https://codecov.io/gh/OscarMulder/codam-42sh)
-
 ## What is VelaSHell
 Velashell (<B>vsh</B>) is a bash-styled shell school project completely written
 from scratch in C with very limited access to libraries and tools. We worked on
