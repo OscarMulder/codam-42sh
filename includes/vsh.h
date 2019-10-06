@@ -6,7 +6,7 @@
 /*   By: omulder <omulder@student.codam.nl>           +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2019/04/10 20:29:42 by jbrinksm       #+#    #+#                */
-/*   Updated: 2019/09/27 14:55:39 by jbrinksm      ########   odam.nl         */
+/*   Updated: 2019/10/03 17:29:33 by omulder       ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -115,13 +115,13 @@
 **================================shell colors==================================
 */
 
-# define RESET		"\e[0m"
-# define RED		"\e[1;31m"
-# define YEL		"\e[1;33m"
-# define BLU		"\e[1;36m"
-# define WHITE_BG	"\e[47m"
-# define BLACK		"\e[30m"
-
+# define RESET			"\e[0m"
+# define RED			"\e[1;31m"
+# define YEL			"\e[1;33m"
+# define BLU			"\e[1;36m"
+# define WHITE_BG		"\e[47m"
+# define BLACK			"\e[30m"
+# define WHITE_BG_BLACK	"\e[47;30m"
 
 /*
 **------------------------------------shell-------------------------------------
@@ -495,7 +495,6 @@ typedef struct	s_vshdata
 	t_pipeseqlist	*pipeseq;
 	short			exec_flags;
 }				t_vshdata;
-t_vshdata		*g_data;
 
 t_vshdata		*g_data;
 
@@ -822,7 +821,7 @@ void			builtin_alias_lstdel(t_aliaslst **lst);
 void			builtin_unalias(char **args, t_aliaslst **aliaslst);
 void			builtin_type(char **args, t_envlst *envlst,
 				t_aliaslst *aliaslst);
-int				builtin_cd(char **args, t_vshdata *data);
+void			builtin_cd(char **args, t_vshdata *data);
 void			builtin_cd_create_newpath(char **newpath, char *argpath);
 int				builtin_cd_change_dir(char *argpath, t_vshdata *data,
 					char cd_flag, int print);
