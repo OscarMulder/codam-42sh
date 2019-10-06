@@ -6,7 +6,7 @@
 /*   By: omulder <omulder@student.codam.nl>           +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2019/05/31 10:47:19 by tde-jong       #+#    #+#                */
-/*   Updated: 2019/09/26 15:45:02 by tde-jong      ########   odam.nl         */
+/*   Updated: 2019/10/05 11:40:46 by jbrinksm      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -44,6 +44,13 @@ static void		exec_bin_handlewait(pid_t pid)
 		g_state->exit_code = EXIT_FATAL + WTERMSIG(status);
 }
 
+/*
+**	Check if `char *binary` is valid.
+**	Set termios structure to default values.
+**	Run cmd_word, and wait for it to finish if the EXEC_WAIT flag is set.
+**	Set termios structure back to our special values.
+*/
+
 static void		exec_bin(char *binary, char **args, char **vshenviron,
 t_vshdata *data)
 {
@@ -74,6 +81,14 @@ t_vshdata *data)
 	term_flags_destroy(data->term->termios_p);
 }
 
+/*
+**	Create the environment for the command about to be executed.
+**	Use the cmd_word (see GRAMMAR) as binary name (+ optional relative path),
+**	or if cmd_word contains one or more slashes ('/'), fetch the absolute path
+**	from the PATH variable, and set `char *binary` equal to that instead.
+**	Then: call `exec_bin`.
+*/
+
 void			exec_external(char **args, t_vshdata *data)
 {
 	char	**vshenviron;
@@ -89,8 +104,7 @@ void			exec_external(char **args, t_vshdata *data)
 		g_state->exit_code = EXIT_FAILURE;
 		return ;
 	}
-	if (args[0][0] != '/' && ft_strnequ(args[0], "./", 2) == 0 &&
-		ft_strnequ(args[0], "../", 3) == 0)
+	if (ft_strchr(args[0], '/') == NULL)
 	{
 		ft_strdel(&binary);
 		if (exec_find_binary(args[0], data, &binary) == FUNCT_SUCCESS)
