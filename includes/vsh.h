@@ -6,7 +6,7 @@
 /*   By: omulder <omulder@student.codam.nl>           +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2019/04/10 20:29:42 by jbrinksm       #+#    #+#                */
-/*   Updated: 2019/09/30 15:31:17 by tde-jong      ########   odam.nl         */
+/*   Updated: 2019/10/07 13:33:30 by tde-jong      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -716,6 +716,7 @@ int				jobs_get_job_state(t_job *job);
 t_job			*jobs_remove_job(t_job *job, pid_t pid);
 int				jobs_add_job(t_vshdata *vshdata, pid_t pid, char *command);
 t_job			*jobs_find_current_job(t_job *joblist);
+void			print_job_info(t_job *job, int options, t_job *joblist);
 
 /*
 **----------------------------------shell---------------------------------------

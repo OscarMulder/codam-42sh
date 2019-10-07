@@ -6,7 +6,7 @@
 /*   By: omulder <omulder@student.codam.nl>           +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2019/04/17 14:03:16 by rkuijper       #+#    #+#                */
-/*   Updated: 2019/09/30 16:12:22 by tde-jong      ########   odam.nl         */
+/*   Updated: 2019/10/07 13:33:40 by tde-jong      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -151,7 +151,7 @@ t_job			*builtin_jobs_find_job(char *job_id, t_job *joblist)
 	return (NULL);
 }
 
-static void	print_job_info(t_job *job, int options, t_job *joblist)
+void	print_job_info(t_job *job, int options, t_job *joblist)
 {
 	int	current;
 
