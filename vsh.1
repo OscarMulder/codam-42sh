@@ -153,7 +153,8 @@ standard input and error are both connected to terminals (as determined by
 .SH "GENERAL OVERVIEW OF OPERATIONS"
 .PP
 The shell operates according to the following general overview of operations
-below. The specific details are included in the cited sections of this document.
+below. You can find more detailed information in the other sections of this
+document.
 .TP
 .B "1. Initialize shell"
 Check terminal settings and shell settings, fetch history and alias files,
@@ -177,7 +178,7 @@ the command line is complete.
 .TP
 .B "3. History expansion"
 If a valid \fIhistory expansion character\fP is found, the proper history event
-is expanded into line.
+is expanded into the command line.
 .TP
 .B "4. Lexing"
 The characters of the command line are lexed into tokens.
@@ -481,7 +482,7 @@ history expansion.
 There are three quoting mechanisms: the \fIescape character\fP, single quotes,
 and double quotes.
 .PP
-A non-quoted backslash \fB\\\fP is the \fBescape character\fP. It removes
+A non-quoted backslash \fB\\\fP is the \fBescape character\fP. It
 preserves the literal value of the next character that follows, with the
 exception of \fB<newline>\fP. If a \fB\\<newline>\fP pair appears, and the
 backslash is not itself quoted, the \fB\\<newline>\fP pair is treated as a
