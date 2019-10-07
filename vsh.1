@@ -1163,7 +1163,7 @@ Job control does not come with any special signal handling; \fBSIGTTIN\fP,
 .\" */
 .SH "JOB CONTROL"
 .PP
-\fB<content will be added by tde-jong>\fP
+\fB<more content will be added by tde-jong>\fP
 .\" /*
 .\" **
 .\" **
@@ -1194,7 +1194,7 @@ Job control does not come with any special signal handling; \fBSIGTTIN\fP,
 .\" **
 .\" */
 .SH HISTORY
-\fB<content will be added by omulder>\fP
+\fB<more content will be added by omulder>\fP
 .\" /*
 .\" **
 .\" **
@@ -1262,160 +1262,126 @@ during substitution. The second is to insert it into the line.
 .\" **
 .\" */
 .SH SHELL BUILTIN COMMANDS
-.PP
-\fBvsh\fP supports a total of 7 builtin commands.
 .TP
-.B echo \fP[-neE] [arg ...]
+.B alias
 .br
-Output the args, separated by spaces, followed by a newline. If -n is specified,
-the trailing newline is not printed. The -e option will enable interpretation of
-these escape characters: \\a \\b \\E \\e \\f \\n \\r \\t \\v \\. Option -E
-disables interpretation of escape characters.
+\fB<more content will be added>\fP
+.\" ============================================================================
 .TP
-.B cd \fP[dir]
+.B cd \fP[\fIdir\fP]
 .br
-Change the current directory to 'dir'. The variable environment variable HOME
-is default to 'dir'
+Change the current directory to \fIdir\fP. If not \fIdir\fP is given, \fBcd\fP
+will attemt to change the current directory to the variable \fBHOME\fP.
+.\" ============================================================================
 .TP
-\fBfc\fP [\fB\-e\fP \fIename\fP] [\fB\-nlr\fP] [\fIfirst\fP] [\fIlast\fP]
+.B echo \fP[\fB\-neE\fP] [\fIarg\fP ...]
+.br
+Output each \fIarg\fP, separated by spaces, followed by a newline. If -n is
+specified, the trailing newline is not printed. The -e option will enable
+interpretation of these escape characters, and option -E disables interpretation
+of the escape characters. \fBecho\fP interprets the following escape characters:
+.RS
 .PD 0
 .TP
-\fBfc\fP \fB\-s\fP [\fIpat\fP=\fIrep\fP] [\fIcmd\fP]
+.B \ea
+alert (bell)
+.TP
+.B \eb
+backspace
+.TP
+.B \ee \fIor\fP \eE
+escape character
+.TP
+.B \ef
+form feed
+.TP
+.B \en
+new line
+.TP
+.B \er
+carriage return
+.TP
+.B \et
+horizontal tab
+.TP
+.B \ev
+vertical tab
+.TP
+.B \e\e
+backslash
 .PD
-Fix Command.  In the first form, a range of commands from
-.I first
-to
-.I last
-is selected from the history list.
-.I First
-and
-.I last
-may be specified as a string (to locate the last command beginning
-with that string) or as a number (an index into the history list,
-where a negative number is used as an offset from the current
-command number).  If 
-.I last
-is not specified it is set to
-the current command for listing (so that
-.if n ``fc \-l \-10''
-.if t \f(CWfc \-l \-10\fP
-prints the last 10 commands) and to
-.I first
-otherwise.
-If
-.I first
-is not specified it is set to the previous
-command for editing and \-16 for listing.
-.sp 1
-The
-.B \-n
-option suppresses
-the command numbers when listing.  The
-.B \-r
-option reverses the order of
-the commands.  If the
-.B \-l
-option is given,
-the commands are listed on
-standard output.  Otherwise, the editor given by
-.I ename
-is invoked
-on a file containing those commands.  If
-.I ename
-is not given, the
-value of the
-.SM
-.B FCEDIT
-variable is used, and
-the value of
-.SM
-.B EDITOR
-if
-.SM
-.B FCEDIT
-is not set.  If neither variable is set,
-\fIed\fP is used.  When editing is complete, the edited commands are
-echoed and executed.
-.sp 1
-In the second form, \fIcommand\fP is re-executed after the first instance
-of \fIpat\fP is replaced by \fIrep\fP.
-A useful alias to use with this is
-.if n ``r="fc -s"'',
-.if t \f(CWr='fc \-s'\fP,
-so that typing
-.if n ``r cc''
-.if t \f(CWr cc\fP
-runs the last command beginning with
-.if n ``cc''
-.if t \f(CWcc\fP
-and typing
-.if n ``r''
-.if t \f(CWr\fP
-re-executes the last command.
-.sp 1
-If the first form is used, the return value is 0 unless an invalid
-option is encountered or
-.I first
-or
-.I last
-specify history lines out of range.
-If the
-.B \-e
-option is supplied, the return value is the value of the last
-command executed or failure if an error occurs with the temporary
-file of commands.  If the second form is used, the return status
-is that of the command re-executed, unless
-.I cmd
-does not specify a valid history line, in which case
-.B fc
-returns failure.
+.RE
+.\" ============================================================================
 .TP
 .B env
 .br
 Display the current environment.
-.TP
-.B set \fP[name] [value]
-.br
-Set a environment variable 'name' to 'value'. If no 'value' is specified, 'name'
-will be set to NULL. If no 'name' is specified, setenv will behave like the env
-builtin.
-.TP
-.B unset \fP[name]
-.br
-Unset environment variable 'name'.
-.br
-\fB<content will be added>\fP
+.\" ============================================================================
 .TP
 .B exit \fP[\fIexit_code\fP]
 .br
-Exits the current running shell (same as ctrl+d input).
+Exits the current running shell (same as ctrl+d input). If the \fIexit_code\fP
+is given, the exit code of \fBvsh\fP will be that of \fIexit_code\fP.
 .br
-\fB<content will be added>\fP
+\fB<more content will be added>\fP
+.\" ============================================================================
 .TP
 .B export
 .br
-\fB<content will be added>\fP
+\fB<more content will be added>\fP
+.\" ============================================================================
+.TP
+.B hash
+.br
+\fB<more content will be added>\fP
+.\" ============================================================================
 .TP
 .B history
 Displays all current history entries.
 .br
-\fB<content will be added>\fP
+\fB<more content will be added>\fP
+.\" ============================================================================
 .TP
-.B alias
+.B fc -l\fP[\fBnr\fP] [\fIfirst\fP] [\fIlast\fP]
 .br
-\fB<content will be added>\fP
+Fix Command. In the first form, a range of commands from first to \fIlast\fP is
+selected from the history list. \fIFirst\fP and \fIlast\fP may be specified as a
+string (to locate the last command beginning with that string) or as a number
+(an index into the history list, where a negative number is used as an offset
+from the current command number). If \fIlast\fP is not specified it is set to
+the current command for listing (so that \fBfc \-l \-10\fP prints the last 10
+commands) and to \fIfirst\fP otherwise. If \fIfirst\fP is not specified it is
+set to \-16.
+.sp 1
+The \fB\-n\fP option suppresses the command numbers when listing. The \fB\-r\fP
+option reverses the order of the commands. If the \fB\-l\fP option is given, the
+commands are listed on standard output.
+.sp 1
+The return value is 0 unless an invalid option is encountered or \fIfirst\fP or
+\fIlast\fP specify history lines out of range.
+.\" ============================================================================
 .TP
-.B unalias
+.B set
 .br
-\fB<content will be added>\fP
+Display all shell variables.
+.\" ============================================================================
 .TP
 .B type
 .br
-\fB<content will be added>\fP
+\fB<more content will be added>\fP
+.\" ============================================================================
 .TP
-.B hash
+.B unalias
 .br
-\fB<content will be added>\fP
+\fB<more content will be added>\fP
+.\" ============================================================================
+.TP
+.B unset \fP[\fIname\fP]
+.br
+Unset environment variable \fIname\fP.
+.br
+\fB<more content will be added>\fP
+.\" ============================================================================
 .\" /*
 .\" **   THE FOLLOWING STILL HAS TO BE IMPLEMENTED
 .\" **   .TP
