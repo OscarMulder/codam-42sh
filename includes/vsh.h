@@ -6,7 +6,7 @@
 /*   By: omulder <omulder@student.codam.nl>           +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2019/04/10 20:29:42 by jbrinksm       #+#    #+#                */
-/*   Updated: 2019/10/07 16:37:53 by jbrinksm      ########   odam.nl         */
+/*   Updated: 2019/10/07 17:09:52 by jbrinksm      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -1043,7 +1043,7 @@ typedef struct	s_globscanner
 	int						word_index;
 }				t_globscanner;
 
-int				glob_lexer(char *word);
+int				glob_lexer(t_globtokenlst **lst, char *word);
 int				glob_expand_word(char *word);
 int				glob_addtolst(t_globtokenlst **lst, t_globtokenlst *new);
 t_globtokenlst	*glob_newlst(char *word_chunk, int type);

@@ -6,7 +6,7 @@
 /*   By: jbrinksm <jbrinksm@student.codam.nl>         +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2019/10/07 14:54:03 by jbrinksm       #+#    #+#                */
-/*   Updated: 2019/10/07 17:00:33 by jbrinksm      ########   odam.nl         */
+/*   Updated: 2019/10/07 17:10:14 by jbrinksm      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -150,12 +150,10 @@ void			glob_print_list(t_globtokenlst *lst)
 	}
 }
 
-int				glob_lexer(char *word)
+int				glob_lexer(t_globtokenlst **lst, char *word)
 {
 	t_globscanner		*scanner;
-	t_globtokenlst		*lst;
 
-	lst = NULL;
 	scanner = ft_memalloc(sizeof(t_globscanner));
 	if (scanner == NULL)
 		return (FUNCT_ERROR);
@@ -163,16 +161,24 @@ int				glob_lexer(char *word)
 	while (GLOB_CUR_CHAR != '\0')
 	{
 		glob_lexer_state_start(scanner);
-		glob_add_scanned_token(&lst, scanner);
+		glob_add_scanned_token(lst, scanner);
 		reset_glob_scanner(scanner);
 	}
-	glob_print_list(lst);
 	return (FUNCT_SUCCESS);
+}
+
+int			glob_parser(t_globtokenlst *lst)
+{
+	
 }
 
 int		glob_expand_word(char *word)
 {
+	t_globtokenlst		*lst;
+
+	lst = NULL;
 	if (word == NULL)
 		return (FUNCT_ERROR);
-	return (glob_lexer(word));
+	glob_print_list(lst);
+	return (glob_lexer(&lst, word));
 }
