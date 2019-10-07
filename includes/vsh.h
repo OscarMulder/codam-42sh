@@ -6,7 +6,7 @@
 /*   By: omulder <omulder@student.codam.nl>           +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2019/04/10 20:29:42 by jbrinksm       #+#    #+#                */
-/*   Updated: 2019/10/03 14:32:48 by jbrinksm      ########   odam.nl         */
+/*   Updated: 2019/10/07 11:09:07 by jbrinksm      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -675,8 +675,8 @@ void			input_parse_ctrl_k(t_vshdata *data);
 void			input_parse_ctrl_u(t_vshdata *data);
 void			input_parse_ctrl_y(t_vshdata *data);
 void			input_parse_tab(t_vshdata *data);
-int				get_curs_row();
-void			input_reset_cursor_pos();
+int				input_get_curs_row(void);
+void			input_reset_cursor_pos(void);
 void			resize_window_check(int sig);
 int				input_add_chunk(t_vshdata *data, char *chunk,
 				int chunk_len);
@@ -821,7 +821,7 @@ void			builtin_alias_lstdel(t_aliaslst **lst);
 void			builtin_unalias(char **args, t_aliaslst **aliaslst);
 void			builtin_type(char **args, t_envlst *envlst,
 				t_aliaslst *aliaslst);
-int				builtin_cd(char **args, t_vshdata *data);
+void			builtin_cd(char **args, t_vshdata *data);
 void			builtin_cd_create_newpath(char **newpath, char *argpath);
 int				builtin_cd_change_dir(char *argpath, t_vshdata *data,
 					char cd_flag, int print);
