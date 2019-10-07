@@ -104,6 +104,126 @@ standard input and error are both connected to terminals (as determined by
 .\" **
 .\" **
 .\" **
+.\" **   INTRODUCTION
+.\" **
+.\" **
+.\" **
+.\" **
+.\" **
+.\" **
+.\" **
+.\" **
+.\" **
+.\" **
+.\" **
+.\" **
+.\" **
+.\" */
+.SH INTRODUCTION
+.\" /*
+.\" **
+.\" **
+.\" **
+.\" **
+.\" **
+.\" **
+.\" **
+.\" **
+.\" **
+.\" **
+.\" **
+.\" **
+.\" **
+.\" **   GENERAL OVERVIEW OF OPERATIONS
+.\" **
+.\" **
+.\" **
+.\" **
+.\" **
+.\" **
+.\" **
+.\" **
+.\" **
+.\" **
+.\" **
+.\" **
+.\" **
+.\" */
+.SH "GENERAL OVERVIEW OF OPERATIONS"
+.PP
+The shell operates according to the following general overview of operations
+below. The specific details are included in the cited sections of this document.
+.TP
+.B "1. Initialize shell"
+Check terminal settings and shell settings, fetch history and alias files,
+prepare the environment.
+.TP
+.B "2. Read input"
+Start the main reading loop which reads on a byte-by-byte basis. Reading is
+stopped when either a specific signal is \fIread\fP (see section \fBSIGNALS\fP
+below for more info), a \fBnewline\fP character is read, or an error occurs.
+.sp 1
+\fBThe following two points apply to interactive mode only:\fP
+.br
+\- While inside the readloop you can move the cursor, perform line edition and
+access the history through specific key combinations.
+.sp 1
+\- If a single quote or a double quote is not closed, or a \fBnewline\fP character
+was read right after an \fBescape character\fP ('\'), we will keep reading more
+input in these seperate prompts
+(\fBquote>\fP, or \fBdquote>\fP, \fBlinecont>\fP) respectively, until
+the command line is complete.
+.TP
+.B "3. History expansion"
+If a valid \fIhistory expansion character\fP is found, the proper history event
+is expanded into line.
+.TP
+.B "4. Lexing"
+The characters of the command line are lexed into tokens.
+.TP
+.B "5. Heredoc handling"
+(\fB>\fP) prompts will ask you to submit input for any heredocs if there are
+any.
+.TP
+.B "6. Alias substitution"
+Any aliases will be substituted for their value.
+.TP
+.B "7. Parsing"
+The token list will be parsed through our grammar, and will be structured into
+an \fIabstract syntax tree\fP. If any illegal sequence of tokens is found,
+the shell's parser will return an error and a new prompt will be printed.
+.TP
+.B "8. Parameter expansion"
+Any parameters that are found inside \fBWORD\fP and \fBASSIGN\fP tokens will
+be expanded.
+.TP
+.B "9. Quote removal"
+Any unescaped quotes that still exist will be removed, as they are no longer
+useful.
+.TP
+.B "10. Redirections and assignments"
+Assignments will be handled, the redirections will be performed and
+the pipeline will be connected properly.
+.TP
+.B "11. Execution"
+The command will be executed.
+.TP
+.B "12. New prompt"
+A new prompt will appear.
+.\" /*
+.\" **
+.\" **
+.\" **
+.\" **
+.\" **
+.\" **
+.\" **
+.\" **
+.\" **
+.\" **
+.\" **
+.\" **
+.\" **
 .\" **   DEFINITIONS
 .\" **
 .\" **
@@ -167,55 +287,6 @@ will expand into a valid history item if there is one. The following:
 .br
 \fB!\fP
 .PD
-.\" /*
-.\" **
-.\" **
-.\" **
-.\" **
-.\" **
-.\" **
-.\" **
-.\" **
-.\" **
-.\" **
-.\" **
-.\" **
-.\" **
-.\" **   INTRODUCTION
-.\" **
-.\" **
-.\" **
-.\" **
-.\" **
-.\" **
-.\" **
-.\" **
-.\" **
-.\" **
-.\" **
-.\" **
-.\" **
-.\" */
-.SH INTRODUCTION
-.PP
-The shell operates according to the following general overview of operations.
-The specific details are included in the cited sections of this document.
-.PP
-.RS
-\fB <INSERT GENERAL OPERATIONAL STRUCTURE OF VSH>
-.RE
-.SS "Shell Initialization"
-.PP
-Sample text.
-.SS "Input Reading"
-.PP
-Sample text.
-.SS "Lexing"
-.PP
-Sample text.
-.SS "Parsing"
-.PP
-Sample text.
 .\" /*
 .\" **
 .\" **
@@ -363,38 +434,6 @@ The format for an OR list is:
 The return status of AND and OR lists is the exit status of the last command
 executed in the list.
 .PD
-.\" /*
-.\" **
-.\" **
-.\" **
-.\" **
-.\" **
-.\" **
-.\" **
-.\" **
-.\" **
-.\" **
-.\" **
-.\" **
-.\" **
-.\" **   QUOTING
-.\" **
-.\" **
-.\" **
-.\" **
-.\" **
-.\" **
-.\" **
-.\" **
-.\" **
-.\" **
-.\" **
-.\" **
-.\" **
-.\" */
-.SH COMMENTS
-.PP
-\fBVsh\fP does not support comments.
 .\" /*
 .\" **
 .\" **
@@ -833,7 +872,7 @@ for aliases, but a word that is identical to an alias being expanded is not
 expanded a second time. This means that one may alias \fBls\fP to \fBls -F\fP,
 for instance, and \fBvsh\fP does not try to recursively expand the replacement
 text. If the last character of the alias value is a \fIblank\fP, then the next
-command word following the alias is also checked for alias expansion.
+command word following the alias is also checked for alias substitution.
 .PP
 Aliases are created and listed with the \fBalias\fP command, and removed with
 the \fBunalias\fP command.
