@@ -6,15 +6,16 @@
 /*   By: mavan-he <mavan-he@student.codam.nl>         +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2019/08/12 20:55:01 by mavan-he       #+#    #+#                */
-/*   Updated: 2019/10/05 17:39:49 by mavan-he      ########   odam.nl         */
+/*   Updated: 2019/10/07 11:38:49 by mavan-he      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "vsh.h"
 
 /*
-This function adds the part that matches with every match in matchlst
-It creates a new string of line + to_add + anything after the cursor
+**	This function inserts the found match into line
+**	to_add is the part that has to be added at the cursor position
+**	New line = everything before the cursor + to_add + anything after the cursor
 */
 
 int		auto_add_match_toline(char *match, char *to_add, t_vshdata *data)

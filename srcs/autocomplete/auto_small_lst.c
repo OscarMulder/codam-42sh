@@ -6,17 +6,11 @@
 /*   By: mavan-he <mavan-he@student.codam.nl>         +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2019/08/13 17:40:10 by mavan-he       #+#    #+#                */
-/*   Updated: 2019/10/05 17:31:39 by mavan-he      ########   odam.nl         */
+/*   Updated: 2019/10/07 11:42:18 by mavan-he      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "vsh.h"
-
-/*
-auto_small_lst will add a part of the match to line
-if one or more characters are the same for each match in the matchlst
-else it will print the whole matchlst
-*/
 
 int		auto_compare(char *str1, char *str2)
 {
@@ -56,6 +50,12 @@ int		auto_anything_to_add(int i, t_list *matchlst, char **to_add)
 	}
 	return (FUNCT_SUCCESS);
 }
+
+/*
+**	auto_small_lst will add a part of the match to line if
+**	one or more characters are the same for each match in the matchlst
+**	else it will print the whole matchlst
+*/
 
 int		auto_small_lst(char *match, t_list **matchlst, t_vshdata *data)
 {
