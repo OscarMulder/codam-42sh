@@ -6,7 +6,7 @@
 /*   By: omulder <omulder@student.codam.nl>           +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2019/04/10 20:29:42 by jbrinksm       #+#    #+#                */
-/*   Updated: 2019/10/07 12:19:59 by jbrinksm      ########   odam.nl         */
+/*   Updated: 2019/10/07 14:55:07 by jbrinksm      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -1011,6 +1011,12 @@ int				auto_lst_count(t_list *lst);
 void			auto_sort_n(t_list **matchlst);
 void			auto_swap_lstitem(t_list **flst, t_list *smal, t_list *prev);
 bool			auto_check_dups(t_list *matchlst, char *filename);
+
+/*
+**----------------------------------globbing------------------------------------
+*/
+
+int		glob_expand_word(void);
 
 /*
 **----------------------------------debugging-----------------------------------
