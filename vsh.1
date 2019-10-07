@@ -51,9 +51,8 @@ commands.
 .\" */
 \fBVsh\fP reads and executes commands from this file and then exits.
 If no commands are executed, the exit status is 0.
-An attempt is first made to open the file in the current directory,
-and, if no file is found, then the shell searches the directories
-in \fBPATH\fP for the script. If any of the files exist but cannot be read,
+An attempt is made to open the file in the current directory,
+and, if no file is found or if any of the files exist but cannot be read,
 \fBvsh\fP reports an error.
 .PD
 .\" /*
