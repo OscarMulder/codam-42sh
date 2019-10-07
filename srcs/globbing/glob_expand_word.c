@@ -6,7 +6,7 @@
 /*   By: jbrinksm <jbrinksm@student.codam.nl>         +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2019/10/07 14:54:03 by jbrinksm       #+#    #+#                */
-/*   Updated: 2019/10/07 16:47:04 by jbrinksm      ########   odam.nl         */
+/*   Updated: 2019/10/07 17:00:33 by jbrinksm      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -129,11 +129,33 @@ int				glob_add_scanned_token(t_globtokenlst **lst,
 	return (FUNCT_SUCCESS);
 }
 
+void			glob_print_list(t_globtokenlst *lst)
+{
+	t_globtokenlst	*probe;
+	int				i;
+
+	probe = lst;
+	i = 1;
+	if (probe == NULL)
+	{
+		ft_eprintf("NULL lst\n");
+		return ;
+	}
+	while (probe != NULL)
+	{
+		ft_eprintf("%i.\ttype: %i\tchunk:\t%s\n", i, probe->tk_type,
+			probe->word_chunk);
+		i++;
+		probe = probe->next;
+	}
+}
+
 int				glob_lexer(char *word)
 {
 	t_globscanner		*scanner;
 	t_globtokenlst		*lst;
 
+	lst = NULL;
 	scanner = ft_memalloc(sizeof(t_globscanner));
 	if (scanner == NULL)
 		return (FUNCT_ERROR);
@@ -144,10 +166,13 @@ int				glob_lexer(char *word)
 		glob_add_scanned_token(&lst, scanner);
 		reset_glob_scanner(scanner);
 	}
+	glob_print_list(lst);
 	return (FUNCT_SUCCESS);
 }
 
 int		glob_expand_word(char *word)
 {
+	if (word == NULL)
+		return (FUNCT_ERROR);
 	return (glob_lexer(word));
 }

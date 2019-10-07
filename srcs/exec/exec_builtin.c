@@ -6,7 +6,7 @@
 /*   By: omulder <omulder@student.codam.nl>           +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2019/05/29 16:59:41 by omulder        #+#    #+#                */
-/*   Updated: 2019/09/10 12:25:09 by omulder       ########   odam.nl         */
+/*   Updated: 2019/10/07 17:05:35 by jbrinksm      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -45,6 +45,10 @@ bool		exec_builtin(char **args, t_vshdata *data)
 		builtin_alias(args, &data->alias->aliaslst);
 	else if (ft_strequ(args[0], "unalias"))
 		builtin_unalias(args, &data->alias->aliaslst);
+	#ifdef DEBUG
+	else if (ft_strequ(args[0], "globme"))
+		glob_expand_word(args[1]);
+	#endif
 	else
 		return (exec_builtin_cont(args, data));
 	return (true);
