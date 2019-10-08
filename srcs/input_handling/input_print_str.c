@@ -6,7 +6,7 @@
 /*   By: rkuijper <rkuijper@student.codam.nl>         +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2019/08/23 11:54:27 by rkuijper       #+#    #+#                */
-/*   Updated: 2019/09/12 17:44:10 by rkuijper      ########   odam.nl         */
+/*   Updated: 2019/10/07 12:19:27 by jbrinksm      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,35 +14,12 @@
 #include <termios.h>
 #include <term.h>
 
-int			get_curs_row(void)
-{
-	size_t		i;
-	size_t		len;
-	int			row;
-	char		answer[TC_MAXRESPONSESIZE];
-
-	len = 0;
-	write(STDIN_FILENO, TC_GETCURSORPOS, 4);
-	while (len < TC_MAXRESPONSESIZE - 1 && read(1, answer + len, 1) == 1)
-	{
-		if (answer[len] == 'R')
-			break ;
-		len++;
-	}
-	i = 1;
-	answer[len] = '\0';
-	while (answer[i - 1] != '[' && answer[i] != '\0')
-		i++;
-	if (ft_isdigit(answer[i]) == false)
-		return (-1);
-	row = ft_atoi(&answer[i]);
-	return (row);
-}
+/*
+**	Scrolls the terminal (and the cursor) down one line.
+*/
 
 static void	scroll_down_terminal(t_vshdata *data)
 {
-	ft_printf("\e[%iD", data->curs->coords.x - 1);
-	tputs(data->termcaps->tc_scroll_down_str, 1, &ft_tputchar);
 	ft_printf("\e[%iC", data->curs->coords.x - 1);
 }
 
@@ -51,6 +28,13 @@ static void	update_newline_coords(t_vshdata *data)
 	data->curs->coords.x = 1;
 	data->curs->cur_relative_y++;
 }
+
+/*
+**	A special version of `ft_putstr` which makes sure that whenever the
+**	cursor is about to walk off the right of the terminal, it is placed
+**	a row down. If the cursor is already on the last row, the terminal will
+**	be scrolled down one line to make room for it.
+*/
 
 void		input_print_str(t_vshdata *data, char *str)
 {
