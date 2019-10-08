@@ -6,7 +6,7 @@
 /*   By: omulder <omulder@student.codam.nl>           +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2019/04/10 20:29:42 by jbrinksm       #+#    #+#                */
-/*   Updated: 2019/10/08 16:40:22 by jbrinksm      ########   odam.nl         */
+/*   Updated: 2019/10/08 17:50:17 by jbrinksm      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -1023,6 +1023,9 @@ typedef enum	e_globtokens
 {
 	GLOB_ERROR,
 	GLOB_STR,
+	GLOB_SLASH,
+	GLOB_DOTSLASH,
+	GLOB_DOTDOTSLASH,
 	GLOB_WILD,
 	GLOB_QUEST,
 	GLOB_BRACENEG,
@@ -1068,7 +1071,7 @@ void			glob_lexer_state_str(t_globscanner *scanner);
 void			glob_lexer_state_bracket(t_globscanner *scanner);
 void			glob_lexer_addchar(t_globscanner *scanner);
 int			glob_start_matching(t_globtokenlst *tokenprobe, t_globmatchlst match);
-int			glob_getmatchlist(t_globmatchlst **matchlst, char *word);
+void			glob_print_matchlist(t_globmatchlst *lst);
 
 /*
 **----------------------------------debugging-----------------------------------

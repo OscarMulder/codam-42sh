@@ -6,7 +6,7 @@
 /*   By: jbrinksm <jbrinksm@student.codam.nl>         +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2019/10/07 14:54:03 by jbrinksm       #+#    #+#                */
-/*   Updated: 2019/10/08 17:09:41 by jbrinksm      ########   odam.nl         */
+/*   Updated: 2019/10/08 18:06:53 by jbrinksm      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -93,13 +93,24 @@ void			glob_lexer_state_braced(t_globscanner *scanner)
 		return ;
 }
 
+void			glob_lexer_state_esc(t_globscanner *scanner)
+{
+	if (GLOB_CUR_CHAR == '\0')
+		return ;
+	else
+		glob_lexer_changestate(scanner, &glob_lexer_state_str);
+}
+
 void			glob_lexer_state_str(t_globscanner *scanner)
 {
 	scanner->tk_type = GLOB_STR;
-	if (GLOB_CUR_CHAR == '\0'
+	if (GLOB_CUR_CHAR == '\\')
+		glob_lexer_changestate(scanner, &glob_lexer_state_esc);
+	else if (GLOB_CUR_CHAR == '\0'
 	|| GLOB_CUR_CHAR == '?'
 	|| GLOB_CUR_CHAR == '['
-	|| GLOB_CUR_CHAR == '*')
+	|| GLOB_CUR_CHAR == '*'
+	|| GLOB_CUR_CHAR == '/')
 		return ;
 	else
 		glob_lexer_changestate(scanner, &glob_lexer_state_str);
@@ -111,6 +122,20 @@ void			glob_lexer_state_start(t_globscanner *scanner)
 		glob_lexer_finish(scanner, GLOB_WILD);
 	else if (GLOB_CUR_CHAR == '?')
 		glob_lexer_finish(scanner, GLOB_QUEST);
+	else if (GLOB_CUR_CHAR == '/')
+		glob_lexer_finish(scanner, GLOB_SLASH);
+	else if (ft_strnequ(&GLOB_CUR_CHAR, "./", 2) == true)
+	{
+		scanner->tk_len++;
+		scanner->word_index++;
+		glob_lexer_finish(scanner, GLOB_DOTSLASH);
+	}
+	else if (ft_strnequ(&GLOB_CUR_CHAR, "../", 3) == true)
+	{
+		scanner->tk_len += 2;
+		scanner->word_index += 2;
+		glob_lexer_finish(scanner, GLOB_DOTDOTSLASH);
+	}
 	else if (GLOB_CUR_CHAR == '[')
 		glob_lexer_changestate(scanner, &glob_lexer_state_braced);
 	else if (GLOB_CUR_CHAR != '\0')
@@ -314,7 +339,8 @@ int			glob_start_matching(t_globtokenlst *tokenprobe, t_globmatchlst match)
 	else if (tokenprobe == NULL)
 		return (FUNCT_FAILURE);
 
-	if (tokenprobe->tk_type == GLOB_STR)
+	if (tokenprobe->tk_type == GLOB_STR || tokenprobe->tk_type == GLOB_SLASH
+		|| tokenprobe->tk_type == GLOB_DOTSLASH || tokenprobe->tk_type == GLOB_DOTDOTSLASH)
 	{
 		if (ft_strnequ(tokenprobe->word_chunk, &match.word[match.index],
 			tokenprobe->word_len) == false)
@@ -363,18 +389,35 @@ int			glob_matcher(t_globtokenlst *tokenlst, t_globmatchlst *matchlst)
 	return (FUNCT_SUCCESS);
 }
 
+#include <dirent.h>
+#include <limits.h>
+
 // int			glob_getpotentials_rel(t_globmatchlst **matchlst, char *word)
 // {
 
 // }
 
-// int			glob_getpotentials_abs(t_globmatchlst **matchlst, char *word)
-// {
+int			glob_getpotentials_abs_browse(t_globmatchlst **matchlst, t_globtokenlst *tokenlst)
+{
+	
+}
 
-// }
+int			glob_getpotentials_abs(t_globmatchlst **matchlst, t_globtokenlst *tokenlst, char *path)
+{
+	t_globtokenlst	*probe;
+	char			*path;
 
-#include <dirent.h>
-#include <limits.h>
+	path = ft_strnew(PATH_MAX);
+	if (path == NULL)
+		return (FUNCT_ERROR);
+	path[0] = '/';
+	probe = tokenlst;
+	while (probe->tk_type == GLOB_SLASH || probe->tk_type == GLOB_DOTSLASH
+		|| probe->tk_type == GLOB_DOTDOTSLASH)
+		probe = probe->next;
+	if (probe->tk_type == GLOB_STR)
+		ft_strcat(path, probe->word_chunk);
+}
 
 int			glob_getpotentials_cwd(t_globmatchlst **matchlst)
 {
@@ -399,22 +442,15 @@ int			glob_getpotentials_cwd(t_globmatchlst **matchlst)
 	return (FUNCT_SUCCESS);
 }
 
-int			glob_getmatchlist(t_globmatchlst **matchlst, char *word)
+int			glob_getmatchlist(t_globmatchlst **matchlst, t_globtokenlst *tokenlst)
 {
-	int i;
+	t_globtokenlst *probe;
 
-	i = 0;
-	// while (word[i] != '\0')
-	// {
-	// 	if (word[i] == '/' && tools_is_char_escaped(word, i) == false)
-	// 	{
-	// 		if (word[0] == '/')
-	// 			return (glob_getpotentials_abs(matchlst, word));
-	// 		return (glob_getpotentials_rel(matchlst, word));
-	// 	}
-	// }
-	(void)word;
-	glob_getpotentials_cwd(matchlst);
+	probe = tokenlst;
+	if (probe->tk_type == GLOB_SLASH)
+		glob_getpotentials_abs(matchlst);
+	else
+		glob_getpotentials_cwd(matchlst);
 	return (FUNCT_SUCCESS);
 }
 
@@ -451,7 +487,7 @@ int		glob_expand_word(char *word)
 	matchlst = NULL;
 	glob_lexer(&tokenlst, word);
 	glob_print_tokenlist(tokenlst);
-	glob_getmatchlist(&matchlst, word);
+	glob_getmatchlist(&matchlst, tokenlst);
 	glob_print_matchlist(matchlst);
 	glob_matcher(tokenlst, matchlst);
 	glob_print_matches(matchlst);
