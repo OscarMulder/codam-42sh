@@ -6,7 +6,7 @@
 /*   By: omulder <omulder@student.codam.nl>           +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2019/05/30 18:55:25 by mavan-he       #+#    #+#                */
-/*   Updated: 2019/09/24 14:05:20 by omulder       ########   odam.nl         */
+/*   Updated: 2019/10/08 18:11:09 by omulder       ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -61,6 +61,23 @@ static int	is_same_cmd(t_history **history, char *line, int index, int len)
 	if (ft_strnequ(history[prev]->str, line, len) == true)
 		return (true);
 	return (false);
+}
+
+void		history_reset_last(t_history **history)
+{
+	int start;
+	int number;
+	int i;
+
+	number = -1;
+	start = 0;
+	history_find_start(history, &number, &start);
+	number = history[start]->number - 1;
+	if (start > 0)
+		i = start - 1;
+	else
+		i = HISTORY_MAX - 1;
+	history[i]->number = number;
 }
 
 int			history_replace_last(t_history **history, char **line)

@@ -6,7 +6,7 @@
 /*   By: mavan-he <mavan-he@student.codam.nl>         +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2019/09/23 20:05:50 by mavan-he       #+#    #+#                */
-/*   Updated: 2019/10/01 13:00:40 by omulder       ########   odam.nl         */
+/*   Updated: 2019/10/08 17:35:50 by omulder       ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -41,6 +41,8 @@ static int	shell_add_line(char *line, int i, char **lines, int reset)
 
 /*
 **	shell_split_line copies substrings (a completed command) of line to lines
+**  The shell_add_line(NULL, 0, NULL, true); is just to clear the static vars
+**  It's a bit hacky but hey it works.
 */
 
 int			shell_split_line(char *line, char **lines)

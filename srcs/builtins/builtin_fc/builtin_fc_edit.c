@@ -6,7 +6,7 @@
 /*   By: omulder <omulder@student.codam.nl>           +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2019/09/22 18:54:24 by omulder        #+#    #+#                */
-/*   Updated: 2019/10/08 14:14:00 by omulder       ########   odam.nl         */
+/*   Updated: 2019/10/08 18:14:04 by omulder       ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,8 +16,8 @@
 /*
 ** This function will try to open a tmp file ending with it 0. When it fails
 ** (most likely because the file exists, it won't open the existing file
-** because of O_EXCL) it will increment and try again the number until 99.
-** If it still fails at 99 there must be another reason (or 100 editors opened)
+** because of O_EXCL) it will increment and try again the number until 100.
+** If it still fails at 100 there must be another reason (or 101 editors opened)
 ** so it will return an error. Since we are not allowed to use errno this is
 ** a bit hacky.
 */
@@ -84,10 +84,9 @@ void		fc_edit(t_vshdata *data, t_datahistory *history, t_fcdata *fc)
 	close(fc->fd);
 	shell_one_line(data, ft_strjoinfree_all(
 		ft_strjoinchr(fc->editor, ' '), ft_strjoinchr(fc->tmpfile, '\n')));
-	// remove last history entry
+	history_reset_last(history->history);
 	set_flags(data);
 	shell_args(data, ft_strdup(fc->tmpfile));
 	data->fc_flags = 0;
-	// shell execute file etc etc ...
 	remove(fc->tmpfile);
 }

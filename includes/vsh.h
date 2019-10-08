@@ -6,7 +6,7 @@
 /*   By: omulder <omulder@student.codam.nl>           +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2019/04/10 20:29:42 by jbrinksm       #+#    #+#                */
-/*   Updated: 2019/10/08 14:12:20 by omulder       ########   odam.nl         */
+/*   Updated: 2019/10/08 18:12:09 by omulder       ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -974,6 +974,8 @@ int				history_insert_into_line(char **line,
 				char *hist_line, size_t i);
 size_t			history_get_match_len(char *line, size_t i);
 int				history_replace_last(t_history **history, char **line);
+void			history_reset_last(t_history **history);
+
 /*
 **--------------------------------hashtable-------------------------------------
 */
