@@ -6,7 +6,7 @@
 /*   By: omulder <omulder@student.codam.nl>           +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2019/04/10 20:29:42 by jbrinksm       #+#    #+#                */
-/*   Updated: 2019/10/07 17:09:52 by jbrinksm      ########   odam.nl         */
+/*   Updated: 2019/10/08 16:40:22 by jbrinksm      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -1017,6 +1017,7 @@ bool			auto_check_dups(t_list *matchlst, char *filename);
 */
 
 #define	GLOB_CUR_CHAR (scanner->word[scanner->word_index])
+#define GLOB_F_NEG	(1 << 0)
 
 typedef enum	e_globtokens
 {
@@ -1024,14 +1025,15 @@ typedef enum	e_globtokens
 	GLOB_STR,
 	GLOB_WILD,
 	GLOB_QUEST,
-	GLOB_EXCLAM,
-	GLOB_BRACED,
+	GLOB_BRACENEG,
+	GLOB_BRACEPOS,
 }				t_globtokens;
 
 typedef struct	s_globtokenlst
 {
 	t_globtokens			tk_type;
 	char					*word_chunk;
+	int						word_len;
 	struct s_globtokenlst	*next;
 }				t_globtokenlst;
 
@@ -1041,7 +1043,17 @@ typedef struct	s_globscanner
 	int						tk_len;
 	char					*word;
 	int						word_index;
+	int						flags;
 }				t_globscanner;
+
+typedef struct	s_globmatchlst
+{
+	char					*word;
+	int						index;
+	int						matched;
+	int						word_len;
+	struct s_globmatchlst	*next;
+}				t_globmatchlst;
 
 int				glob_lexer(t_globtokenlst **lst, char *word);
 int				glob_expand_word(char *word);
@@ -1055,6 +1067,8 @@ void			glob_lexer_changestate(t_globscanner *scanner,
 void			glob_lexer_state_str(t_globscanner *scanner);
 void			glob_lexer_state_bracket(t_globscanner *scanner);
 void			glob_lexer_addchar(t_globscanner *scanner);
+int			glob_start_matching(t_globtokenlst *tokenprobe, t_globmatchlst match);
+int			glob_getmatchlist(t_globmatchlst **matchlst, char *word);
 
 /*
 **----------------------------------debugging-----------------------------------
