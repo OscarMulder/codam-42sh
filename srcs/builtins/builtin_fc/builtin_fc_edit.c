@@ -6,7 +6,7 @@
 /*   By: omulder <omulder@student.codam.nl>           +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2019/09/22 18:54:24 by omulder        #+#    #+#                */
-/*   Updated: 2019/10/01 14:01:39 by omulder       ########   odam.nl         */
+/*   Updated: 2019/10/08 14:14:00 by omulder       ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -48,6 +48,10 @@ static int	fc_open_temp(t_fcdata *fc)
 	fc->fd = fd;
 	return (FUNCT_SUCCESS);
 }
+
+/*
+** These flags tell the executor to print the command and to add it to history
+*/
 
 static void	set_flags(t_vshdata *data)
 {
