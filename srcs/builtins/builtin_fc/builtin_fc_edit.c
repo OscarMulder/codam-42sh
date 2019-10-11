@@ -6,7 +6,7 @@
 /*   By: omulder <omulder@student.codam.nl>           +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2019/09/22 18:54:24 by omulder        #+#    #+#                */
-/*   Updated: 2019/10/11 12:41:19 by omulder       ########   odam.nl         */
+/*   Updated: 2019/10/11 14:23:19 by omulder       ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -108,8 +108,11 @@ void		fc_edit(t_vshdata *data, t_datahistory *history, t_fcdata *fc)
 	shell_one_line(data, exec_edit);
 	ft_strdel(&exec_edit);
 	history_reset_last(history->history);
-	set_flags(data);
-	shell_args(data, fc->tmpfile);
-	data->fc_flags = 0;
+	if (g_state->exit_code == EXIT_SUCCESS)
+	{
+		set_flags(data);
+		shell_args(data, fc->tmpfile);
+		data->fc_flags = 0;
+	}
 	remove(fc->tmpfile);
 }

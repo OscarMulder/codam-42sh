@@ -6,7 +6,7 @@
 /*   By: omulder <omulder@student.codam.nl>           +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2019/09/11 12:54:36 by omulder        #+#    #+#                */
-/*   Updated: 2019/09/24 14:04:13 by omulder       ########   odam.nl         */
+/*   Updated: 2019/10/11 14:33:14 by omulder       ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,14 +17,23 @@
 **  So it's not magic, I just want 16 items.
 */
 
-void	fc_find_start_end_no_param(t_datahistory *history, int *start, int *end)
+void	fc_find_start_end_no_param(t_datahistory *history, t_fcdata *fc,
+int *start, int *end)
 {
-	*end = history->hist_start;
-	*start = *end - 15;
-	if (*start < 0 && history->history[0]->number != 1)
-		*start = HISTORY_MAX + *start;
-	else if (*start < 0)
-		*start = 0;
+	if (fc->options & FC_OPT_L)
+	{
+		*end = history->hist_start;
+		*start = *end - 15;
+		if (*start < 0 && history->history[0]->number != 1)
+			*start = HISTORY_MAX + *start;
+		else if (*start < 0)
+			*start = 0;
+	}
+	else
+	{
+		*end = history->hist_start;
+		*start = history->hist_start;
+	}
 }
 
 int		fc_find_start_end(t_datahistory *history, t_fcdata *fc, int *start,
@@ -32,8 +41,10 @@ int *end)
 {
 	if (fc_find_index(history, fc, fc->first, start) == FUNCT_FAILURE)
 		return (FUNCT_FAILURE);
-	if (fc->last == NULL)
+	if (fc->last == NULL && fc->options & FC_OPT_L)
 		*end = history->hist_start;
+	else if (fc->last == NULL)
+		*end = *start;
 	else
 	{
 		if (fc_find_index(history, fc, fc->last, end) == FUNCT_FAILURE)
@@ -46,7 +57,7 @@ int		fc_get_indexes(t_datahistory *history, t_fcdata *fc, int *start,
 int *end)
 {
 	if (fc->first == NULL)
-		fc_find_start_end_no_param(history, start, end);
+		fc_find_start_end_no_param(history, fc, start, end);
 	else
 	{
 		if (fc_find_start_end(history, fc, start, end) == FUNCT_FAILURE)
