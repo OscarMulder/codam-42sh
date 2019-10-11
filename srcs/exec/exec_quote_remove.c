@@ -6,7 +6,7 @@
 /*   By: mavan-he <mavan-he@student.codam.nl>         +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2019/07/13 11:20:18 by mavan-he       #+#    #+#                */
-/*   Updated: 2019/10/05 12:51:57 by jbrinksm      ########   odam.nl         */
+/*   Updated: 2019/10/11 15:55:09 by mavan-he      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -54,7 +54,8 @@ static void	remove_double_quote(char *str, int *i, int *i_new)
 			(*i)++;
 		}
 	}
-	(*i)++;
+	if (str[*i] == '"')
+		(*i)++;
 }
 
 static void	remove_single_quote(char *str, int *i, int *i_new)
@@ -66,7 +67,8 @@ static void	remove_single_quote(char *str, int *i, int *i_new)
 		(*i_new)++;
 		(*i)++;
 	}
-	(*i)++;
+	if (str[*i] == '\'')
+		(*i)++;
 }
 
 /*
