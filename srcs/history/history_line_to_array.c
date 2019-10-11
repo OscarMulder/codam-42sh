@@ -6,7 +6,7 @@
 /*   By: omulder <omulder@student.codam.nl>           +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2019/05/30 18:55:25 by mavan-he       #+#    #+#                */
-/*   Updated: 2019/10/11 12:38:49 by omulder       ########   odam.nl         */
+/*   Updated: 2019/10/11 15:31:03 by omulder       ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -58,7 +58,8 @@ static int	is_same_cmd(t_history **history, char *line, int index, int len)
 		return (false);
 	if (line[len - 1] == '\n')
 		len--;
-	if (ft_strnequ(history[prev]->str, line, len) == true)
+	if (ft_strnequ(history[prev]->str, line, len) == true &&
+		history[prev]->str[len] == '\0')
 		return (true);
 	return (false);
 }
