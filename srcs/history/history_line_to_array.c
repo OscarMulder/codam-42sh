@@ -6,7 +6,7 @@
 /*   By: omulder <omulder@student.codam.nl>           +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2019/05/30 18:55:25 by mavan-he       #+#    #+#                */
-/*   Updated: 2019/10/08 18:11:09 by omulder       ########   odam.nl         */
+/*   Updated: 2019/10/11 12:38:49 by omulder       ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -77,7 +77,8 @@ void		history_reset_last(t_history **history)
 		i = start - 1;
 	else
 		i = HISTORY_MAX - 1;
-	history[i]->number = number;
+	history[i]->number = -1;
+	ft_strdel(&(history[i]->str));
 }
 
 int			history_replace_last(t_history **history, char **line)
