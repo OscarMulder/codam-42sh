@@ -6,21 +6,12 @@
 /*   By: omulder <omulder@student.codam.nl>           +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2019/09/22 18:54:24 by omulder        #+#    #+#                */
-/*   Updated: 2019/10/11 14:23:19 by omulder       ########   odam.nl         */
+/*   Updated: 2019/10/11 14:36:42 by omulder       ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "vsh.h"
 #include <stdio.h>
-
-/*
-** This function will try to open a tmp file ending with it 0. When it fails
-** (most likely because the file exists, it won't open the existing file
-** because of O_EXCL) it will increment and try again the number until 100.
-** If it still fails at 100 there must be another reason (or 101 editors opened)
-** so it will return an error. Since we are not allowed to use errno this is
-** a bit hacky.
-*/
 
 static int	err_ret_prog_exit(char *str, char *prog, int exitcode)
 {
@@ -30,6 +21,10 @@ static int	err_ret_prog_exit(char *str, char *prog, int exitcode)
 	return (FUNCT_ERROR);
 }
 
+/*
+** Creates the correct tmpfile string and checks for malloc errors
+*/
+
 static int	fc_create_tmpfile(t_fcdata *fc, int i)
 {
 	fc->tmpfile = ft_strjoinfree_s2(FC_TMP_FILE, ft_itoa(i));
@@ -37,6 +32,15 @@ static int	fc_create_tmpfile(t_fcdata *fc, int i)
 		return (err_ret_prog_exit(E_N_ALLOC_STR, "fc", EXIT_FAILURE));
 	return (FUNCT_SUCCESS);
 }
+
+/*
+** This function will try to open a tmp file ending with it 0. When it fails
+** (most likely because the file exists, it won't open the existing file
+** because of O_EXCL) it will increment and try again the number until 100.
+** If it still fails at 100 there must be another reason (or 101 editors opened)
+** so it will return an error. Since we are not allowed to use errno this is
+** a bit hacky.
+*/
 
 static int	fc_open_temp(t_fcdata *fc)
 {
