@@ -6,7 +6,7 @@
 /*   By: omulder <omulder@student.codam.nl>           +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2019/04/10 20:29:42 by jbrinksm       #+#    #+#                */
-/*   Updated: 2019/10/08 18:12:09 by omulder       ########   odam.nl         */
+/*   Updated: 2019/10/11 11:50:42 by omulder       ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -205,7 +205,6 @@ typedef struct	s_fcdata
 	char	*last;
 	char	*editor;
 	char	*replace;
-	char	*match;
 	char	*tmpfile;
 	int		fd;
 }				t_fcdata;

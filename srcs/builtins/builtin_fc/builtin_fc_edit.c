@@ -6,7 +6,7 @@
 /*   By: omulder <omulder@student.codam.nl>           +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2019/09/22 18:54:24 by omulder        #+#    #+#                */
-/*   Updated: 2019/10/08 18:14:04 by omulder       ########   odam.nl         */
+/*   Updated: 2019/10/11 11:56:14 by omulder       ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -74,6 +74,7 @@ void		fc_edit(t_vshdata *data, t_datahistory *history, t_fcdata *fc)
 {
 	int		start;
 	int		end;
+	char	*exec_edit;
 
 	g_state->exit_code = EXIT_SUCCESS;
 	if (fc_get_indexes(history, fc, &start, &end) == FUNCT_FAILURE)
@@ -82,11 +83,15 @@ void		fc_edit(t_vshdata *data, t_datahistory *history, t_fcdata *fc)
 		return ;
 	fc_print(history, fc, start, end);
 	close(fc->fd);
-	shell_one_line(data, ft_strjoinfree_all(
-		ft_strjoinchr(fc->editor, ' '), ft_strjoinchr(fc->tmpfile, '\n')));
+	exec_edit = ft_strjoinfree_all(
+		ft_strjoinchr(fc->editor, ' '), ft_strjoinchr(fc->tmpfile, '\n'));
+	if (exec_edit == NULL)
+		return ; // ADD ERROR
+	shell_one_line(data, exec_edit);
+	ft_strdel(&exec_edit);
 	history_reset_last(history->history);
 	set_flags(data);
-	shell_args(data, ft_strdup(fc->tmpfile));
+	shell_args(data, fc->tmpfile);
 	data->fc_flags = 0;
 	remove(fc->tmpfile);
 }
