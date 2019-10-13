@@ -6,7 +6,7 @@
 /*   By: omulder <omulder@student.codam.nl>           +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2019/04/10 20:29:42 by jbrinksm       #+#    #+#                */
-/*   Updated: 2019/10/08 17:50:17 by jbrinksm      ########   odam.nl         */
+/*   Updated: 2019/10/13 21:13:13 by mavan-he      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -92,6 +92,7 @@
 # define E_BINARY_FILE		SHELL ": cannot execute binary file\n"
 # define E_HIST_NOT_FOUND   "\n" SHELL ": !%s: event not found\n"
 # define E_HIST_NUM_ERROR   "\n" SHELL ": %.*s: event not found\n"
+# define E_BAD_PATTERN		SHELL ": bad pattern: %s\n"
 # define E_ALLOC 42
 # define E_DUP 100
 # define E_OPEN 101
@@ -1038,7 +1039,7 @@ typedef struct	s_globtokenlst
 	char					*word_chunk;
 	int						word_len;
 	struct s_globtokenlst	*next;
-}				t_globtokenlst;
+}				t_globtoken;
 
 typedef struct	s_globscanner
 {
@@ -1058,20 +1059,21 @@ typedef struct	s_globmatchlst
 	struct s_globmatchlst	*next;
 }				t_globmatchlst;
 
-int				glob_lexer(t_globtokenlst **lst, char *word);
+int				glob_lexer(t_globtoken **lst, char *word);
+void			glob_lexer_finish(t_globscanner *scanner, t_globtokens type);
 int				glob_expand_word(char *word);
-int				glob_addtolst(t_globtokenlst **lst, t_globtokenlst *new);
-t_globtokenlst	*glob_newlst(char *word_chunk, int type);
-int				glob_add_scanned_token(t_globtokenlst **lst,
+void			glob_tokenlstadd(t_globtoken **lst, t_globtoken *new);
+t_globtoken		*glob_tokenlstnew(char *word_chunk, int type);
+int				glob_add_scanned_token(t_globtoken **lst,
 				t_globscanner *scanner);
 void			glob_lexer_state_start(t_globscanner *scanner);
 void			glob_lexer_changestate(t_globscanner *scanner,
 					void (*state)(t_globscanner *scanner));
-void			glob_lexer_state_str(t_globscanner *scanner);
 void			glob_lexer_state_bracket(t_globscanner *scanner);
 void			glob_lexer_addchar(t_globscanner *scanner);
-int			glob_start_matching(t_globtokenlst *tokenprobe, t_globmatchlst match);
-void			glob_print_matchlist(t_globmatchlst *lst);
+int				glob_start_matching(t_globtoken *tokenprobe, t_globmatchlst match);
+int				glob_matchlstadd(t_globmatchlst **lst, char *word);
+
 
 /*
 **----------------------------------debugging-----------------------------------
@@ -1082,5 +1084,8 @@ void			print_tree(t_ast *root);
 void			print_token(t_scanner *scanner);
 void			print_tree(t_ast *root);
 void			print_token_list(t_tokenlst *node);
+void			glob_print_tokenlist(t_globtoken *lst);
+void			glob_print_matches(t_globmatchlst *lst);
+void			glob_print_matchlist(t_globmatchlst *lst);
 
 #endif
