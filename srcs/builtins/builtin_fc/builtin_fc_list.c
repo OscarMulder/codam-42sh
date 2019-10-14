@@ -6,7 +6,7 @@
 /*   By: omulder <omulder@student.codam.nl>           +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2019/09/11 12:54:36 by omulder        #+#    #+#                */
-/*   Updated: 2019/10/14 13:54:42 by omulder       ########   odam.nl         */
+/*   Updated: 2019/10/14 13:55:38 by omulder       ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -88,7 +88,6 @@ void	fc_list(t_datahistory *history, t_fcdata *fc)
 
 	if (fc_get_indexes(history, fc, &start, &end) == FUNCT_FAILURE)
 		return ;
-	ft_eprintf("histstart: %d\nstart: %d\nend: %d\n", history->hist_start, start, end);
 	fc_print(history, fc, start, end);
 	return ;
 }
