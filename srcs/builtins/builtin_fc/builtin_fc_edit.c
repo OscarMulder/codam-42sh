@@ -6,7 +6,7 @@
 /*   By: omulder <omulder@student.codam.nl>           +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2019/09/22 18:54:24 by omulder        #+#    #+#                */
-/*   Updated: 2019/10/11 14:36:42 by omulder       ########   odam.nl         */
+/*   Updated: 2019/10/14 16:09:24 by omulder       ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -99,6 +99,7 @@ void		fc_edit(t_vshdata *data, t_datahistory *history, t_fcdata *fc)
 	char	*exec_edit;
 
 	g_state->exit_code = EXIT_SUCCESS;
+	history_reset_last(history->history);
 	if (fc_get_indexes(history, fc, &start, &end) != FUNCT_SUCCESS)
 		return ;
 	if (fc_open_temp(fc) != FUNCT_SUCCESS)
@@ -111,7 +112,6 @@ void		fc_edit(t_vshdata *data, t_datahistory *history, t_fcdata *fc)
 		return (err_void_prog_exit(E_N_ALLOC_STR, "fc", EXIT_FAILURE));
 	shell_one_line(data, exec_edit);
 	ft_strdel(&exec_edit);
-	history_reset_last(history->history);
 	if (g_state->exit_code == EXIT_SUCCESS)
 	{
 		set_flags(data);

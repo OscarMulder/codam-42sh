@@ -6,7 +6,7 @@
 /*   By: omulder <omulder@student.codam.nl>           +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2019/05/30 18:55:25 by mavan-he       #+#    #+#                */
-/*   Updated: 2019/10/11 15:31:03 by omulder       ########   odam.nl         */
+/*   Updated: 2019/10/14 15:36:44 by omulder       ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -73,7 +73,6 @@ void		history_reset_last(t_history **history)
 	number = -1;
 	start = 0;
 	history_find_start(history, &number, &start);
-	number = history[start]->number - 1;
 	if (start > 0)
 		i = start - 1;
 	else
