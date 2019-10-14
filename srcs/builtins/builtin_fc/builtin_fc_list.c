@@ -6,7 +6,7 @@
 /*   By: omulder <omulder@student.codam.nl>           +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2019/09/11 12:54:36 by omulder        #+#    #+#                */
-/*   Updated: 2019/10/11 14:33:14 by omulder       ########   odam.nl         */
+/*   Updated: 2019/10/14 13:54:42 by omulder       ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -23,10 +23,13 @@ int *start, int *end)
 	if (fc->options & FC_OPT_L)
 	{
 		*end = history->hist_start;
-		*start = *end - 15;
+		if (HISTORY_MAX > 15)
+			*start = *end - 15;
+		else
+			*start = *end - (HISTORY_MAX - 2);
 		if (*start < 0 && history->history[0]->number != 1)
 			*start = HISTORY_MAX + *start;
-		else if (*start < 0)
+		if (*start < 0)
 			*start = 0;
 	}
 	else
@@ -85,6 +88,7 @@ void	fc_list(t_datahistory *history, t_fcdata *fc)
 
 	if (fc_get_indexes(history, fc, &start, &end) == FUNCT_FAILURE)
 		return ;
+	ft_eprintf("histstart: %d\nstart: %d\nend: %d\n", history->hist_start, start, end);
 	fc_print(history, fc, start, end);
 	return ;
 }
