@@ -6,7 +6,7 @@
 /*   By: mavan-he <mavan-he@student.codam.nl>         +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2019/10/13 19:53:46 by mavan-he       #+#    #+#                */
-/*   Updated: 2019/10/13 21:17:58 by mavan-he      ########   odam.nl         */
+/*   Updated: 2019/10/14 15:17:50 by mavan-he      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -54,9 +54,10 @@ t_globmatchlst	*glob_matchlstnew(char *item)
 	new = ft_memalloc(sizeof(t_globmatchlst));
 	if (new == NULL)
 		return (NULL);
-	new->word = item;
-	if (new->word != NULL)
-		new->word_len = ft_strlen(new->word);
+	new->word = ft_strdup(item);
+	if (new->word == NULL)
+		return (NULL);
+	new->word_len = ft_strlen(new->word);
 	return (new);
 }
 

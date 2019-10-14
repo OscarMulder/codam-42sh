@@ -6,7 +6,7 @@
 /*   By: mavan-he <mavan-he@student.codam.nl>         +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2019/10/13 17:39:27 by mavan-he       #+#    #+#                */
-/*   Updated: 2019/10/13 20:15:57 by mavan-he      ########   odam.nl         */
+/*   Updated: 2019/10/14 17:16:59 by mavan-he      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -49,8 +49,7 @@ void			glob_print_matches(t_globmatchlst *lst)
 	ft_eprintf("MATCHES:\n");
 	while (probe != NULL)
 	{
-		if (probe->matched == true)
-			ft_eprintf("%i.\tmatch:\t%s\n", i, probe->word);
+		ft_eprintf("%i.\tmatch:\t%s\n", i, probe->word);
 		i++;
 		probe = probe->next;
 	}

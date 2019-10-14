@@ -6,7 +6,7 @@
 /*   By: omulder <omulder@student.codam.nl>           +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2019/04/10 20:29:42 by jbrinksm       #+#    #+#                */
-/*   Updated: 2019/10/13 21:13:13 by mavan-he      ########   odam.nl         */
+/*   Updated: 2019/10/14 17:16:21 by mavan-he      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -93,6 +93,7 @@
 # define E_HIST_NOT_FOUND   "\n" SHELL ": !%s: event not found\n"
 # define E_HIST_NUM_ERROR   "\n" SHELL ": %.*s: event not found\n"
 # define E_BAD_PATTERN		SHELL ": bad pattern: %s\n"
+# define E_OPEN_DIR			SHELL ": error opening directory: %s\n"
 # define E_ALLOC 42
 # define E_DUP 100
 # define E_OPEN 101
@@ -1054,7 +1055,6 @@ typedef struct	s_globmatchlst
 {
 	char					*word;
 	int						index;
-	int						matched;
 	int						word_len;
 	struct s_globmatchlst	*next;
 }				t_globmatchlst;
@@ -1073,6 +1073,7 @@ void			glob_lexer_state_bracket(t_globscanner *scanner);
 void			glob_lexer_addchar(t_globscanner *scanner);
 int				glob_start_matching(t_globtoken *tokenprobe, t_globmatchlst match);
 int				glob_matchlstadd(t_globmatchlst **lst, char *word);
+int				glob_start_matching(t_globtoken *tokenprobe, t_globmatchlst match);
 
 
 /*
