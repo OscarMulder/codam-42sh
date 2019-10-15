@@ -6,7 +6,7 @@
 /*   By: omulder <omulder@student.codam.nl>           +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2019/05/29 15:25:10 by mavan-he       #+#    #+#                */
-/*   Updated: 2019/10/15 12:13:45 by omulder       ########   odam.nl         */
+/*   Updated: 2019/10/15 15:18:05 by omulder       ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -46,10 +46,12 @@ int			history_to_file(t_datahistory *history)
 	if (fd == -1)
 	{
 		ft_eprintf(E_HIST_OPEN_STR);
+		ft_strdel(&histfile);
 		return (FUNCT_ERROR);
 	}
 	history_print_to_fd(fd, history);
 	close(fd);
+	ft_strdel(&histfile);
 	return (FUNCT_SUCCESS);
 }
  

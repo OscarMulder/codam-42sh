@@ -6,7 +6,7 @@
 /*   By: omulder <omulder@student.codam.nl>           +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2019/05/30 13:49:22 by mavan-he       #+#    #+#                */
-/*   Updated: 2019/10/15 14:56:34 by omulder       ########   odam.nl         */
+/*   Updated: 2019/10/15 15:20:59 by omulder       ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -96,7 +96,7 @@ int				history_get_file_content(t_datahistory *history)
 		return (FUNCT_ERROR);
 	fd = open(histfile, O_RDWR | O_CREAT, S_IRUSR | S_IWUSR);
 	if (fd == -1)
-		return (err_ret(E_HIST_OPEN_STR));
+		return (ft_free_return(histfile, err_ret(E_HIST_OPEN_STR)));
 	ret = 1;
 	size = history_get_histsize();
 	i = 0;
@@ -104,10 +104,10 @@ int				history_get_file_content(t_datahistory *history)
 	{
 		ret = get_line_in_history(fd, history);
 		if (ret == FUNCT_ERROR)
-			return (FUNCT_ERROR);
+			return (ft_free_return(histfile, FUNCT_ERROR));
 		i++;
 	}
 	empty_gnl(fd);
 	close(fd);
-	return (ret);
+	return (ft_free_return(histfile, ret));
 }
