@@ -6,7 +6,7 @@
 /*   By: omulder <omulder@student.codam.nl>           +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2019/10/15 10:16:47 by omulder        #+#    #+#                */
-/*   Updated: 2019/10/15 16:53:30 by omulder       ########   odam.nl         */
+/*   Updated: 2019/10/15 17:55:47 by omulder       ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -48,6 +48,8 @@ static bool	history_is_duplicate(t_datahistory *history, char *line)
 	if (history->tail == NULL)
 		return (false);
 	len = ft_strlen(line);
+	if (len == 1)
+		return (true);
 	if (line[len - 1] == '\n')
 		len -= 1;
 	if (ft_strnequ(history->tail->str, line, len) == true
@@ -118,7 +120,7 @@ int		history_count(t_historyitem *start, t_historyitem *end)
 	probe = start;
 	while (probe != end)
 	{
-		if (probe->next == NULL)
+		if (probe->next == NULL && end != NULL)
 			return (-1);
 		count++;
 		probe = probe->next;

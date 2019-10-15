@@ -6,7 +6,7 @@
 /*   By: omulder <omulder@student.codam.nl>           +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2019/09/12 18:16:01 by omulder        #+#    #+#                */
-/*   Updated: 2019/10/15 16:42:28 by omulder       ########   odam.nl         */
+/*   Updated: 2019/10/15 17:46:26 by omulder       ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -47,7 +47,7 @@ t_historyitem **item)
 {
 	int i;
 
-	i = -1;
+	i = 0;
 	*item = history->tail;
 	while (i > num)
 	{

@@ -6,7 +6,7 @@
 /*   By: omulder <omulder@student.codam.nl>           +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2019/09/11 12:54:36 by omulder        #+#    #+#                */
-/*   Updated: 2019/10/15 16:45:50 by omulder       ########   odam.nl         */
+/*   Updated: 2019/10/15 18:22:37 by omulder       ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -44,7 +44,9 @@ t_historyitem **start, int *len)
 
 	if (fc_find_item(history, fc, fc->first, start) == FUNCT_FAILURE)
 		return (FUNCT_FAILURE);
-	if (fc->last == NULL && fc->options & FC_OPT_L)
+	if (fc->last == NULL && fc->options & FC_OPT_L && fc->options & ~FC_OPT_R)
+		*len = history_count(*start, NULL) - 2;
+	else if (fc->last == NULL && fc->options & FC_OPT_L)
 		*len = history->count;
 	else if (fc->last == NULL)
 		*len = 1;
@@ -54,8 +56,13 @@ t_historyitem **start, int *len)
 			return (FUNCT_FAILURE);
 		*len = history_count(*start, end);
 		if (*len == -1)
-			return (FUNCT_FAILURE);
+		{
+			*len = history_count(end, *start);
+			fc->options |= FC_OPT_R;
+		}
 	}
+	if (*len < 1)
+		*len = 1;
 	return (FUNCT_SUCCESS);
 }
 
@@ -77,9 +84,9 @@ void	fc_print(t_fcdata *fc, t_historyitem *start, int len)
 	t_historyitem *end;
 
 	end = history_walker(start, len);
-	if (fc->options & FC_OPT_R && fc->last == NULL)
-		fc_print_reverse(start, len, fc);
-	else if (end != NULL && start->number > end->number && fc->last != NULL)
+	// if (start != NULL && end != NULL)
+	// 	ft_eprintf("start: %x, end: %x, start->num: %d, end->num: %d, len: %d\n", start, end, start->number, end->number, len);
+	if (fc->options & FC_OPT_R)
 		fc_print_reverse(start, len, fc);
 	else
 		fc_print_regular(start, len, fc);
