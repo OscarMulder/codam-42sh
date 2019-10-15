@@ -6,7 +6,7 @@
 /*   By: omulder <omulder@student.codam.nl>           +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2019/09/12 18:16:01 by omulder        #+#    #+#                */
-/*   Updated: 2019/10/15 17:46:26 by omulder       ########   odam.nl         */
+/*   Updated: 2019/10/15 18:33:04 by omulder       ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -76,6 +76,8 @@ char *str, t_historyitem **item)
 			find_hist_num_neg(history, num, item);
 		else
 			find_history_item_num(history, num, item);
+		if (fc->options & FC_OPT_L && item != NULL && (*item)->next == NULL && (*item)->prev != NULL)
+			*item = (*item)->prev;
 	}
 	else
 	{
