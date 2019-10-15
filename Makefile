@@ -6,7 +6,7 @@
 #    By: omulder <omulder@student.codam.nl>           +#+                      #
 #                                                    +#+                       #
 #    Created: 2019/04/10 20:30:07 by jbrinksm       #+#    #+#                 #
-#    Updated: 2019/10/11 16:32:33 by mavan-he      ########   odam.nl          #
+#    Updated: 2019/10/15 14:40:59 by omulder       ########   odam.nl          #
 #                                                                              #
 # **************************************************************************** #
 
@@ -61,7 +61,7 @@ parser_start parser_debug parser_utils parser_command parser_error \
 parser_astdel \
 alias_expansion alias_replace alias_read_file alias_add_expanded \
 alias_getvalue \
-history_to_file history_get_file_content history_line_to_array history_print \
+history_to_file history_get_file_content history_item_helpers history_print \
 history_change_line history_index_change history_expansion history_get_line \
 history_match_line history_insert_into_line \
 exec_builtin exec_cmd exec_external exec_start exec_find_binary \

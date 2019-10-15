@@ -6,7 +6,7 @@
 /*   By: mavan-he <mavan-he@student.codam.nl>         +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2019/09/10 18:35:45 by mavan-he       #+#    #+#                */
-/*   Updated: 2019/10/15 14:30:41 by omulder       ########   odam.nl         */
+/*   Updated: 2019/10/15 14:59:49 by omulder       ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -23,7 +23,7 @@ static char	*tofind_negative(t_datahistory *history, int tofind)
 	t_historyitem	*probe;
 	int				i;
 
-	i = 0;
+	i = -1;
 	probe = history->tail;
 	while (probe != NULL && i > tofind)
 	{
@@ -38,7 +38,6 @@ static char	*tofind_negative(t_datahistory *history, int tofind)
 static char	*tofind_positive(t_datahistory *history, int tofind)
 {
 	t_historyitem	*probe;
-	int				i;
 
 	probe = history->tail;
 	while (probe != NULL)

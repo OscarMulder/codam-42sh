@@ -6,7 +6,7 @@
 /*   By: omulder <omulder@student.codam.nl>           +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2019/05/30 13:49:22 by mavan-he       #+#    #+#                */
-/*   Updated: 2019/10/15 12:18:16 by omulder       ########   odam.nl         */
+/*   Updated: 2019/10/15 14:56:34 by omulder       ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,7 +19,7 @@
 ** Get the content out of the history file
 */
 
-static int		get_line_in_history(int fd, t_datahistory *history, int i)
+static int		get_line_in_history(int fd, t_datahistory *history)
 {
 	int		ret;
 	char	*line;
@@ -28,7 +28,8 @@ static int		get_line_in_history(int fd, t_datahistory *history, int i)
 	ret = ft_get_next_line_delim(fd, &line, HIST_SEPARATE);
 	if (ret == -1)
 		return (err_ret(E_HIST_READ_STR));
-	history_add_item(history, line);
+	if (line != NULL)
+		history_add_item(history, line);
 	return (ret);
 }
 
@@ -97,11 +98,11 @@ int				history_get_file_content(t_datahistory *history)
 	if (fd == -1)
 		return (err_ret(E_HIST_OPEN_STR));
 	ret = 1;
-	i = 0;
 	size = history_get_histsize();
+	i = 0;
 	while (ret > 0 && i < size)
 	{
-		ret = get_line_in_history(fd, history, i);
+		ret = get_line_in_history(fd, history);
 		if (ret == FUNCT_ERROR)
 			return (FUNCT_ERROR);
 		i++;

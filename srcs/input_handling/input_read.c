@@ -6,34 +6,13 @@
 /*   By: omulder <omulder@student.codam.nl>           +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2019/04/17 14:03:16 by jbrinksm       #+#    #+#                */
-/*   Updated: 2019/10/15 13:43:32 by omulder       ########   odam.nl         */
+/*   Updated: 2019/10/15 14:47:05 by omulder       ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "vsh.h"
 #include <unistd.h>
 #include <signal.h>
-
-static int	find_start(t_history **history)
-{
-	int i;
-	int start;
-	int largest;
-
-	i = 0;
-	start = 0;
-	largest = -1;
-	while (i < HISTORY_MAX && history[i]->str != NULL)
-	{
-		if (history[i]->number > largest)
-		{
-			start = i;
-			largest = history[i]->number;
-		}
-		i++;
-	}
-	return (start + 1);
-}
 
 /*
 **	Every time we return from input_read, we want to make sure that the content
