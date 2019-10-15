@@ -6,7 +6,7 @@
 /*   By: omulder <omulder@student.codam.nl>           +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2019/10/15 10:16:47 by omulder        #+#    #+#                */
-/*   Updated: 2019/10/15 12:10:40 by omulder       ########   odam.nl         */
+/*   Updated: 2019/10/15 13:38:42 by omulder       ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -56,15 +56,15 @@ static bool	history_is_duplicate(t_datahistory *history, char *line)
 	return (false);
 }
 
-bool	history_add_item(t_datahistory *history, char *line)
+int		history_add_item(t_datahistory *history, char *line)
 {
 	t_historyitem *new;
 
 	if (history_is_duplicate(history, line))
-		return (true);
+		return (FUNCT_FAILURE);
 	new = history_new_item(line);
 	if (new == NULL)
-		return (false);
+		return (FUNCT_ERROR);
 	if (history->head == NULL && history->tail == NULL)
 	{
 		new->number = 1;
@@ -78,7 +78,7 @@ bool	history_add_item(t_datahistory *history, char *line)
 	}
 	history->tail = new;
 	history->count += 1;
-	return (true);
+	return (FUNCT_SUCCESS);
 }
 
 void	history_remove_tail(t_datahistory *history)

@@ -6,7 +6,7 @@
 /*   By: omulder <omulder@student.codam.nl>           +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2019/04/17 14:03:16 by jbrinksm       #+#    #+#                */
-/*   Updated: 2019/10/07 12:19:33 by jbrinksm      ########   odam.nl         */
+/*   Updated: 2019/10/15 13:43:32 by omulder       ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -50,9 +50,7 @@ static int	reset_input_read_return(t_vshdata *data, int ret)
 	if (ret == 0)
 		data->curs->coords.y = input_get_curs_row();
 	data->curs->cur_relative_y = 1;
-	data->history->hist_index = find_start(data->history->history);
-	data->history->hist_start = data->history->hist_index - 1;
-	data->history->hist_isfirst = true;
+	data->history->current = NULL;
 	signal(SIGWINCH, SIG_DFL);
 	if (ret == 0)
 		resize_window_check(SIGWINCH);

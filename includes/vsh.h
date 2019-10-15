@@ -6,7 +6,7 @@
 /*   By: omulder <omulder@student.codam.nl>           +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2019/04/10 20:29:42 by jbrinksm       #+#    #+#                */
-/*   Updated: 2019/10/15 11:21:31 by omulder       ########   odam.nl         */
+/*   Updated: 2019/10/15 13:56:11 by omulder       ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -966,11 +966,13 @@ int				history_get_file_content(t_datahistory *history);
 int				history_get_histsize(void);
 void			history_print(t_datahistory *history);
 
-int				history_line_to_array(t_history **history, char **line);
-int				history_change_line(t_vshdata *data,
-					char arrow);
-int				history_index_change_down(t_vshdata *data);
-int				history_index_change_up(t_vshdata *data);
+int				history_add_item(t_datahistory *history, char *line);
+void			history_remove_tail(t_datahistory *history);
+void			history_remove_head(t_datahistory *history);
+
+int				history_change_line(t_vshdata *data, char arrow);
+int				history_index_change_down(t_datahistory *history);
+int				history_index_change_up(t_datahistory *history);
 int				history_expansion(t_vshdata *data);
 char			*history_get_line(t_datahistory *history, char *line, size_t i);
 char			*history_match_line(t_datahistory *history,
@@ -978,12 +980,6 @@ char			*history_match_line(t_datahistory *history,
 int				history_insert_into_line(char **line,
 				char *hist_line, size_t i);
 size_t			history_get_match_len(char *line, size_t i);
-int				history_replace_last(t_history **history, char **line);
-void			history_reset_last(t_history **history);
-
-bool			history_add_item(t_datahistory *history, char *line);
-void			history_remove_tail(t_datahistory *history);
-void			history_remove_head(t_datahistory *history);
 
 /*
 **--------------------------------hashtable-------------------------------------
