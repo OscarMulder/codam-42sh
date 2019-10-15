@@ -6,7 +6,7 @@
 /*   By: omulder <omulder@student.codam.nl>           +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2019/10/15 10:16:47 by omulder        #+#    #+#                */
-/*   Updated: 2019/10/15 14:56:38 by omulder       ########   odam.nl         */
+/*   Updated: 2019/10/15 16:53:30 by omulder       ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -107,4 +107,39 @@ void	history_remove_head(t_datahistory *history)
 		history->head->prev = NULL;
 	history_free_item(&tofree);
 	history->count -= 1;
+}
+
+int		history_count(t_historyitem *start, t_historyitem *end)
+{
+	t_historyitem	*probe;
+	int				count;
+
+	count = 0;
+	probe = start;
+	while (probe != end)
+	{
+		if (probe->next == NULL)
+			return (-1);
+		count++;
+		probe = probe->next;
+	}
+	count++;
+	return (count);
+}
+
+t_historyitem	*history_walker(t_historyitem *start, int len)
+{
+	t_historyitem	*probe;
+	int				i;
+
+	i = 0;
+	probe = start;
+	while (i < len)
+	{
+		if (probe->next == NULL)
+			return (NULL);
+		i++;
+		probe = probe->next;
+	}
+	return (probe);
 }

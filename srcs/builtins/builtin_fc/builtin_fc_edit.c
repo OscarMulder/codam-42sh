@@ -6,7 +6,7 @@
 /*   By: omulder <omulder@student.codam.nl>           +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2019/09/22 18:54:24 by omulder        #+#    #+#                */
-/*   Updated: 2019/10/14 16:09:24 by omulder       ########   odam.nl         */
+/*   Updated: 2019/10/15 16:49:55 by omulder       ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -94,17 +94,17 @@ static void	set_flags(t_vshdata *data)
 
 void		fc_edit(t_vshdata *data, t_datahistory *history, t_fcdata *fc)
 {
-	int		start;
-	int		end;
-	char	*exec_edit;
+	t_historyitem	*start;
+	int				len;
+	char			*exec_edit;
 
 	g_state->exit_code = EXIT_SUCCESS;
-	history_reset_last(history->history);
-	if (fc_get_indexes(history, fc, &start, &end) != FUNCT_SUCCESS)
+	history_remove_tail(history);
+	if (fc_get_start(history, fc, &start, &len) != FUNCT_SUCCESS)
 		return ;
 	if (fc_open_temp(fc) != FUNCT_SUCCESS)
 		return ;
-	fc_print(history, fc, start, end);
+	fc_print(fc, start, len);
 	close(fc->fd);
 	exec_edit = ft_strjoinfree_all(
 		ft_strjoinchr(fc->editor, ' '), ft_strjoinchr(fc->tmpfile, '\n'));

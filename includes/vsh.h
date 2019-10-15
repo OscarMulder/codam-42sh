@@ -6,7 +6,7 @@
 /*   By: omulder <omulder@student.codam.nl>           +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2019/04/10 20:29:42 by jbrinksm       #+#    #+#                */
-/*   Updated: 2019/10/15 14:50:22 by omulder       ########   odam.nl         */
+/*   Updated: 2019/10/15 16:49:36 by omulder       ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -855,23 +855,16 @@ int				fc_option_substitute(int i, char **args, t_fcdata *fc);
 void			fc_option_suppress(t_fcdata *fc);
 void			fc_option_reverse(t_fcdata *fc);
 void			fc_list(t_datahistory *history, t_fcdata *fc);
-int				fc_list_print_line(t_datahistory *history, t_fcdata *fc);
-void			fc_print_regular(int start, int end, t_datahistory **history,
-				t_fcdata *fc);
-void			fc_print_reverse(int start, int end, t_datahistory **history,
-				t_fcdata *fc);
-int				fc_find_index(t_datahistory *history, t_fcdata *fc,
-				char *str, int *index);
+int				fc_list_print_line(t_historyitem *item, t_fcdata *fc);
+void			fc_print_regular(t_historyitem *start, int len, t_fcdata *fc);
+void			fc_print_reverse(t_historyitem *start, int len, t_fcdata *fc);
+int				fc_find_item(t_datahistory *history, t_fcdata *fc,
+				char *str, t_historyitem **item);
 void			fc_substitute(t_vshdata *data, t_datahistory *history,
 				t_fcdata *fc);
-void			fc_find_start_end_no_param(t_datahistory *history, t_fcdata *fc,
-				int *start, int *end);
-int				fc_find_start_end(t_datahistory *history, t_fcdata *fc,
-				int *start, int *end);
-int				fc_get_indexes(t_datahistory *history, t_fcdata *fc, int *start,
-				int *end);
-void			fc_print(t_datahistory *history, t_fcdata *fc, int start,
-				int end);
+int				fc_get_start(t_datahistory *history, t_fcdata *fc,
+				t_historyitem **start, int *len);
+void			fc_print(t_fcdata *fc, t_historyitem *start, int len);
 void			fc_edit(t_vshdata *data, t_datahistory *history, t_fcdata *fc);
 
 /*
@@ -981,6 +974,8 @@ char			*history_match_line(t_datahistory *history,
 int				history_insert_into_line(char **line,
 				char *hist_line, size_t i);
 size_t			history_get_match_len(char *line, size_t i);
+int				history_count(t_historyitem *start, t_historyitem *end);
+t_historyitem	*history_walker(t_historyitem *start, int len);
 
 /*
 **--------------------------------hashtable-------------------------------------
