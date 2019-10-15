@@ -6,7 +6,7 @@
 /*   By: omulder <omulder@student.codam.nl>           +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2019/04/10 20:29:42 by jbrinksm       #+#    #+#                */
-/*   Updated: 2019/10/15 09:41:48 by omulder       ########   odam.nl         */
+/*   Updated: 2019/10/15 11:21:31 by omulder       ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -315,7 +315,7 @@ typedef struct	s_fcdata
 **----------------------------------history-------------------------------------
 */
 
-# define HISTORY_MAX	500
+# define POSIX_HISTSIZE 32767
 # define ARROW_UP	    1
 # define ARROW_DOWN	    2
 # define HISTFILENAME	".vsh_history"
@@ -363,13 +363,13 @@ typedef struct	s_envlst
 **-----------------------------------history------------------------------------
 */
 
-typedef struct	s_history
+typedef struct	s_historyitem
 {
-	int					number;
-	char				*str;
-	struct s_history	*prev;
-	struct s_history	*next;
-}				t_history;
+	int						number;
+	char					*str;
+	struct s_historyitem	*prev;
+	struct s_historyitem	*next;
+}				t_historyitem;
 
 /*
 **------------------------------------alias-------------------------------------
@@ -431,10 +431,11 @@ typedef struct	s_datacurs
 
 typedef struct	s_datahistory
 {
-	t_history	*head;
-	t_history	*tail;
-	t_history	*current;
-	int			count;
+	t_historyitem	*head;
+	t_historyitem	*tail;
+	t_historyitem	*current;
+	int				count;
+	char			*history_file;
 }				t_datahistory;
 
 typedef struct	s_dataline
@@ -960,10 +961,12 @@ int				redir_close_saved_stdfds(t_vshdata *data);
 **------------------------------------history-----------------------------------
 */
 
-int				history_to_file(t_vshdata *data);
-int				history_get_file_content(t_vshdata *data);
+int				history_to_file(t_datahistory *history);
+int				history_get_file_content(t_datahistory *history);
+int				history_get_histsize(void);
+void			history_print(t_datahistory *history);
+
 int				history_line_to_array(t_history **history, char **line);
-void			history_print(t_history **history);
 int				history_change_line(t_vshdata *data,
 					char arrow);
 int				history_index_change_down(t_vshdata *data);
@@ -977,6 +980,10 @@ int				history_insert_into_line(char **line,
 size_t			history_get_match_len(char *line, size_t i);
 int				history_replace_last(t_history **history, char **line);
 void			history_reset_last(t_history **history);
+
+bool			history_add_item(t_datahistory *history, char *line);
+void			history_remove_tail(t_datahistory *history);
+void			history_remove_head(t_datahistory *history);
 
 /*
 **--------------------------------hashtable-------------------------------------
