@@ -6,7 +6,7 @@
 /*   By: omulder <omulder@student.codam.nl>           +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2019/04/10 20:29:42 by jbrinksm       #+#    #+#                */
-/*   Updated: 2019/10/11 14:33:43 by omulder       ########   odam.nl         */
+/*   Updated: 2019/10/15 09:41:48 by omulder       ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -322,6 +322,8 @@ typedef struct	s_fcdata
 # define HIST_SEPARATE	-1
 # define HIST_EXPANDED	(1 << 2)
 
+
+
 /*
 **===============================personal headers===============================
 */
@@ -363,8 +365,10 @@ typedef struct	s_envlst
 
 typedef struct	s_history
 {
-	int		number;
-	char	*str;
+	int					number;
+	char				*str;
+	struct s_history	*prev;
+	struct s_history	*next;
 }				t_history;
 
 /*
@@ -427,11 +431,10 @@ typedef struct	s_datacurs
 
 typedef struct	s_datahistory
 {
-	t_history	**history;
-	char		*history_file;
-	int			hist_index;
-	int			hist_start;
-	bool		hist_isfirst;
+	t_history	*head;
+	t_history	*tail;
+	t_history	*current;
+	int			count;
 }				t_datahistory;
 
 typedef struct	s_dataline
