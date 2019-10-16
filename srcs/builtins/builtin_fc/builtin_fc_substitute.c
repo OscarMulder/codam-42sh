@@ -6,11 +6,15 @@
 /*   By: omulder <omulder@student.codam.nl>           +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2019/09/21 15:22:42 by omulder        #+#    #+#                */
-/*   Updated: 2019/10/15 16:48:42 by omulder       ########   odam.nl         */
+/*   Updated: 2019/10/16 15:23:02 by omulder       ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "vsh.h"
+
+/*
+** Finds the item, if there is no parameter it uses the last item in the list.
+*/
 
 static int	find_item(t_datahistory *history, t_fcdata *fc,
 t_historyitem **item)
@@ -21,6 +25,11 @@ t_historyitem **item)
 	{
 		if (fc_find_item(history, fc, fc->first, item) == FUNCT_FAILURE)
 			return (FUNCT_FAILURE);
+	}
+	if (*item == NULL)
+	{
+		ft_eprintf(E_FC_OUT_RANGE);
+		return (FUNCT_FAILURE);
 	}
 	return (FUNCT_SUCCESS);
 }
@@ -60,13 +69,13 @@ void		fc_substitute(t_vshdata *data, t_datahistory *history, t_fcdata *fc)
 	char			*cmd;
 
 	cmd = NULL;
+	history_remove_tail(history);
 	if (find_item(history, fc, &item) == FUNCT_FAILURE ||
 	replace_cmd(fc, item, &cmd) == FUNCT_ERROR)
 	{
 		ft_strdel(&cmd);
 		return ;
 	}
-	history_remove_tail(history);
 	ft_printf(cmd);
 	data->fc_flags |= FC_SET_HIST;
 	shell_one_line(data, cmd);

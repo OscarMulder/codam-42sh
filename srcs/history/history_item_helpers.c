@@ -6,7 +6,7 @@
 /*   By: omulder <omulder@student.codam.nl>           +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2019/10/15 10:16:47 by omulder        #+#    #+#                */
-/*   Updated: 2019/10/16 15:11:55 by omulder       ########   odam.nl         */
+/*   Updated: 2019/10/16 15:26:43 by omulder       ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -35,13 +35,13 @@ static t_historyitem	*history_new_item(char *line)
 	return (new);
 }
 
-static void			history_free_item(t_historyitem **item)
+void					history_free_item(t_historyitem **item)
 {
 	ft_strdel(&((*item)->str));
 	ft_memdel((void**)item);
 }
 
-static bool			history_is_duplicate(t_datahistory *history, char *line)
+static bool				history_is_duplicate(t_datahistory *history, char *line)
 {
 	size_t	len;
 
@@ -58,7 +58,7 @@ static bool			history_is_duplicate(t_datahistory *history, char *line)
 	return (false);
 }
 
-int					history_add_item(t_datahistory *history, char *line)
+int						history_add_item(t_datahistory *history, char *line)
 {
 	t_historyitem *new;
 
