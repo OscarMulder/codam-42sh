@@ -6,7 +6,7 @@
 #    By: omulder <omulder@student.codam.nl>           +#+                      #
 #                                                    +#+                       #
 #    Created: 2019/04/10 20:30:07 by jbrinksm       #+#    #+#                 #
-#    Updated: 2019/10/15 14:40:59 by omulder       ########   odam.nl          #
+#    Updated: 2019/10/16 15:12:20 by omulder       ########   odam.nl          #
 #                                                                              #
 # **************************************************************************** #
 
@@ -63,7 +63,7 @@ alias_expansion alias_replace alias_read_file alias_add_expanded \
 alias_getvalue \
 history_to_file history_get_file_content history_item_helpers history_print \
 history_change_line history_index_change history_expansion history_get_line \
-history_match_line history_insert_into_line \
+history_match_line history_insert_into_line history_helpers \
 exec_builtin exec_cmd exec_external exec_start exec_find_binary \
 exec_quote_remove expan_handle_variables expan_handle_dollar \
 exec_create_files exec_command exec_add_pid_to_pipeseqlist \

@@ -6,11 +6,18 @@
 /*   By: omulder <omulder@student.codam.nl>           +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2019/09/11 12:54:36 by omulder        #+#    #+#                */
-/*   Updated: 2019/10/15 18:29:37 by omulder       ########   odam.nl         */
+/*   Updated: 2019/10/16 15:10:14 by omulder       ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "vsh.h"
+
+/*
+** This function finds the history items needed when no parameters are given.
+** It functions differently when option -l is given, because the list option
+** has to display up to 16 items (usually 16, unless the history doesn't have 16
+** items in it), while al other fc options will only display one item.
+*/
 
 static void	fc_find_start_len_no_param(t_datahistory *history, t_fcdata *fc,
 t_historyitem **start, int *len)
@@ -36,6 +43,29 @@ t_historyitem **start, int *len)
 		*len = 1;
 	}
 }
+
+/*
+** This function finds the history items needed when one or two parameters are
+** given (first and/or last).
+** It works a little hacky, because I converted it from the array version. If
+** you have suggestions for rewrite, please tell me.
+**
+** Fc_find_item finds the correct item for start, and if a second parameter is
+** given, also for end. If we have just one parameter and the option is list, we
+** find the amount of item untill the second to last item in the list. If the
+** option is not list, we only need one item.
+**
+** When we also have end, we have to know the count between start and end. The
+** problem is that we don't know if end comes before or after start in the list.
+** That's why if history_count fails the first time, we run it again but switch
+** the parameters. This time it should succeed and we know that we have use the
+** reverse printing function, so we set the reverse option.
+**
+** Lastly, in some cases the len variable can end up below zero, which we don't
+** want so we set it to one.
+**
+** TL;DR: It's crappy code. I'm sorry.
+*/
 
 static int	fc_find_start_len(t_datahistory *history, t_fcdata *fc,
 t_historyitem **start, int *len)
@@ -66,7 +96,11 @@ t_historyitem **start, int *len)
 	return (FUNCT_SUCCESS);
 }
 
-int		fc_get_start(t_datahistory *history, t_fcdata *fc,
+/*
+** Just checks if any parameters are set to decided which function to use.
+*/
+
+int			fc_get_start(t_datahistory *history, t_fcdata *fc,
 t_historyitem **start, int *len)
 {
 	if (fc->first == NULL)
@@ -79,20 +113,24 @@ t_historyitem **start, int *len)
 	return (FUNCT_SUCCESS);
 }
 
-void	fc_print(t_fcdata *fc, t_historyitem *start, int len)
-{
-	t_historyitem *end;
+/*
+** Check if we need to print in reverse, if so, print in reverse.
+*/
 
-	end = history_walker(start, len);
-	// if (start != NULL && end != NULL)
-	// 	ft_eprintf("start: %x, end: %x, start->num: %d, end->num: %d, len: %d\n", start, end, start->number, end->number, len);
+void		fc_print(t_fcdata *fc, t_historyitem *start, int len)
+{
 	if (fc->options & FC_OPT_R)
 		fc_print_reverse(start, len, fc);
 	else
 		fc_print_regular(start, len, fc);
 }
 
-void	fc_list(t_datahistory *history, t_fcdata *fc)
+/*
+** First fc_get_start finds the start item and the amount of items to print.
+** Then fc_print prints len items starting at start.
+*/
+
+void		fc_list(t_datahistory *history, t_fcdata *fc)
 {
 	t_historyitem	*start;
 	int				len;

@@ -6,7 +6,7 @@
 /*   By: omulder <omulder@student.codam.nl>           +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2019/10/15 10:16:47 by omulder        #+#    #+#                */
-/*   Updated: 2019/10/15 17:55:47 by omulder       ########   odam.nl         */
+/*   Updated: 2019/10/16 15:11:55 by omulder       ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -35,13 +35,13 @@ static t_historyitem	*history_new_item(char *line)
 	return (new);
 }
 
-static void	history_free_item(t_historyitem **item)
+static void			history_free_item(t_historyitem **item)
 {
 	ft_strdel(&((*item)->str));
 	ft_memdel((void**)item);
 }
 
-static bool	history_is_duplicate(t_datahistory *history, char *line)
+static bool			history_is_duplicate(t_datahistory *history, char *line)
 {
 	size_t	len;
 
@@ -58,7 +58,7 @@ static bool	history_is_duplicate(t_datahistory *history, char *line)
 	return (false);
 }
 
-int		history_add_item(t_datahistory *history, char *line)
+int					history_add_item(t_datahistory *history, char *line)
 {
 	t_historyitem *new;
 
@@ -81,67 +81,4 @@ int		history_add_item(t_datahistory *history, char *line)
 	history->tail = new;
 	history->count += 1;
 	return (FUNCT_SUCCESS);
-}
-
-void	history_remove_tail(t_datahistory *history)
-{
-	t_historyitem *tofree;
-
-	if (history->tail == NULL)
-		return ;
-	tofree = history->tail;
-	history->tail = history->tail->prev;
-	if (history->tail != NULL)
-		history->tail->next = NULL;
-	history_free_item(&tofree);
-	history->count -= 1;
-}
-
-void	history_remove_head(t_datahistory *history)
-{
-	t_historyitem *tofree;
-
-	if (history->head == NULL)
-		return ;
-	tofree = history->head;
-	history->head = history->head->next;
-	if (history->head != NULL)
-		history->head->prev = NULL;
-	history_free_item(&tofree);
-	history->count -= 1;
-}
-
-int		history_count(t_historyitem *start, t_historyitem *end)
-{
-	t_historyitem	*probe;
-	int				count;
-
-	count = 0;
-	probe = start;
-	while (probe != end)
-	{
-		if (probe->next == NULL && end != NULL)
-			return (-1);
-		count++;
-		probe = probe->next;
-	}
-	count++;
-	return (count);
-}
-
-t_historyitem	*history_walker(t_historyitem *start, int len)
-{
-	t_historyitem	*probe;
-	int				i;
-
-	i = 0;
-	probe = start;
-	while (i < len)
-	{
-		if (probe->next == NULL)
-			return (NULL);
-		i++;
-		probe = probe->next;
-	}
-	return (probe);
 }

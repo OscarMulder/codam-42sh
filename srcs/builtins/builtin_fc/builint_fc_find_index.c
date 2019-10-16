@@ -6,7 +6,7 @@
 /*   By: omulder <omulder@student.codam.nl>           +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2019/09/12 18:16:01 by omulder        #+#    #+#                */
-/*   Updated: 2019/10/15 18:33:04 by omulder       ########   odam.nl         */
+/*   Updated: 2019/10/16 14:17:25 by omulder       ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -58,27 +58,32 @@ t_historyitem **item)
 	}
 }
 
-int			fc_find_item(t_datahistory *history, t_fcdata *fc,
+static void	find_item_by_number(t_datahistory *history, t_fcdata *fc,
 char *str, t_historyitem **item)
 {
 	int	num;
 
 	num = 0;
+	num = ft_atoi(str);
+	if (str == fc->first && num <= 0)
+		fc->options |= FC_FIRST_NEG;
+	else if (str == fc->last && num <= 0)
+		fc->options |= FC_LAST_NEG;
+	if (num <= 0)
+		find_hist_num_neg(history, num, item);
+	else
+		find_history_item_num(history, num, item);
+	if (fc->options & FC_OPT_L && item != NULL && (*item)->next == NULL &&
+	(*item)->prev != NULL)
+		*item = (*item)->prev;
+}
+
+int			fc_find_item(t_datahistory *history, t_fcdata *fc,
+char *str, t_historyitem **item)
+{
 	if (ft_isdigit(str[0]) || ((str[0] == '+' || str[0] == '-') &&
 	ft_isdigit(str[1])))
-	{
-		num = ft_atoi(str);
-		if (str == fc->first && num <= 0)
-			fc->options |= FC_FIRST_NEG;
-		else if (str == fc->last && num <= 0)
-			fc->options |= FC_LAST_NEG;
-		if (num <= 0)
-			find_hist_num_neg(history, num, item);
-		else
-			find_history_item_num(history, num, item);
-		if (fc->options & FC_OPT_L && item != NULL && (*item)->next == NULL && (*item)->prev != NULL)
-			*item = (*item)->prev;
-	}
+		find_item_by_number(history, fc, str, item);
 	else
 	{
 		if (find_history_item_str(history, str, item) == FUNCT_FAILURE)
