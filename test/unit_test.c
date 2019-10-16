@@ -6,7 +6,7 @@
 /*   By: omulder <omulder@student.codam.nl>           +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2019/04/18 16:37:32 by omulder        #+#    #+#                */
-/*   Updated: 2019/10/16 19:50:07 by omulder       ########   odam.nl         */
+/*   Updated: 2019/10/16 19:57:44 by omulder       ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -205,7 +205,6 @@ Test(shell_quote_checker, basic)
 	
 	INIT_VSHDATA
 	data->history->history_file = "/tmp/.vsh_history";
-	history_get_file_content(data->history);
 	data->line->line = strdup("lala");
 	shell_close_unclosed_quotes(data);
 	cr_expect_str_eq(data->line->line, "lala");
@@ -891,7 +890,6 @@ Test(alias, multi_line_test)
 	data->envlst = env_getlst();
 	cr_assert(data->envlst != NULL);
 	cr_assert(shell_init_files(data) != FUNCT_ERROR);
-	cr_assert(history_get_file_content(data->history) != FUNCT_ERROR);
 	cr_assert(alias_read_file(data) != FUNCT_ERROR);
 	args[0] = "alias";
 	args[1] = ft_strdup("echo=echo hoi\necho doei\n\n");
