@@ -6,7 +6,7 @@
 /*   By: omulder <omulder@student.codam.nl>           +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2019/09/12 18:16:01 by omulder        #+#    #+#                */
-/*   Updated: 2019/10/16 14:17:25 by omulder       ########   odam.nl         */
+/*   Updated: 2019/10/16 18:53:33 by omulder       ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -34,7 +34,7 @@ static void	find_history_item_num(t_datahistory *history, int num,
 t_historyitem **item)
 {
 	*item = history->head;
-	while ((*item)->number != num)
+	while (*item != NULL && (*item)->number != num)
 	{
 		if ((*item)->next == NULL)
 			break ;
@@ -47,9 +47,9 @@ t_historyitem **item)
 {
 	int i;
 
-	i = 0;
+	i = -1;
 	*item = history->tail;
-	while (i > num)
+	while (*item != NULL && i > num)
 	{
 		if ((*item)->prev == NULL)
 			break ;
@@ -73,9 +73,6 @@ char *str, t_historyitem **item)
 		find_hist_num_neg(history, num, item);
 	else
 		find_history_item_num(history, num, item);
-	if (fc->options & FC_OPT_L && item != NULL && (*item)->next == NULL &&
-	(*item)->prev != NULL)
-		*item = (*item)->prev;
 }
 
 int			fc_find_item(t_datahistory *history, t_fcdata *fc,

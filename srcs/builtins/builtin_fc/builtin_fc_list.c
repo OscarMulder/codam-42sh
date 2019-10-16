@@ -6,7 +6,7 @@
 /*   By: omulder <omulder@student.codam.nl>           +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2019/09/11 12:54:36 by omulder        #+#    #+#                */
-/*   Updated: 2019/10/16 15:10:14 by omulder       ########   odam.nl         */
+/*   Updated: 2019/10/16 18:54:31 by omulder       ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -24,17 +24,17 @@ t_historyitem **start, int *len)
 {
 	int i;
 
-	i = 16;
+	i = 0;
 	if (fc->options & FC_OPT_L)
 	{
 		*start = history->tail;
 		*len = 16;
-		while (i > 0)
+		while (*start != NULL && i < *len)
 		{
 			if ((*start)->prev == NULL)
 				break ;
 			*start = (*start)->prev;
-			i--;
+			i++;
 		}
 	}
 	else
@@ -53,7 +53,7 @@ t_historyitem **start, int *len)
 ** Fc_find_item finds the correct item for start, and if a second parameter is
 ** given, also for end. If we have just one parameter and the option is list, we
 ** find the amount of item untill the second to last item in the list. If the
-** option is not list, we only need one item.
+** option is not -l, we only need one item.
 **
 ** When we also have end, we have to know the count between start and end. The
 ** problem is that we don't know if end comes before or after start in the list.
@@ -62,7 +62,7 @@ t_historyitem **start, int *len)
 ** reverse printing function, so we set the reverse option.
 **
 ** Lastly, in some cases the len variable can end up below zero, which we don't
-** want so we set it to one.
+** want so we return an error.
 **
 ** TL;DR: It's crappy code. I'm sorry.
 */
@@ -75,7 +75,7 @@ t_historyitem **start, int *len)
 	if (fc_find_item(history, fc, fc->first, start) == FUNCT_FAILURE)
 		return (FUNCT_FAILURE);
 	if (fc->last == NULL && fc->options & FC_OPT_L && fc->options & ~FC_OPT_R)
-		*len = history_count(*start, NULL) - 2;
+		*len = history_count(*start, NULL);
 	else if (fc->last == NULL && fc->options & FC_OPT_L)
 		*len = history->count;
 	else if (fc->last == NULL)
@@ -92,7 +92,10 @@ t_historyitem **start, int *len)
 		}
 	}
 	if (*len < 1)
-		*len = 1;
+	{
+		ft_eprintf(E_FC_OUT_RANGE);
+		return (FUNCT_FAILURE);
+	}
 	return (FUNCT_SUCCESS);
 }
 
@@ -134,9 +137,14 @@ void		fc_list(t_datahistory *history, t_fcdata *fc)
 {
 	t_historyitem	*start;
 	int				len;
+	char			*cmd;
 
+	cmd = ft_strdup(history->tail->str);
+	history_remove_tail(history);
 	if (fc_get_start(history, fc, &start, &len) == FUNCT_FAILURE)
 		return ;
 	fc_print(fc, start, len);
+	history_add_item(history, cmd);
+	ft_strdel(&cmd);
 	return ;
 }

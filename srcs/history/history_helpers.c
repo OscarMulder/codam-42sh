@@ -6,7 +6,7 @@
 /*   By: omulder <omulder@student.codam.nl>           +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2019/10/16 15:11:11 by omulder        #+#    #+#                */
-/*   Updated: 2019/10/16 15:15:54 by omulder       ########   odam.nl         */
+/*   Updated: 2019/10/16 18:49:33 by omulder       ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -23,6 +23,8 @@ void			history_remove_tail(t_datahistory *history)
 	if (history->tail == NULL)
 		return ;
 	tofree = history->tail;
+	if (history->head == history->tail)
+		history->head = NULL;
 	history->tail = history->tail->prev;
 	if (history->tail != NULL)
 		history->tail->next = NULL;
@@ -41,6 +43,8 @@ void			history_remove_head(t_datahistory *history)
 	if (history->head == NULL)
 		return ;
 	tofree = history->head;
+	if (history->head == history->tail)
+		history->tail = NULL;
 	history->head = history->head->next;
 	if (history->head != NULL)
 		history->head->prev = NULL;
@@ -50,7 +54,7 @@ void			history_remove_head(t_datahistory *history)
 
 /*
 ** Counts the items from start -> end. If end is NULL, counts till end of
-** the list.
+** the list. If end is not found, returns -1.
 */
 
 int				history_count(t_historyitem *start, t_historyitem *end)
@@ -58,16 +62,15 @@ int				history_count(t_historyitem *start, t_historyitem *end)
 	t_historyitem	*probe;
 	int				count;
 
-	count = 0;
+	count = 1;
 	probe = start;
-	while (probe != end)
+	while (probe != end && probe != NULL)
 	{
-		if (probe->next == NULL && end != NULL)
-			return (-1);
 		count++;
 		probe = probe->next;
 	}
-	count++;
+	if (probe != end)
+		return (-1);
 	return (count);
 }
 

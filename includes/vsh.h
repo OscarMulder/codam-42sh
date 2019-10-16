@@ -6,7 +6,7 @@
 /*   By: omulder <omulder@student.codam.nl>           +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2019/04/10 20:29:42 by jbrinksm       #+#    #+#                */
-/*   Updated: 2019/10/16 15:25:57 by omulder       ########   odam.nl         */
+/*   Updated: 2019/10/16 18:11:20 by omulder       ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -198,6 +198,7 @@
 # define E_FC_INV_OPT		SHELL ": fc: -%c: invalid option\n"
 # define E_FC_OUT_RANGE		SHELL ": fc: history specification out of range\n"
 # define E_FC_F_OPEN		SHELL ": fc: failed to open temporary file\n"
+
 typedef struct	s_fcdata
 {
 	char	options;
