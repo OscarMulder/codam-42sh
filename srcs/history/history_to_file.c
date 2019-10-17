@@ -6,7 +6,7 @@
 /*   By: omulder <omulder@student.codam.nl>           +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2019/05/29 15:25:10 by mavan-he       #+#    #+#                */
-/*   Updated: 2019/10/15 15:18:05 by omulder       ########   odam.nl         */
+/*   Updated: 2019/10/17 15:53:43 by omulder       ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -54,4 +54,3 @@ int			history_to_file(t_datahistory *history)
 	ft_strdel(&histfile);
 	return (FUNCT_SUCCESS);
 }
- 
