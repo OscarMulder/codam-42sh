@@ -6,7 +6,7 @@
 /*   By: omulder <omulder@student.codam.nl>           +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2019/04/11 20:15:24 by jbrinksm       #+#    #+#                */
-/*   Updated: 2019/10/15 14:49:25 by omulder       ########   odam.nl         */
+/*   Updated: 2019/10/17 15:45:37 by omulder       ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -24,6 +24,8 @@ void		builtin_exit(char **args, t_vshdata *data)
 {
 	ft_eprintf("exit\n");
 	history_to_file(data->history);
+	while (data->history->head != NULL)
+		history_remove_head(data->history);
 	if (args == NULL)
 		reset_exit(g_state->exit_code, data->term);
 	if (args[1] != NULL && args[2] == NULL)
