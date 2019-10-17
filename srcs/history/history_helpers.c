@@ -6,7 +6,7 @@
 /*   By: omulder <omulder@student.codam.nl>           +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2019/10/16 15:11:11 by omulder        #+#    #+#                */
-/*   Updated: 2019/10/16 18:49:33 by omulder       ########   odam.nl         */
+/*   Updated: 2019/10/17 16:01:15 by omulder       ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -20,7 +20,7 @@ void			history_remove_tail(t_datahistory *history)
 {
 	t_historyitem *tofree;
 
-	if (history->tail == NULL)
+	if (history == NULL || history->tail == NULL)
 		return ;
 	tofree = history->tail;
 	if (history->head == history->tail)
@@ -40,7 +40,7 @@ void			history_remove_head(t_datahistory *history)
 {
 	t_historyitem *tofree;
 
-	if (history->head == NULL)
+	if (history == NULL || history->head == NULL)
 		return ;
 	tofree = history->head;
 	if (history->head == history->tail)
