@@ -6,7 +6,7 @@
 /*   By: omulder <omulder@student.codam.nl>           +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2019/09/21 15:22:42 by omulder        #+#    #+#                */
-/*   Updated: 2019/10/16 15:23:02 by omulder       ########   odam.nl         */
+/*   Updated: 2019/10/17 14:45:53 by omulder       ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -69,17 +69,18 @@ void		fc_substitute(t_vshdata *data, t_datahistory *history, t_fcdata *fc)
 	char			*cmd;
 
 	cmd = NULL;
+	g_state->exit_code = EXIT_SUCCESS;
 	history_remove_tail(history);
 	if (find_item(history, fc, &item) == FUNCT_FAILURE ||
 	replace_cmd(fc, item, &cmd) == FUNCT_ERROR)
 	{
 		ft_strdel(&cmd);
+		g_state->exit_code = EXIT_FAILURE;
 		return ;
 	}
 	ft_printf(cmd);
 	data->fc_flags |= FC_SET_HIST;
 	shell_one_line(data, cmd);
-	g_state->exit_code = EXIT_SUCCESS;
 	data->fc_flags = 0;
 	ft_strdel(&cmd);
 }

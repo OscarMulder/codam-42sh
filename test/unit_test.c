@@ -6,7 +6,7 @@
 /*   By: omulder <omulder@student.codam.nl>           +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2019/04/18 16:37:32 by omulder        #+#    #+#                */
-/*   Updated: 2019/10/17 14:25:13 by omulder       ########   odam.nl         */
+/*   Updated: 2019/10/17 14:48:55 by omulder       ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -1018,14 +1018,19 @@ Test(deepfake, basic, .init=redirect_all_stdout)
 	history_add_item(data->history, "echo hoi\ndoei");
 	lines = (char**)ft_memalloc(sizeof(char*) * 11);
 	lines[0] = ft_strdup("fc -l");
-	lines[1] = ft_strdup("fc -l -2");
+	lines[1] = ft_strdup("fc -lr -2");
 	lines[2] = ft_strdup("fc -l 1 -3");
 	lines[3] = ft_strdup("fc -e cat -4");
 	lines[4] = ft_strdup("fc -l echo -5");
 	lines[5] = ft_strdup("fc -s hoi=doei -6");
+	lines[6] = ft_strdup("fc -ln 200 -200");
+	lines[7] = ft_strdup("fc -e cat");
+	lines[8] = ft_strdup("fc -s wauw=wow 1");
 	data->fc_flags |= FC_PRINT_CMD;
 	data->fc_flags |= FC_SET_HIST;
 	shell_lines_exec(data, lines);
 	ft_strarrdel(&lines);
 	cr_expect(g_state->exit_code == EXIT_SUCCESS);
+	shell_one_line(data, "fc -l error");
+	cr_expect(g_state->exit_code == EXIT_FAILURE);
 }
