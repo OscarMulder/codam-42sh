@@ -6,7 +6,7 @@
 /*   By: omulder <omulder@student.codam.nl>           +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2019/04/18 16:37:32 by omulder        #+#    #+#                */
-/*   Updated: 2019/10/16 19:57:44 by omulder       ########   odam.nl         */
+/*   Updated: 2019/10/17 14:17:19 by omulder       ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -1002,3 +1002,30 @@ Test(tilde_expansion, basic_test)
 /*
 **------------------------------------------------------------------------------
 */
+
+TestSuite(deepfake);
+
+Test(deepfake, basic, .init=redirect_all_stdout)
+{
+	t_vshdata	*data;
+	char **lines;
+
+	INIT_VSHDATA
+	history_add_item(data->history, "echo wauw");
+	history_add_item(data->history, "echo wooh");
+	history_add_item(data->history, "echo codam");
+	history_add_item(data->history, "echo kippen");
+	history_add_item(data->history, "echo hoi");
+	lines = (char**)ft_memalloc(sizeof(char*) * 11);
+	lines[0] = ft_strdup("fc -l");
+	lines[1] = ft_strdup("fc -l -2");
+	lines[2] = ft_strdup("fc -l 1 -3");
+	lines[3] = ft_strdup("fc -e cat -4");
+	lines[4] = ft_strdup("fc -l echo -5");
+	lines[5] = ft_strdup("fc -s hoi=doei -6");
+	data->fc_flags |= FC_PRINT_CMD;
+	data->fc_flags |= FC_SET_HIST;
+	shell_lines_exec(data, lines);
+	ft_strarrdel(&lines);
+	cr_expect(g_state->exit_code == EXIT_SUCCESS);
+}
