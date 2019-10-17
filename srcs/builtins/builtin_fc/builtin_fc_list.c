@@ -6,7 +6,7 @@
 /*   By: omulder <omulder@student.codam.nl>           +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2019/09/11 12:54:36 by omulder        #+#    #+#                */
-/*   Updated: 2019/10/16 18:54:31 by omulder       ########   odam.nl         */
+/*   Updated: 2019/10/17 14:58:04 by omulder       ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -140,11 +140,13 @@ void		fc_list(t_datahistory *history, t_fcdata *fc)
 	char			*cmd;
 
 	cmd = ft_strdup(history->tail->str);
-	history_remove_tail(history);
+	if (g_state->shell_type == SHELL_INTERACT)
+		history_remove_tail(history);
 	if (fc_get_start(history, fc, &start, &len) == FUNCT_FAILURE)
 		return ;
 	fc_print(fc, start, len);
-	history_add_item(history, cmd);
+	if (g_state->shell_type == SHELL_INTERACT)
+		history_add_item(history, cmd);
 	ft_strdel(&cmd);
 	return ;
 }

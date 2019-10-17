@@ -6,20 +6,12 @@
 /*   By: omulder <omulder@student.codam.nl>           +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2019/09/22 18:54:24 by omulder        #+#    #+#                */
-/*   Updated: 2019/10/15 16:49:55 by omulder       ########   odam.nl         */
+/*   Updated: 2019/10/17 15:05:51 by omulder       ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "vsh.h"
 #include <stdio.h>
-
-static int	err_ret_prog_exit(char *str, char *prog, int exitcode)
-{
-	g_state->exit_code = exitcode;
-	if (str != NULL)
-		ft_eprintf(str, prog);
-	return (FUNCT_ERROR);
-}
 
 /*
 ** Creates the correct tmpfile string and checks for malloc errors
@@ -82,6 +74,23 @@ static void	set_flags(t_vshdata *data)
 }
 
 /*
+** Finds all the commands needed, creates tmp file, prints commands to file.
+*/
+
+static void	print_cmds_to_file(t_datahistory *history, t_fcdata *fc)
+{
+	t_historyitem	*start;
+	int				len;
+
+	if (fc_get_start(history, fc, &start, &len) != FUNCT_SUCCESS)
+		return ;
+	if (fc_open_temp(fc) != FUNCT_SUCCESS)
+		return ;
+	fc_print(fc, start, len);
+	close(fc->fd);
+}
+
+/*
 ** So fc_edit has to do a lot of stuff:
 ** - Find start and end (the commands that need to be edited)
 ** - Create a temporary file
@@ -94,18 +103,12 @@ static void	set_flags(t_vshdata *data)
 
 void		fc_edit(t_vshdata *data, t_datahistory *history, t_fcdata *fc)
 {
-	t_historyitem	*start;
-	int				len;
 	char			*exec_edit;
 
 	g_state->exit_code = EXIT_SUCCESS;
-	history_remove_tail(history);
-	if (fc_get_start(history, fc, &start, &len) != FUNCT_SUCCESS)
-		return ;
-	if (fc_open_temp(fc) != FUNCT_SUCCESS)
-		return ;
-	fc_print(fc, start, len);
-	close(fc->fd);
+	if (g_state->shell_type == SHELL_INTERACT)
+		history_remove_tail(history);
+	print_cmds_to_file(history, fc);
 	exec_edit = ft_strjoinfree_all(
 		ft_strjoinchr(fc->editor, ' '), ft_strjoinchr(fc->tmpfile, '\n'));
 	if (exec_edit == NULL)
@@ -114,7 +117,8 @@ void		fc_edit(t_vshdata *data, t_datahistory *history, t_fcdata *fc)
 	ft_strdel(&exec_edit);
 	if (g_state->exit_code == EXIT_SUCCESS)
 	{
-		set_flags(data);
+		if (g_state->shell_type == SHELL_INTERACT)
+			set_flags(data);
 		shell_args(data, fc->tmpfile);
 		data->fc_flags = 0;
 	}

@@ -6,7 +6,7 @@
 /*   By: omulder <omulder@student.codam.nl>           +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2019/09/21 15:22:42 by omulder        #+#    #+#                */
-/*   Updated: 2019/10/17 14:45:53 by omulder       ########   odam.nl         */
+/*   Updated: 2019/10/17 14:58:20 by omulder       ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -70,7 +70,8 @@ void		fc_substitute(t_vshdata *data, t_datahistory *history, t_fcdata *fc)
 
 	cmd = NULL;
 	g_state->exit_code = EXIT_SUCCESS;
-	history_remove_tail(history);
+	if (g_state->shell_type == SHELL_INTERACT)
+		history_remove_tail(history);
 	if (find_item(history, fc, &item) == FUNCT_FAILURE ||
 	replace_cmd(fc, item, &cmd) == FUNCT_ERROR)
 	{

@@ -6,7 +6,7 @@
 /*   By: omulder <omulder@student.codam.nl>           +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2019/04/10 20:29:42 by jbrinksm       #+#    #+#                */
-/*   Updated: 2019/10/16 18:11:20 by omulder       ########   odam.nl         */
+/*   Updated: 2019/10/17 15:04:16 by omulder       ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -1000,6 +1000,7 @@ int				err_ret_exit(char *str, int exitcode);
 void			err_void_exit(char *str, int exitcode);
 int				err_ret(char *str);
 void			err_void_prog_exit(char *error, char *prog, int exitcode);
+int				err_ret_prog_exit(char *str, char *prog, int exitcode);
 
 /*
 **--------------------------------autocomplete----------------------------------
