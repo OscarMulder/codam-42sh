@@ -6,7 +6,7 @@
 /*   By: omulder <omulder@student.codam.nl>           +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2019/04/18 16:37:32 by omulder        #+#    #+#                */
-/*   Updated: 2019/10/17 15:18:30 by omulder       ########   odam.nl         */
+/*   Updated: 2019/10/17 16:08:44 by omulder       ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -1011,6 +1011,7 @@ Test(deepfake, fc_basic, .init=redirect_all_stdout)
 	char **lines;
 
 	INIT_VSHDATA
+	g_data = data;
 	history_add_item(data->history, "echo wauw");
 	history_add_item(data->history, "echo wooh");
 	history_add_item(data->history, "echo codam");
@@ -1041,6 +1042,7 @@ Test(deepfake, history_basic, .init=redirect_all_stdout)
 	char **lines;
 
 	INIT_VSHDATA
+	g_data = data;
 	history_add_item(data->history, "echo wauw");
 	history_add_item(data->history, "echo wooh");
 	history_add_item(data->history, "echo codam");
