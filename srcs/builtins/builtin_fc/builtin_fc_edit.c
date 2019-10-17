@@ -6,7 +6,7 @@
 /*   By: omulder <omulder@student.codam.nl>           +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2019/09/22 18:54:24 by omulder        #+#    #+#                */
-/*   Updated: 2019/10/17 15:05:51 by omulder       ########   odam.nl         */
+/*   Updated: 2019/10/17 15:19:50 by omulder       ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -93,12 +93,15 @@ static void	print_cmds_to_file(t_datahistory *history, t_fcdata *fc)
 /*
 ** So fc_edit has to do a lot of stuff:
 ** - Find start and end (the commands that need to be edited)
+** - Remove itself from history (when shell is interactive)
 ** - Create a temporary file
 ** - Write the commands to the file
 ** - Open the file in specified editor/FCEDIT/EDITOR/ed
 ** - When editor closes
 ** - Execute the file
 ** - Remove file
+** If the shell is interactive, executed commands are added to history,
+** otherwise they are not added.
 */
 
 void		fc_edit(t_vshdata *data, t_datahistory *history, t_fcdata *fc)
