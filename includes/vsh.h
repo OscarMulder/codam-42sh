@@ -6,7 +6,7 @@
 /*   By: omulder <omulder@student.codam.nl>           +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2019/04/10 20:29:42 by jbrinksm       #+#    #+#                */
-/*   Updated: 2019/10/17 15:04:16 by omulder       ########   odam.nl         */
+/*   Updated: 2019/10/17 16:20:13 by omulder       ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -436,7 +436,6 @@ typedef struct	s_datahistory
 	t_historyitem	*tail;
 	t_historyitem	*current;
 	int				count;
-	char			*history_file;
 }				t_datahistory;
 
 typedef struct	s_dataline

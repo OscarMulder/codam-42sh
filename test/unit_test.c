@@ -6,7 +6,7 @@
 /*   By: omulder <omulder@student.codam.nl>           +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2019/04/18 16:37:32 by omulder        #+#    #+#                */
-/*   Updated: 2019/10/17 16:08:44 by omulder       ########   odam.nl         */
+/*   Updated: 2019/10/17 16:20:02 by omulder       ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -204,7 +204,6 @@ Test(shell_quote_checker, basic)
 
 	
 	INIT_VSHDATA
-	data->history->history_file = "/tmp/.vsh_history";
 	data->line->line = strdup("lala");
 	shell_close_unclosed_quotes(data);
 	cr_expect_str_eq(data->line->line, "lala");
