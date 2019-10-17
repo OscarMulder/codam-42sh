@@ -6,7 +6,7 @@
 /*   By: omulder <omulder@student.codam.nl>           +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2019/04/10 20:29:42 by jbrinksm       #+#    #+#                */
-/*   Updated: 2019/10/17 16:20:13 by omulder       ########   odam.nl         */
+/*   Updated: 2019/10/17 16:22:05 by omulder       ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -975,7 +975,6 @@ int				history_insert_into_line(char **line,
 				char *hist_line, size_t i);
 size_t			history_get_match_len(char *line, size_t i);
 int				history_count(t_historyitem *start, t_historyitem *end);
-t_historyitem	*history_walker(t_historyitem *start, int len);
 void			history_free_item(t_historyitem **item);
 
 /*

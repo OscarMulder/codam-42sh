@@ -6,7 +6,7 @@
 /*   By: omulder <omulder@student.codam.nl>           +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2019/10/16 15:11:11 by omulder        #+#    #+#                */
-/*   Updated: 2019/10/17 16:01:15 by omulder       ########   odam.nl         */
+/*   Updated: 2019/10/17 16:22:10 by omulder       ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -72,26 +72,4 @@ int				history_count(t_historyitem *start, t_historyitem *end)
 	if (probe != end)
 		return (-1);
 	return (count);
-}
-
-/*
-** Walks the history from start, len times. Then returns the item.
-** I needed this but ended up refactoring it away. So it's not used.
-*/
-
-t_historyitem	*history_walker(t_historyitem *start, int len)
-{
-	t_historyitem	*probe;
-	int				i;
-
-	i = 0;
-	probe = start;
-	while (i < len)
-	{
-		if (probe->next == NULL)
-			return (NULL);
-		i++;
-		probe = probe->next;
-	}
-	return (probe);
 }
