@@ -6,7 +6,7 @@
 /*   By: mavan-he <mavan-he@student.codam.nl>         +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2019/10/14 15:23:48 by mavan-he       #+#    #+#                */
-/*   Updated: 2019/10/14 16:21:28 by mavan-he      ########   odam.nl         */
+/*   Updated: 2019/10/17 18:17:00 by mavan-he      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -55,14 +55,8 @@ int			glob_matching_bracepos(t_globtoken *tokenprobe, t_globmatchlst match)
 	return (FUNCT_FAILURE);
 }
 
-int			glob_start_matching(t_globtoken *tokenprobe, t_globmatchlst match)
+int			glob_quest_or_str(t_globtoken *tokenprobe, t_globmatchlst match)
 {
-	if (match.index == match.word_len &&
-		(tokenprobe == NULL || tokenprobe->tk_type == GLOB_SLASH))
-		return (FUNCT_SUCCESS);
-	else if (tokenprobe == NULL || tokenprobe->tk_type == GLOB_SLASH)
-		return (FUNCT_FAILURE);
-
 	if (tokenprobe->tk_type == GLOB_STR)
 	{
 		if (ft_strnequ(tokenprobe->word_chunk, &match.word[match.index],
@@ -74,7 +68,6 @@ int			glob_start_matching(t_globtoken *tokenprobe, t_globmatchlst match)
 			return (glob_start_matching(tokenprobe->next, match));
 		}
 	}
-
 	else if (tokenprobe->tk_type == GLOB_QUEST)
 	{
 		if (match.word[match.index] == '\0')
@@ -85,15 +78,23 @@ int			glob_start_matching(t_globtoken *tokenprobe, t_globmatchlst match)
 			return (glob_start_matching(tokenprobe->next, match));
 		}
 	}
+	return (FUNCT_ERROR);
+}
 
+int			glob_start_matching(t_globtoken *tokenprobe, t_globmatchlst match)
+{
+	if (match.index == match.word_len &&
+		(tokenprobe == NULL || tokenprobe->tk_type == GLOB_SLASH))
+		return (FUNCT_SUCCESS);
+	else if (tokenprobe == NULL || tokenprobe->tk_type == GLOB_SLASH)
+		return (FUNCT_FAILURE);
+	if (tokenprobe->tk_type == GLOB_STR || tokenprobe->tk_type == GLOB_QUEST)
+		return (glob_quest_or_str(tokenprobe, match));
 	else if (tokenprobe->tk_type == GLOB_BRACEPOS)
 		return (glob_matching_bracepos(tokenprobe, match));
-
 	else if (tokenprobe->tk_type == GLOB_BRACENEG)
 		return (glob_matching_braceneg(tokenprobe, match));
-
 	else if (tokenprobe->tk_type == GLOB_WILD)
 		return (glob_matching_wild(tokenprobe, match));
-
 	return (FUNCT_SUCCESS);
 }

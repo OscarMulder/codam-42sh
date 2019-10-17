@@ -6,7 +6,7 @@
 /*   By: omulder <omulder@student.codam.nl>           +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2019/04/10 20:29:42 by jbrinksm       #+#    #+#                */
-/*   Updated: 2019/10/14 17:16:21 by mavan-he      ########   odam.nl         */
+/*   Updated: 2019/10/17 18:56:21 by mavan-he      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -1071,10 +1071,14 @@ void			glob_lexer_changestate(t_globscanner *scanner,
 					void (*state)(t_globscanner *scanner));
 void			glob_lexer_state_bracket(t_globscanner *scanner);
 void			glob_lexer_addchar(t_globscanner *scanner);
-int				glob_start_matching(t_globtoken *tokenprobe, t_globmatchlst match);
+int				glob_start_matching(t_globtoken *tokenprobe,
+				t_globmatchlst match);
 int				glob_matchlstadd(t_globmatchlst **lst, char *word);
-int				glob_start_matching(t_globtoken *tokenprobe, t_globmatchlst match);
-
+int				glob_start_matching(t_globtoken *tokenprobe,
+				t_globmatchlst match);
+int				glob_add_dotslash_to_path(t_globtoken **tokenlst, char **path);
+void			glob_delmatch(t_globmatchlst **match);
+int				glob_loop_matcher(t_globtoken *tokenlst, char *path);
 
 /*
 **----------------------------------debugging-----------------------------------
