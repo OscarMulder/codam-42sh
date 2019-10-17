@@ -6,7 +6,7 @@
 /*   By: omulder <omulder@student.codam.nl>           +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2019/04/18 16:37:32 by omulder        #+#    #+#                */
-/*   Updated: 2019/10/17 14:48:55 by omulder       ########   odam.nl         */
+/*   Updated: 2019/10/17 15:18:30 by omulder       ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -1005,7 +1005,7 @@ Test(tilde_expansion, basic_test)
 
 TestSuite(deepfake);
 
-Test(deepfake, basic, .init=redirect_all_stdout)
+Test(deepfake, fc_basic, .init=redirect_all_stdout)
 {
 	t_vshdata	*data;
 	char **lines;
@@ -1033,4 +1033,30 @@ Test(deepfake, basic, .init=redirect_all_stdout)
 	cr_expect(g_state->exit_code == EXIT_SUCCESS);
 	shell_one_line(data, "fc -l error");
 	cr_expect(g_state->exit_code == EXIT_FAILURE);
+}
+
+Test(deepfake, history_basic, .init=redirect_all_stdout)
+{
+	t_vshdata	*data;
+	char **lines;
+
+	INIT_VSHDATA
+	history_add_item(data->history, "echo wauw");
+	history_add_item(data->history, "echo wooh");
+	history_add_item(data->history, "echo codam");
+	history_add_item(data->history, "echo kippen");
+	history_add_item(data->history, "echo hoi\ndoei");
+	lines = (char**)ft_memalloc(sizeof(char*) * 11);
+	lines[0] = ft_strdup("history");
+	lines[1] = ft_strdup("echo !-2");
+	lines[2] = ft_strdup("echo !!");
+	lines[3] = ft_strdup("echo !echo");
+	lines[4] = ft_strdup("echo !2");
+	data->fc_flags |= FC_PRINT_CMD;
+	data->fc_flags |= FC_SET_HIST;
+	shell_lines_exec(data, lines);
+	ft_strarrdel(&lines);
+	cr_expect(g_state->exit_code == EXIT_SUCCESS);
+	history_index_change_up(data->history);
+	history_index_change_down(data->history);
 }
