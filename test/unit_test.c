@@ -6,7 +6,7 @@
 /*   By: omulder <omulder@student.codam.nl>           +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2019/04/18 16:37:32 by omulder        #+#    #+#                */
-/*   Updated: 2019/10/17 14:17:19 by omulder       ########   odam.nl         */
+/*   Updated: 2019/10/17 14:25:13 by omulder       ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -1015,7 +1015,7 @@ Test(deepfake, basic, .init=redirect_all_stdout)
 	history_add_item(data->history, "echo wooh");
 	history_add_item(data->history, "echo codam");
 	history_add_item(data->history, "echo kippen");
-	history_add_item(data->history, "echo hoi");
+	history_add_item(data->history, "echo hoi\ndoei");
 	lines = (char**)ft_memalloc(sizeof(char*) * 11);
 	lines[0] = ft_strdup("fc -l");
 	lines[1] = ft_strdup("fc -l -2");
