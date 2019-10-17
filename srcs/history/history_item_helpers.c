@@ -6,7 +6,7 @@
 /*   By: omulder <omulder@student.codam.nl>           +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2019/10/15 10:16:47 by omulder        #+#    #+#                */
-/*   Updated: 2019/10/17 15:38:53 by omulder       ########   odam.nl         */
+/*   Updated: 2019/10/17 16:24:55 by omulder       ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -78,9 +78,9 @@ int						history_add_item(t_datahistory *history, char *line)
 		new->prev = history->tail;
 		history->tail->next = new;
 	}
-	while (history_get_histsize() <= history->count)
-		history_remove_head(history);
 	history->tail = new;
 	history->count += 1;
+	while (history->count > history_get_histsize())
+		history_remove_head(history);
 	return (FUNCT_SUCCESS);
 }
