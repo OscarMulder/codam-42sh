@@ -6,7 +6,7 @@
 /*   By: omulder <omulder@student.codam.nl>           +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2019/04/10 20:29:42 by jbrinksm       #+#    #+#                */
-/*   Updated: 2019/10/17 16:22:05 by omulder       ########   odam.nl         */
+/*   Updated: 2019/10/17 17:23:10 by omulder       ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -316,7 +316,8 @@ typedef struct	s_fcdata
 **----------------------------------history-------------------------------------
 */
 
-# define POSIX_HISTSIZE 32767
+# define POSIX_WRAPPER 	32767
+# define DEF_HISTSIZE	500
 # define ARROW_UP	    1
 # define ARROW_DOWN	    2
 # define HISTFILENAME	".vsh_history"
