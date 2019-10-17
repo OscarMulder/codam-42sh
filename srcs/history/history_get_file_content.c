@@ -6,7 +6,7 @@
 /*   By: omulder <omulder@student.codam.nl>           +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2019/05/30 13:49:22 by mavan-he       #+#    #+#                */
-/*   Updated: 2019/10/16 19:43:40 by omulder       ########   odam.nl         */
+/*   Updated: 2019/10/17 15:40:07 by omulder       ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -74,12 +74,18 @@ char			*history_get_filename(void)
 int				history_get_histsize(void)
 {
 	char	*size;
+	int		histsize;
 
 	size = env_getvalue("HISTSIZE", g_data->envlst);
 	if (size == NULL)
 		return (POSIX_HISTSIZE);
 	if (ft_aisint(size))
-		return (ft_atoi(size));
+	{
+		histsize = ft_atoi(size);
+		if (histsize < 128)
+			histsize = 128;
+		return (histsize);
+	}
 	return (POSIX_HISTSIZE);
 }
 
