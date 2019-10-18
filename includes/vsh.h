@@ -6,7 +6,7 @@
 /*   By: omulder <omulder@student.codam.nl>           +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2019/04/10 20:29:42 by jbrinksm       #+#    #+#                */
-/*   Updated: 2019/10/17 18:56:21 by mavan-he      ########   odam.nl         */
+/*   Updated: 2019/10/18 12:04:37 by mavan-he      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -191,11 +191,15 @@
 # define FC_OPT_S			(1 << 4)
 # define FC_FIRST_NEG		(1 << 5)
 # define FC_LAST_NEG		(1 << 6)
-# define U_FC 				"fc: usage: fc [-e ename] [-nlr] [first] [last] or"\
-							"fc -s [pat=rep] [cmd]\n"
+# define FC_PRINT_CMD		(1 << 0)
+# define FC_SET_HIST		(1 << 1)
+# define FC_TMP_FILE		"/tmp/vsh-fc-tmp"
+# define U_FC_2				"[-nlr] [first] [last] or fc -s [pat=rep] [cmd]\n"
+# define U_FC 				"fc: usage: fc [-e ename] " U_FC_2
 # define E_FC_REQARG		SHELL "fc: %s: option requires an argument\n"
 # define E_FC_INV_OPT		SHELL ": fc: -%c: invalid option\n"
 # define E_FC_OUT_RANGE		SHELL ": fc: history specification out of range\n"
+# define E_FC_F_OPEN		SHELL ": fc: failed to open temporary file\n"
 
 typedef struct	s_fcdata
 {
@@ -204,7 +208,8 @@ typedef struct	s_fcdata
 	char	*last;
 	char	*editor;
 	char	*replace;
-	char	*match;
+	char	*tmpfile;
+	int		fd;
 }				t_fcdata;
 
 /*
@@ -313,12 +318,15 @@ typedef struct	s_fcdata
 **----------------------------------history-------------------------------------
 */
 
-# define HISTORY_MAX	500
+# define POSIX_WRAPPER 	32767
+# define DEF_HISTSIZE	500
 # define ARROW_UP	    1
 # define ARROW_DOWN	    2
 # define HISTFILENAME	".vsh_history"
 # define HIST_SEPARATE	-1
 # define HIST_EXPANDED	(1 << 2)
+
+
 
 /*
 **===============================personal headers===============================
@@ -359,11 +367,13 @@ typedef struct	s_envlst
 **-----------------------------------history------------------------------------
 */
 
-typedef struct	s_history
+typedef struct	s_historyitem
 {
-	int		number;
-	char	*str;
-}				t_history;
+	int						number;
+	char					*str;
+	struct s_historyitem	*prev;
+	struct s_historyitem	*next;
+}				t_historyitem;
 
 /*
 **------------------------------------alias-------------------------------------
@@ -425,11 +435,10 @@ typedef struct	s_datacurs
 
 typedef struct	s_datahistory
 {
-	t_history	**history;
-	char		*history_file;
-	int			hist_index;
-	int			hist_start;
-	bool		hist_isfirst;
+	t_historyitem	*head;
+	t_historyitem	*tail;
+	t_historyitem	*current;
+	int				count;
 }				t_datahistory;
 
 typedef struct	s_dataline
@@ -495,7 +504,8 @@ typedef struct	s_vshdata
 	t_dataalias		*alias;
 	t_datatermcaps	*termcaps;
 	t_pipeseqlist	*pipeseq;
-	short			exec_flags;
+	int				fc_flags;
+	int				exec_flags;
 }				t_vshdata;
 
 t_vshdata		*g_data;
@@ -706,7 +716,7 @@ int				shell_handle_escaped_newlines(t_vshdata *data);
 void			shell_get_valid_prompt(t_vshdata *data, int prompt_type);
 int 			shell_init_term(t_vshdata *data);
 void			shell_args(t_vshdata *data, char *filepath);
-int				shell_get_path(t_vshdata *data, char **filepath);
+int				shell_get_path(t_vshdata *data, char *filepath, char **path);
 int				shell_init_line(t_vshdata *data, char *filepath);
 int				shell_one_line(t_vshdata *data, char *line);
 void			shell_stdin(t_vshdata *data);
@@ -848,15 +858,17 @@ int				fc_option_substitute(int i, char **args, t_fcdata *fc);
 void			fc_option_suppress(t_fcdata *fc);
 void			fc_option_reverse(t_fcdata *fc);
 void			fc_list(t_datahistory *history, t_fcdata *fc);
-int				fc_list_print_line(t_history *history, t_fcdata *fc);
-void			fc_print_regular(int start, int end, t_history **history,
+int				fc_list_print_line(t_historyitem *item, t_fcdata *fc);
+void			fc_print_regular(t_historyitem *start, int len, t_fcdata *fc);
+void			fc_print_reverse(t_historyitem *start, int len, t_fcdata *fc);
+int				fc_find_item(t_datahistory *history, t_fcdata *fc,
+				char *str, t_historyitem **item);
+void			fc_substitute(t_vshdata *data, t_datahistory *history,
 				t_fcdata *fc);
-void			fc_print_reverse(int start, int end, t_history **history,
-				t_fcdata *fc);
-int				fc_find_index(t_datahistory *history, t_fcdata *fc,
-				char *str, int *index);
-int				fc_substitute(t_vshdata *data, t_datahistory *history,
-				t_fcdata *fc);
+int				fc_get_start(t_datahistory *history, t_fcdata *fc,
+				t_historyitem **start, int *len);
+void			fc_print(t_fcdata *fc, t_historyitem *start, int len);
+void			fc_edit(t_vshdata *data, t_datahistory *history, t_fcdata *fc);
 
 /*
 **---------------------------------tools----------------------------------------
@@ -945,14 +957,19 @@ int				redir_close_saved_stdfds(t_vshdata *data);
 **------------------------------------history-----------------------------------
 */
 
-int				history_to_file(t_vshdata *data);
-int				history_get_file_content(t_vshdata *data);
-int				history_line_to_array(t_history **history, char **line);
-void			history_print(t_history **history);
-int				history_change_line(t_vshdata *data,
-					char arrow);
-int				history_index_change_down(t_vshdata *data);
-int				history_index_change_up(t_vshdata *data);
+int				history_to_file(t_datahistory *history);
+int				history_get_file_content(t_datahistory *history);
+int				history_get_histsize(void);
+void			history_print(t_datahistory *history);
+char			*history_get_filename(void);
+
+int				history_add_item(t_datahistory *history, char *line);
+void			history_remove_tail(t_datahistory *history);
+void			history_remove_head(t_datahistory *history);
+
+int				history_change_line(t_vshdata *data, char arrow);
+int				history_index_change_down(t_datahistory *history);
+int				history_index_change_up(t_datahistory *history);
 int				history_expansion(t_vshdata *data);
 char			*history_get_line(t_datahistory *history, char *line, size_t i);
 char			*history_match_line(t_datahistory *history,
@@ -960,7 +977,9 @@ char			*history_match_line(t_datahistory *history,
 int				history_insert_into_line(char **line,
 				char *hist_line, size_t i);
 size_t			history_get_match_len(char *line, size_t i);
-int				history_replace_last(t_history **history, char **line);
+int				history_count(t_historyitem *start, t_historyitem *end);
+void			history_free_item(t_historyitem **item);
+
 /*
 **--------------------------------hashtable-------------------------------------
 */
@@ -982,6 +1001,7 @@ int				err_ret_exit(char *str, int exitcode);
 void			err_void_exit(char *str, int exitcode);
 int				err_ret(char *str);
 void			err_void_prog_exit(char *error, char *prog, int exitcode);
+int				err_ret_prog_exit(char *str, char *prog, int exitcode);
 
 /*
 **--------------------------------autocomplete----------------------------------
