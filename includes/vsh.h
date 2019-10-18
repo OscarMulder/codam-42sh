@@ -6,7 +6,7 @@
 /*   By: omulder <omulder@student.codam.nl>           +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2019/04/10 20:29:42 by jbrinksm       #+#    #+#                */
-/*   Updated: 2019/10/18 12:04:37 by mavan-he      ########   odam.nl         */
+/*   Updated: 2019/10/18 17:53:50 by mavan-he      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -928,6 +928,7 @@ int				expan_handle_bracketed_var(char **value, int *i,
 int				expan_handle_dollar(char **value, int *i, t_envlst *envlst);
 int				expan_tilde_expansion(t_ast *node, int *i);
 int				expan_var_error_print(char *str, int len);
+int				expan_pathname(t_ast *ast);
 
 /*
 **------------------------------------redir-------------------------------------
@@ -1081,7 +1082,7 @@ typedef struct	s_globmatchlst
 
 int				glob_lexer(t_globtoken **lst, char *word);
 void			glob_lexer_finish(t_globscanner *scanner, t_globtokens type);
-int				glob_expand_word(char *word);
+int				glob_expand_word(t_ast **ast, char *word);
 void			glob_tokenlstadd(t_globtoken **lst, t_globtoken *new);
 t_globtoken		*glob_tokenlstnew(char *word_chunk, int type);
 int				glob_add_scanned_token(t_globtoken **lst,
@@ -1098,7 +1099,12 @@ int				glob_start_matching(t_globtoken *tokenprobe,
 				t_globmatchlst match);
 int				glob_add_dotslash_to_path(t_globtoken **tokenlst, char **path);
 void			glob_delmatch(t_globmatchlst **match);
-int				glob_loop_matcher(t_globtoken *tokenlst, char *path);
+int				glob_loop_matcher(t_ast **ast, t_globtoken *tokenlst,
+				char *path, int cwd_len);
+int				glob_ast_add_left(t_ast **ast, char *value,
+				t_tokens type, char flags);
+int				glob_keep_dirs(t_globmatchlst **matchlst, char *path);
+void			glob_del_matchlst(t_globmatchlst **matchlst);
 
 /*
 **----------------------------------debugging-----------------------------------

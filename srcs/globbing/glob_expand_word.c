@@ -6,38 +6,42 @@
 /*   By: jbrinksm <jbrinksm@student.codam.nl>         +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2019/10/07 14:54:03 by jbrinksm       #+#    #+#                */
-/*   Updated: 2019/10/17 19:16:52 by mavan-he      ########   odam.nl         */
+/*   Updated: 2019/10/18 18:07:52 by mavan-he      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "vsh.h"
 
-int			glob_init_path(t_globtoken **tokenlst, char **path)
+int			glob_init_path(t_globtoken **tokenlst, char **path, int *cwd_len)
 {
-	if ((*tokenlst)->tk_type == GLOB_SLASH || (*tokenlst)->tk_type == GLOB_DOTSLASH ||
+	if ((*tokenlst)->tk_type == GLOB_SLASH ||
+		(*tokenlst)->tk_type == GLOB_DOTSLASH ||
 		(*tokenlst)->tk_type == GLOB_DOTDOTSLASH)
 	{
 		if (glob_add_dotslash_to_path(tokenlst, path) == FUNCT_ERROR)
-			return (FUNCT_ERROR); // error
+			return (FUNCT_ERROR);
 	}
 	else
 	{
 		*path = getcwd(NULL, 0);
 		if (*path == NULL)
-			return (FUNCT_ERROR); // error
+			return (err_ret_exit(E_ALLOC_STR, EXIT_FAILURE));
 		*path = ft_strjoinfree_s1(*path, "/");
+		*cwd_len = ft_strlen(*path);
 	}
 	if (*path == NULL)
-		return (FUNCT_ERROR); // error
+		return (err_ret_exit(E_ALLOC_STR, EXIT_FAILURE));
 	return (FUNCT_SUCCESS);
 }
 
-int		glob_expand_word(char *word)
+int		glob_expand_word(t_ast **ast, char *word)
 {
 	t_globtoken		*tokenlst;
 	t_globtoken		*tokenlst_head;
 	char			*path;
+	int				cwd_len;
 
+	cwd_len = 0;
 	if (word == NULL)
 		return (FUNCT_ERROR);
 	path = NULL;
@@ -45,11 +49,11 @@ int		glob_expand_word(char *word)
 	if (glob_lexer(&tokenlst, word) == FUNCT_ERROR)
 		return (FUNCT_ERROR);
 	tokenlst_head = tokenlst;
-	glob_print_tokenlist(tokenlst); // debug
-	if (glob_init_path(&tokenlst, &path) == FUNCT_ERROR)
+	if (glob_init_path(&tokenlst, &path, &cwd_len) == FUNCT_ERROR)
 		return (FUNCT_ERROR);
-	ft_printf("Begin path: %s\n", path); // debug
-	if (glob_loop_matcher(tokenlst, path) == FUNCT_ERROR)
+	if (glob_loop_matcher(ast, tokenlst, path, cwd_len) == FUNCT_ERROR)
 		return (FUNCT_ERROR);
+
+	// free token lst / and path / and ast ?
 	return (FUNCT_SUCCESS);
 }

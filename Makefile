@@ -6,7 +6,7 @@
 #    By: omulder <omulder@student.codam.nl>           +#+                      #
 #                                                    +#+                       #
 #    Created: 2019/04/10 20:30:07 by jbrinksm       #+#    #+#                 #
-#    Updated: 2019/10/18 12:04:02 by mavan-he      ########   odam.nl          #
+#    Updated: 2019/10/18 14:48:29 by mavan-he      ########   odam.nl          #
 #                                                                              #
 # **************************************************************************** #
 
@@ -68,6 +68,7 @@ exec_builtin exec_cmd exec_external exec_start exec_find_binary \
 exec_quote_remove expan_handle_variables expan_handle_dollar \
 exec_create_files exec_command exec_add_pid_to_pipeseqlist \
 expan_handle_bracketed_var expan_tilde_expansion exec_validate_binary \
+expan_pathname \
 redir_pipe redir redir_tools redir_tools2 \
 hash_ht_insert hash_print hash_reset hash_init hash_check \
 print_errors print_errors_extended \
@@ -80,7 +81,7 @@ builtin_fc_print_helpers builint_fc_find_index builtin_fc_substitute \
 builtin_fc_edit \
 signal_handle_child_death \
 glob_expand_word glob_lexer glob_debug glob_lst_funcs glob_lexer_helpers \
-glob_lexer_states glob_matching glob_helpers glob_start_matching
+glob_lexer_states glob_matching glob_helpers glob_start_matching glob_ast_add
 TESTS = unit_test builtin_assign_test
 OBJECTS := $(SRCS:%=%.o)
 TESTOBJECTS := $(TESTS:%=%.o)
