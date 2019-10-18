@@ -6,7 +6,7 @@
 /*   By: rkuijper <rkuijper@student.codam.nl>         +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2019/10/18 15:54:56 by rkuijper       #+#    #+#                */
-/*   Updated: 2019/10/18 17:07:39 by rkuijper      ########   odam.nl         */
+/*   Updated: 2019/10/18 17:13:40 by rkuijper      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -41,7 +41,8 @@ static int	bg_with_params(char **av, t_vshdata *data)
 		if (ft_strlen(*av) != ft_numlen(num))
 			ft_eprintf("bg: %s: job not found\n");
 		else
-			av++;
+			
+		av++;
 	}
 	(void)data;
 }
