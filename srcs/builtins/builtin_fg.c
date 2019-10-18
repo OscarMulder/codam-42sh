@@ -48,32 +48,8 @@ int		builtin_fg(char **args, t_vshdata* data)
 	job->current = builtin_jobs_new_current_val(data->jobs->joblist);
 	print_job_info(job, 0, data->jobs->joblist);
 	term_flags_init(data->term->termios_p);
-	kill(job->process_id, SIGCONT);
-	waitpid(job->process_id, &status, WUNTRACED);
+	kill(job->pgid, SIGCONT);
+	waitpid(job->pgid, &status, WUNTRACED);
 	term_flags_destroy(data->term->termios_p);
-	return (FUNCT_SUCCESS);
-}
-
-/* Needs to handle arguments still... */
-int		builtin_bg(char **args, t_vshdata* data)
-{
-	t_job	*job;
-	int		status;
-	
-	(void)args;
-	job = data->jobs->joblist;
-	if (job == NULL)
-		return (err_ret("bg: no current job\n"));
-	while (job != NULL)
-	{
-		ft_eprintf("Checking job with pid: %i\n", job->process_id);
-		if (jobs_get_job_state(job) == JOB_SUSPEND)
-		{
-			kill(job->process_id, SIGCONT);
-			waitpid(job->process_id, &status, WNOHANG);
-			return (FUNCT_SUCCESS);
-		}
-		job = job->next;
-	}
 	return (FUNCT_SUCCESS);
 }

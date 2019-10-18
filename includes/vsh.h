@@ -6,7 +6,7 @@
 /*   By: omulder <omulder@student.codam.nl>           +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2019/04/10 20:29:42 by jbrinksm       #+#    #+#                */
-/*   Updated: 2019/10/07 13:33:30 by tde-jong      ########   odam.nl         */
+/*   Updated: 2019/10/18 17:10:11 by rkuijper      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -399,13 +399,18 @@ typedef struct termios	t_termios;
 # define JOB_RUNNING	1
 # define JOB_SUSPEND	2
 
+#define JOB_OPT_NONE	0
+#define JOB_OPT_P		1
+#define JOB_OPT_L		2
+
 typedef struct	s_job
 {
-	int				job_id;
-	pid_t			process_id;
-	char			*command_name;
+	bool			bg;
+	pid_t			pgid;
 	int				state;
+	int				job_id;
 	int 			current;
+	char			*command;
 	struct s_job	*next;
 }				t_job;
 
@@ -718,6 +723,16 @@ int				jobs_add_job(t_vshdata *vshdata, pid_t pid, char *command);
 t_job			*jobs_find_current_job(t_job *joblist);
 void			print_job_info(t_job *job, int options, t_job *joblist);
 
+t_job			*jobs_get_current_job(t_job *joblist);
+
+void			jobs_continue_job(t_job *job, bool fg);
+void			jobs_bg_job(t_job *job, bool job_continued);
+
+void			jobs_print_job_info(t_job *job, int options, t_job *joblist);
+
+t_job			*jobs_find_contains_str(char *str, t_job *joblist);
+t_job			*jobs_find_startswith_str(char *str, t_job *joblist);
+
 /*
 **----------------------------------shell---------------------------------------
 */
@@ -737,7 +752,7 @@ int				shell_close_quote_and_esc(t_vshdata *data);
 char			shell_quote_checker_find_quote(char *line);
 int				shell_handle_escaped_newlines(t_vshdata *data);
 void			shell_get_valid_prompt(t_vshdata *data, int prompt_type);
-int 			shell_init_term(t_vshdata *data);
+int				shell_init_term(t_vshdata *data);
 void			shell_args(t_vshdata *data, char *filepath);
 int				shell_get_path(t_vshdata *data, char **filepath);
 int				shell_init_line(t_vshdata *data, char *filepath);

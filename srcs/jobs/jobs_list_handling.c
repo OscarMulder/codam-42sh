@@ -6,7 +6,7 @@
 /*   By: omulder <omulder@student.codam.nl>           +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2019/05/31 10:47:19 by tde-jong       #+#    #+#                */
-/*   Updated: 2019/09/30 16:12:42 by tde-jong      ########   odam.nl         */
+/*   Updated: 2019/10/18 17:06:16 by rkuijper      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,11 +17,12 @@ static t_job	*new_job(pid_t pid, int jid, char *command, int current)
 	t_job *new;
 
 	new = ft_memalloc(sizeof(t_job));
+	new->bg = true;
+	new->pgid = pid;
 	new->next = NULL;
 	new->job_id = jid;
-	new->process_id = pid;
-	new->command_name = ft_strdup(command);
 	new->current = current;
+	new->command = ft_strdup(command);
 	return (new);
 }
 
@@ -31,10 +32,10 @@ t_job			*jobs_remove_job(t_job *job, pid_t pid)
 
 	if (job == NULL)
 		return (NULL);
-	if (job->process_id == pid)
+	if (job->pgid == pid)
 	{
 		tmp = job->next;
-		ft_strdel(&job->command_name);
+		ft_strdel(&job->command);
 		free(job);
 		job = NULL;
 		return (tmp);

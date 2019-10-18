@@ -6,7 +6,7 @@
 /*   By: omulder <omulder@student.codam.nl>           +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2019/04/17 14:03:16 by rkuijper       #+#    #+#                */
-/*   Updated: 2019/10/07 13:33:40 by tde-jong      ########   odam.nl         */
+/*   Updated: 2019/10/18 17:11:14 by rkuijper      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,31 +18,11 @@
 **
 */
 
-#define JOB_OPT_NONE	0
-#define JOB_OPT_P		1
-#define JOB_OPT_L		2
-
-static t_job	*find_current_job(t_job *joblist)
-{
-	t_job *job;
-	t_job *toreturn;
-
-	job = joblist;
-	toreturn = job;
-	while (job != NULL)
-	{
-		if (job->current > toreturn->current)
-			toreturn = job;
-		job = job->next;
-	}
-	return (toreturn);
-}
-
 int				builtin_jobs_new_current_val(t_job *joblist)
 {
 	t_job *job;
 
-	job = find_current_job(joblist);
+	job = jobs_get_current_job(joblist);
 	if (job == NULL)
 		return (0);
 	else
@@ -55,8 +35,8 @@ static t_job	*find_previous_job(t_job *joblist)
 	t_job *toreturn;
 	t_job *current_job;
 
-	current_job = find_current_job(joblist);
-	if (find_current_job(joblist) == joblist
+	current_job = jobs_get_current_job(joblist);
+	if (current_job == joblist
 		|| (joblist != NULL && joblist->next == NULL))
 		return (NULL);
 	job = joblist;
@@ -73,7 +53,7 @@ static t_job	*find_previous_job(t_job *joblist)
 
 static bool		is_current_job(t_job *job, t_job *joblist)
 {
-	if (find_current_job(joblist) == job)
+	if (jobs_get_current_job(joblist) == job)
 		return (true);
 	return (false);
 }
@@ -85,48 +65,6 @@ static bool		is_previous_job(t_job *job, t_job *joblist)
 	return (false);
 }
 
-static t_job	*find_job_contains_str(char *str, t_job *joblist)
-{
-	t_job *job;
-
-	job = joblist;
-	while (job != NULL)
-	{
-		if (ft_strstr(job->command_name, str) != NULL)
-			return (job);
-		job = job->next;
-	}
-	return (NULL);
-}
-
-static t_job	*find_job_startswith_str(char *str, t_job *joblist)
-{
-	t_job *job;
-
-	job = joblist;
-	while (job != NULL)
-	{
-		if (ft_strstr(job->command_name, str) == job->command_name)
-			return (job);
-		job = job->next;
-	}
-	return (NULL);
-}
-
-static t_job	*find_job_n(char *n, t_job *joblist)
-{
-	t_job *job;
-
-	job = joblist;
-	while (job != NULL)
-	{
-		if (ft_atoi(n) == job->job_id)
-			return (job);
-		job = job->next;
-	}
-	return (NULL);
-}
-
 t_job			*builtin_jobs_find_job(char *job_id, t_job *joblist)
 {
 	if (job_id != NULL && job_id[0] != '\0' && job_id[1] != '\0')
@@ -134,38 +72,21 @@ t_job			*builtin_jobs_find_job(char *job_id, t_job *joblist)
 		job_id++;
 		/* In this case we return Current Job */
 		if ((*job_id == '%' || *job_id == '+') && *(job_id + 1) == '\0')
-			return (find_current_job(joblist));
+			return (jobs_get_current_job(joblist));
 		/* In this case we return Previous job. */
 		else if (*job_id == '-' && *(job_id + 1) == '\0')
 			return (find_previous_job(joblist));
 		/* In this case we return Job whose command contains string. */
 		else if (*job_id == '?')
-			return (find_job_contains_str(job_id + 1, joblist));
+			return (jobs_find_contains_str(job_id + 1, joblist));
 		/* In this case we return Job number n. */
 		else if (ft_isdigit(*job_id))
-			return (find_job_n(job_id, joblist));
+			return (jobs_find_n(job_id, joblist));
 		/* In this case we return Job whose command begins with string. */
 		else
-			return (find_job_startswith_str(job_id, joblist));
+			return (jobs_find_startswith_str(job_id, joblist));
 	}
 	return (NULL);
-}
-
-void	print_job_info(t_job *job, int options, t_job *joblist)
-{
-	int	current;
-
-	current = ' ';
-	if (is_current_job(job, joblist))
-		current = '+';
-	if (is_previous_job(job, joblist))
-		current = '-';
-	ft_printf("[%i] %c ", job->job_id, current);
-	if (options & JOB_OPT_L || options & JOB_OPT_P)
-		ft_printf("%i ", job->process_id);
-	ft_printf("%s ", jobs_get_job_state(job) == JOB_RUNNING ?
-		"running" : "suspended");
-	ft_printf("%s\n", job->command_name);
 }
 
 static int	read_options(char **args, int *arg, int *options)
@@ -211,7 +132,7 @@ static int	jobs_log_args(t_datajobs *jobs, int options, char **args)
 		toprint = builtin_jobs_find_job(args[i], jobs->joblist);
 		if (toprint == NULL)
 			return (FUNCT_FAILURE);
-		print_job_info(toprint, options, jobs->joblist);
+		jobs_print_job_info(toprint, options, jobs->joblist);
 		i++;
 	}
 	return (FUNCT_SUCCESS);
@@ -226,12 +147,12 @@ static int	jobs_log_all(t_datajobs *jobs, int options)
 	job = jobs->joblist;
 	while (job != NULL)
 	{
-		if (job->process_id == 0)
+		if (job->pgid == 0)
 		{
 			job = job->next;
 			continue ;
 		}
-		print_job_info(job, options, jobs->joblist);
+		jobs_print_job_info(job, options, jobs->joblist);
 		job = job->next;
 	}
 	return (FUNCT_SUCCESS);

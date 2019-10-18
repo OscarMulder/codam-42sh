@@ -6,7 +6,7 @@
 /*   By: omulder <omulder@student.codam.nl>           +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2019/04/11 20:15:24 by jbrinksm       #+#    #+#                */
-/*   Updated: 2019/09/24 16:10:57 by mavan-he      ########   odam.nl         */
+/*   Updated: 2019/10/18 15:51:21 by rkuijper      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -27,7 +27,7 @@ static void	close_jobs(t_datajobs *jobs)
 	job = jobs->joblist;
 	while (job != NULL)
 	{
-		kill(job->process_id, SIGABRT);
+		kill(job->pgid, SIGABRT);
 		job = job->next;
 	}
 }

@@ -6,7 +6,7 @@
 /*   By: jbrinksm <jbrinksm@student.codam.nl>         +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2019/04/10 20:29:49 by jbrinksm       #+#    #+#                */
-/*   Updated: 2019/09/27 10:49:51 by tde-jong      ########   odam.nl         */
+/*   Updated: 2019/10/18 17:01:20 by rkuijper      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -22,7 +22,7 @@ void			signal_handle(int sig)
 		job = g_data->jobs->joblist;
 		while (job != NULL)
 		{
-			kill(job->process_id, SIGTSTP);
+			kill(job->pgid, SIGTSTP);
 			job = job->next;
 		}
 		ft_putchar('\n');
@@ -46,7 +46,7 @@ void			sigchld_handle(int sig)
 				g_data->jobs->joblist = job->next;
 			else
 				prev->next = job->next;
-			ft_strdel(&job->command_name);
+			ft_strdel(&job->command);
 			free(job);
 			job = g_data->jobs->joblist;
 			continue;

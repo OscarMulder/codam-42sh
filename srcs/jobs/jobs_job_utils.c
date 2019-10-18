@@ -6,7 +6,7 @@
 /*   By: omulder <omulder@student.codam.nl>           +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2019/05/31 10:47:19 by tde-jong       #+#    #+#                */
-/*   Updated: 2019/08/22 11:25:02 by omulder       ########   odam.nl         */
+/*   Updated: 2019/10/18 16:30:26 by rkuijper      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,7 +18,7 @@ int		jobs_get_job_state(t_job *job)
 	int		status;
 	pid_t	result;
 
-	result = waitpid(job->process_id, &status, WNOHANG);
+	result = waitpid(job->pgid, &status, WNOHANG);
 	if (WIFSTOPPED(status))
 		return (JOB_SUSPEND);
 	if (WIFCONTINUED(status))
@@ -28,7 +28,18 @@ int		jobs_get_job_state(t_job *job)
 	return (JOB_RUNNING);
 }
 
-void	job_set_active(int job_id)
+t_job	*jobs_get_current_job(t_job *joblist)
 {
-	(void)job_id;
+	t_job *job;
+	t_job *toreturn;
+
+	job = joblist;
+	toreturn = job;
+	while (job != NULL)
+	{
+		if (job->current > toreturn->current)
+			toreturn = job;
+		job = job->next;
+	}
+	return (toreturn);
 }
