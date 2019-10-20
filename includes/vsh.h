@@ -6,7 +6,7 @@
 /*   By: omulder <omulder@student.codam.nl>           +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2019/04/10 20:29:42 by jbrinksm       #+#    #+#                */
-/*   Updated: 2019/10/18 17:53:50 by mavan-he      ########   odam.nl         */
+/*   Updated: 2019/10/20 12:44:08 by mavan-he      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -1082,6 +1082,7 @@ typedef struct	s_globmatchlst
 
 int				glob_lexer(t_globtoken **lst, char *word);
 void			glob_lexer_finish(t_globscanner *scanner, t_globtokens type);
+void			glob_del_tokenlst(t_globtoken **token);
 int				glob_expand_word(t_ast **ast, char *word);
 void			glob_tokenlstadd(t_globtoken **lst, t_globtoken *new);
 t_globtoken		*glob_tokenlstnew(char *word_chunk, int type);
@@ -1105,6 +1106,7 @@ int				glob_ast_add_left(t_ast **ast, char *value,
 				t_tokens type, char flags);
 int				glob_keep_dirs(t_globmatchlst **matchlst, char *path);
 void			glob_del_matchlst(t_globmatchlst **matchlst);
+bool			glob_check_hidden_file(t_globtoken *tokenlst);
 
 /*
 **----------------------------------debugging-----------------------------------

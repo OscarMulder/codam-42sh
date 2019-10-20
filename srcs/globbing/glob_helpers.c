@@ -6,7 +6,7 @@
 /*   By: mavan-he <mavan-he@student.codam.nl>         +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2019/10/17 11:47:38 by mavan-he       #+#    #+#                */
-/*   Updated: 2019/10/18 17:40:27 by mavan-he      ########   odam.nl         */
+/*   Updated: 2019/10/20 12:43:51 by mavan-he      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -60,6 +60,13 @@ int		glob_is_dir(char *match, char *path)
 	if (ret == true)
 		return (FUNCT_SUCCESS);
 	return (FUNCT_FAILURE);
+}
+
+bool	glob_check_hidden_file(t_globtoken *tokenlst)
+{
+	if (tokenlst->tk_type == GLOB_STR && tokenlst->word_chunk[0] == '.')
+		return (true);
+	return (false);
 }
 
 int		glob_keep_dirs(t_globmatchlst **matchlst, char *path)

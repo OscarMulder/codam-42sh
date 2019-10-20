@@ -6,14 +6,15 @@
 /*   By: mavan-he <mavan-he@student.codam.nl>         +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2019/10/17 18:19:03 by mavan-he       #+#    #+#                */
-/*   Updated: 2019/10/18 18:11:29 by mavan-he      ########   odam.nl         */
+/*   Updated: 2019/10/20 12:51:37 by mavan-he      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "vsh.h"
 #include <dirent.h>
 
-int			glob_getmatchlist(t_globmatchlst **matchlst, char *path)
+static int	glob_getmatchlist(t_globmatchlst **matchlst, char *path,
+			bool hidden_file)
 {
 	DIR				*dir;
 	struct dirent	*rdir;
@@ -24,7 +25,8 @@ int			glob_getmatchlist(t_globmatchlst **matchlst, char *path)
 	rdir = readdir(dir);
 	while (rdir != NULL)
 	{
-		if (!(ft_strequ(rdir->d_name, ".") || ft_strequ(rdir->d_name, "..")))
+		if ((ft_strequ(rdir->d_name, ".") || ft_strequ(rdir->d_name, ".."))
+		== false && (rdir->d_name[0] == '.' && hidden_file == false) == false)
 		{
 			if (glob_matchlstadd(matchlst, rdir->d_name) == FUNCT_ERROR)
 			{
@@ -106,7 +108,7 @@ int			glob_loop_matcher(t_ast **ast, t_globtoken *tokenlst, char *path,
 	int				ret;
 
 	matchlst = NULL;
-	ret = glob_getmatchlist(&matchlst, path);
+	ret = glob_getmatchlist(&matchlst, path, glob_check_hidden_file(tokenlst));
 	if (ret != FUNCT_SUCCESS)
 		return (ret);
 	glob_matcher(tokenlst, &matchlst);
