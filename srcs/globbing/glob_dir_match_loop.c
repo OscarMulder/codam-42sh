@@ -1,12 +1,12 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        ::::::::            */
-/*   glob_start_matching.c                              :+:    :+:            */
+/*   glob_dir_match_loop.c                              :+:    :+:            */
 /*                                                     +:+                    */
 /*   By: mavan-he <mavan-he@student.codam.nl>         +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2019/10/17 18:19:03 by mavan-he       #+#    #+#                */
-/*   Updated: 2019/10/20 12:51:37 by mavan-he      ########   odam.nl         */
+/*   Updated: 2019/10/20 15:09:23 by mavan-he      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -40,7 +40,7 @@ static int	glob_getmatchlist(t_globmatchlst **matchlst, char *path,
 	return (FUNCT_SUCCESS);
 }
 
-void		glob_matcher(t_globtoken *tokenlst, t_globmatchlst **matchlst)
+void		glob_start_matching(t_globtoken *tokenlst, t_globmatchlst **matchlst)
 {
 	t_globmatchlst *matchprobe;
 	t_globmatchlst *next;
@@ -50,7 +50,7 @@ void		glob_matcher(t_globtoken *tokenlst, t_globmatchlst **matchlst)
 	matchprobe = *matchlst;
 	while (matchprobe->next != NULL)
 	{
-		if (glob_start_matching(tokenlst, *(matchprobe->next)) != FUNCT_SUCCESS)
+		if (glob_matcher(tokenlst, *(matchprobe->next)) != FUNCT_SUCCESS)
 		{
 			next = matchprobe->next->next;
 			glob_delmatch(&matchprobe->next);
@@ -59,7 +59,7 @@ void		glob_matcher(t_globtoken *tokenlst, t_globmatchlst **matchlst)
 		else
 			matchprobe = matchprobe->next;
 	}
-	if (glob_start_matching(tokenlst, **matchlst) != FUNCT_SUCCESS)
+	if (glob_matcher(tokenlst, **matchlst) != FUNCT_SUCCESS)
 	{
 		next = (*matchlst)->next;
 		glob_delmatch(matchlst);
@@ -87,7 +87,7 @@ int			glob_continue_check(t_globmatchlst *matchlst, t_ast **ast, t_globtoken *to
 		new_path = ft_strjoinfree_s2(path, ft_strjoin(matchlst->word, path_suffix));
 		if (tokenlst != NULL)
 		{
-			if (glob_loop_matcher(ast, tokenlst, new_path, cwd_len) == FUNCT_ERROR)
+			if (glob_dir_match_loop(ast, tokenlst, new_path, cwd_len) == FUNCT_ERROR)
 				return (FUNCT_ERROR);
 		}
 		else
@@ -101,7 +101,7 @@ int			glob_continue_check(t_globmatchlst *matchlst, t_ast **ast, t_globtoken *to
 	return (FUNCT_SUCCESS);
 }
 
-int			glob_loop_matcher(t_ast **ast, t_globtoken *tokenlst, char *path,
+int			glob_dir_match_loop(t_ast **ast, t_globtoken *tokenlst, char *path,
 			int cwd_len)
 {
 	t_globmatchlst	*matchlst;
@@ -111,7 +111,7 @@ int			glob_loop_matcher(t_ast **ast, t_globtoken *tokenlst, char *path,
 	ret = glob_getmatchlist(&matchlst, path, glob_check_hidden_file(tokenlst));
 	if (ret != FUNCT_SUCCESS)
 		return (ret);
-	glob_matcher(tokenlst, &matchlst);
+	glob_start_matching(tokenlst, &matchlst);
 	if (matchlst == NULL)
 		return (FUNCT_FAILURE);
 	while (tokenlst != NULL && tokenlst->tk_type != GLOB_SLASH)

@@ -6,11 +6,18 @@
 /*   By: jbrinksm <jbrinksm@student.codam.nl>         +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2019/10/07 14:54:03 by jbrinksm       #+#    #+#                */
-/*   Updated: 2019/10/20 12:13:29 by mavan-he      ########   odam.nl         */
+/*   Updated: 2019/10/20 15:21:29 by mavan-he      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "vsh.h"
+
+/*
+**	glob_init_path sets the start path of the WORD we need to expand
+**	If there is no ./ or ../ or slash we get the cwd
+**	In this case we also set cwd_len to the lenght of the cwd
+**	Otherwise glob_add_dotslash_to_path will set path and cwd_len remains zero
+*/
 
 static int	glob_init_path(t_globtoken **tokenlst, char **path, int *cwd_len)
 {
@@ -40,6 +47,12 @@ static void	glob_free(t_globtoken **tokenlst, char **path)
 	ft_strdel(path);
 }
 
+/*
+**	Glob pathname expansion starts with the lexer which creates a tokenlst.
+**	It will then init the path variable.
+**	If that is all successful, we go into the glob_dir_match_loop
+*/
+
 int		glob_expand_word(t_ast **ast, char *word)
 {
 	t_globtoken		*tokenlst;
@@ -60,7 +73,7 @@ int		glob_expand_word(t_ast **ast, char *word)
 		glob_free(&tokenlst_head, &path);
 		return (FUNCT_ERROR);
 	}
-	if (glob_loop_matcher(ast, tokenlst, path, cwd_len) == FUNCT_ERROR)
+	if (glob_dir_match_loop(ast, tokenlst, path, cwd_len) == FUNCT_ERROR)
 	{
 		glob_free(&tokenlst_head, &path);
 		return (FUNCT_ERROR);

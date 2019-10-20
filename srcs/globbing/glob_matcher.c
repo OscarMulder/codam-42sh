@@ -6,7 +6,7 @@
 /*   By: mavan-he <mavan-he@student.codam.nl>         +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2019/10/14 15:23:48 by mavan-he       #+#    #+#                */
-/*   Updated: 2019/10/17 18:17:00 by mavan-he      ########   odam.nl         */
+/*   Updated: 2019/10/20 15:09:02 by mavan-he      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,7 +16,7 @@ int			glob_matching_wild(t_globtoken *tokenprobe, t_globmatchlst match)
 {
 	while (match.index <= match.word_len)
 	{
-		if (glob_start_matching(tokenprobe->next, match) == FUNCT_SUCCESS)
+		if (glob_matcher(tokenprobe->next, match) == FUNCT_SUCCESS)
 			return (FUNCT_SUCCESS);
 		match.index++;
 	}
@@ -35,7 +35,7 @@ int			glob_matching_braceneg(t_globtoken *tokenprobe, t_globmatchlst match)
 		i++;
 	}
 	match.index++;
-	return (glob_start_matching(tokenprobe->next, match));
+	return (glob_matcher(tokenprobe->next, match));
 }
 
 int			glob_matching_bracepos(t_globtoken *tokenprobe, t_globmatchlst match)
@@ -48,7 +48,7 @@ int			glob_matching_bracepos(t_globtoken *tokenprobe, t_globmatchlst match)
 		if (tokenprobe->word_chunk[i] == match.word[match.index])
 		{
 			match.index++;
-			return (glob_start_matching(tokenprobe->next, match));
+			return (glob_matcher(tokenprobe->next, match));
 		}
 		i++;
 	}
@@ -65,7 +65,7 @@ int			glob_quest_or_str(t_globtoken *tokenprobe, t_globmatchlst match)
 		else
 		{
 			match.index += tokenprobe->word_len;
-			return (glob_start_matching(tokenprobe->next, match));
+			return (glob_matcher(tokenprobe->next, match));
 		}
 	}
 	else if (tokenprobe->tk_type == GLOB_QUEST)
@@ -75,13 +75,13 @@ int			glob_quest_or_str(t_globtoken *tokenprobe, t_globmatchlst match)
 		else
 		{
 			match.index += tokenprobe->word_len;
-			return (glob_start_matching(tokenprobe->next, match));
+			return (glob_matcher(tokenprobe->next, match));
 		}
 	}
 	return (FUNCT_ERROR);
 }
 
-int			glob_start_matching(t_globtoken *tokenprobe, t_globmatchlst match)
+int			glob_matcher(t_globtoken *tokenprobe, t_globmatchlst match)
 {
 	if (match.index == match.word_len &&
 		(tokenprobe == NULL || tokenprobe->tk_type == GLOB_SLASH))
