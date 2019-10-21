@@ -6,7 +6,7 @@
 /*   By: mavan-he <mavan-he@student.codam.nl>         +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2019/10/18 14:38:28 by mavan-he       #+#    #+#                */
-/*   Updated: 2019/10/21 16:51:31 by mavan-he      ########   odam.nl         */
+/*   Updated: 2019/10/21 16:58:58 by mavan-he      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -42,7 +42,7 @@ static void		glob_insert_ast(t_ast **ast, t_ast *new)
 		new->left = probe;
 		*ast = new;
 		return ;
-	}	
+	}
 	while (probe->left != NULL)
 	{
 		if (ft_strcmp(probe->left->value, new->value) > 0)
