@@ -6,7 +6,7 @@
 /*   By: mavan-he <mavan-he@student.codam.nl>         +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2019/10/18 12:06:36 by mavan-he       #+#    #+#                */
-/*   Updated: 2019/10/20 14:58:40 by mavan-he      ########   odam.nl         */
+/*   Updated: 2019/10/21 12:20:37 by mavan-he      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -70,14 +70,15 @@ static void	insert_expan_into_ast(t_ast **ast, t_ast *expanded)
 
 int			expan_pathname(t_ast *ast)
 {
-	t_ast	*expanded;
+	t_glob	glob_data;
 
 	while (ast != NULL)
 	{
-		expanded = NULL;
-		if (glob_expand_word(&expanded, ast->value) == FUNCT_ERROR)
+		glob_data.expanded = NULL;
+		glob_data.cwd_len = 0;
+		if (glob_expand_word(&glob_data, ast->value) == FUNCT_ERROR)
 			return (FUNCT_ERROR);
-		insert_expan_into_ast(&ast, expanded);
+		insert_expan_into_ast(&ast, glob_data.expanded);
 	}
 	return (FUNCT_SUCCESS);
 }

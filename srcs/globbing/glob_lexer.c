@@ -6,13 +6,13 @@
 /*   By: mavan-he <mavan-he@student.codam.nl>         +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2019/10/13 17:38:55 by mavan-he       #+#    #+#                */
-/*   Updated: 2019/10/13 21:22:20 by mavan-he      ########   odam.nl         */
+/*   Updated: 2019/10/21 13:26:38 by mavan-he      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "vsh.h"
 
-static void	reset_glob_scanner(t_globscanner *scanner)
+static void		reset_glob_scanner(t_globscanner *scanner)
 {
 	scanner->tk_len = 0;
 	scanner->tk_type = GLOB_ERROR;
@@ -54,9 +54,13 @@ int				glob_lexer(t_globtoken **lst, char *word)
 	{
 		glob_lexer_state_start(scanner);
 		if (glob_add_scanned_token(lst, scanner) == FUNCT_ERROR)
+		{
+			free(scanner);
 			return (FUNCT_ERROR);
+		}
 		reset_glob_scanner(scanner);
 	}
+	free(scanner);
 	if (*lst == NULL)
 		return (FUNCT_ERROR);
 	return (FUNCT_SUCCESS);

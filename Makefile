@@ -6,7 +6,7 @@
 #    By: omulder <omulder@student.codam.nl>           +#+                      #
 #                                                    +#+                       #
 #    Created: 2019/04/10 20:30:07 by jbrinksm       #+#    #+#                 #
-#    Updated: 2019/10/20 15:15:12 by mavan-he      ########   odam.nl          #
+#    Updated: 2019/10/21 11:34:52 by mavan-he      ########   odam.nl          #
 #                                                                              #
 # **************************************************************************** #
 
@@ -80,8 +80,9 @@ builtin_fc builtin_fc_options builtin_fc_init builtin_fc_list \
 builtin_fc_print_helpers builint_fc_find_index builtin_fc_substitute \
 builtin_fc_edit \
 signal_handle_child_death \
-glob_expand_word glob_lexer glob_debug glob_lst_funcs glob_lexer_helpers \
-glob_lexer_states glob_matcher glob_helpers glob_dir_match_loop glob_ast_add
+glob_expand_word glob_lexer glob_debug glob_matchlst_funcs glob_lexer_helpers \
+glob_lexer_states glob_matcher glob_helpers glob_dir_match_loop glob_ast_add \
+glob_tokenlst_funcs
 TESTS = unit_test builtin_assign_test
 OBJECTS := $(SRCS:%=%.o)
 TESTOBJECTS := $(TESTS:%=%.o)

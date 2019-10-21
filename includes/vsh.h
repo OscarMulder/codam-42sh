@@ -6,7 +6,7 @@
 /*   By: omulder <omulder@student.codam.nl>           +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2019/04/10 20:29:42 by jbrinksm       #+#    #+#                */
-/*   Updated: 2019/10/20 15:09:02 by mavan-he      ########   odam.nl         */
+/*   Updated: 2019/10/21 13:32:33 by mavan-he      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -1080,31 +1080,38 @@ typedef struct	s_globmatchlst
 	struct s_globmatchlst	*next;
 }				t_globmatchlst;
 
+typedef struct	s_glob
+{
+	t_ast		*expanded;
+	int			cwd_len;
+}				t_glob;
+
 int				glob_lexer(t_globtoken **lst, char *word);
 void			glob_lexer_finish(t_globscanner *scanner, t_globtokens type);
-void			glob_del_tokenlst(t_globtoken **token);
-int				glob_expand_word(t_ast **ast, char *word);
-void			glob_tokenlstadd(t_globtoken **lst, t_globtoken *new);
-t_globtoken		*glob_tokenlstnew(char *word_chunk, int type);
-int				glob_add_scanned_token(t_globtoken **lst,
-				t_globscanner *scanner);
 void			glob_lexer_state_start(t_globscanner *scanner);
-void			glob_lexer_changestate(t_globscanner *scanner,
-					void (*state)(t_globscanner *scanner));
 void			glob_lexer_state_bracket(t_globscanner *scanner);
 void			glob_lexer_addchar(t_globscanner *scanner);
+void			glob_lexer_changestate(t_globscanner *scanner,
+					void (*state)(t_globscanner *scanner));
+void			glob_tokenlstadd(t_globtoken **lst, t_globtoken *new);
+t_globtoken		*glob_tokenlstnew(char *word_chunk, int type);
+void			glob_del_tokenlst(t_globtoken **token);
+int				glob_add_scanned_token(t_globtoken **lst,
+				t_globscanner *scanner);
 int				glob_matcher(t_globtoken *tokenprobe,
 				t_globmatchlst match);
 int				glob_matchlstadd(t_globmatchlst **lst, char *word);
 int				glob_add_dotslash_to_path(t_globtoken **tokenlst, char **path);
 void			glob_delmatch(t_globmatchlst **match);
-int				glob_dir_match_loop(t_ast **ast, t_globtoken *tokenlst,
-				char *path, int cwd_len);
+int				glob_dir_match_loop(t_glob *glob_data, t_globtoken *tokenlst,
+				char *path);
 int				glob_ast_add_left(t_ast **ast, char *value,
 				t_tokens type, char flags);
 int				glob_keep_dirs(t_globmatchlst **matchlst, char *path);
 void			glob_del_matchlst(t_globmatchlst **matchlst);
 bool			glob_check_hidden_file(t_globtoken *tokenlst);
+int				glob_delmatchlst_ret_err(t_globmatchlst **matchlst);
+int				glob_expand_word(t_glob *glob_data, char *word);
 
 /*
 **----------------------------------debugging-----------------------------------

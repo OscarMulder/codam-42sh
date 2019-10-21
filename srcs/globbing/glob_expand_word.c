@@ -6,7 +6,7 @@
 /*   By: jbrinksm <jbrinksm@student.codam.nl>         +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2019/10/07 14:54:03 by jbrinksm       #+#    #+#                */
-/*   Updated: 2019/10/20 15:21:29 by mavan-he      ########   odam.nl         */
+/*   Updated: 2019/10/21 13:26:26 by mavan-he      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -53,14 +53,12 @@ static void	glob_free(t_globtoken **tokenlst, char **path)
 **	If that is all successful, we go into the glob_dir_match_loop
 */
 
-int		glob_expand_word(t_ast **ast, char *word)
+int			glob_expand_word(t_glob *glob_data, char *word)
 {
 	t_globtoken		*tokenlst;
 	t_globtoken		*tokenlst_head;
 	char			*path;
-	int				cwd_len;
 
-	cwd_len = 0;
 	if (word == NULL)
 		return (FUNCT_ERROR);
 	path = NULL;
@@ -68,12 +66,12 @@ int		glob_expand_word(t_ast **ast, char *word)
 	if (glob_lexer(&tokenlst, word) == FUNCT_ERROR)
 		return (FUNCT_ERROR);
 	tokenlst_head = tokenlst;
-	if (glob_init_path(&tokenlst, &path, &cwd_len) == FUNCT_ERROR)
+	if (glob_init_path(&tokenlst, &path, &glob_data->cwd_len) == FUNCT_ERROR)
 	{
 		glob_free(&tokenlst_head, &path);
 		return (FUNCT_ERROR);
 	}
-	if (glob_dir_match_loop(ast, tokenlst, path, cwd_len) == FUNCT_ERROR)
+	if (glob_dir_match_loop(glob_data, tokenlst, path) == FUNCT_ERROR)
 	{
 		glob_free(&tokenlst_head, &path);
 		return (FUNCT_ERROR);

@@ -1,12 +1,12 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        ::::::::            */
-/*   glob_matching.c                                    :+:    :+:            */
+/*   glob_matcher.c                                     :+:    :+:            */
 /*                                                     +:+                    */
 /*   By: mavan-he <mavan-he@student.codam.nl>         +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2019/10/14 15:23:48 by mavan-he       #+#    #+#                */
-/*   Updated: 2019/10/20 15:09:02 by mavan-he      ########   odam.nl         */
+/*   Updated: 2019/10/21 15:02:08 by mavan-he      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -23,7 +23,8 @@ int			glob_matching_wild(t_globtoken *tokenprobe, t_globmatchlst match)
 	return (FUNCT_FAILURE);
 }
 
-int			glob_matching_braceneg(t_globtoken *tokenprobe, t_globmatchlst match)
+int			glob_matching_braceneg(t_globtoken *tokenprobe,
+			t_globmatchlst match)
 {
 	int i;
 
@@ -38,7 +39,8 @@ int			glob_matching_braceneg(t_globtoken *tokenprobe, t_globmatchlst match)
 	return (glob_matcher(tokenprobe->next, match));
 }
 
-int			glob_matching_bracepos(t_globtoken *tokenprobe, t_globmatchlst match)
+int			glob_matching_bracepos(t_globtoken *tokenprobe,
+			t_globmatchlst match)
 {
 	int i;
 
@@ -80,6 +82,11 @@ int			glob_quest_or_str(t_globtoken *tokenprobe, t_globmatchlst match)
 	}
 	return (FUNCT_ERROR);
 }
+
+/*
+**	If tokenlst is at the end or we encounter a slash the match.index and
+**	match.world_len have to be equal otherwise there is no match
+*/
 
 int			glob_matcher(t_globtoken *tokenprobe, t_globmatchlst match)
 {

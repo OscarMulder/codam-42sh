@@ -6,12 +6,18 @@
 /*   By: mavan-he <mavan-he@student.codam.nl>         +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2019/10/17 18:19:03 by mavan-he       #+#    #+#                */
-/*   Updated: 2019/10/20 15:09:23 by mavan-he      ########   odam.nl         */
+/*   Updated: 2019/10/21 14:39:34 by mavan-he      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "vsh.h"
 #include <dirent.h>
+
+/*
+**	glob_getmatchlist opens the directory pointed to by path
+**	each entry is added to the matchlst
+**	if hidden_file is true it also adds hidden files to the lst
+*/
 
 static int	glob_getmatchlist(t_globmatchlst **matchlst, char *path,
 			bool hidden_file)
@@ -40,7 +46,13 @@ static int	glob_getmatchlist(t_globmatchlst **matchlst, char *path,
 	return (FUNCT_SUCCESS);
 }
 
-void		glob_start_matching(t_globtoken *tokenlst, t_globmatchlst **matchlst)
+/*
+**	For each potential match in matchlst we call glob_matcher
+**	If there is a match we keep it in the lst, otherwise it is deleted
+*/
+
+void		glob_start_matching(t_globtoken *tokenlst,
+			t_globmatchlst **matchlst)
 {
 	t_globmatchlst *matchprobe;
 	t_globmatchlst *next;
@@ -67,14 +79,37 @@ void		glob_start_matching(t_globtoken *tokenlst, t_globmatchlst **matchlst)
 	}
 }
 
-int			glob_delmatchlst_ret_err(t_globmatchlst **matchlst)
+/*
+**	If tokenlst is NULL we are at the end so we add path to expanded lst
+**	otherwise we call another glob_dir_match_loop
+*/
+
+static int	glob_add_match_or_continue(t_glob *glob_data, t_globtoken *tokenlst,
+			char *path)
 {
-	glob_del_matchlst(matchlst);
-	return (FUNCT_ERROR);
+	if (tokenlst != NULL)
+	{
+		if (glob_dir_match_loop(glob_data, tokenlst, path) == FUNCT_ERROR)
+			return (FUNCT_ERROR);
+	}
+	else
+	{
+		if (glob_ast_add_left(&glob_data->expanded, &path[glob_data->cwd_len],
+			WORD, 0) == FUNCT_ERROR)
+			return (err_ret_exit(E_ALLOC_STR, EXIT_FAILURE));
+	}
+	return (FUNCT_SUCCESS);
 }
 
-int			glob_continue_check(t_globmatchlst *matchlst, t_ast **ast, t_globtoken *tokenlst, char *path,
-			int cwd_len)
+/*
+**	First we create the path suffix (any slash or ./ ../)
+**	For each match in matchlst we join "path" "match" "path suffix" together
+**	and check if we need to add it to the expanded lst or continue with
+**	another glob_dir_match_loop
+*/
+
+static int	glob_handle_matchlst(t_globmatchlst *matchlst,
+			t_glob *glob_data, t_globtoken *tokenlst, char *path)
 {
 	char			*path_suffix;
 	char			*new_path;
@@ -84,25 +119,34 @@ int			glob_continue_check(t_globmatchlst *matchlst, t_ast **ast, t_globtoken *to
 		return (FUNCT_ERROR);
 	while (matchlst != NULL)
 	{
-		new_path = ft_strjoinfree_s2(path, ft_strjoin(matchlst->word, path_suffix));
-		if (tokenlst != NULL)
+		new_path = ft_strjoinfree_s2(path, ft_strjoin(matchlst->word,
+		path_suffix));
+		if (new_path == NULL)
+			return (err_ret_exit(E_ALLOC_STR, EXIT_FAILURE));
+		if (glob_add_match_or_continue(glob_data, tokenlst, new_path)
+			== FUNCT_ERROR)
 		{
-			if (glob_dir_match_loop(ast, tokenlst, new_path, cwd_len) == FUNCT_ERROR)
-				return (FUNCT_ERROR);
-		}
-		else
-		{
-			if (glob_ast_add_left(ast, &new_path[cwd_len], WORD, 0) == FUNCT_ERROR)
-				return (err_ret_exit(E_ALLOC_STR, EXIT_FAILURE));
+			ft_strdel(&new_path);
+			ft_strdel(&path_suffix);
+			return (FUNCT_ERROR);
 		}
 		ft_strdel(&new_path);
 		matchlst = matchlst->next;
 	}
+	ft_strdel(&path_suffix);
 	return (FUNCT_SUCCESS);
 }
 
-int			glob_dir_match_loop(t_ast **ast, t_globtoken *tokenlst, char *path,
-			int cwd_len)
+/*
+**	First we get the matchlst (all files in the directory pointed to by path)
+**	glob_start_matching finds all matches
+**	If the tokenlst is not at the end, we keep every match that is a direcotry
+**	We then continue the same loop again with each matching directory
+**	If tokenlst is at end, all remaining matches are added to the expanded lst
+*/
+
+int			glob_dir_match_loop(t_glob *glob_data, t_globtoken *tokenlst,
+			char *path)
 {
 	t_globmatchlst	*matchlst;
 	int				ret;
@@ -118,7 +162,7 @@ int			glob_dir_match_loop(t_ast **ast, t_globtoken *tokenlst, char *path,
 		tokenlst = tokenlst->next;
 	if (tokenlst != NULL && glob_keep_dirs(&matchlst, path) == FUNCT_ERROR)
 		return (glob_delmatchlst_ret_err(&matchlst));
-	ret = glob_continue_check(matchlst, ast, tokenlst, path, cwd_len);
+	ret = glob_handle_matchlst(matchlst, glob_data, tokenlst, path);
 	glob_del_matchlst(&matchlst);
 	return (ret);
 }

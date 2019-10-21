@@ -6,7 +6,7 @@
 /*   By: mavan-he <mavan-he@student.codam.nl>         +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2019/10/13 20:37:43 by mavan-he       #+#    #+#                */
-/*   Updated: 2019/10/20 12:15:28 by mavan-he      ########   odam.nl         */
+/*   Updated: 2019/10/21 11:30:43 by mavan-he      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -29,19 +29,4 @@ void			glob_lexer_changestate(t_globscanner *scanner,
 {
 	glob_lexer_addchar(scanner);
 	state(scanner);
-}
-
-void	glob_deltoken(t_globtoken **token)
-{
-	ft_strdel(&(*token)->word_chunk);
-	free(*token);
-	*token = NULL;
-}
-
-void	glob_del_tokenlst(t_globtoken **token)
-{
-	if (*token == NULL)
-		return ;
-	glob_del_tokenlst(&(*token)->next);
-	glob_deltoken(token);
 }

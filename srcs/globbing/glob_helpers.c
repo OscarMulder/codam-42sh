@@ -6,26 +6,21 @@
 /*   By: mavan-he <mavan-he@student.codam.nl>         +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2019/10/17 11:47:38 by mavan-he       #+#    #+#                */
-/*   Updated: 2019/10/20 12:43:51 by mavan-he      ########   odam.nl         */
+/*   Updated: 2019/10/21 14:43:36 by mavan-he      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "vsh.h"
 
-void	glob_delmatch(t_globmatchlst **match)
+int		glob_delmatchlst_ret_err(t_globmatchlst **matchlst)
 {
-	ft_strdel(&(*match)->word);
-	free(*match);
-	*match = NULL;
+	glob_del_matchlst(matchlst);
+	return (FUNCT_ERROR);
 }
 
-void	glob_del_matchlst(t_globmatchlst **matchlst)
-{
-	if (*matchlst == NULL)
-		return ;
-	glob_del_matchlst(&(*matchlst)->next);
-	glob_delmatch(matchlst);
-}
+/*
+**	As long as there are tokens with / ./ or ../ they are string joined to path
+*/
 
 int		glob_add_dotslash_to_path(t_globtoken **tokenlst, char **path)
 {
@@ -64,10 +59,16 @@ int		glob_is_dir(char *match, char *path)
 
 bool	glob_check_hidden_file(t_globtoken *tokenlst)
 {
+	if (tokenlst == NULL)
+		return (false);
 	if (tokenlst->tk_type == GLOB_STR && tokenlst->word_chunk[0] == '.')
 		return (true);
 	return (false);
 }
+
+/*
+**	glob_keep_dirs removes all non directory files from the matchlst
+*/
 
 int		glob_keep_dirs(t_globmatchlst **matchlst, char *path)
 {

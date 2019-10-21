@@ -6,7 +6,7 @@
 /*   By: mavan-he <mavan-he@student.codam.nl>         +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2019/10/13 21:10:48 by mavan-he       #+#    #+#                */
-/*   Updated: 2019/10/13 21:11:40 by mavan-he      ########   odam.nl         */
+/*   Updated: 2019/10/21 16:11:51 by mavan-he      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,7 +18,8 @@ static void		glob_lexer_state_braced(t_globscanner *scanner)
 		glob_lexer_finish(scanner, GLOB_BRACENEG);
 	else if (GLOB_CUR_CHAR == ']')
 		glob_lexer_finish(scanner, GLOB_BRACEPOS);
-	else if (GLOB_CUR_CHAR == '!' && scanner->tk_len == 1)
+	else if (GLOB_CUR_CHAR == '\\' && scanner->word[scanner->word_index + 1] ==
+	'!' && scanner->tk_len == 1)
 	{
 		scanner->flags |= GLOB_F_NEG;
 		glob_lexer_changestate(scanner, &glob_lexer_state_braced);
