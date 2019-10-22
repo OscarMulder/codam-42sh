@@ -6,7 +6,7 @@
 /*   By: mavan-he <mavan-he@student.codam.nl>         +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2019/10/13 19:53:46 by mavan-he       #+#    #+#                */
-/*   Updated: 2019/10/21 13:27:34 by mavan-he      ########   odam.nl         */
+/*   Updated: 2019/10/22 11:31:30 by mavan-he      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,8 +15,7 @@
 void			glob_delmatch(t_globmatchlst **match)
 {
 	ft_strdel(&(*match)->word);
-	free(*match);
-	*match = NULL;
+	ft_memdel((void**)match);
 }
 
 void			glob_del_matchlst(t_globmatchlst **matchlst)
@@ -31,7 +30,7 @@ t_globmatchlst	*glob_matchlstnew(char *item)
 {
 	t_globmatchlst *new;
 
-	new = ft_memalloc(sizeof(t_globmatchlst));
+	new = (t_globmatchlst*)ft_memalloc(sizeof(t_globmatchlst));
 	if (new == NULL)
 		return (NULL);
 	new->word = ft_strdup(item);

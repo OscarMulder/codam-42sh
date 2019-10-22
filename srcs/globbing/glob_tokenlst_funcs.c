@@ -6,7 +6,7 @@
 /*   By: mavan-he <mavan-he@student.codam.nl>         +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2019/10/21 11:27:35 by mavan-he       #+#    #+#                */
-/*   Updated: 2019/10/21 13:29:50 by mavan-he      ########   odam.nl         */
+/*   Updated: 2019/10/22 11:31:35 by mavan-he      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,8 +15,7 @@
 void		glob_deltoken(t_globtoken **token)
 {
 	ft_strdel(&(*token)->word_chunk);
-	free(*token);
-	*token = NULL;
+	ft_memdel((void**)token);
 }
 
 void		glob_del_tokenlst(t_globtoken **token)
@@ -33,7 +32,7 @@ t_globtoken	*glob_tokenlstnew(char *word_chunk, int type)
 
 	if (word_chunk == NULL)
 		return (NULL);
-	globtoken = ft_memalloc(sizeof(t_globtoken));
+	globtoken = (t_globtoken*)ft_memalloc(sizeof(t_globtoken));
 	if (globtoken == NULL)
 		return (NULL);
 	globtoken->word_chunk = word_chunk;

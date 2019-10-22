@@ -6,7 +6,7 @@
 /*   By: mavan-he <mavan-he@student.codam.nl>         +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2019/10/18 12:06:36 by mavan-he       #+#    #+#                */
-/*   Updated: 2019/10/21 12:20:37 by mavan-he      ########   odam.nl         */
+/*   Updated: 2019/10/22 11:30:46 by mavan-he      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -27,7 +27,7 @@ static void	copy_first_expan_to_ast(t_ast *ast, t_ast **expanded)
 	ast->left = (*expanded)->left;
 	to_free = *expanded;
 	*expanded = (*expanded)->left;
-	free(to_free);
+	ft_memdel((void**)&to_free);
 }
 
 /*

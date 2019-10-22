@@ -6,7 +6,7 @@
 /*   By: mavan-he <mavan-he@student.codam.nl>         +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2019/10/13 17:38:55 by mavan-he       #+#    #+#                */
-/*   Updated: 2019/10/21 13:26:38 by mavan-he      ########   odam.nl         */
+/*   Updated: 2019/10/22 11:29:57 by mavan-he      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -46,7 +46,7 @@ int				glob_lexer(t_globtoken **lst, char *word)
 {
 	t_globscanner		*scanner;
 
-	scanner = ft_memalloc(sizeof(t_globscanner));
+	scanner = (t_globscanner*)ft_memalloc(sizeof(t_globscanner));
 	if (scanner == NULL)
 		return (err_ret_exit(E_ALLOC_STR, EXIT_FAILURE));
 	scanner->word = word;
