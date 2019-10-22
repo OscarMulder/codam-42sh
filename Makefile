@@ -6,7 +6,7 @@
 #    By: omulder <omulder@student.codam.nl>           +#+                      #
 #                                                    +#+                       #
 #    Created: 2019/04/10 20:30:07 by jbrinksm       #+#    #+#                 #
-#    Updated: 2019/10/22 15:43:21 by mavan-he      ########   odam.nl          #
+#    Updated: 2019/10/22 16:01:08 by mavan-he      ########   odam.nl          #
 #                                                                              #
 # **************************************************************************** #
 
@@ -126,7 +126,7 @@ test_norm: fclean
 	@sh ${GITHUB_WORKSPACE}/test/norminette.sh
 
 $(TESTOBJECTS): $(TESTS)
-	@$(CC) $(FLAGS) $^ $(INCLUDES) $(CRITERIONINCLUDES) -c 
+	@$(CC) $(FLAGS) $^ $(INCLUDES) $(CRITERIONINCLUDES) -c
 
 build_test: $(TESTOBJECTS) $(OBJECTS)
 	@make re COVERAGE=$(COVERAGE)
