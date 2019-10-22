@@ -6,7 +6,7 @@
 #    By: omulder <omulder@student.codam.nl>           +#+                      #
 #                                                    +#+                       #
 #    Created: 2019/04/10 20:30:07 by jbrinksm       #+#    #+#                 #
-#    Updated: 2019/10/17 15:08:10 by omulder       ########   odam.nl          #
+#    Updated: 2019/10/22 15:28:57 by mavan-he      ########   odam.nl          #
 #                                                                              #
 # **************************************************************************** #
 
@@ -17,6 +17,7 @@ COVERAGE =
 INCLUDES = -I./libft/ -I./includes
 LIBFT = ./libft/libft.a
 LIB = -L./libft/ -lft -ltermcap
+OBJDIR = objects/
 CRITERIONINCLUDES = -I$(HOME)/.brew/include
 CRITERION = $(CRITERIONINCLUDES) -L$(HOME)/.brew/lib -lcriterion
 VPATH = ./test ./libft ./srcs ./srcs/builtins ./srcs/input_handling \
@@ -80,33 +81,35 @@ builtin_fc_print_helpers builint_fc_find_index builtin_fc_substitute \
 builtin_fc_edit \
 signal_handle_child_death
 TESTS = unit_test builtin_assign_test
-OBJECTS := $(SRCS:%=%.o)
+OBJECTS := $(SRCS:%=$(OBJDIR)%.o)
 TESTOBJECTS := $(TESTS:%=%.o)
 SRCS := $(SRCS:%=%.c)
 TESTS := $(TESTS:%=%.c)
 
-all: $(OBJECTS) $(LIBFT) $(NAME)
+all: $(LIBFT) $(NAME)
 
-$(NAME): $(OBJECTS) main.o
-	@$(CC) $(FLAGS) $^ $(COVERAGE) $(INCLUDES) $(LIB) -o $(NAME)
+$(NAME): $(OBJDIR) $(OBJECTS) $(OBJDIR)main.o
+	@$(CC) $(FLAGS) $(OBJECTS) $(OBJDIR)main.o $(INCLUDES) $(LIB) -o $(NAME)
 	@echo "[ + ] vsh has been compiled"
 
-%.o: %.c vsh.h
+$(OBJDIR)%.o: %.c vsh.h
 	@$(CC) -o $@ $(FLAGS) $< $(COVERAGE) $(INCLUDES) -c
 
 $(LIBFT):
 	@$(MAKE) -C libft
 
+$(OBJDIR):
+	@mkdir $(OBJDIR)
+
 clean:
-	@rm -f $(OBJECTS) $(TESTOBJECTS) main.o
-	@$(MAKE) -C libft clean
+	@rm -f $(OBJECTS) $(TESTOBJECTS) $(OBJDIR)main.o
+	@$(MAKE) -C libft fclean
 	@echo "[ - ] removed object files"
 	@rm -f *.gcno
 	@rm -f *.gcda
 
 fclean: clean
 	@rm -f $(NAME) test_coverage vsh_tests
-	@$(MAKE) -C libft fclean
 	@echo "[ - ] removed binaries"
 	@rm -f *.gcov
 
@@ -123,7 +126,7 @@ test_norm: fclean
 	@sh ${GITHUB_WORKSPACE}/test/norminette.sh
 
 $(TESTOBJECTS): $(TESTS)
-	@$(CC) $(FLAGS) $^ $(INCLUDES) $(CRITERIONINCLUDES) -c
+	@$(CC) $(FLAGS) $^ $(INCLUDES) $(CRITERIONINCLUDES) -c 
 
 build_test: $(TESTOBJECTS) $(OBJECTS)
 	@make re COVERAGE=$(COVERAGE)
