@@ -1,55 +1,61 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        ::::::::            */
-/*   builtin_fg_bg.c                                    :+:    :+:            */
+/*   builtin_fg.c                                       :+:    :+:            */
 /*                                                     +:+                    */
-/*   By: anonymous <anonymous@student.codam.nl>       +#+                     */
+/*   By: rkuijper <rkuijper@student.codam.nl>         +#+                     */
 /*                                                   +#+                      */
-/*   Created: 2019/09/10 17:16:05 by anonymous      #+#    #+#                */
-/*   Updated: 2019/09/10 17:16:05 by anonymous     ########   odam.nl         */
+/*   Created: 2019/10/22 14:27:21 by rkuijper       #+#    #+#                */
+/*   Updated: 2019/10/22 14:34:19 by rkuijper      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "vsh.h"
-#include <unistd.h>
-#include <sys/wait.h>
-#include <termios.h>
-#include <signal.h>
 
-/*
-**	The following two functions need a lot of testing and possibly reworking..
-*/
-
-static void		term_flags_init(t_termios *termios_p)
+static int	read_options(char **av)
 {
-	termios_p->c_lflag |= (ECHO | ICANON | ISIG);
-	tcsetattr(STDIN_FILENO, TCSANOW, termios_p);
+	if (av[1] == NULL || av[1][0] != '-')
+		return (FUNCT_SUCCESS);
+	else
+	{
+		ft_eprintf("vsh: bg: %s: invalid option\n");
+		ft_eprintf("bg: usage: bg [job_spec ...]\n");
+		return (FUNCT_ERROR);
+	}
 }
 
-static void		term_flags_destroy(t_termios *termios_p)
+static void	fg(t_job *job)
 {
-	termios_p->c_lflag &= ~(ECHO | ICANON | ISIG);
-	tcsetattr(STDIN_FILENO, TCSANOW, termios_p);
+	t_proc *proc;
+
+	if (jobs_stopped_job(job))
+		jobs_continue_job(job, true);
+	else
+	{
+		proc = job->processes;
+		while (proc != NULL)
+		{
+			proc->state = PROC_RUNNING;
+			proc = proc->next;
+		}
+		jobs_print_job_info(job, JOB_OPT_L, g_data->jobs->joblist);
+		jobs_fg_job(job, 0);
+	}
 }
 
-/* Needs to handle arguments still... */
-int		builtin_fg(char **args, t_vshdata* data)
+int			builtin_fg(char **av, t_vshdata *data)
 {
 	t_job	*job;
-	int		status;
-	
 
-	if (args[1] == NULL)
-		job = builtin_jobs_find_job("%%", data->jobs->joblist);
+	if (read_options(av) == FUNCT_ERROR)
+		return (FUNCT_ERROR);
+	if (av[1] == NULL)
+		job = jobs_find_job("%%", data->jobs->joblist);
 	else
-		job = builtin_jobs_find_job(args[1], data->jobs->joblist);
+		job = jobs_find_job(av[1], data->jobs->joblist);
 	if (job == NULL)
-			return (err_ret("fg: no current job\n"));
+		return (err_ret("fg: no current job\n"));
 	job->current = builtin_jobs_new_current_val(data->jobs->joblist);
-	print_job_info(job, 0, data->jobs->joblist);
-	term_flags_init(data->term->termios_p);
-	kill(job->pgid, SIGCONT);
-	waitpid(job->pgid, &status, WUNTRACED);
-	term_flags_destroy(data->term->termios_p);
+	fg(job);
 	return (FUNCT_SUCCESS);
 }

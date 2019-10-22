@@ -6,7 +6,7 @@
 /*   By: omulder <omulder@student.codam.nl>           +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2019/05/29 16:59:41 by omulder        #+#    #+#                */
-/*   Updated: 2019/09/10 20:02:49 by anonymous     ########   odam.nl         */
+/*   Updated: 2019/10/22 14:36:45 by rkuijper      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -61,3 +61,52 @@ bool		exec_builtin(char **args, t_vshdata *data)
 		return (exec_builtin_cont(args, data));
 	return (true);
 }
+
+/*
+
+static void		exec_child(t_job *job, char *binary, char **args, char **env)
+{
+	signal_reset();
+	setpgid(0, job->pgid);
+	execve(binary, args, env);
+	ft_eprintf(E_FAIL_EXEC_P, binary);
+	exit(EXIT_FAILURE);
+}
+
+static void		exec_parent(t_job *job, pid_t pid)
+{
+	if (job != NULL && job->pgid == 0)
+		job->pgid = pid;
+	setpgid(pid, job->pgid);
+	jobs_add_process(job, pid);
+	if (g_data->exec_flags & EXEC_WAIT)
+	{
+		if (g_data->exec_flags & EXEC_BG)
+		{
+			g_data->exec_flags &= ~EXEC_BG;
+			jobs_bg_job(job, false);
+		}
+		else
+			g_state->exit_code = jobs_fg_job(job, false);
+	}
+}
+
+static void		exec_bin(char *binary, char **args, char **env,
+t_vshdata *data)
+{
+	pid_t	pid;
+	t_job	*job;
+	void	*old_sig;
+
+	old_sig = signal(SIGCHLD, SIG_IGN);
+	if (exec_validate_binary(binary) == FUNCT_ERROR)
+		return ;
+	job = jobs_find_current_job(data->jobs->joblist);
+	pid = fork();
+	if (pid < 0)
+		return (err_void_exit(E_FORK_STR, EXIT_FAILURE));
+	if (pid == 0)
+		exec_child(job, binary, args, env);
+	exec_parent(job, pid);
+	signal(SIGCHLD, old_sig);
+}*/

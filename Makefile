@@ -6,7 +6,7 @@
 #    By: omulder <omulder@student.codam.nl>           +#+                      #
 #                                                    +#+                       #
 #    Created: 2019/04/10 20:30:07 by jbrinksm       #+#    #+#                 #
-#    Updated: 2019/10/18 17:12:04 by rkuijper      ########   odam.nl          #
+#    Updated: 2019/10/21 14:48:32 by rkuijper      ########   odam.nl          #
 #                                                                              #
 # **************************************************************************** #
 
@@ -66,7 +66,7 @@ history_change_line history_index_change history_expansion history_get_line \
 history_match_line history_insert_into_line \
 exec_builtin exec_cmd exec_external exec_start exec_find_binary \
 exec_quote_remove expan_handle_variables expan_handle_dollar \
-exec_create_files exec_command exec_add_pid_to_pipeseqlist \
+exec_create_files exec_command \
 expan_handle_bracketed_var expan_tilde_expansion exec_validate_binary \
 redir_pipe redir redir_tools redir_tools2 \
 hash_ht_insert hash_print hash_reset hash_init hash_check \
@@ -76,10 +76,11 @@ auto_find_state auto_start auto_add_match_toline auto_find_matches \
 auto_handle_matchlst auto_small_lst auto_big_lst auto_lst_print \
 auto_lst_print_helpers auto_check_dups \
 jobs_list_handling jobs_job_utils jobs_find jobs_cont jobs_bg \
-jobs_fg jobs_info \
+jobs_fg jobs_info jobs_mark jobs_processes jobs_status jobs_wait \
+jobs_notify \
 builtin_fc builtin_fc_options builtin_fc_init builtin_fc_list \
 builtin_fc_print_helpers builint_fc_find_index \
-signal_handle_child_death
+signal_handle_child_death signal_reset
 TESTS = unit_test builtin_assign_test
 OBJECTS := $(SRCS:%=%.o)
 TESTOBJECTS := $(TESTS:%=%.o)

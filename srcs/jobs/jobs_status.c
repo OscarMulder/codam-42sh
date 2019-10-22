@@ -1,32 +1,47 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        ::::::::            */
-/*   jobs_cont.c                                        :+:    :+:            */
+/*   jobs_status.c                                      :+:    :+:            */
 /*                                                     +:+                    */
 /*   By: rkuijper <rkuijper@student.codam.nl>         +#+                     */
 /*                                                   +#+                      */
-/*   Created: 2019/10/18 16:47:14 by rkuijper       #+#    #+#                */
-/*   Updated: 2019/10/21 14:29:39 by rkuijper      ########   odam.nl         */
+/*   Created: 2019/10/21 11:25:18 by rkuijper       #+#    #+#                */
+/*   Updated: 2019/10/22 13:59:12 by rkuijper      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "vsh.h"
 
-void		jobs_continue_job(t_job *job, bool fg)
+int			jobs_stopped_job(t_job *job)
+{
+	int		s;
+	t_proc	*proc;
+
+	s = 0;
+	proc = job->processes;
+	while (proc != NULL)
+	{
+		if (proc->state != PROC_COMPLETED)
+		{
+			if (proc->state != PROC_STOPPED)
+				return (FUNCT_FAILURE);
+			s++;
+		}
+		proc = proc->next;
+	}
+	return (s > 0);
+}
+
+int			jobs_completed_job(t_job *job)
 {
 	t_proc *proc;
 
 	proc = job->processes;
 	while (proc != NULL)
 	{
-		if (proc->state == PROC_STOPPED)
-			proc->state = PROC_CONTINUED;
+		if (proc->state != PROC_COMPLETED)
+			return (FUNCT_FAILURE);
 		proc = proc->next;
 	}
-	job->current = builtin_jobs_new_current_val(g_data->jobs->joblist);
-	jobs_print_job_info(job, JOB_OPT_P, g_data->jobs->joblist);
-	if (fg == true)
-		jobs_fg_job(job, true);
-	else
-		jobs_bg_job(job, true);
+	return (FUNCT_SUCCESS);
 }

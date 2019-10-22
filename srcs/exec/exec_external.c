@@ -6,7 +6,7 @@
 /*   By: omulder <omulder@student.codam.nl>           +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2019/05/31 10:47:19 by tde-jong       #+#    #+#                */
-/*   Updated: 2019/09/26 15:45:02 by tde-jong      ########   odam.nl         */
+/*   Updated: 2019/10/22 14:46:42 by rkuijper      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,63 +16,55 @@
 #include <termios.h>
 #include <signal.h>
 
-static void		term_flags_init(t_termios *termios_p)
+static void		exec_child(t_job *job, char *binary, char **args, char **env)
 {
-	if (g_state->shell_type == SHELL_NON_INTERACT)
-		return ;
-	termios_p->c_lflag |= (ECHO | ICANON | ISIG);
-	tcsetattr(STDIN_FILENO, TCSANOW, termios_p);
+	signal_reset();
+	setpgid(0, job->pgid);
+	execve(binary, args, env);
+	ft_eprintf(E_FAIL_EXEC_P, binary);
+	exit(EXIT_FAILURE);
 }
 
-static void		term_flags_destroy(t_termios *termios_p)
+static void		exec_parent(t_job *job, pid_t pid)
 {
-	if (g_state->shell_type == SHELL_NON_INTERACT)
-		return ;
-	termios_p->c_lflag &= ~(ECHO | ICANON | ISIG);
-	tcsetattr(STDIN_FILENO, TCSANOW, termios_p);
+	if (job != NULL && job->pgid == 0)
+		job->pgid = pid;
+	setpgid(pid, job->pgid);
+	jobs_add_process(job, pid);
+	if (g_data->exec_flags & EXEC_WAIT)
+	{
+		if (g_data->exec_flags & EXEC_BG)
+		{
+			g_data->exec_flags &= ~EXEC_BG;
+			jobs_bg_job(job, false);
+		}
+		else
+			g_state->exit_code = jobs_fg_job(job, false);
+	}
 }
 
-static void		exec_bin_handlewait(pid_t pid)
-{
-	int		status;
-
-	status = 0;
-	waitpid(pid, &status, WUNTRACED);
-	if (WIFEXITED(status))
-		g_state->exit_code = WEXITSTATUS(status);
-	else if (WIFSIGNALED(status))
-		g_state->exit_code = EXIT_FATAL + WTERMSIG(status);
-}
-
-static void		exec_bin(char *binary, char **args, char **vshenviron,
+static void		exec_bin(char *binary, char **args, char **env,
 t_vshdata *data)
 {
 	pid_t	pid;
+	t_job	*job;
+	void	*old_sig;
 
+	old_sig = signal(SIGCHLD, SIG_IGN);
 	if (exec_validate_binary(binary) == FUNCT_ERROR)
 		return ;
-	if (data->term->termios_p != NULL)
-		term_flags_init(data->term->termios_p);
+	job = data->jobs->active_job;
+	if (job == NULL)
+		job = jobs_add_job(data, 0, "HMMMMM");
+	if (job == NULL)
+		return ;
 	pid = fork();
 	if (pid < 0)
 		return (err_void_exit(E_FORK_STR, EXIT_FAILURE));
-	if (pid > 0)
-	{
-		jobs_add_job(data, pid, binary);
-		signal(SIGINT, SIG_IGN);
-		if (data->exec_flags & EXEC_ISPIPED)
-			exec_add_pid_to_pipeseqlist(data, pid);
-	}
-	else
-	{
-		signal(SIGINT, SIG_DFL);
-		execve(binary, args, vshenviron);
-		ft_eprintf(E_FAIL_EXEC_P, binary);
-		exit(EXIT_FAILURE);
-	}
-	if (data->exec_flags & EXEC_WAIT)
-		exec_bin_handlewait(pid);
-	term_flags_destroy(data->term->termios_p);
+	if (pid == 0)
+		exec_child(job, binary, args, env);
+	exec_parent(job, pid);
+	signal(SIGCHLD, old_sig);
 }
 
 void			exec_external(char **args, t_vshdata *data)

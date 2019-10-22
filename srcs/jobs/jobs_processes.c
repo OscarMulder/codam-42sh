@@ -1,32 +1,40 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        ::::::::            */
-/*   jobs_cont.c                                        :+:    :+:            */
+/*   jobs_processes.c                                   :+:    :+:            */
 /*                                                     +:+                    */
 /*   By: rkuijper <rkuijper@student.codam.nl>         +#+                     */
 /*                                                   +#+                      */
-/*   Created: 2019/10/18 16:47:14 by rkuijper       #+#    #+#                */
-/*   Updated: 2019/10/21 14:29:39 by rkuijper      ########   odam.nl         */
+/*   Created: 2019/10/21 11:41:03 by rkuijper       #+#    #+#                */
+/*   Updated: 2019/10/22 14:00:16 by rkuijper      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "vsh.h"
 
-void		jobs_continue_job(t_job *job, bool fg)
+t_proc		*jobs_new_proc(pid_t pid)
 {
 	t_proc *proc;
 
-	proc = job->processes;
-	while (proc != NULL)
-	{
-		if (proc->state == PROC_STOPPED)
-			proc->state = PROC_CONTINUED;
-		proc = proc->next;
-	}
-	job->current = builtin_jobs_new_current_val(g_data->jobs->joblist);
-	jobs_print_job_info(job, JOB_OPT_P, g_data->jobs->joblist);
-	if (fg == true)
-		jobs_fg_job(job, true);
+	proc = (t_proc*)ft_memalloc(sizeof(t_proc));
+	proc->pid = pid;
+	proc->state = PROC_RUNNING;
+	return (proc);
+}
+
+int			jobs_add_process(t_job *job, pid_t pid)
+{
+	t_proc *proc;
+
+	proc = jobs_new_proc(pid);
+	if (proc == NULL)
+		return (FUNCT_ERROR);
+	if (job->processes == NULL)
+		job->processes = proc;
 	else
-		jobs_bg_job(job, true);
+	{
+		proc->next = job->processes;
+		job->processes = proc;
+	}
+	return (FUNCT_SUCCESS);
 }

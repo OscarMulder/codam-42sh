@@ -6,7 +6,7 @@
 /*   By: omulder <omulder@student.codam.nl>           +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2019/05/31 10:47:19 by tde-jong       #+#    #+#                */
-/*   Updated: 2019/10/18 17:06:16 by rkuijper      ########   odam.nl         */
+/*   Updated: 2019/10/22 14:43:54 by rkuijper      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,49 +16,48 @@ static t_job	*new_job(pid_t pid, int jid, char *command, int current)
 {
 	t_job *new;
 
-	new = ft_memalloc(sizeof(t_job));
+	new = (t_job*)ft_memalloc(sizeof(t_job));
 	new->bg = true;
 	new->pgid = pid;
 	new->next = NULL;
 	new->job_id = jid;
+	new->processes = NULL;
 	new->current = current;
 	new->command = ft_strdup(command);
 	return (new);
 }
 
-t_job			*jobs_remove_job(t_job *job, pid_t pid)
+t_job			*jobs_remove_job(t_job *joblist, pid_t pid)
 {
 	t_job *tmp;
 
-	if (job == NULL)
+	if (joblist == NULL)
 		return (NULL);
-	if (job->pgid == pid)
+	if (joblist->pgid == pid)
 	{
-		tmp = job->next;
-		ft_strdel(&job->command);
-		free(job);
-		job = NULL;
+		tmp = joblist->next;
+		ft_strdel(&joblist->command);
+		ft_memdel((void**)&joblist);
 		return (tmp);
 	}
-	job->next = jobs_remove_job(job->next, pid);
-	return (job);
+	joblist->next = jobs_remove_job(joblist->next, pid);
+	return (joblist);
 }
 
-int				jobs_add_job(t_vshdata *vshdata, pid_t pid, char *command)
+t_job				*jobs_add_job(t_vshdata *data, pid_t pid, char *command)
 {
-	t_job	*job;
 	int		jid;
+	t_job	*job;
 
-	if (vshdata->jobs->joblist == NULL)
+	if (data->jobs->joblist == NULL)
 	{
-		vshdata->jobs->joblist = new_job(pid, 1, command,
-			builtin_jobs_new_current_val(vshdata->jobs->joblist));
-		if (vshdata->jobs->joblist == NULL)
-			return (FUNCT_ERROR);
+		data->jobs->joblist = new_job(pid, 1, command,
+			builtin_jobs_new_current_val(data->jobs->joblist));
+		return (data->jobs->joblist);
 	}
 	else
 	{
-		job = vshdata->jobs->joblist;
+		job = data->jobs->joblist;
 		jid = job->job_id;
 		while (job->next)
 		{
@@ -67,9 +66,7 @@ int				jobs_add_job(t_vshdata *vshdata, pid_t pid, char *command)
 				jid = job->job_id;
 		}
 		job->next = new_job(pid, jid + 1, command,
-			builtin_jobs_new_current_val(vshdata->jobs->joblist));
-		if (job->next == NULL)
-			return (FUNCT_ERROR);
+			builtin_jobs_new_current_val(data->jobs->joblist));
+		return (job->next);
 	}
-	return (FUNCT_SUCCESS);
 }

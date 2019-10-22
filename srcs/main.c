@@ -6,7 +6,7 @@
 /*   By: jbrinksm <jbrinksm@student.codam.nl>         +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2019/04/10 20:29:49 by jbrinksm       #+#    #+#                */
-/*   Updated: 2019/10/18 17:01:20 by rkuijper      ########   odam.nl         */
+/*   Updated: 2019/10/21 14:24:59 by rkuijper      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -29,34 +29,6 @@ void			signal_handle(int sig)
 	}
 }
 
-void			sigchld_handle(int sig)
-{
-	t_job	*job;
-	t_job	*prev;
-
-	if (sig != SIGCHLD)
-		return ;
-	prev = NULL;
-	job = g_data->jobs->joblist;
-	while (job != NULL)
-	{
-		if (jobs_get_job_state(job) == JOB_EXIT)
-		{
-			if (prev == NULL)
-				g_data->jobs->joblist = job->next;
-			else
-				prev->next = job->next;
-			ft_strdel(&job->command);
-			free(job);
-			job = g_data->jobs->joblist;
-			continue;
-		}
-		prev = job;
-		job = job->next;
-	}
-	signal(SIGCHLD, sigchld_handle);
-}
-
 void	init_g_state(void)
 {
 	g_state = (t_state*)ft_memalloc(sizeof(t_state));
@@ -65,7 +37,18 @@ void	init_g_state(void)
 		ft_eprintf(E_ALLOC_STR);
 		exit(EXIT_FAILURE);
 	}
+	g_state->pid = getpid();
 	g_state->shell_type = SHELL_INTERACT;
+	while (tcgetpgrp(STDIN_FILENO) != g_state->pid)
+		kill(-g_state->pid, SIGTTIN);
+	signal(SIGINT, SIG_IGN);
+	signal(SIGQUIT, SIG_IGN);
+	signal(SIGTSTP, SIG_IGN);
+	signal(SIGTTIN, SIG_IGN);
+	signal(SIGTTOU, SIG_IGN);
+	g_state->pid = getpid();
+	setpgid(g_state->pid, g_state->pid);
+	tcsetpgrp(STDIN_FILENO, g_state->pid);
 }
 
 int		main(int argc, char **argv)
@@ -73,7 +56,6 @@ int		main(int argc, char **argv)
 	t_vshdata	*data;
 
 	signal(SIGTSTP, signal_handle);
-	signal(SIGCHLD, sigchld_handle);
 	signal(SIGCHLD, signal_handle_child_death);
 	signal(SIGINT, SIG_IGN);
 	init_g_state();

@@ -6,7 +6,7 @@
 /*   By: omulder <omulder@student.codam.nl>           +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2019/04/10 20:29:42 by jbrinksm       #+#    #+#                */
-/*   Updated: 2019/10/18 17:10:11 by rkuijper      ########   odam.nl         */
+/*   Updated: 2019/10/22 14:44:21 by rkuijper      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -236,6 +236,7 @@ typedef struct	s_fcdata
 # define EXEC_AND_IF (1 << 2)
 # define EXEC_OR_IF (1 << 3)
 # define EXEC_SEMICOL (1 << 4)
+# define EXEC_WAIT (1 << 5)
 
 /*
 **--------------------------------redirections----------------------------------
@@ -336,6 +337,7 @@ typedef struct	s_fcdata
 
 typedef struct	s_state
 {
+	pid_t		pid;
 	int			exit_code;
 	int			shell_type;
 }				t_state;
@@ -399,19 +401,37 @@ typedef struct termios	t_termios;
 # define JOB_RUNNING	1
 # define JOB_SUSPEND	2
 
-#define JOB_OPT_NONE	0
-#define JOB_OPT_P		1
-#define JOB_OPT_L		2
+# define JOB_OPT_NONE	0
+# define JOB_OPT_P		1
+# define JOB_OPT_L		2
+
+typedef enum			e_proc_state
+{
+	PROC_COMPLETED,
+	PROC_STOPPED,
+	PROC_CONTINUED,
+	PROC_RUNNING
+}						t_proc_state;
+
+typedef struct	s_proc
+{
+	pid_t			pid;
+	struct s_proc	*next;
+	t_proc_state	state;
+	int				exit_status;
+}				t_proc;
 
 typedef struct	s_job
 {
 	bool			bg;
 	pid_t			pgid;
 	int				state;
-	int				job_id;
-	int 			current;
-	char			*command;
 	struct s_job	*next;
+	t_termios		*tmode;
+	int				job_id;
+	int				current;
+	char			*command;
+	t_proc			*processes;
 }				t_job;
 
 /*
@@ -494,16 +514,10 @@ typedef struct	s_vshdatajobs
 {
 	t_job		*joblist;
 	int			current_job;
+	t_job		*active_job;
 }				t_datajobs;
 
-typedef struct	s_pipeseqlist
-{
-	pid_t					pid;
-	struct s_pipeseqlist	*next;
-}				t_pipeseqlist;
-
-# define EXEC_ISPIPED (1 << 0)
-# define EXEC_WAIT (1 << 1)
+# define EXEC_ISPIPED	(1 << 0)
 # define PID_STATE_EXIT		0
 # define PID_STATE_RUNNING	1
 # define PID_STATE_SUSPEND	2
@@ -522,7 +536,6 @@ typedef struct	s_vshdata
 	t_dataalias		*alias;
 	t_datatermcaps	*termcaps;
 	t_datajobs		*jobs;
-	t_pipeseqlist	*pipeseq;
 	short			exec_flags;
 }				t_vshdata;
 
@@ -719,19 +732,35 @@ int				input_read_from_buffer(t_vshdata *data);
 
 int				jobs_get_job_state(t_job *job);
 t_job			*jobs_remove_job(t_job *job, pid_t pid);
-int				jobs_add_job(t_vshdata *vshdata, pid_t pid, char *command);
-t_job			*jobs_find_current_job(t_job *joblist);
+t_job			*jobs_add_job(t_vshdata *vshdata, pid_t pid, char *command);
 void			print_job_info(t_job *job, int options, t_job *joblist);
 
-t_job			*jobs_get_current_job(t_job *joblist);
 
 void			jobs_continue_job(t_job *job, bool fg);
 void			jobs_bg_job(t_job *job, bool job_continued);
+int				jobs_fg_job(t_job *job, bool job_continued);
 
 void			jobs_print_job_info(t_job *job, int options, t_job *joblist);
 
+t_job			*jobs_find_n(char *n, t_job *joblist);
+t_job			*jobs_find_current_job(t_job *joblist);
+t_job			*jobs_find_previous_job(t_job *joblist);
+t_job			*jobs_find_job(char *job_id, t_job *joblist);
 t_job			*jobs_find_contains_str(char *str, t_job *joblist);
 t_job			*jobs_find_startswith_str(char *str, t_job *joblist);
+
+int				jobs_add_process(t_job *job, pid_t pid);
+
+void			jobs_wait_job(t_job *job);
+int				jobs_stopped_job(t_job *job);
+int				jobs_completed_job(t_job *job);
+
+int				jobs_mark_pool(pid_t pid, int status);
+int				jobs_mark_proc(t_proc *proc, int status);
+int				jobs_mark_job(t_job *job, pid_t pid, int status);
+
+void			jobs_notify_pool(void);
+void			jobs_handle_finished_jobs(void);
 
 /*
 **----------------------------------shell---------------------------------------
@@ -961,6 +990,7 @@ void			exec_add_pid_to_pipeseqlist(t_vshdata *data, pid_t pid);
 **-----------------------------------signals------------------------------------
 */
 
+void			signal_reset(void);
 void			signal_handle_child_death(int signum);
 
 /*

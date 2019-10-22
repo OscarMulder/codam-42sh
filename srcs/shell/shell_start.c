@@ -6,7 +6,7 @@
 /*   By: omulder <omulder@student.codam.nl>           +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2019/04/18 16:44:50 by omulder        #+#    #+#                */
-/*   Updated: 2019/09/27 10:41:01 by tde-jong      ########   odam.nl         */
+/*   Updated: 2019/10/22 12:18:39 by rkuijper      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -89,6 +89,7 @@ void		shell_start(t_vshdata *data)
 	ast = NULL;
 	while (true)
 	{
+		jobs_handle_finished_jobs();
 		shell_clear_input_data(&data->line->line, &ast, &token_lst);
 		shell_display_prompt(data, REGULAR_PROMPT);
 		if (pre_lexer_reading(data) != FUNCT_SUCCESS)

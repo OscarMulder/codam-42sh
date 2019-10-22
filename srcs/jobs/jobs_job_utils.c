@@ -6,7 +6,7 @@
 /*   By: omulder <omulder@student.codam.nl>           +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2019/05/31 10:47:19 by tde-jong       #+#    #+#                */
-/*   Updated: 2019/10/18 16:30:26 by rkuijper      ########   odam.nl         */
+/*   Updated: 2019/10/21 12:20:38 by rkuijper      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -28,7 +28,7 @@ int		jobs_get_job_state(t_job *job)
 	return (JOB_RUNNING);
 }
 
-t_job	*jobs_get_current_job(t_job *joblist)
+t_job	*jobs_find_current_job(t_job *joblist)
 {
 	t_job *job;
 	t_job *toreturn;

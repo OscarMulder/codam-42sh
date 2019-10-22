@@ -1,32 +1,25 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        ::::::::            */
-/*   jobs_cont.c                                        :+:    :+:            */
+/*   signal_reset.c                                     :+:    :+:            */
 /*                                                     +:+                    */
 /*   By: rkuijper <rkuijper@student.codam.nl>         +#+                     */
 /*                                                   +#+                      */
-/*   Created: 2019/10/18 16:47:14 by rkuijper       #+#    #+#                */
-/*   Updated: 2019/10/21 14:29:39 by rkuijper      ########   odam.nl         */
+/*   Created: 2019/10/21 13:44:58 by rkuijper       #+#    #+#                */
+/*   Updated: 2019/10/21 13:45:34 by rkuijper      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "vsh.h"
+#include <signal.h>
 
-void		jobs_continue_job(t_job *job, bool fg)
+void	signal_reset(void)
 {
-	t_proc *proc;
+	int i;
 
-	proc = job->processes;
-	while (proc != NULL)
+	i = 0;
+	while (i < 33)
 	{
-		if (proc->state == PROC_STOPPED)
-			proc->state = PROC_CONTINUED;
-		proc = proc->next;
+		signal(i, SIG_DFL);
+		i++;
 	}
-	job->current = builtin_jobs_new_current_val(g_data->jobs->joblist);
-	jobs_print_job_info(job, JOB_OPT_P, g_data->jobs->joblist);
-	if (fg == true)
-		jobs_fg_job(job, true);
-	else
-		jobs_bg_job(job, true);
 }

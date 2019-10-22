@@ -1,32 +1,30 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        ::::::::            */
-/*   jobs_cont.c                                        :+:    :+:            */
+/*   jobs_flush.c                                       :+:    :+:            */
 /*                                                     +:+                    */
 /*   By: rkuijper <rkuijper@student.codam.nl>         +#+                     */
 /*                                                   +#+                      */
-/*   Created: 2019/10/18 16:47:14 by rkuijper       #+#    #+#                */
-/*   Updated: 2019/10/21 14:29:39 by rkuijper      ########   odam.nl         */
+/*   Created: 2019/10/22 13:22:46 by rkuijper       #+#    #+#                */
+/*   Updated: 2019/10/22 13:24:44 by rkuijper      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "vsh.h"
+#include <signal.h>
 
-void		jobs_continue_job(t_job *job, bool fg)
+void		jobs_flush_all(void)
 {
-	t_proc *proc;
+	t_job *tmp;
+	t_job *job;
 
-	proc = job->processes;
-	while (proc != NULL)
+	job = g_data->jobs->joblist;
+	while (job != NULL)
 	{
-		if (proc->state == PROC_STOPPED)
-			proc->state = PROC_CONTINUED;
-		proc = proc->next;
+		kill(-job->pgid, SIGKILL);
+		tmp = job;
+		job = job->next;
+		ft_strdel(tmp->command);
+		ft_memdel(&tmp);
 	}
-	job->current = builtin_jobs_new_current_val(g_data->jobs->joblist);
-	jobs_print_job_info(job, JOB_OPT_P, g_data->jobs->joblist);
-	if (fg == true)
-		jobs_fg_job(job, true);
-	else
-		jobs_bg_job(job, true);
 }

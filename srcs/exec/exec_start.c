@@ -6,7 +6,7 @@
 /*   By: omulder <omulder@student.codam.nl>           +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2019/05/29 17:52:22 by omulder        #+#    #+#                */
-/*   Updated: 2019/09/04 10:23:58 by mavan-he      ########   odam.nl         */
+/*   Updated: 2019/10/22 14:44:33 by rkuijper      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -65,7 +65,10 @@ int				exec_and_or(t_ast *ast, t_vshdata *data)
 
 	pipes = redir_init_pipestruct();
 	if (ast->type != AND_IF && ast->type != OR_IF)
+	{
+		data->jobs->active_job = NULL;
 		return (exec_pipe_sequence(ast, data, pipes));
+	}
 	if (exec_and_or(ast->left, data) == FUNCT_ERROR)
 		return (FUNCT_ERROR);
 	if (ast->type == AND_IF && g_state->exit_code != EXIT_SUCCESS)
@@ -81,6 +84,8 @@ int				exec_list(t_ast *ast, t_vshdata *data)
 {
 	if (ast->type != BG && ast->type != SEMICOL)
 		return (exec_and_or(ast, data));
+	if (ast->type == BG)
+		data->exec_flags |= EXEC_BG;
 	if (exec_and_or(ast->left, data) == FUNCT_ERROR)
 		return (FUNCT_ERROR);
 	if (ast->right != NULL)

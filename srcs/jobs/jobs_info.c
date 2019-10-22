@@ -6,16 +6,56 @@
 /*   By: rkuijper <rkuijper@student.codam.nl>         +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2019/10/18 16:48:34 by rkuijper       #+#    #+#                */
-/*   Updated: 2019/10/18 17:01:20 by rkuijper      ########   odam.nl         */
+/*   Updated: 2019/10/22 14:22:14 by rkuijper      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "vsh.h"
 
+static char		*g_proc_state_string[] =
+{
+	[PROC_RUNNING] = "running\t",
+	[PROC_STOPPED] = "suspended\t",
+	[PROC_CONTINUED] = "continued\t",
+	[PROC_COMPLETED] = "done\t\t"
+};
+
+static bool		is_current_job(t_job *job, t_job *joblist)
+{
+	if (jobs_find_current_job(joblist) == job)
+		return (true);
+	return (false);
+}
+
+static bool		is_previous_job(t_job *job, t_job *joblist)
+{
+	if (jobs_find_previous_job(joblist) == job && job->next != NULL)
+		return (true);
+	return (false);
+}
+
+static void		print_process_data(t_job *job)
+{
+	t_proc *proc;
+
+	proc = job->processes;
+	if (proc == 0)
+		return (ft_putchar('\n'));
+	while (proc != NULL)
+	{
+		if (proc != job->processes)
+			ft_printf("\t");
+		ft_printf("%d %s\n", proc->pid, g_proc_state_string[proc->state]);
+		proc = proc->next;
+	}
+}
+
 void	jobs_print_job_info(t_job *job, int options, t_job *joblist)
 {
 	int	current;
 
+	if (job->bg == false)
+		return ;
 	current = ' ';
 	if (is_current_job(job, joblist))
 		current = '+';
@@ -23,8 +63,7 @@ void	jobs_print_job_info(t_job *job, int options, t_job *joblist)
 		current = '-';
 	ft_printf("[%i]%c ", job->job_id, current);
 	if (options & (JOB_OPT_L | JOB_OPT_P))
-		ft_printf("%i ", job->pgid);
-	ft_printf("%s ", jobs_get_job_state(job) == JOB_RUNNING ?
-		"Running" : "Stopped");
-	ft_printf("%s\n", job->command);
+		print_process_data(job);
+	else
+		ft_putchar('\n');
 }
