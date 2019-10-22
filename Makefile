@@ -6,7 +6,7 @@
 #    By: omulder <omulder@student.codam.nl>           +#+                      #
 #                                                    +#+                       #
 #    Created: 2019/04/10 20:30:07 by jbrinksm       #+#    #+#                 #
-#    Updated: 2019/10/22 15:28:57 by mavan-he      ########   odam.nl          #
+#    Updated: 2019/10/22 15:39:19 by mavan-he      ########   odam.nl          #
 #                                                                              #
 # **************************************************************************** #
 
@@ -133,7 +133,7 @@ build_test: $(TESTOBJECTS) $(OBJECTS)
 	@make $(TESTOBJECTS) COVERAGE=$(COVERAGE)
 	@$(CC) $(FLAGS) $^ $(COVERAGE) $(INCLUDES) $(CRITERION) $(LIB) -o vsh_tests
 
-test: build_test
+test: $(OBJDIR) build_test
 	@./vsh_tests
 
 test_valgrind: build_test
