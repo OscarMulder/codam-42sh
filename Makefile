@@ -6,7 +6,7 @@
 #    By: omulder <omulder@student.codam.nl>           +#+                      #
 #                                                    +#+                       #
 #    Created: 2019/04/10 20:30:07 by jbrinksm       #+#    #+#                 #
-#    Updated: 2019/10/22 15:39:19 by mavan-he      ########   odam.nl          #
+#    Updated: 2019/10/22 15:43:21 by mavan-he      ########   odam.nl          #
 #                                                                              #
 # **************************************************************************** #
 
@@ -89,7 +89,7 @@ TESTS := $(TESTS:%=%.c)
 all: $(LIBFT) $(NAME)
 
 $(NAME): $(OBJDIR) $(OBJECTS) $(OBJDIR)main.o
-	@$(CC) $(FLAGS) $(OBJECTS) $(OBJDIR)main.o $(INCLUDES) $(LIB) -o $(NAME)
+	@$(CC) $(FLAGS) $(OBJECTS) $(OBJDIR)main.o $(COVERAGE) $(INCLUDES) $(LIB) -o $(NAME)
 	@echo "[ + ] vsh has been compiled"
 
 $(OBJDIR)%.o: %.c vsh.h
