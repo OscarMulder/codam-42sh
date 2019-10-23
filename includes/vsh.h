@@ -6,7 +6,7 @@
 /*   By: omulder <omulder@student.codam.nl>           +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2019/04/10 20:29:42 by jbrinksm       #+#    #+#                */
-/*   Updated: 2019/10/22 11:46:46 by mavan-he      ########   odam.nl         */
+/*   Updated: 2019/10/23 15:07:51 by omulder       ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -297,6 +297,7 @@ typedef struct	s_fcdata
 # define INPUT_CTRL_E '\5'
 # define INPUT_CTRL_K '\v'
 # define INPUT_TAB '\t'
+# define INPUT_CTRL_R 18
 # define INPUT_CTRL_U 21
 # define INPUT_CTRL_Y 25
 # define TC_MAXRESPONSESIZE 16
@@ -692,6 +693,7 @@ int				input_add_chunk(t_vshdata *data, char *chunk,
 				int chunk_len);
 int				input_empty_buffer(t_vshdata *data, int n);
 int				input_read_from_buffer(t_vshdata *data);
+void			input_parse_ctrl_r(t_vshdata *data);
 
 /*
 **----------------------------------shell---------------------------------------
