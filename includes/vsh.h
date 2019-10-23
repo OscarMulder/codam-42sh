@@ -6,7 +6,7 @@
 /*   By: omulder <omulder@student.codam.nl>           +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2019/04/10 20:29:42 by jbrinksm       #+#    #+#                */
-/*   Updated: 2019/10/23 15:07:51 by omulder       ########   odam.nl         */
+/*   Updated: 2019/10/23 18:33:53 by omulder       ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -23,6 +23,8 @@
 # define SEPERATOR			">"
 # define PROMPT_NAME		SHELL " "
 # define PROMPT_SEPERATOR	SEPERATOR " "
+# define HIST_SRCH_FIRST	"(reverse-i-search)`"
+# define HIST_SRCH_LAST		"': "
 # define FUNCT_FAILURE 0
 # define FUNCT_SUCCESS 1
 # define NEW_PROMPT 2
@@ -300,6 +302,7 @@ typedef struct	s_fcdata
 # define INPUT_CTRL_R 18
 # define INPUT_CTRL_U 21
 # define INPUT_CTRL_Y 25
+# define INPUT_ESC 27
 # define TC_MAXRESPONSESIZE 16
 # define INPUT_BUF_READ_SIZE 100
 
@@ -460,9 +463,18 @@ typedef struct	s_dataprompt
 	int		cur_prompt_type;
 }				t_dataprompt;
 
-typedef struct	s_vshdatainput
+typedef struct	s_searchhistory
 {
-	char				c;
+	bool			active;
+	char			*search_str;
+	char			*result_str;
+	t_historyitem	*current;
+}				t_searchhistory;
+
+typedef struct	s_datainput
+{
+	char			c;
+	t_searchhistory	searchhistory;
 }				t_datainput;
 
 typedef struct	s_datahashtable
@@ -694,6 +706,7 @@ int				input_add_chunk(t_vshdata *data, char *chunk,
 int				input_empty_buffer(t_vshdata *data, int n);
 int				input_read_from_buffer(t_vshdata *data);
 void			input_parse_ctrl_r(t_vshdata *data);
+void			input_parse_esc(t_vshdata *data);
 
 /*
 **----------------------------------shell---------------------------------------
