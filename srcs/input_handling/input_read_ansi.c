@@ -6,7 +6,7 @@
 /*   By: jbrinksm <jbrinksm@student.codam.nl>         +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2019/08/30 10:45:52 by jbrinksm       #+#    #+#                */
-/*   Updated: 2019/08/30 10:52:29 by jbrinksm      ########   odam.nl         */
+/*   Updated: 2019/10/23 19:01:50 by omulder       ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -49,6 +49,8 @@ int			input_read_ansi(t_vshdata *data)
 	ft_bzero(termcapbuf, TERMCAPBUFFSIZE);
 	if (data->input->c == '\e')
 	{
+		if (data->input->searchhistory.active)
+			input_parse_esc(data);
 		termcapbuf[0] = '\e';
 		if (read(STDIN_FILENO, &termcapbuf[1], TERMCAPBUFFSIZE - 1) == -1)
 			return (FUNCT_ERROR);

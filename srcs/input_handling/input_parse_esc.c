@@ -6,7 +6,7 @@
 /*   By: omulder <omulder@student.codam.nl>           +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2019/10/23 16:48:32 by omulder        #+#    #+#                */
-/*   Updated: 2019/10/23 18:43:58 by omulder       ########   odam.nl         */
+/*   Updated: 2019/10/23 19:30:33 by omulder       ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -33,9 +33,7 @@ void		input_parse_esc(t_vshdata *data)
 	if (data->input->searchhistory.active)
 	{
 		clear_line(data);
-		ft_printf("before: %i\n", data->input->searchhistory.active);
 		reset(&data->input->searchhistory);
-		ft_printf("after: %i\n", data->input->searchhistory.active);
-		// go to next history item
+		shell_display_prompt(data, REGULAR_PROMPT);
 	}
 }
