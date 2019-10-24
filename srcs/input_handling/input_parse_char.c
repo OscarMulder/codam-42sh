@@ -6,11 +6,12 @@
 /*   By: omulder <omulder@student.codam.nl>           +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2019/05/16 13:33:54 by rkuijper       #+#    #+#                */
-/*   Updated: 2019/08/30 16:53:50 by jbrinksm      ########   odam.nl         */
+/*   Updated: 2019/10/24 15:48:41 by omulder       ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "vsh.h"
+#include "term.h"
 
 /*
 **  This function makes sure that when you are inserting a char
@@ -131,7 +132,7 @@ int			input_empty_buffer(t_vshdata *data, int n)
 	return (n - 1);
 }
 
-int			input_parse_char(t_vshdata *data)
+static int			input_parse_char_og(t_vshdata *data)
 {
 	int old_index;
 
@@ -151,4 +152,35 @@ int			input_parse_char(t_vshdata *data)
 			return (FUNCT_ERROR);
 	}
 	return (FUNCT_SUCCESS);
+}
+
+static void	clear_line(t_vshdata *data)
+{
+	curs_move_n_left(data, data->line->index);
+	data->line->index = ft_strlen(HIST_SRCH_FIRST "" HIST_SRCH_LAST);
+	if (data->input->searchhistory.result_str != NULL)
+		data->line->index += ft_strlen(data->input->searchhistory.result_str);
+	curs_move_n_left(data, data->line->index);
+	tputs(data->termcaps->tc_clear_lines_str, 1, &ft_tputchar);
+}
+
+int			input_parse_char(t_vshdata *data)
+{
+	int ret;
+
+	if (data->input->searchhistory.active)
+	{
+		clear_line(data);
+		data->line->index = data->line->len_cur;
+		input_print_str(data, HIST_SRCH_FIRST);
+		input_print_str(data, data->line->line);
+		ret = input_parse_char_og(data);
+		input_print_str(data, HIST_SRCH_LAST);
+		input_print_str(data, data->input->searchhistory.result_str);
+	}
+	else
+	{
+		ret = input_parse_char_og(data);
+	}
+	return (ret);
 }

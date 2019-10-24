@@ -6,7 +6,7 @@
 /*   By: omulder <omulder@student.codam.nl>           +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2019/04/17 14:03:16 by jbrinksm       #+#    #+#                */
-/*   Updated: 2019/10/23 19:04:36 by omulder       ########   odam.nl         */
+/*   Updated: 2019/10/24 15:46:37 by omulder       ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -71,6 +71,7 @@ static int	input_parse(t_vshdata *data)
 {
 	int		ret;
 
+	ft_eprintf("curs.x: %d, index: %d, line: %s, line_len %d\n", data->curs->coords.x, data->line->index, data->line->line, data->line->len_cur);
 	if (input_parse_ctrl_c(data) == FUNCT_SUCCESS)
 		return (reset_input_read_return(data, NEW_PROMPT));
 	ret = input_parse_ctrl_d(data);

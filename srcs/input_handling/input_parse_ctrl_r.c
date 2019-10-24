@@ -6,7 +6,7 @@
 /*   By: omulder <omulder@student.codam.nl>           +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2019/10/23 15:01:03 by omulder        #+#    #+#                */
-/*   Updated: 2019/10/23 19:28:33 by omulder       ########   odam.nl         */
+/*   Updated: 2019/10/24 15:41:35 by omulder       ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -23,9 +23,21 @@ static void	clear_line(t_vshdata *data)
 
 static void	init(t_vshdata *data)
 {
+	int index_tmp;
+
+	index_tmp = data->line->index;
 	clear_line(data);
-	ft_printf(HIST_SRCH_FIRST "" HIST_SRCH_LAST);
-	data->curs->coords.x = ft_strlen(HIST_SRCH_FIRST "" HIST_SRCH_LAST) + 1;
+	input_print_str(data, HIST_SRCH_FIRST "" HIST_SRCH_LAST);
+	input_print_str(data, data->line->line);
+	// ft_eprintf("i_tmp: %d, index: %d, len-cur: %d, strlen: %d\n", index_tmp, data->line->index, data->line->len_cur, ft_strlen(data->line->line));
+	// ft_eprintf("i_tmp: %d, index: %d, len-cur: %d, strlen: %d\n", index_tmp, data->line->index, data->line->len_cur, ft_strlen(data->line->line));
+	data->line->index = data->line->len_cur;
+	curs_move_n_left(data, data->line->len_cur - index_tmp);
+	data->input->searchhistory.result_str = data->line->line;
+	data->line->index = 0;
+	data->line->len_max = 64;
+	data->line->len_cur = 0;
+	data->line->line = ft_strnew(data->line->len_max);
 	data->input->searchhistory.active = true;
 }
 
@@ -33,7 +45,7 @@ void		input_parse_ctrl_r(t_vshdata *data)
 {
 	if (data->input->searchhistory.active)
 	{
-		// go to next history item
+		
 	}
 	else
 		init(data);
@@ -44,3 +56,10 @@ void		input_parse_ctrl_r(t_vshdata *data)
 // {
 // 	ft_bzero(searchhistory, sizeof(t_searchhistory));
 // }
+
+// prompt
+// line
+// promtp_p2
+// result
+
+// reset cursor

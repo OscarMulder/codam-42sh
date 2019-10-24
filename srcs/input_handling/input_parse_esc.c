@@ -6,7 +6,7 @@
 /*   By: omulder <omulder@student.codam.nl>           +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2019/10/23 16:48:32 by omulder        #+#    #+#                */
-/*   Updated: 2019/10/23 19:30:33 by omulder       ########   odam.nl         */
+/*   Updated: 2019/10/24 14:49:48 by omulder       ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -36,5 +36,8 @@ void		input_parse_esc(t_vshdata *data)
 		clear_line(data);
 		reset(&data->input->searchhistory);
 		shell_display_prompt(data, REGULAR_PROMPT);
+		input_print_str(data, data->line->line);
+		data->line->index = ft_strlen(data->line->line);
+		// input_print_str(data, data->line->line);
 	}
 }
