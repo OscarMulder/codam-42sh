@@ -32,6 +32,7 @@ void		input_parse_esc(t_vshdata *data)
 {
 	if (data->input->searchhistory.active)
 	{
+		data->input->searchhistory.active = false;
 		clear_line(data);
 		reset(&data->input->searchhistory);
 		shell_display_prompt(data, REGULAR_PROMPT);

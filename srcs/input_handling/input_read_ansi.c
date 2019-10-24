@@ -50,7 +50,10 @@ int			input_read_ansi(t_vshdata *data)
 	if (data->input->c == '\e')
 	{
 		if (data->input->searchhistory.active)
+		{
 			input_parse_esc(data);
+			input_empty_buffer(data, 0);
+		}
 		termcapbuf[0] = '\e';
 		if (read(STDIN_FILENO, &termcapbuf[1], TERMCAPBUFFSIZE - 1) == -1)
 			return (FUNCT_ERROR);

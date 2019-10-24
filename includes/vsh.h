@@ -527,7 +527,8 @@ typedef enum	e_prompt_type
 	LINECONT_PROMPT,
 	QUOTE_PROMPT,
 	DQUOTE_PROMPT,
-	DLESS_PROMPT
+	DLESS_PROMPT,
+	HISTSEARCH_PROMPT
 }				t_prompt_type;
 
 /*
