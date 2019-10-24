@@ -6,7 +6,7 @@
 /*   By: omulder <omulder@student.codam.nl>           +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2019/04/10 20:29:42 by jbrinksm       #+#    #+#                */
-/*   Updated: 2019/10/23 18:33:53 by omulder       ########   odam.nl         */
+/*   Updated: 2019/10/24 19:58:12 by omulder       ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -468,6 +468,7 @@ typedef struct	s_searchhistory
 	bool			active;
 	char			*search_str;
 	char			*result_str;
+	size_t			result_i;
 	t_historyitem	*current;
 }				t_searchhistory;
 
@@ -708,7 +709,7 @@ int				input_empty_buffer(t_vshdata *data, int n);
 int				input_read_from_buffer(t_vshdata *data);
 void			input_parse_ctrl_r(t_vshdata *data);
 void			input_parse_esc(t_vshdata *data);
-
+void			ctrlr_clear_line(t_vshdata *data);
 /*
 **----------------------------------shell---------------------------------------
 */
@@ -993,6 +994,7 @@ int				history_insert_into_line(char **line,
 size_t			history_get_match_len(char *line, size_t i);
 int				history_count(t_historyitem *start, t_historyitem *end);
 void			history_free_item(t_historyitem **item);
+int				history_ctrl_r(t_vshdata *data);
 
 /*
 **--------------------------------hashtable-------------------------------------

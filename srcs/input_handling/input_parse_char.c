@@ -6,7 +6,7 @@
 /*   By: omulder <omulder@student.codam.nl>           +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2019/05/16 13:33:54 by rkuijper       #+#    #+#                */
-/*   Updated: 2019/10/24 15:48:41 by omulder       ########   odam.nl         */
+/*   Updated: 2019/10/24 20:10:30 by omulder       ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -154,33 +154,36 @@ static int			input_parse_char_og(t_vshdata *data)
 	return (FUNCT_SUCCESS);
 }
 
-static void	clear_line(t_vshdata *data)
+void	ctrlr_clear_line(t_vshdata *data)
 {
 	curs_move_n_left(data, data->line->index);
 	data->line->index = ft_strlen(HIST_SRCH_FIRST "" HIST_SRCH_LAST);
-	if (data->input->searchhistory.result_str != NULL)
-		data->line->index += ft_strlen(data->input->searchhistory.result_str);
+	if (data->input->searchhistory.result_str[0] != '\0')
+		data->line->index += data->input->searchhistory.result_i + 1;
 	curs_move_n_left(data, data->line->index);
 	tputs(data->termcaps->tc_clear_lines_str, 1, &ft_tputchar);
 }
 
 int			input_parse_char(t_vshdata *data)
 {
-	int ret;
-
 	if (data->input->searchhistory.active)
 	{
-		clear_line(data);
+		ft_eprintf("res_i: %d index: %d\n", data->input->searchhistory.result_i, data->line->index);
+		ctrlr_clear_line(data);
 		data->line->index = data->line->len_cur;
 		input_print_str(data, HIST_SRCH_FIRST);
 		input_print_str(data, data->line->line);
-		ret = input_parse_char_og(data);
+		if (input_parse_char_og(data) == FUNCT_ERROR)
+			return (FUNCT_ERROR);
 		input_print_str(data, HIST_SRCH_LAST);
+		if (history_ctrl_r(data) == FUNCT_ERROR)
+			return (FUNCT_ERROR);
 		input_print_str(data, data->input->searchhistory.result_str);
+		data->line->index = ft_strlen(data->input->searchhistory.result_str);
+		curs_move_n_left(data, data->line->index - data->input->searchhistory.result_i);
+		data->line->index = data->line->len_cur;
 	}
 	else
-	{
-		ret = input_parse_char_og(data);
-	}
-	return (ret);
+		input_parse_char_og(data);
+	return (FUNCT_SUCCESS);
 }

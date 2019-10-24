@@ -6,7 +6,7 @@
 /*   By: omulder <omulder@student.codam.nl>           +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2019/10/23 15:01:03 by omulder        #+#    #+#                */
-/*   Updated: 2019/10/24 15:41:35 by omulder       ########   odam.nl         */
+/*   Updated: 2019/10/24 18:46:37 by omulder       ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -26,6 +26,7 @@ static void	init(t_vshdata *data)
 	int index_tmp;
 
 	index_tmp = data->line->index;
+	data->input->searchhistory.current = data->history->tail;
 	clear_line(data);
 	input_print_str(data, HIST_SRCH_FIRST "" HIST_SRCH_LAST);
 	input_print_str(data, data->line->line);
@@ -34,6 +35,7 @@ static void	init(t_vshdata *data)
 	data->line->index = data->line->len_cur;
 	curs_move_n_left(data, data->line->len_cur - index_tmp);
 	data->input->searchhistory.result_str = data->line->line;
+	data->input->searchhistory.result_i = ft_strlen(data->line->line) - 1;
 	data->line->index = 0;
 	data->line->len_max = 64;
 	data->line->len_cur = 0;
@@ -51,15 +53,7 @@ void		input_parse_ctrl_r(t_vshdata *data)
 		init(data);
 }
 
-
 // static void reset(t_searchhistory *searchhistory)
 // {
 // 	ft_bzero(searchhistory, sizeof(t_searchhistory));
 // }
-
-// prompt
-// line
-// promtp_p2
-// result
-
-// reset cursor
