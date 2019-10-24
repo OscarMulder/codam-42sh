@@ -6,7 +6,7 @@
 /*   By: omulder <omulder@student.codam.nl>           +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2019/05/29 17:52:22 by omulder        #+#    #+#                */
-/*   Updated: 2019/10/22 14:44:33 by rkuijper      ########   odam.nl         */
+/*   Updated: 2019/10/24 14:03:23 by rkuijper      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -62,19 +62,26 @@ int				exec_pipe_sequence(t_ast *ast, t_vshdata *data, t_pipes pipes)
 int				exec_and_or(t_ast *ast, t_vshdata *data)
 {
 	t_pipes pipes;
+	int		bg;
 
+	bg = 0;
 	pipes = redir_init_pipestruct();
 	if (ast->type != AND_IF && ast->type != OR_IF)
 	{
 		data->jobs->active_job = NULL;
 		return (exec_pipe_sequence(ast, data, pipes));
 	}
+	if (data->exec_flags & EXEC_BG)
+		bg = 1;
+	data->exec_flags &= ~EXEC_BG;
 	if (exec_and_or(ast->left, data) == FUNCT_ERROR)
 		return (FUNCT_ERROR);
 	if (ast->type == AND_IF && g_state->exit_code != EXIT_SUCCESS)
 		return (FUNCT_ERROR);
 	else if (ast->type == OR_IF && g_state->exit_code == EXIT_SUCCESS)
 		return (FUNCT_FAILURE);
+	if (bg == 1)
+		data->exec_flags |= EXEC_BG;
 	if (exec_and_or(ast->right, data) == FUNCT_ERROR)
 		return (FUNCT_ERROR);
 	return (FUNCT_SUCCESS);
@@ -98,9 +105,8 @@ int				exec_list(t_ast *ast, t_vshdata *data)
 
 int				exec_complete_command(t_ast *ast, t_vshdata *data)
 {
-	if (ast == NULL)
-		return (FUNCT_ERROR);
-	if (exec_list(ast, data) == FUNCT_ERROR)
+	data->exec_flags = 0;
+	if (ast == NULL || exec_list(ast, data) == FUNCT_ERROR)
 		return (FUNCT_ERROR);
 	return (FUNCT_SUCCESS);
 }

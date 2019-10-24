@@ -6,7 +6,7 @@
 /*   By: rkuijper <rkuijper@student.codam.nl>         +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2019/10/18 16:48:34 by rkuijper       #+#    #+#                */
-/*   Updated: 2019/10/22 14:22:14 by rkuijper      ########   odam.nl         */
+/*   Updated: 2019/10/22 15:39:23 by rkuijper      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -43,9 +43,7 @@ static void		print_process_data(t_job *job)
 		return (ft_putchar('\n'));
 	while (proc != NULL)
 	{
-		if (proc != job->processes)
-			ft_printf("\t");
-		ft_printf("%d %s\n", proc->pid, g_proc_state_string[proc->state]);
+		ft_printf("\t- %d %s\n", proc->pid, g_proc_state_string[proc->state]);
 		proc = proc->next;
 	}
 }
@@ -61,9 +59,7 @@ void	jobs_print_job_info(t_job *job, int options, t_job *joblist)
 		current = '+';
 	if (is_previous_job(job, joblist))
 		current = '-';
-	ft_printf("[%i]%c ", job->job_id, current);
+	ft_printf("[%i]%c %s\n", job->job_id, current, job->command);
 	if (options & (JOB_OPT_L | JOB_OPT_P))
 		print_process_data(job);
-	else
-		ft_putchar('\n');
 }

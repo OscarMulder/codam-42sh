@@ -6,7 +6,7 @@
 /*   By: rkuijper <rkuijper@student.codam.nl>         +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2019/10/18 17:12:11 by rkuijper       #+#    #+#                */
-/*   Updated: 2019/10/22 14:16:21 by rkuijper      ########   odam.nl         */
+/*   Updated: 2019/10/24 15:03:21 by rkuijper      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,6 +14,7 @@
 #include <term.h>
 #include <errno.h>
 #include <signal.h>
+#include <stdio.h>
 
 static t_proc	*last_proc(t_job *job)
 {
@@ -38,15 +39,14 @@ int				jobs_fg_job(t_job *job, bool job_continued)
 {
 	int status;
 
-	status = 0;
 	job->bg = false;
 	if (g_state->shell_type == SHELL_INTERACT)
 		tcsetpgrp(STDIN_FILENO, job->pgid);
-	if (job_continued)
+	if (job_continued == true)
 	{
 		tcsetattr(STDIN_FILENO, TCSADRAIN, job->tmode);
 		if (kill(-job->pgid, SIGCONT) < 0)
-			return (ft_eprintf("kill (SIGCONT): %i\n", errno));
+			return (ft_eprintf("Could not SIGCONT job %i\n", job->pgid));
 	}
 	jobs_wait_job(job);
 	if (g_state->shell_type == SHELL_INTERACT)

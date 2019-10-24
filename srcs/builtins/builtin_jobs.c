@@ -6,7 +6,7 @@
 /*   By: omulder <omulder@student.codam.nl>           +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2019/04/17 14:03:16 by rkuijper       #+#    #+#                */
-/*   Updated: 2019/10/22 13:27:35 by rkuijper      ########   odam.nl         */
+/*   Updated: 2019/10/24 10:39:57 by rkuijper      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -97,6 +97,7 @@ int				builtin_jobs(char **args, t_vshdata *data)
 	options = JOB_OPT_NONE;
 	if (read_options(args, &arg, &options) != FUNCT_SUCCESS)
 		return (FUNCT_ERROR);
+	jobs_handle_finished_jobs();
 	if (args[arg] != NULL)
 		jobs_log_args(data->jobs, options, args + arg);
 	else

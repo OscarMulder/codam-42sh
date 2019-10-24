@@ -6,20 +6,25 @@
 /*   By: omulder <omulder@student.codam.nl>           +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2019/05/31 10:47:19 by tde-jong       #+#    #+#                */
-/*   Updated: 2019/10/22 14:46:42 by rkuijper      ########   odam.nl         */
+/*   Updated: 2019/10/24 15:22:11 by rkuijper      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "vsh.h"
-#include <unistd.h>
-#include <sys/wait.h>
-#include <termios.h>
 #include <signal.h>
+#include <unistd.h>
+#include <termios.h>
+#include <sys/wait.h>
 
 static void		exec_child(t_job *job, char *binary, char **args, char **env)
 {
-	signal_reset();
-	setpgid(0, job->pgid);
+	if (g_state->shell_type == SHELL_INTERACT)
+	{
+		setpgid(0, job->pgid);
+		if (!(g_data->exec_flags & EXEC_BG))
+			tcsetpgrp(STDIN_FILENO, job->pgid == 0 ? getpid() : job->pgid);
+		signal_reset();
+	}
 	execve(binary, args, env);
 	ft_eprintf(E_FAIL_EXEC_P, binary);
 	exit(EXIT_FAILURE);
@@ -27,17 +32,17 @@ static void		exec_child(t_job *job, char *binary, char **args, char **env)
 
 static void		exec_parent(t_job *job, pid_t pid)
 {
-	if (job != NULL && job->pgid == 0)
-		job->pgid = pid;
-	setpgid(pid, job->pgid);
+	if (g_state->shell_type == SHELL_INTERACT)
+	{
+		if (job->pgid == 0)
+			job->pgid = pid;
+		setpgid(pid, job->pgid);
+	}
 	jobs_add_process(job, pid);
 	if (g_data->exec_flags & EXEC_WAIT)
 	{
 		if (g_data->exec_flags & EXEC_BG)
-		{
-			g_data->exec_flags &= ~EXEC_BG;
 			jobs_bg_job(job, false);
-		}
 		else
 			g_state->exit_code = jobs_fg_job(job, false);
 	}
@@ -50,14 +55,18 @@ t_vshdata *data)
 	t_job	*job;
 	void	*old_sig;
 
-	old_sig = signal(SIGCHLD, SIG_IGN);
+	old_sig = signal(SIGCHLD, SIG_DFL);
 	if (exec_validate_binary(binary) == FUNCT_ERROR)
 		return ;
 	job = data->jobs->active_job;
 	if (job == NULL)
-		job = jobs_add_job(data, 0, "HMMMMM");
+	{
+		job = jobs_add_job(data, 0, "");
+		data->jobs->active_job = job;
+	}
 	if (job == NULL)
 		return ;
+	jobs_update_job_command(job, args);
 	pid = fork();
 	if (pid < 0)
 		return (err_void_exit(E_FORK_STR, EXIT_FAILURE));

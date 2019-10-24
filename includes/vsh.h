@@ -6,7 +6,7 @@
 /*   By: omulder <omulder@student.codam.nl>           +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2019/04/10 20:29:42 by jbrinksm       #+#    #+#                */
-/*   Updated: 2019/10/22 14:44:21 by rkuijper      ########   odam.nl         */
+/*   Updated: 2019/10/24 14:54:14 by rkuijper      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -732,8 +732,8 @@ int				input_read_from_buffer(t_vshdata *data);
 
 int				jobs_get_job_state(t_job *job);
 t_job			*jobs_remove_job(t_job *job, pid_t pid);
-t_job			*jobs_add_job(t_vshdata *vshdata, pid_t pid, char *command);
 void			print_job_info(t_job *job, int options, t_job *joblist);
+t_job			*jobs_add_job(t_vshdata *vshdata, pid_t pid, char *command);
 
 
 void			jobs_continue_job(t_job *job, bool fg);
@@ -761,6 +761,11 @@ int				jobs_mark_job(t_job *job, pid_t pid, int status);
 
 void			jobs_notify_pool(void);
 void			jobs_handle_finished_jobs(void);
+
+int				jobs_update_job_command(t_job *job, char **av);
+
+// TMPTMTPMTPM
+int				jobs_mark_process_status(pid_t pid, int status);
 
 /*
 **----------------------------------shell---------------------------------------

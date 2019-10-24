@@ -6,11 +6,49 @@
 /*   By: rkuijper <rkuijper@student.codam.nl>         +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2019/10/21 11:51:41 by rkuijper       #+#    #+#                */
-/*   Updated: 2019/10/22 14:17:57 by rkuijper      ########   odam.nl         */
+/*   Updated: 2019/10/24 14:53:54 by rkuijper      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "vsh.h"
+#include <errno.h>
+
+int			jobs_mark_process_status(pid_t pid, int status)
+{
+	t_job	*job;
+	t_proc	*proc;
+
+	if (pid > 0)
+	{
+		job = g_data->jobs->joblist;
+		while (job != NULL)
+		{
+			proc = job->processes;
+			while (proc != NULL)
+			{
+				if (proc->pid == pid)
+				{
+					proc->exit_status = status;
+					if (WIFSTOPPED(status))
+						proc->state = PROC_STOPPED;
+					else
+					{
+						proc->state = PROC_COMPLETED;
+						if (WIFSIGNALED(status))
+							ft_eprintf("%d: Terminated by signal %d\n", proc->pid,
+								WTERMSIG(status));
+					}
+					return (0);
+				}
+				proc = proc->next;
+			}
+			job = job->next;
+		}
+	}
+	else if (pid == 0 || errno == ECHILD)
+		return (FUNCT_ERROR);
+	return (FUNCT_ERROR);
+}
 
 int			jobs_mark_proc(t_proc *proc, int status)
 {
