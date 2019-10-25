@@ -6,7 +6,7 @@
 /*   By: omulder <omulder@student.codam.nl>           +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2019/10/24 16:54:12 by omulder        #+#    #+#                */
-/*   Updated: 2019/10/25 13:48:20 by omulder       ########   odam.nl         */
+/*   Updated: 2019/10/25 14:28:56 by omulder       ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -37,6 +37,7 @@ static int	history_find_match(t_vshdata *data, char *to_match)
 		if (match != NULL)
 			return (set_new_match(data, match, probe->str));
 		probe = probe->prev;
+		data->input->searchhistory.current = probe;
 	}
 	return (FUNCT_FAILURE);
 }
