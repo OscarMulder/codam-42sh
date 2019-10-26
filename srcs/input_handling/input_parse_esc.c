@@ -6,7 +6,7 @@
 /*   By: omulder <omulder@student.codam.nl>           +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2019/10/23 16:48:32 by omulder        #+#    #+#                */
-/*   Updated: 2019/10/24 19:59:05 by omulder       ########   odam.nl         */
+/*   Updated: 2019/10/26 12:38:50 by omulder       ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -20,14 +20,19 @@ static void	reset(t_searchhistory *searchhistory)
 
 void		input_parse_esc(t_vshdata *data)
 {
+	char	*tmp;
+
 	if (data->input->searchhistory.active)
 	{
 		data->input->searchhistory.active = false;
 		ctrlr_clear_line(data);
-		reset(&data->input->searchhistory);
 		shell_display_prompt(data, REGULAR_PROMPT);
+		tmp = data->line->line;
+		data->line->line = data->input->searchhistory.result_str;
+		data->line->len_max = ft_strlen(data->input->searchhistory.result_str);
+		data->line->index = data->line->len_max - 1;
 		input_print_str(data, data->line->line);
-		data->line->index = ft_strlen(data->line->line);
-		// input_print_str(data, data->line->line);
+		ft_strdel(&tmp);
+		reset(&data->input->searchhistory);
 	}
 }
