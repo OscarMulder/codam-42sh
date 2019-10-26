@@ -6,7 +6,7 @@
 /*   By: omulder <omulder@student.codam.nl>           +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2019/04/17 14:03:16 by jbrinksm       #+#    #+#                */
-/*   Updated: 2019/10/24 15:46:37 by omulder       ########   odam.nl         */
+/*   Updated: 2019/10/26 16:37:51 by omulder       ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -71,7 +71,7 @@ static int	input_parse(t_vshdata *data)
 {
 	int		ret;
 
-	ft_eprintf("curs.x: %d, index: %d, line: %s, line_len %d\n", data->curs->coords.x, data->line->index, data->line->line, data->line->len_cur);
+	ft_eprintf("before: curs.x: %d, curs.y: %d, index: %d, line: %s, line_len %d\n", data->curs->coords.x, data->curs->coords.y, data->line->index, data->line->line, data->line->len_cur);
 	if (input_parse_ctrl_c(data) == FUNCT_SUCCESS)
 		return (reset_input_read_return(data, NEW_PROMPT));
 	ret = input_parse_ctrl_d(data);
@@ -87,6 +87,7 @@ static int	input_parse(t_vshdata *data)
 				return (reset_input_read_return(data, FUNCT_ERROR));
 		}
 	}
+	ft_eprintf("after: curs.x: %d, curs.y: %d, index: %d, line: %s, line_len %d\n", data->curs->coords.x, data->curs->coords.y, data->line->index, data->line->line, data->line->len_cur);
 	return (FUNCT_SUCCESS);
 }
 
