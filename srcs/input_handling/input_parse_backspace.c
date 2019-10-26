@@ -6,7 +6,7 @@
 /*   By: rkuijper <rkuijper@student.codam.nl>         +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2019/05/16 13:43:07 by rkuijper       #+#    #+#                */
-/*   Updated: 2019/10/25 13:47:53 by omulder       ########   odam.nl         */
+/*   Updated: 2019/10/26 12:53:46 by tde-jong      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -40,14 +40,12 @@ static void	input_handle_backspace_og(t_vshdata *data)
 
 void	input_handle_backspace(t_vshdata *data)
 {
-	int			len_left;
 	int			saved_index;
 
 	if (data->input->searchhistory.active && data->line->index > 0)
 	{
 		ctrlr_clear_line(data);
 		saved_index = ft_strlen(data->line->line);
-		len_left = data->line->len_cur - data->line->index;
 		data->line->len_cur--;
 		input_clear_char_at(&data->line->line, saved_index - 1);
 		input_print_str(data, HIST_SRCH_FIRST);
