@@ -6,7 +6,7 @@
 /*   By: jbrinksm <jbrinksm@student.codam.nl>         +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2019/08/30 10:45:52 by jbrinksm       #+#    #+#                */
-/*   Updated: 2019/10/27 19:41:04 by omulder       ########   odam.nl         */
+/*   Updated: 2019/10/27 21:16:33 by omulder       ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -36,6 +36,13 @@ static int	input_parse_ansi_arrows(t_vshdata *data,
 	return (FUNCT_SUCCESS);
 }
 
+static int	input_ctrlr_esc(t_vshdata *data)
+{
+	input_parse_esc(data);
+	input_empty_buffer(data, 0);
+	return (FUNCT_SUCCESS);
+}
+
 /*
 **	Is called after reading '\e'. The complete sequence is dumped into a buf.
 **	If we support the escape sequence, it is handled by any of the functions
@@ -50,11 +57,7 @@ int			input_read_ansi(t_vshdata *data)
 	if (data->input->c == '\e')
 	{
 		if (data->input->searchhistory.active)
-		{
-			input_parse_esc(data);
-			input_empty_buffer(data, 0);
-			return (FUNCT_SUCCESS);
-		}
+			return (input_ctrlr_esc(data));
 		termcapbuf[0] = '\e';
 		if (read(STDIN_FILENO, &termcapbuf[1], TERMCAPBUFFSIZE - 1) == -1)
 			return (FUNCT_ERROR);
@@ -67,12 +70,7 @@ int			input_read_ansi(t_vshdata *data)
 			else if (ft_strequ(termcapbuf, TC_DELETE) == true)
 				input_handle_delete(data);
 			else
-			{
-				#ifdef DEBUG
-				ft_eprintf(">%s< TERMCAP NOT FOUND\n", &termcapbuf[1]);
-				#endif
 				return (FUNCT_FAILURE);
-			}
 		}
 		return (FUNCT_SUCCESS);
 	}
