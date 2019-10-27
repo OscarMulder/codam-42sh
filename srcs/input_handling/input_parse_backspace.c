@@ -6,7 +6,7 @@
 /*   By: rkuijper <rkuijper@student.codam.nl>         +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2019/05/16 13:43:07 by rkuijper       #+#    #+#                */
-/*   Updated: 2019/10/26 12:53:46 by tde-jong      ########   odam.nl         */
+/*   Updated: 2019/10/27 17:34:15 by omulder       ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -40,26 +40,17 @@ static void	input_handle_backspace_og(t_vshdata *data)
 
 void	input_handle_backspace(t_vshdata *data)
 {
-	int			saved_index;
-
 	if (data->input->searchhistory.active && data->line->index > 0)
 	{
-		ctrlr_clear_line(data);
-		saved_index = ft_strlen(data->line->line);
+		input_clear_char_at(&data->line->line, ft_strlen(data->line->line) - 1);
 		data->line->len_cur--;
-		input_clear_char_at(&data->line->line, saved_index - 1);
-		input_print_str(data, HIST_SRCH_FIRST);
-		input_print_str(data, data->line->line);
-		input_print_str(data, HIST_SRCH_LAST);
+		ctrlr_clear_line(data);
 		data->input->searchhistory.current = data->history->tail;
 		if (history_ctrl_r(data, true) == FUNCT_ERROR)
 			return ;
-		input_print_str(data, data->input->searchhistory.result_str);
-		data->line->index = ft_strlen(data->input->searchhistory.result_str);
-		curs_move_n_left(data, data->line->index - data->input->searchhistory.result_i);
-		data->line->index = data->line->len_cur;
-		data->input->searchhistory.total_len = ft_strlen(HIST_SRCH_FIRST "" HIST_SRCH_LAST) + data->line->len_cur + data->input->searchhistory.result_i;
-		ft_eprintf("PARSE BACKSPACE total: %d\n", data->input->searchhistory.total_len);
+		input_print_ctrl_r(data, data->line->line,
+		data->input->searchhistory.result_str,
+		data->input->searchhistory.result_i);
 	}
 	else
 		input_handle_backspace_og(data);

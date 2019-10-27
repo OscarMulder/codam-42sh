@@ -6,7 +6,7 @@
 /*   By: jbrinksm <jbrinksm@student.codam.nl>         +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2019/04/11 20:16:38 by jbrinksm       #+#    #+#                */
-/*   Updated: 2019/10/08 22:09:06 by tde-jong      ########   odam.nl         */
+/*   Updated: 2019/10/27 17:17:09 by omulder       ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -32,11 +32,6 @@ static void	shell_set_prompt(t_dataprompt *prompt, int prompt_type)
 	else
 		prompt->prompt_len = ft_strlen(prompt->prompt_name)
 		+ ft_strlen(prompt->prompt_seperator);
-}
-
-static void	shell_display_histsearch_prompt(void)
-{
-	
 }
 
 static void	shell_display_regular_pompt(t_vshdata *data, int prompt_type)
@@ -69,8 +64,5 @@ void	shell_display_prompt(t_vshdata *data, int prompt_type)
 {
 	data->prompt->cur_prompt_type = prompt_type;
 	input_reset_cursor_pos();
-	if (prompt_type == HISTSEARCH_PROMPT)
-		shell_display_histsearch_prompt();
-	else
-		shell_display_regular_pompt(data, prompt_type);
+	shell_display_regular_pompt(data, prompt_type);
 }

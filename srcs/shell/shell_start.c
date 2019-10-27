@@ -6,7 +6,7 @@
 /*   By: omulder <omulder@student.codam.nl>           +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2019/04/18 16:44:50 by omulder        #+#    #+#                */
-/*   Updated: 2019/10/15 14:48:25 by omulder       ########   odam.nl         */
+/*   Updated: 2019/10/27 17:42:29 by omulder       ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -90,8 +90,7 @@ void		shell_start(t_vshdata *data)
 	while (true)
 	{
 		shell_clear_input_data(&data->line->line, &ast, &token_lst);
-		shell_display_prompt(data,
-		data->input->searchhistory.active ? HISTSEARCH_PROMPT : REGULAR_PROMPT);
+		shell_display_prompt(data, REGULAR_PROMPT);
 		if (pre_lexer_reading(data) != FUNCT_SUCCESS)
 			continue ;
 		if (history_expansion(data) != FUNCT_SUCCESS ||

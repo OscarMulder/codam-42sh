@@ -6,7 +6,7 @@
 /*   By: omulder <omulder@student.codam.nl>           +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2019/10/24 16:54:12 by omulder        #+#    #+#                */
-/*   Updated: 2019/10/25 14:28:56 by omulder       ########   odam.nl         */
+/*   Updated: 2019/10/27 16:22:58 by omulder       ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -41,6 +41,16 @@ static int	history_find_match(t_vshdata *data, char *to_match)
 	}
 	return (FUNCT_FAILURE);
 }
+
+/*
+**	Clear the whole line (or multiple lines) including prompt, then print all
+**  The stuff again where `first` is the user input and `second` is the found
+**  match or the string that was already in line.
+**
+**  Does some magic with the variables that hold the length of line and prompt
+**  to make sure all the input_ functions actually do what they have to do.
+**  This is mostly needed to support multiline.
+*/
 
 int			history_ctrl_r(t_vshdata *data, bool second)
 {
