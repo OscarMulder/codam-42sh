@@ -6,7 +6,7 @@
 /*   By: rkuijper <rkuijper@student.codam.nl>         +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2019/05/16 13:43:07 by rkuijper       #+#    #+#                */
-/*   Updated: 2019/10/27 17:34:15 by omulder       ########   odam.nl         */
+/*   Updated: 2019/10/27 21:19:23 by omulder       ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -38,7 +38,7 @@ static void	input_handle_backspace_og(t_vshdata *data)
 	}
 }
 
-void	input_handle_backspace(t_vshdata *data)
+void		input_handle_backspace(t_vshdata *data)
 {
 	if (data->input->searchhistory.active && data->line->index > 0)
 	{
