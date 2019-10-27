@@ -6,7 +6,7 @@
 /*   By: omulder <omulder@student.codam.nl>           +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2019/04/10 20:29:42 by jbrinksm       #+#    #+#                */
-/*   Updated: 2019/10/27 21:01:02 by omulder       ########   odam.nl         */
+/*   Updated: 2019/10/27 21:23:47 by omulder       ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -714,6 +714,8 @@ void			input_parse_esc(t_vshdata *data);
 void			ctrlr_clear_line(t_vshdata *data);
 void			input_print_ctrl_r(t_vshdata *data, char *first, char *second,
 				int second_i);
+int				input_parse_char_og(t_vshdata *data);
+
 /*
 **----------------------------------shell---------------------------------------
 */

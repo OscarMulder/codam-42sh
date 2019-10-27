@@ -6,7 +6,7 @@
 /*   By: omulder <omulder@student.codam.nl>           +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2019/10/27 21:10:44 by omulder        #+#    #+#                */
-/*   Updated: 2019/10/27 21:19:09 by omulder       ########   odam.nl         */
+/*   Updated: 2019/10/27 21:23:59 by omulder       ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -132,7 +132,7 @@ int			input_empty_buffer(t_vshdata *data, int n)
 	return (n - 1);
 }
 
-static int	input_parse_char_og(t_vshdata *data)
+int			input_parse_char_og(t_vshdata *data)
 {
 	int old_index;
 
