@@ -6,7 +6,7 @@
 /*   By: omulder <omulder@student.codam.nl>           +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2019/10/23 15:01:03 by omulder        #+#    #+#                */
-/*   Updated: 2019/10/27 17:35:05 by omulder       ########   odam.nl         */
+/*   Updated: 2019/10/27 21:06:03 by omulder       ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -21,7 +21,7 @@ static void	clear_line(t_vshdata *data)
 	tputs(data->termcaps->tc_clear_lines_str, 1, &ft_tputchar);
 }
 
-static void	init(t_vshdata *data)
+static int	init(t_vshdata *data)
 {
 	int index_tmp;
 
@@ -30,18 +30,23 @@ static void	init(t_vshdata *data)
 	clear_line(data);
 	input_print_str(data, HIST_SRCH_FIRST "" HIST_SRCH_LAST);
 	input_print_str(data, data->line->line);
-	// ft_eprintf("i_tmp: %d, index: %d, len-cur: %d, strlen: %d\n", index_tmp, data->line->index, data->line->len_cur, ft_strlen(data->line->line));
-	// ft_eprintf("i_tmp: %d, index: %d, len-cur: %d, strlen: %d\n", index_tmp, data->line->index, data->line->len_cur, ft_strlen(data->line->line));
 	data->line->index = data->line->len_cur;
 	curs_move_n_left(data, data->line->len_cur - index_tmp);
-	data->input->searchhistory.total_len = ft_strlen(HIST_SRCH_FIRST "" HIST_SRCH_LAST) + index_tmp;
+	data->input->searchhistory.total_len =
+	ft_strlen(HIST_SRCH_FIRST "" HIST_SRCH_LAST) + index_tmp;
 	data->input->searchhistory.result_str = data->line->line;
 	data->input->searchhistory.result_i = ft_strlen(data->line->line) - 1;
 	data->line->index = 0;
 	data->line->len_max = 64;
 	data->line->len_cur = 0;
-	data->line->line = ft_strnew(data->line->len_max); // malloc check
+	data->line->line = ft_strnew(data->line->len_max);
+	if (data->line->line == NULL)
+	{
+		return (err_ret_prog_exit(E_N_ALLOC_STR, "reverse-i-search",
+		EXIT_FAILURE));
+	}
 	data->input->searchhistory.active = true;
+	return (FUNCT_SUCCESS);
 }
 
 void		input_print_ctrl_r(t_vshdata *data, char *first, char *second,
@@ -65,7 +70,7 @@ int second_i)
 	data->line->index = first_len;
 }
 
-void		input_parse_ctrl_r(t_vshdata *data)
+int			input_parse_ctrl_r(t_vshdata *data)
 {
 	if (data->input->searchhistory.active)
 	{
@@ -74,11 +79,12 @@ void		input_parse_ctrl_r(t_vshdata *data)
 			data->input->searchhistory.current =
 			data->input->searchhistory.current->prev;
 		if (history_ctrl_r(data, true) == FUNCT_ERROR)
-			return ;
+			return (FUNCT_SUCCESS);
 		input_print_ctrl_r(data, data->line->line,
 		data->input->searchhistory.result_str,
 		data->input->searchhistory.result_i);
 	}
 	else
-		init(data);
+		return (init(data));
+	return (FUNCT_SUCCESS);
 }

@@ -6,7 +6,7 @@
 /*   By: omulder <omulder@student.codam.nl>           +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2019/04/17 14:03:16 by jbrinksm       #+#    #+#                */
-/*   Updated: 2019/10/26 16:37:51 by omulder       ########   odam.nl         */
+/*   Updated: 2019/10/27 20:57:13 by omulder       ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -71,7 +71,6 @@ static int	input_parse(t_vshdata *data)
 {
 	int		ret;
 
-	ft_eprintf("before: curs.x: %d, curs.y: %d, index: %d, line: %s, line_len %d\n", data->curs->coords.x, data->curs->coords.y, data->line->index, data->line->line, data->line->len_cur);
 	if (input_parse_ctrl_c(data) == FUNCT_SUCCESS)
 		return (reset_input_read_return(data, NEW_PROMPT));
 	ret = input_parse_ctrl_d(data);
@@ -81,13 +80,15 @@ static int	input_parse(t_vshdata *data)
 		return (FUNCT_SUCCESS);
 	else if (input_read_ansi(data) == FUNCT_FAILURE)
 	{
-		if (input_parse_special(data) == FUNCT_FAILURE)
+		ret = input_parse_special(data);
+		if (ret == FUNCT_FAILURE)
 		{
 			if (input_parse_char(data) == FUNCT_ERROR)
 				return (reset_input_read_return(data, FUNCT_ERROR));
 		}
+		if (ret == FUNCT_ERROR)
+			return (reset_input_read_return(data, FUNCT_ERROR));
 	}
-	ft_eprintf("after: curs.x: %d, curs.y: %d, index: %d, line: %s, line_len %d\n", data->curs->coords.x, data->curs->coords.y, data->line->index, data->line->line, data->line->len_cur);
 	return (FUNCT_SUCCESS);
 }
 

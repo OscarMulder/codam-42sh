@@ -6,7 +6,7 @@
 /*   By: omulder <omulder@student.codam.nl>           +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2019/10/24 16:54:12 by omulder        #+#    #+#                */
-/*   Updated: 2019/10/27 16:22:58 by omulder       ########   odam.nl         */
+/*   Updated: 2019/10/27 21:08:06 by omulder       ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,7 +19,10 @@ static int	set_new_match(t_vshdata *data, char *match, char *full_str)
 	data->input->searchhistory.result_i = match - full_str;
 	tmp = ft_strdup(full_str);
 	if (tmp == NULL)
-		return (FUNCT_ERROR); // do error stuffs
+	{
+		return (err_ret_prog_exit(E_N_ALLOC_STR, "reverse-i-search",
+		EXIT_FAILURE));
+	}
 	ft_strdel(&data->input->searchhistory.result_str);
 	data->input->searchhistory.result_str = tmp;
 	return (FUNCT_SUCCESS);
@@ -61,11 +64,15 @@ int			history_ctrl_r(t_vshdata *data, bool second)
 	{
 		if (data->input->searchhistory.result_str == NULL)
 			return (FUNCT_FAILURE);
-		match = ft_strstr(data->input->searchhistory.result_str, data->line->line);
+		match = ft_strstr(data->input->searchhistory.result_str,
+		data->line->line);
 	}
 	if (match == NULL)
 		return (history_find_match(data, data->line->line));
 	else
-		return (set_new_match(data, match, data->input->searchhistory.result_str));
+	{
+		return (set_new_match(data, match,
+		data->input->searchhistory.result_str));
+	}
 	return (history_find_match(data, data->line->line));
 }

@@ -6,7 +6,7 @@
 /*   By: omulder <omulder@student.codam.nl>           +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2019/04/10 20:29:42 by jbrinksm       #+#    #+#                */
-/*   Updated: 2019/10/27 16:19:03 by omulder       ########   odam.nl         */
+/*   Updated: 2019/10/27 21:01:02 by omulder       ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -709,7 +709,7 @@ int				input_add_chunk(t_vshdata *data, char *chunk,
 				int chunk_len);
 int				input_empty_buffer(t_vshdata *data, int n);
 int				input_read_from_buffer(t_vshdata *data);
-void			input_parse_ctrl_r(t_vshdata *data);
+int				input_parse_ctrl_r(t_vshdata *data);
 void			input_parse_esc(t_vshdata *data);
 void			ctrlr_clear_line(t_vshdata *data);
 void			input_print_ctrl_r(t_vshdata *data, char *first, char *second,
