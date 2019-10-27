@@ -6,7 +6,7 @@
 /*   By: omulder <omulder@student.codam.nl>           +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2019/10/23 16:48:32 by omulder        #+#    #+#                */
-/*   Updated: 2019/10/27 18:10:06 by omulder       ########   odam.nl         */
+/*   Updated: 2019/10/27 19:20:46 by omulder       ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -30,7 +30,8 @@ void		input_parse_esc(t_vshdata *data)
 		tmp = data->line->line;
 		data->line->line = data->input->searchhistory.result_str;
 		data->line->len_max = ft_strlen(data->input->searchhistory.result_str);
-		data->line->index = data->line->len_max - 1;
+		data->line->len_cur = data->line->len_max;
+		data->line->index = data->line->len_max;
 		input_print_str(data, data->line->line);
 		ft_strdel(&tmp);
 		reset(&data->input->searchhistory);

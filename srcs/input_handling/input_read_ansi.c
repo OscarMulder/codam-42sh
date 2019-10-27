@@ -6,7 +6,7 @@
 /*   By: jbrinksm <jbrinksm@student.codam.nl>         +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2019/08/30 10:45:52 by jbrinksm       #+#    #+#                */
-/*   Updated: 2019/10/23 19:01:50 by omulder       ########   odam.nl         */
+/*   Updated: 2019/10/27 19:41:04 by omulder       ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -53,6 +53,7 @@ int			input_read_ansi(t_vshdata *data)
 		{
 			input_parse_esc(data);
 			input_empty_buffer(data, 0);
+			return (FUNCT_SUCCESS);
 		}
 		termcapbuf[0] = '\e';
 		if (read(STDIN_FILENO, &termcapbuf[1], TERMCAPBUFFSIZE - 1) == -1)

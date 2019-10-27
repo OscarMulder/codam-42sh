@@ -6,7 +6,7 @@
 /*   By: omulder <omulder@student.codam.nl>           +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2019/05/16 13:33:54 by rkuijper       #+#    #+#                */
-/*   Updated: 2019/10/27 17:27:57 by omulder       ########   odam.nl         */
+/*   Updated: 2019/10/27 20:02:25 by omulder       ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -142,12 +142,17 @@ static int			input_parse_char_og(t_vshdata *data)
 			&data->line->line) == FUNCT_ERROR)
 			return (FUNCT_ERROR);
 		old_index = data->line->index;
-		input_print_str(data, data->line->line + data->line->index);
-		data->line->index = data->line->len_cur;
-		curs_move_n_left(data, data->line->index - old_index - 1);
+		if (data->input->searchhistory.active == false)
+		{
+			input_print_str(data, data->line->line + data->line->index);
+			data->line->index = data->line->len_cur;
+			curs_move_n_left(data, data->line->index - old_index - 1);
+		}
 	}
 	else if (data->input->c == '\n')
 	{
+		if (data->input->searchhistory.active)
+			input_parse_esc(data);
 		if (add_newline(data, &data->line->line) == FUNCT_ERROR)
 			return (FUNCT_ERROR);
 	}
@@ -172,33 +177,19 @@ void	ctrlr_clear_line(t_vshdata *data)
 
 int			input_parse_char(t_vshdata *data)
 {
-	char	*tmp;
-
 	if (data->input->searchhistory.active)
 	{
-		ft_eprintf("res_i: %d index: %d\n", data->input->searchhistory.result_i, data->line->index);
-		ctrlr_clear_line(data);
-		data->line->index = data->line->len_cur;
-		input_print_str(data, HIST_SRCH_FIRST);
-		input_print_str(data, data->line->line);
+		data->line->index = ft_strlen(data->line->line);
 		if (input_parse_char_og(data) == FUNCT_ERROR)
 			return (FUNCT_ERROR);
-		input_print_str(data, HIST_SRCH_LAST);
+		ctrlr_clear_line(data);
+		if (data->input->searchhistory.active == false)
+			return (FUNCT_SUCCESS);
 		if (history_ctrl_r(data, false) == FUNCT_ERROR)
 			return (FUNCT_ERROR);
-		input_print_str(data, data->input->searchhistory.result_str);
-		data->line->index = ft_strlen(data->input->searchhistory.result_str);
-		tmp = data->line->line;
-		data->line->line = data->input->searchhistory.result_str;
-		data->prompt->prompt_len = ft_strlen(HIST_SRCH_FIRST "" HIST_SRCH_LAST) + ft_strlen(tmp);
-			ft_eprintf("CHAR->BEFORE: curs.x: %d, curs.y: %d, index: %d, line: %s, line_len %d\n", data->curs->coords.x, data->curs->coords.y, data->line->index, data->line->line, data->line->len_cur);
-		ft_eprintf("MOVE LEFT: %d\n", data->line->index - data->input->searchhistory.result_i);
-		curs_move_n_left(data, data->line->index - data->input->searchhistory.result_i);
-			ft_eprintf("CHAR->AFTER: curs.x: %d, curs.y: %d, index: %d, line: %s, line_len %d\n", data->curs->coords.x, data->curs->coords.y, data->line->index, data->line->line, data->line->len_cur);
-		data->line->line = tmp;
-		data->input->searchhistory.total_len = ft_strlen(HIST_SRCH_FIRST "" HIST_SRCH_LAST) + data->line->len_cur + data->input->searchhistory.result_i;
-		data->line->index = data->line->len_cur;
-		ft_eprintf("PARSE CHAR total: %d\n", data->input->searchhistory.total_len);
+		input_print_ctrl_r(data, data->line->line,
+		data->input->searchhistory.result_str,
+		data->input->searchhistory.result_i);
 	}
 	else
 		input_parse_char_og(data);
