@@ -6,7 +6,7 @@
 #    By: omulder <omulder@student.codam.nl>           +#+                      #
 #                                                    +#+                       #
 #    Created: 2019/04/10 20:30:07 by jbrinksm       #+#    #+#                 #
-#    Updated: 2019/10/07 12:20:18 by jbrinksm      ########   odam.nl          #
+#    Updated: 2019/10/21 16:19:40 by mavan-he      ########   odam.nl          #
 #                                                                              #
 # **************************************************************************** #
 
@@ -17,6 +17,7 @@ COVERAGE =
 INCLUDES = -I./libft/ -I./includes
 LIBFT = ./libft/libft.a
 LIB = -L./libft/ -lft -ltermcap
+OBJDIR = objects/
 CRITERIONINCLUDES = -I$(HOME)/.brew/include
 CRITERION = $(CRITERIONINCLUDES) -L$(HOME)/.brew/lib -lcriterion
 VPATH = ./test ./libft ./srcs ./srcs/builtins ./srcs/input_handling \
@@ -25,7 +26,7 @@ VPATH = ./test ./libft ./srcs ./srcs/builtins ./srcs/input_handling \
 ./test/environment_handling ./srcs/lexer ./srcs/parser ./srcs/history \
 ./srcs/expan ./srcs/autocomplete ./srcs/hashtable ./srcs/signal \
 ./srcs/exec ./srcs/redir ./srcs/error_handling ./srcs/exec ./includes \
-./srcs/builtins/builtin_fc
+./srcs/builtins/builtin_fc ./srcs/globbing
 SRCS = shell_start shell_prompt shell_quote_checker shell_dless_input \
 shell_init_files shell_init_vshdata shell_getcurrentdir \
 shell_handle_escaped_newlines shell_init_input shell_init_features \
@@ -48,7 +49,7 @@ tools_is_char_escaped tool_is_redirect_tk tools_is_valid_identifier \
 tools_is_builtin tool_is_special tool_check_for_special tools_is_fdnumstr \
 tools_isidentifierchar tool_check_for_whitespace tool_get_paths \
 tools_isprintnotblank tools_get_pid_state tools_contains_quoted_chars \
-tools_is_cmd_seperator \
+tools_is_cmd_seperator tools_remove_quotes_etc \
 builtin_echo builtin_echo_set_flags builtin_exit builtin_assign \
 builtin_export builtin_export_print builtin_set builtin_unset \
 builtin_alias builtin_alias_set builtin_alias_lstdel builtin_unalias \
@@ -61,51 +62,58 @@ parser_start parser_debug parser_utils parser_command parser_error \
 parser_astdel \
 alias_expansion alias_replace alias_read_file alias_add_expanded \
 alias_getvalue \
-history_to_file history_get_file_content history_line_to_array history_print \
+history_to_file history_get_file_content history_item_helpers history_print \
 history_change_line history_index_change history_expansion history_get_line \
-history_match_line history_insert_into_line \
+history_match_line history_insert_into_line history_helpers \
 exec_builtin exec_cmd exec_external exec_start exec_find_binary \
 exec_quote_remove expan_handle_variables expan_handle_dollar \
 exec_create_files exec_command exec_add_pid_to_pipeseqlist \
 expan_handle_bracketed_var expan_tilde_expansion exec_validate_binary \
+expan_pathname \
 redir_pipe redir redir_tools redir_tools2 \
 hash_ht_insert hash_print hash_reset hash_init hash_check \
-print_errors \
+print_errors print_errors_extended \
 auto_get_cmdlst auto_match_builtins auto_get_filelst auto_get_varlst \
 auto_find_state auto_start auto_add_match_toline auto_find_matches \
 auto_handle_matchlst auto_small_lst auto_big_lst auto_lst_print \
 auto_lst_print_helpers auto_check_dups \
 builtin_fc builtin_fc_options builtin_fc_init builtin_fc_list \
-builtin_fc_print_helpers builint_fc_find_index \
-signal_handle_child_death
+builtin_fc_print_helpers builint_fc_find_index builtin_fc_substitute \
+builtin_fc_edit \
+signal_handle_child_death \
+glob_expand_word glob_lexer glob_matchlst_funcs glob_lexer_helpers \
+glob_lexer_states glob_matcher glob_helpers glob_dir_match_loop glob_ast_add \
+glob_tokenlst_funcs
 TESTS = unit_test builtin_assign_test
-OBJECTS := $(SRCS:%=%.o)
+OBJECTS := $(SRCS:%=$(OBJDIR)%.o)
 TESTOBJECTS := $(TESTS:%=%.o)
 SRCS := $(SRCS:%=%.c)
 TESTS := $(TESTS:%=%.c)
 
-all: $(OBJECTS) $(LIBFT) $(NAME)
+all: $(LIBFT) $(NAME)
 
-$(NAME): $(OBJECTS) main.o
-	@$(CC) $(FLAGS) $^ $(COVERAGE) $(INCLUDES) $(LIB) -o $(NAME)
+$(NAME): $(OBJDIR) $(OBJECTS) $(OBJDIR)main.o
+	@$(CC) $(FLAGS) $(OBJECTS) $(OBJDIR)main.o $(COVERAGE) $(INCLUDES) $(LIB) -o $(NAME)
 	@echo "[ + ] vsh has been compiled"
 
-%.o: %.c vsh.h
+$(OBJDIR)%.o: %.c vsh.h
 	@$(CC) -o $@ $(FLAGS) $< $(COVERAGE) $(INCLUDES) -c
 
 $(LIBFT):
 	@$(MAKE) -C libft
 
+$(OBJDIR):
+	@mkdir $(OBJDIR)
+
 clean:
-	@rm -f $(OBJECTS) $(TESTOBJECTS) main.o
-	@$(MAKE) -C libft clean
+	@rm -f $(OBJECTS) $(TESTOBJECTS) $(OBJDIR)main.o
+	@$(MAKE) -C libft fclean
 	@echo "[ - ] removed object files"
 	@rm -f *.gcno
 	@rm -f *.gcda
 
 fclean: clean
 	@rm -f $(NAME) test_coverage vsh_tests
-	@$(MAKE) -C libft fclean
 	@echo "[ - ] removed binaries"
 	@rm -f *.gcov
 
@@ -129,7 +137,7 @@ build_test: $(TESTOBJECTS) $(OBJECTS)
 	@make $(TESTOBJECTS) COVERAGE=$(COVERAGE)
 	@$(CC) $(FLAGS) $^ $(COVERAGE) $(INCLUDES) $(CRITERION) $(LIB) -o vsh_tests
 
-test: build_test
+test: $(OBJDIR) build_test
 	@./vsh_tests
 
 test_valgrind: build_test
