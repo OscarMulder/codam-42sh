@@ -6,7 +6,7 @@
 /*   By: omulder <omulder@student.codam.nl>           +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2019/10/27 21:10:44 by omulder        #+#    #+#                */
-/*   Updated: 2019/10/28 14:05:00 by omulder       ########   odam.nl         */
+/*   Updated: 2019/10/28 15:16:31 by omulder       ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -152,8 +152,7 @@ int			input_parse_char_og(t_vshdata *data)
 	else if (data->input->c == '\n')
 	{
 		if (data->input->searchhistory.active)
-			if (input_parse_esc(data) == FUNCT_ERROR)
-				return (FUNCT_ERROR);
+			ctrlr_restore_shell(data);
 		if (add_newline(data, &data->line->line) == FUNCT_ERROR)
 			return (FUNCT_ERROR);
 	}
