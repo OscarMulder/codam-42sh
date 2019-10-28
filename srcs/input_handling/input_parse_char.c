@@ -6,7 +6,7 @@
 /*   By: omulder <omulder@student.codam.nl>           +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2019/05/16 13:33:54 by rkuijper       #+#    #+#                */
-/*   Updated: 2019/10/27 21:11:04 by omulder       ########   odam.nl         */
+/*   Updated: 2019/10/28 13:15:43 by omulder       ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,11 +15,15 @@
 
 void		ctrlr_clear_line(t_vshdata *data)
 {
+	char *tmp;
+
+	tmp = data->line->line;
+	data->line->line = ft_strjoin(HIST_SRCH_FIRST, ft_strjoin(tmp, ft_strjoin(HIST_SRCH_LAST, data->input->searchhistory.result_str)));
 	data->line->index = data->input->searchhistory.total_len;
-	data->prompt->prompt_len = ft_strlen(HIST_SRCH_FIRST);
-	curs_move_n_left(data, data->input->searchhistory.total_len
-	- data->prompt->prompt_len);
-	curs_move_n_left(data, ft_strlen(HIST_SRCH_FIRST));
+	data->prompt->prompt_len = 0;
+	curs_move_n_left(data, data->line->index);
+	data->line->line = tmp;
+	// curs_move_n_left(data, ft_strlen(HIST_SRCH_FIRST));
 	tputs(data->termcaps->tc_clear_lines_str, 1, &ft_tputchar);
 }
 
