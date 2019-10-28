@@ -6,7 +6,7 @@
 /*   By: rkuijper <rkuijper@student.codam.nl>         +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2019/10/21 11:22:46 by rkuijper       #+#    #+#                */
-/*   Updated: 2019/10/24 14:56:47 by rkuijper      ########   odam.nl         */
+/*   Updated: 2019/10/28 20:25:58 by jbrinksm      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -20,12 +20,12 @@ void		jobs_wait_job(t_job *job)
 
 	while (42)
 	{
-		pid = waitpid(-job->pgid, &status, WUNTRACED);
+		pid = waitpid(job->pgid, &status, WUNTRACED);
 		while (pid < 0)
 		{
 			if (errno != EINTR)
 				break ;
-			pid = waitpid(-job->pgid, &status, WUNTRACED);
+			pid = waitpid(job->pgid, &status, WUNTRACED);
 		}
 		if (!jobs_mark_job(job, pid, status) || jobs_stopped_job(job) ||
 			jobs_completed_job(job))

@@ -6,7 +6,7 @@
 /*   By: omulder <omulder@student.codam.nl>           +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2019/05/29 17:52:22 by omulder        #+#    #+#                */
-/*   Updated: 2019/10/28 16:57:23 by jbrinksm      ########   odam.nl         */
+/*   Updated: 2019/10/28 20:58:03 by jbrinksm      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -37,7 +37,7 @@ int				exec_pipe_sequence(t_ast *ast, t_vshdata *data)
 		if (exec_command(ast->left, data) == FUNCT_ERROR)
 			return (FUNCT_ERROR);
 	}
-	return (FUNCT_SUCCESS);
+	return (exec_command(ast->right, data));
 }
 
 int				exec_and_or(t_ast *ast, t_vshdata *data)
@@ -48,7 +48,7 @@ int				exec_and_or(t_ast *ast, t_vshdata *data)
 	if (ast->type != AND_IF && ast->type != OR_IF)
 	{
 		if (data->jobs->active_job != NULL)
-			jobs_launch_job(data->jobs->active_job);
+			jobs_launch_job(data->jobs->active_job); // @rob, why is this one necessary?
 		data->jobs->active_job = NULL;
 		return (exec_pipe_sequence(ast, data));
 	}
@@ -89,6 +89,8 @@ int				exec_complete_command(t_ast *ast, t_vshdata *data)
 	data->exec_flags = 0;
 	if (ast == NULL || exec_list(ast, data) == FUNCT_ERROR)
 		return (FUNCT_ERROR);
-	data->jobs->active_job ? jobs_launch_job(data->jobs->active_job) : 0;
+	if (data->jobs->active_job != NULL)
+		jobs_launch_job(data->jobs->active_job);
+	data->jobs->active_job = NULL;
 	return (FUNCT_SUCCESS);
 }

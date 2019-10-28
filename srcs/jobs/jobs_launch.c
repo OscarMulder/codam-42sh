@@ -6,13 +6,13 @@
 /*   By: rkuijper <rkuijper@student.codam.nl>         +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2019/10/28 16:25:10 by rkuijper       #+#    #+#                */
-/*   Updated: 2019/10/28 17:06:22 by jbrinksm      ########   odam.nl         */
+/*   Updated: 2019/10/28 20:59:39 by jbrinksm      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "vsh.h"
 
-static void	jobs_launch_proc(t_job *job, t_proc *proc, int fds[3])
+static void	jobs_launch_proc(t_job *job, t_proc *proc, int fds[3], int pipes[2])
 {
 	pid_t pid;
 
@@ -31,11 +31,13 @@ static void	jobs_launch_proc(t_job *job, t_proc *proc, int fds[3])
 		dup2(fds[0], STDIN_FILENO);
 		close(fds[0]);
 	}
+	else
+		close(pipes[0]); /* When the childs STDIN is the terminal, the pipe is not used so therefore it should be closed in the child process */
 	if (fds[1] != STDOUT_FILENO)
 	{
 		dup2(fds[1], STDOUT_FILENO);
 		close(fds[1]);
-	}
+	} /* No pipe is made when we are at the end of the pipe sequence, therefore the comment above is not a problem for stdout */
 	if (fds[2] != STDERR_FILENO)
 	{
 		dup2(fds[2], STDERR_FILENO);
@@ -72,14 +74,14 @@ void		jobs_launch_job(t_job *job)
 			fds[1] = STDOUT_FILENO;
 
 		pid = fork();
-		if (pid < 0)
+		if (pid < 0) 	/* Fork failed */
 		{
 			ft_eprintf("Could not fork.\n");
 			exit(1);
 		}
-		if (pid == 0)
-			jobs_launch_proc(job, proc, fds);
-		else
+		if (pid == 0) 	/* Child */
+			jobs_launch_proc(job, proc, fds, pipes);
+		else 			/* Parent */
 		{
 			proc->pid = pid;
 			if (g_state->shell_type == SHELL_INTERACT)

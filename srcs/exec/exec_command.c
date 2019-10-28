@@ -6,7 +6,7 @@
 /*   By: rkuijper <rkuijper@student.codam.nl>         +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2019/09/04 10:16:26 by rkuijper       #+#    #+#                */
-/*   Updated: 2019/10/28 16:54:48 by jbrinksm      ########   odam.nl         */
+/*   Updated: 2019/10/28 17:14:15 by jbrinksm      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -64,11 +64,11 @@ static int		exec_redirs_or_assigns(t_ast *ast, t_vshdata *data,
 {
 	if (ast == NULL)
 		return (FUNCT_FAILURE);
-	if (tool_is_redirect_tk(ast->type) == true)
-	{
-		if (redir(ast) == FUNCT_ERROR)
-			return (FUNCT_ERROR);
-	}
+	// if (tool_is_redirect_tk(ast->type) == true)
+	// {
+	// 	if (redir(ast) == FUNCT_ERROR)
+	// 		return (FUNCT_ERROR);
+	// }
 	else if (ast->type == ASSIGN)
 	{
 		if (builtin_assign(ast->value, data, env_type)
