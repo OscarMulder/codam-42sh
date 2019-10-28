@@ -6,7 +6,7 @@
 /*   By: rkuijper <rkuijper@student.codam.nl>         +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2019/05/16 13:43:07 by rkuijper       #+#    #+#                */
-/*   Updated: 2019/10/28 14:24:49 by omulder       ########   odam.nl         */
+/*   Updated: 2019/10/28 16:02:25 by omulder       ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -37,6 +37,12 @@ static void	input_handle_backspace_og(t_vshdata *data)
 		curs_move_n_left(data, len_left);
 	}
 }
+
+/*
+**  If ctrl+r is active -> clear the line, remove the char, search again
+**  starting from the beginning of the history list, print the result.
+**  if ctrl+r is not active the regular backspace function is called.
+*/
 
 int			input_handle_backspace(t_vshdata *data)
 {
