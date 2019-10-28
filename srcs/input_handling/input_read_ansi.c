@@ -6,7 +6,7 @@
 /*   By: jbrinksm <jbrinksm@student.codam.nl>         +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2019/08/30 10:45:52 by jbrinksm       #+#    #+#                */
-/*   Updated: 2019/10/27 21:16:33 by omulder       ########   odam.nl         */
+/*   Updated: 2019/10/28 14:05:37 by omulder       ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -38,7 +38,8 @@ static int	input_parse_ansi_arrows(t_vshdata *data,
 
 static int	input_ctrlr_esc(t_vshdata *data)
 {
-	input_parse_esc(data);
+	if (input_parse_esc(data) == FUNCT_ERROR)
+		return (FUNCT_ERROR);
 	input_empty_buffer(data, 0);
 	return (FUNCT_SUCCESS);
 }

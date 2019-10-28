@@ -6,7 +6,7 @@
 /*   By: omulder <omulder@student.codam.nl>           +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2019/10/23 15:01:03 by omulder        #+#    #+#                */
-/*   Updated: 2019/10/28 11:13:59 by mavan-he      ########   odam.nl         */
+/*   Updated: 2019/10/28 14:03:49 by omulder       ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -79,7 +79,8 @@ int			input_parse_ctrl_r(t_vshdata *data)
 {
 	if (data->input->searchhistory.active)
 	{
-		ctrlr_clear_line(data);
+		if (ctrlr_clear_line(data) == FUNCT_ERROR)
+			return (FUNCT_ERROR);
 		if (data->input->searchhistory.current != NULL)
 			data->input->searchhistory.current =
 			data->input->searchhistory.current->prev;
