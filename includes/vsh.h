@@ -94,6 +94,7 @@
 # define E_HIST_NUM_ERROR   "\n" SHELL ": %.*s: event not found\n"
 # define E_BAD_PATTERN		SHELL ": bad pattern: %s\n"
 # define E_OPEN_DIR			SHELL ": error opening directory: %s\n"
+# define E_INVALID_USER		SHELL ": could not get working directory of: %s\n"
 # define E_ALLOC 42
 # define E_DUP 100
 # define E_OPEN 101

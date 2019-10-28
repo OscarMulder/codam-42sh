@@ -17,6 +17,7 @@ COVERAGE =
 INCLUDES = -I./libft/ -I./includes
 LIBFT = ./libft/libft.a
 LIB = -L./libft/ -lft -ltermcap
+OBJDIR = objects/
 CRITERIONINCLUDES = -I$(HOME)/.brew/include
 CRITERION = $(CRITERIONINCLUDES) -L$(HOME)/.brew/lib -lcriterion
 VPATH = ./test ./libft ./srcs ./srcs/builtins ./srcs/input_handling \
@@ -84,33 +85,35 @@ glob_expand_word glob_lexer glob_matchlst_funcs glob_lexer_helpers \
 glob_lexer_states glob_matcher glob_helpers glob_dir_match_loop glob_ast_add \
 glob_tokenlst_funcs
 TESTS = unit_test builtin_assign_test
-OBJECTS := $(SRCS:%=%.o)
+OBJECTS := $(SRCS:%=$(OBJDIR)%.o)
 TESTOBJECTS := $(TESTS:%=%.o)
 SRCS := $(SRCS:%=%.c)
 TESTS := $(TESTS:%=%.c)
 
-all: $(OBJECTS) $(LIBFT) $(NAME)
+all: $(LIBFT) $(NAME)
 
-$(NAME): $(OBJECTS) main.o
-	@$(CC) $(FLAGS) $^ $(COVERAGE) $(INCLUDES) $(LIB) -o $(NAME)
+$(NAME): $(OBJDIR) $(OBJECTS) $(OBJDIR)main.o
+	@$(CC) $(FLAGS) $(OBJECTS) $(OBJDIR)main.o $(COVERAGE) $(INCLUDES) $(LIB) -o $(NAME)
 	@echo "[ + ] vsh has been compiled"
 
-%.o: %.c vsh.h
+$(OBJDIR)%.o: %.c vsh.h
 	@$(CC) -o $@ $(FLAGS) $< $(COVERAGE) $(INCLUDES) -c
 
 $(LIBFT):
 	@$(MAKE) -C libft
 
+$(OBJDIR):
+	@mkdir $(OBJDIR)
+
 clean:
-	@rm -f $(OBJECTS) $(TESTOBJECTS) main.o
-	@$(MAKE) -C libft clean
+	@rm -f $(OBJECTS) $(TESTOBJECTS) $(OBJDIR)main.o
+	@$(MAKE) -C libft fclean
 	@echo "[ - ] removed object files"
 	@rm -f *.gcno
 	@rm -f *.gcda
 
 fclean: clean
 	@rm -f $(NAME) test_coverage vsh_tests
-	@$(MAKE) -C libft fclean
 	@echo "[ - ] removed binaries"
 	@rm -f *.gcov
 
@@ -134,7 +137,7 @@ build_test: $(TESTOBJECTS) $(OBJECTS)
 	@make $(TESTOBJECTS) COVERAGE=$(COVERAGE)
 	@$(CC) $(FLAGS) $^ $(COVERAGE) $(INCLUDES) $(CRITERION) $(LIB) -o vsh_tests
 
-test: build_test
+test: $(OBJDIR) build_test
 	@./vsh_tests
 
 test_valgrind: build_test
