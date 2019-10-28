@@ -6,22 +6,11 @@
 /*   By: omulder <omulder@student.codam.nl>           +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2019/05/29 17:52:22 by omulder        #+#    #+#                */
-/*   Updated: 2019/10/24 14:03:23 by rkuijper      ########   odam.nl         */
+/*   Updated: 2019/10/28 16:57:23 by jbrinksm      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "vsh.h"
-
-static int		exec_post_pipe_sequence(t_ast *ast, t_vshdata *data,
-				t_pipes pipes)
-{
-	close(pipes.currentpipe[PIPE_WRITE]);
-	pipes.pipeside = PIPE_EXTEND;
-	if (exec_command(ast->right, data, pipes) == FUNCT_ERROR)
-		return (FUNCT_ERROR);
-	close(pipes.currentpipe[PIPE_READ]);
-	return (FUNCT_SUCCESS);
-}
 
 /*
 **	Recursively runs commands of the whole pipesequence, and
@@ -32,44 +21,36 @@ static int		exec_post_pipe_sequence(t_ast *ast, t_vshdata *data,
 **	be siblings of pipenodes, and will thus be PIPE_EXTEND.
 */
 
-int				exec_pipe_sequence(t_ast *ast, t_vshdata *data, t_pipes pipes)
+int				exec_pipe_sequence(t_ast *ast, t_vshdata *data)
 {
-	t_pipes	childpipes;
-
 	if (ast->type != PIPE)
-		return (exec_command(ast, data, pipes));
-	if (pipe(pipes.currentpipe) == -1)
-		return (err_ret(E_NO_PIPE));
+		return (exec_command(ast, data));
 	if (exec_create_files(ast) == FUNCT_ERROR)
 		return (FUNCT_ERROR);
 	if (ast->left->type == PIPE)
 	{
-		childpipes = pipes;
-		childpipes.parentpipe[PIPE_READ] = pipes.currentpipe[PIPE_READ];
-		childpipes.parentpipe[PIPE_WRITE] = pipes.currentpipe[PIPE_WRITE];
-		if (exec_pipe_sequence(ast->left, data, childpipes) == FUNCT_ERROR)
+		if (exec_pipe_sequence(ast->left, data) == FUNCT_ERROR)
 			return (FUNCT_ERROR);
 	}
 	else
 	{
-		pipes.pipeside = PIPE_START;
-		if (exec_command(ast->left, data, pipes) == FUNCT_ERROR)
+		if (exec_command(ast->left, data) == FUNCT_ERROR)
 			return (FUNCT_ERROR);
 	}
-	return (exec_post_pipe_sequence(ast, data, pipes));
+	return (FUNCT_SUCCESS);
 }
 
 int				exec_and_or(t_ast *ast, t_vshdata *data)
 {
-	t_pipes pipes;
 	int		bg;
 
 	bg = 0;
-	pipes = redir_init_pipestruct();
 	if (ast->type != AND_IF && ast->type != OR_IF)
 	{
+		if (data->jobs->active_job != NULL)
+			jobs_launch_job(data->jobs->active_job);
 		data->jobs->active_job = NULL;
-		return (exec_pipe_sequence(ast, data, pipes));
+		return (exec_pipe_sequence(ast, data));
 	}
 	if (data->exec_flags & EXEC_BG)
 		bg = 1;
@@ -108,5 +89,6 @@ int				exec_complete_command(t_ast *ast, t_vshdata *data)
 	data->exec_flags = 0;
 	if (ast == NULL || exec_list(ast, data) == FUNCT_ERROR)
 		return (FUNCT_ERROR);
+	data->jobs->active_job ? jobs_launch_job(data->jobs->active_job) : 0;
 	return (FUNCT_SUCCESS);
 }

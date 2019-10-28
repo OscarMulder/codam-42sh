@@ -6,7 +6,7 @@
 /*   By: rkuijper <rkuijper@student.codam.nl>         +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2019/09/04 10:16:26 by rkuijper       #+#    #+#                */
-/*   Updated: 2019/09/16 09:55:33 by jbrinksm      ########   odam.nl         */
+/*   Updated: 2019/10/28 16:54:48 by jbrinksm      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -75,34 +75,25 @@ static int		exec_redirs_or_assigns(t_ast *ast, t_vshdata *data,
 		== FUNCT_ERROR)
 			return (FUNCT_ERROR);
 	}
-	if (exec_redirs_or_assigns(ast->left, data, env_type) == FUNCT_ERROR)
-		return (FUNCT_ERROR);
 	return (FUNCT_SUCCESS);
 }
 
-int				exec_command(t_ast *ast, t_vshdata *data, t_pipes pipes)
+int				exec_command(t_ast *ast, t_vshdata *data)
 {
 	char	**command;
 
 	if (expan_handle_variables(ast, data->envlst) == FUNCT_ERROR)
 		return (FUNCT_ERROR);
 	exec_quote_remove(ast);
-	if (redir_handle_pipe(pipes) == FUNCT_ERROR)
-		return (return_and_reset_fds(FUNCT_ERROR, data));
 	if (ast->type == WORD)
 	{
 		if (ast->right &&
 		exec_redirs_or_assigns(ast->right, data, ENV_TEMP) == FUNCT_ERROR)
-			return (return_and_reset_fds(FUNCT_ERROR, data));
+			return (FUNCT_ERROR);
 		command = create_args(ast);
 		if (command == NULL)
-			return (return_and_reset_fds(FUNCT_ERROR, data));
-		exec_cmd(command, data, pipes);
+			return (FUNCT_ERROR);
+		exec_cmd(command, data);
 	}
-	else if (ast->type == ASSIGN || tool_is_redirect_tk(ast->type) == true)
-	{
-		if (exec_redirs_or_assigns(ast, data, ENV_LOCAL) == FUNCT_ERROR)
-			return (return_and_reset_fds(FUNCT_ERROR, data));
-	}
-	return (return_and_reset_fds(FUNCT_SUCCESS, data));
+	return (FUNCT_SUCCESS);
 }

@@ -6,7 +6,7 @@
 /*   By: rkuijper <rkuijper@student.codam.nl>         +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2019/10/21 11:51:41 by rkuijper       #+#    #+#                */
-/*   Updated: 2019/10/24 14:53:54 by rkuijper      ########   odam.nl         */
+/*   Updated: 2019/10/28 15:48:45 by jbrinksm      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -71,10 +71,7 @@ int			jobs_mark_proc(t_proc *proc, int status)
 			proc->exit_status = 1;
 		}
 		else if (WTERMSIG(status) == SIGINT)
-		{
-			ft_putchar('\n');
 			proc->exit_status = 130;
-		}
 	}
 	return (FUNCT_SUCCESS);
 }

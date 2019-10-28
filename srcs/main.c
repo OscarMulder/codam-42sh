@@ -6,7 +6,7 @@
 /*   By: jbrinksm <jbrinksm@student.codam.nl>         +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2019/04/10 20:29:49 by jbrinksm       #+#    #+#                */
-/*   Updated: 2019/10/24 10:30:09 by rkuijper      ########   odam.nl         */
+/*   Updated: 2019/10/28 16:55:40 by jbrinksm      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -49,8 +49,6 @@ int			main(int argc, char **argv)
 	init_shell();
 	data = shell_init_vshdata();
 	if (data == NULL)
-		return (EXIT_FAILURE);
-	if (redir_save_stdfds(data) == FUNCT_ERROR)
 		return (EXIT_FAILURE);
 	if (argc > 1 || isatty(STDIN_FILENO) != 1)
 	{

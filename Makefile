@@ -6,7 +6,7 @@
 #    By: omulder <omulder@student.codam.nl>           +#+                      #
 #                                                    +#+                       #
 #    Created: 2019/04/10 20:30:07 by jbrinksm       #+#    #+#                 #
-#    Updated: 2019/10/22 15:28:29 by rkuijper      ########   odam.nl          #
+#    Updated: 2019/10/28 16:56:01 by jbrinksm      ########   odam.nl          #
 #                                                                              #
 # **************************************************************************** #
 
@@ -68,7 +68,7 @@ exec_builtin exec_cmd exec_external exec_start exec_find_binary \
 exec_quote_remove expan_handle_variables expan_handle_dollar \
 exec_create_files exec_command \
 expan_handle_bracketed_var expan_tilde_expansion exec_validate_binary \
-redir_pipe redir redir_tools redir_tools2 \
+redir_pipe redir redir_tools \
 hash_ht_insert hash_print hash_reset hash_init hash_check \
 print_errors \
 auto_get_cmdlst auto_match_builtins auto_get_filelst auto_get_varlst \
@@ -77,7 +77,7 @@ auto_handle_matchlst auto_small_lst auto_big_lst auto_lst_print \
 auto_lst_print_helpers auto_check_dups \
 jobs_list_handling jobs_job_utils jobs_find jobs_cont jobs_bg \
 jobs_fg jobs_info jobs_mark jobs_processes jobs_status jobs_wait \
-jobs_notify jobs_command \
+jobs_notify jobs_command jobs_launch \
 builtin_fc builtin_fc_options builtin_fc_init builtin_fc_list \
 builtin_fc_print_helpers builint_fc_find_index \
 signal_handle_child_death signal_reset

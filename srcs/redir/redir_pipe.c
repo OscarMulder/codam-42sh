@@ -6,7 +6,7 @@
 /*   By: jbrinksm <jbrinksm@student.codam.nl>         +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2019/07/14 10:37:41 by jbrinksm       #+#    #+#                */
-/*   Updated: 2019/08/07 11:50:42 by mavan-he      ########   odam.nl         */
+/*   Updated: 2019/10/28 16:40:10 by jbrinksm      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -45,6 +45,7 @@ t_pipes		redir_init_pipestruct(void)
 **	previous pipe, and the output will be to STDOUT.
 */
 
+/* UNUSED */
 int			redir_handle_pipe(t_pipes pipes)
 {
 	if (pipes.currentpipe[PIPE_READ] != PIPE_UNINIT

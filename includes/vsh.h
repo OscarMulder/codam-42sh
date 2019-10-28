@@ -6,7 +6,7 @@
 /*   By: omulder <omulder@student.codam.nl>           +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2019/04/10 20:29:42 by jbrinksm       #+#    #+#                */
-/*   Updated: 2019/10/24 14:54:14 by rkuijper      ########   odam.nl         */
+/*   Updated: 2019/10/28 16:53:19 by jbrinksm      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -419,6 +419,12 @@ typedef struct	s_proc
 	struct s_proc	*next;
 	t_proc_state	state;
 	int				exit_status;
+
+	char			**env;
+	char			**argv;
+	char			*binary;
+
+	// t_ast			*redir_node;
 }				t_proc;
 
 typedef struct	s_job
@@ -432,6 +438,7 @@ typedef struct	s_job
 	int				current;
 	char			*command;
 	t_proc			*processes;
+	t_proc			*last_proc;
 }				t_job;
 
 /*
@@ -749,7 +756,7 @@ t_job			*jobs_find_job(char *job_id, t_job *joblist);
 t_job			*jobs_find_contains_str(char *str, t_job *joblist);
 t_job			*jobs_find_startswith_str(char *str, t_job *joblist);
 
-int				jobs_add_process(t_job *job, pid_t pid);
+int				jobs_add_process(t_job *job);
 
 void			jobs_wait_job(t_job *job);
 int				jobs_stopped_job(t_job *job);
@@ -766,6 +773,7 @@ int				jobs_update_job_command(t_job *job, char **av);
 
 // TMPTMTPMTPM
 int				jobs_mark_process_status(pid_t pid, int status);
+void			jobs_launch_job(t_job *job);
 
 /*
 **----------------------------------shell---------------------------------------
@@ -978,9 +986,9 @@ bool			tools_is_cmd_seperator(t_tokens type);
 int				exec_complete_command(t_ast *ast, t_vshdata *data);
 int				exec_list(t_ast *ast, t_vshdata *data);
 int				exec_and_or(t_ast *ast, t_vshdata *data);
-int				exec_pipe_sequence(t_ast *ast, t_vshdata *data, t_pipes pipes);
-int				exec_command(t_ast *ast, t_vshdata *data, t_pipes pipes);
-void			exec_cmd(char **args, t_vshdata *data, t_pipes pipes);
+int				exec_pipe_sequence(t_ast *ast, t_vshdata *data);
+int				exec_command(t_ast *ast, t_vshdata *g_data);
+void			exec_cmd(char **args, t_vshdata *data);
 bool			exec_builtin(char **args, t_vshdata *data);
 void			exec_external(char **args, t_vshdata *data);
 int				exec_find_binary(char *filename, t_vshdata *data,
@@ -1027,11 +1035,6 @@ int				redir_pipe(t_ast *pipe_node);
 int				redir_run_pipesequence(t_ast *pipenode, t_vshdata *data,
 					t_pipes pipes);
 int				redir_handle_pipe(t_pipes pipes);
-
-int				redir_save_stdfds(t_vshdata *data);
-int				return_and_reset_fds(int retval, t_vshdata *data);
-int				redir_reset_stdfds(t_vshdata *data);
-int				redir_close_saved_stdfds(t_vshdata *data);
 
 /*
 **------------------------------------history-----------------------------------
