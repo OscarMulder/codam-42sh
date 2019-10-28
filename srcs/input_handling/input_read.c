@@ -6,7 +6,7 @@
 /*   By: omulder <omulder@student.codam.nl>           +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2019/04/17 14:03:16 by jbrinksm       #+#    #+#                */
-/*   Updated: 2019/10/24 15:13:50 by rkuijper      ########   odam.nl         */
+/*   Updated: 2019/10/28 12:45:00 by rkuijper      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -109,13 +109,13 @@ int			input_read(t_vshdata *data)
 
 	if (data == NULL)
 		return (FUNCT_ERROR);
+	if (tcgetpgrp(STDIN_FILENO) != g_state->pid)
+		tcsetpgrp(STDIN_FILENO, g_state->pid);
 	data->line->line = ft_strnew(data->line->len_max);
 	if (data->line->line == NULL)
 		return (reset_input_read_return(data, FUNCT_ERROR));
 	reset_input_read_return(data, 0);
 	term_disable_isig(data->term->termios_p);
-	if (tcgetpgrp(STDIN_FILENO) != g_state->pid)
-		tcsetpgrp(STDIN_FILENO, g_state->pid);
 	while (true)
 	{
 		if (input_read_from_buffer(data) != FUNCT_SUCCESS &&
