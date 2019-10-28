@@ -6,7 +6,7 @@
 /*   By: rkuijper <rkuijper@student.codam.nl>         +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2019/10/28 16:25:10 by rkuijper       #+#    #+#                */
-/*   Updated: 2019/10/28 20:59:39 by jbrinksm      ########   odam.nl         */
+/*   Updated: 2019/10/28 23:06:08 by jbrinksm      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -32,17 +32,20 @@ static void	jobs_launch_proc(t_job *job, t_proc *proc, int fds[3], int pipes[2])
 		close(fds[0]);
 	}
 	else
-		close(pipes[0]); /* When the childs STDIN is the terminal, the pipe is not used so therefore it should be closed in the child process */
+		close(pipes[0]); /* @rob dit was de fix: When the childs STDIN is the terminal, the pipe is not used so therefore it should be closed in the child process */
 	if (fds[1] != STDOUT_FILENO)
 	{
 		dup2(fds[1], STDOUT_FILENO);
 		close(fds[1]);
-	} /* No pipe is made when we are at the end of the pipe sequence, therefore the comment above is not a problem for stdout */
+	}
 	if (fds[2] != STDERR_FILENO)
 	{
 		dup2(fds[2], STDERR_FILENO);
 		close(fds[2]);
 	}
+	if (exec_redirs(proc->redir_node) == FUNCT_ERROR) /* Do redirections based on the redir node linked to the process */
+		return ;
+
 	execve(proc->binary, proc->argv, proc->env);
 	ft_eprintf("Error executing %s\n", proc->binary);
 	exit(1);

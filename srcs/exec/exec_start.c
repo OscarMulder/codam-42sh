@@ -6,7 +6,7 @@
 /*   By: omulder <omulder@student.codam.nl>           +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2019/05/29 17:52:22 by omulder        #+#    #+#                */
-/*   Updated: 2019/10/28 20:58:03 by jbrinksm      ########   odam.nl         */
+/*   Updated: 2019/10/28 23:09:11 by jbrinksm      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -23,10 +23,10 @@
 
 int				exec_pipe_sequence(t_ast *ast, t_vshdata *data)
 {
+	if (exec_create_files(ast) == FUNCT_ERROR)
+		return (FUNCT_ERROR); /* Volgens moet hij boven onderstaande rule, omdat het anders fout kan gaan als er alleen een foute redir wordt gegeven */
 	if (ast->type != PIPE)
 		return (exec_command(ast, data));
-	if (exec_create_files(ast) == FUNCT_ERROR)
-		return (FUNCT_ERROR);
 	if (ast->left->type == PIPE)
 	{
 		if (exec_pipe_sequence(ast->left, data) == FUNCT_ERROR)
@@ -48,7 +48,7 @@ int				exec_and_or(t_ast *ast, t_vshdata *data)
 	if (ast->type != AND_IF && ast->type != OR_IF)
 	{
 		if (data->jobs->active_job != NULL)
-			jobs_launch_job(data->jobs->active_job); // @rob, why is this one necessary?
+			jobs_launch_job(data->jobs->active_job); /* @rob, why is this one necessary? We already have one after exec_complete_command */
 		data->jobs->active_job = NULL;
 		return (exec_pipe_sequence(ast, data));
 	}

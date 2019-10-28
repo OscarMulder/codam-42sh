@@ -6,7 +6,7 @@
 /*   By: omulder <omulder@student.codam.nl>           +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2019/04/10 20:29:42 by jbrinksm       #+#    #+#                */
-/*   Updated: 2019/10/28 16:53:19 by jbrinksm      ########   odam.nl         */
+/*   Updated: 2019/10/28 22:03:52 by jbrinksm      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -332,6 +332,82 @@ typedef struct	s_fcdata
 # include <stdbool.h>
 
 /*
+**----------------------------------lexer--------------------------------------
+*/
+/*
+**	START,
+**	WORD, // bascially any string
+**	ASSIGN, WORD=[WORD]
+**	IO_NUMBER, // NUM followed by > or <
+**	AND_IF, // &&
+**	OR_IF, // ||
+**	DLESS, // <<
+**	DGREAT, // >>
+**	SLESS, // <
+**	SGREAT, // >
+**	LESSAND, // <&
+**	GREATAND, // >&
+**	BG // & in background
+**	PIPE, // |
+**	SEMICOL // ;
+**	NEWLINE,
+**	END,
+**	ERROR // malloc fail
+*/
+
+typedef enum	e_tokens
+{
+	ERROR,
+	START,
+	WORD,
+	ASSIGN,
+	IO_NUMBER,
+	AND_IF,
+	OR_IF,
+	DLESS,
+	DGREAT,
+	SLESS,
+	SGREAT,
+	LESSAND,
+	GREATAND,
+	BG,
+	PIPE,
+	SEMICOL,
+	NEWLINE,
+	END
+}				t_tokens;
+
+typedef struct	s_tokenlst
+{
+	t_tokens			type;
+	int					flags;
+	char				*value;
+	struct s_tokenlst	*next;
+}				t_tokenlst;
+
+typedef struct	s_scanner
+{
+	t_tokens	tk_type;
+	int			tk_len;
+	char		*str;
+	int			str_index;
+	char		flags;
+}				t_scanner;
+
+/*
+**----------------------------------parser--------------------------------------
+*/
+
+typedef struct	s_ast
+{
+	t_tokens		type;
+	char			flags;
+	char			*value;
+	struct s_ast	*left;
+	struct s_ast	*right;
+}				t_ast;
+
+/*
 **=================================typedefs====================================
 */
 
@@ -424,7 +500,7 @@ typedef struct	s_proc
 	char			**argv;
 	char			*binary;
 
-	// t_ast			*redir_node;
+	t_ast			*redir_node;
 }				t_proc;
 
 typedef struct	s_job
@@ -544,6 +620,7 @@ typedef struct	s_vshdata
 	t_datatermcaps	*termcaps;
 	t_datajobs		*jobs;
 	short			exec_flags;
+	t_ast			*current_redirs;
 }				t_vshdata;
 
 t_vshdata		*g_data;
@@ -556,82 +633,6 @@ typedef enum	e_prompt_type
 	DQUOTE_PROMPT,
 	DLESS_PROMPT
 }				t_prompt_type;
-
-/*
-**----------------------------------lexer--------------------------------------
-*/
-/*
-**	START,
-**	WORD, // bascially any string
-**	ASSIGN, WORD=[WORD]
-**	IO_NUMBER, // NUM followed by > or <
-**	AND_IF, // &&
-**	OR_IF, // ||
-**	DLESS, // <<
-**	DGREAT, // >>
-**	SLESS, // <
-**	SGREAT, // >
-**	LESSAND, // <&
-**	GREATAND, // >&
-**	BG // & in background
-**	PIPE, // |
-**	SEMICOL // ;
-**	NEWLINE,
-**	END,
-**	ERROR // malloc fail
-*/
-
-typedef enum	e_tokens
-{
-	ERROR,
-	START,
-	WORD,
-	ASSIGN,
-	IO_NUMBER,
-	AND_IF,
-	OR_IF,
-	DLESS,
-	DGREAT,
-	SLESS,
-	SGREAT,
-	LESSAND,
-	GREATAND,
-	BG,
-	PIPE,
-	SEMICOL,
-	NEWLINE,
-	END
-}				t_tokens;
-
-typedef struct	s_tokenlst
-{
-	t_tokens			type;
-	int					flags;
-	char				*value;
-	struct s_tokenlst	*next;
-}				t_tokenlst;
-
-typedef struct	s_scanner
-{
-	t_tokens	tk_type;
-	int			tk_len;
-	char		*str;
-	int			str_index;
-	char		flags;
-}				t_scanner;
-
-/*
-**----------------------------------parser--------------------------------------
-*/
-
-typedef struct	s_ast
-{
-	t_tokens		type;
-	char			flags;
-	char			*value;
-	struct s_ast	*left;
-	struct s_ast	*right;
-}				t_ast;
 
 /*
 **----------------------------------autocomplete--------------------------------
@@ -998,6 +999,7 @@ void			exec_quote_remove(t_ast *node);
 int				exec_validate_binary(char *binary);
 int				exec_create_files(t_ast *ast);
 void			exec_add_pid_to_pipeseqlist(t_vshdata *data, pid_t pid);
+int				exec_redirs(t_ast *redirs);
 
 /*
 **-----------------------------------signals------------------------------------

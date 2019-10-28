@@ -6,7 +6,7 @@
 /*   By: omulder <omulder@student.codam.nl>           +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2019/05/31 10:47:19 by tde-jong       #+#    #+#                */
-/*   Updated: 2019/10/28 16:58:39 by jbrinksm      ########   odam.nl         */
+/*   Updated: 2019/10/28 23:13:02 by jbrinksm      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -70,6 +70,7 @@ t_vshdata *data)
 	job->last_proc->env = env;
 	job->last_proc->argv = args;
 	job->last_proc->binary = binary;
+	job->last_proc->redir_node = data->current_redirs; /* Save the current redir to the correct process */
 	if (g_data->exec_flags & EXEC_BG)
 		job->bg = true;
 	else
@@ -83,6 +84,9 @@ t_vshdata *data)
 	exec_parent(job, pid);
 	signal(SIGCHLD, old_sig);*/
 }
+
+/* @rob, volgens mij moeten we direct een `[1] 42424` message laten zien als
+we bijvoorbeeld `sleep 5 &` doen toch? Ik zie hem bij ons niet namelijk */
 
 void			exec_external(char **args, t_vshdata *data)
 {
