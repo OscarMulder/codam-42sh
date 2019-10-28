@@ -6,7 +6,7 @@
 /*   By: omulder <omulder@student.codam.nl>           +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2019/04/10 20:29:42 by jbrinksm       #+#    #+#                */
-/*   Updated: 2019/10/28 14:05:18 by omulder       ########   odam.nl         */
+/*   Updated: 2019/10/28 14:25:29 by omulder       ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -681,7 +681,7 @@ int				input_parse_char(t_vshdata *data);
 void			input_print_str(t_vshdata *data, char *str);
 int				ft_tputchar(int c);
 int				tools_isprintnotblank(int i);
-void			input_handle_backspace(t_vshdata *data);
+int				input_handle_backspace(t_vshdata *data);
 void			input_handle_delete(t_vshdata *data);
 void			curs_move_left(t_vshdata *data);
 void			curs_move_n_left(t_vshdata *data, size_t n);

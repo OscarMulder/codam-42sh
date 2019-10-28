@@ -6,7 +6,7 @@
 /*   By: rkuijper <rkuijper@student.codam.nl>         +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2019/08/30 14:05:27 by rkuijper       #+#    #+#                */
-/*   Updated: 2019/10/27 21:00:36 by omulder       ########   odam.nl         */
+/*   Updated: 2019/10/28 14:25:23 by omulder       ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -36,7 +36,10 @@ static int	parse_special(t_vshdata *data)
 int			input_parse_special(t_vshdata *data)
 {
 	if (data->input->c == INPUT_BACKSPACE)
-		input_handle_backspace(data);
+	{
+		if (input_handle_backspace(data) == FUNCT_ERROR)
+			return (FUNCT_ERROR);
+	}
 	else if (data->input->c == INPUT_CTRL_R)
 	{
 		if (input_parse_ctrl_r(data) == FUNCT_ERROR)
