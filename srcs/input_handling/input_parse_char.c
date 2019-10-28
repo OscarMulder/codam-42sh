@@ -6,12 +6,20 @@
 /*   By: omulder <omulder@student.codam.nl>           +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2019/05/16 13:33:54 by rkuijper       #+#    #+#                */
-/*   Updated: 2019/10/28 14:08:23 by omulder       ########   odam.nl         */
+/*   Updated: 2019/10/28 16:08:54 by omulder       ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "vsh.h"
 #include "term.h"
+
+/*
+**  Clears the full line including prompt when ctrl+r is active. The line
+**  consists of 4 parts:
+**  HIST_SRCH_FIRST - input(line) - HIST_SRCH_LAST - result_str
+**  which are all cleared.
+**  The crazy way it uses to do this is to make sure multiline is supported.
+*/
 
 int			ctrlr_clear_line(t_vshdata *data)
 {
@@ -34,6 +42,13 @@ int			ctrlr_clear_line(t_vshdata *data)
 	tputs(data->termcaps->tc_clear_lines_str, 1, &ft_tputchar);
 	return (FUNCT_SUCCESS);
 }
+
+/*
+**  If ctrl+r is active -> clear the line, add the char, search again
+**  starting from the last match, print the result. If char is '\n' end the
+**  ctrl+r execution.
+**  If ctrl+r is not active the regular parse_char function is called.
+*/
 
 int			input_parse_char(t_vshdata *data)
 {
