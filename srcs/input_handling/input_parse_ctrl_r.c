@@ -6,12 +6,16 @@
 /*   By: omulder <omulder@student.codam.nl>           +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2019/10/23 15:01:03 by omulder        #+#    #+#                */
-/*   Updated: 2019/10/28 14:03:49 by omulder       ########   odam.nl         */
+/*   Updated: 2019/10/28 15:51:44 by omulder       ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "vsh.h"
 #include <term.h>
+
+/*
+**  Used to clear the regular prompt and line.
+*/
 
 static void	clear_line(t_vshdata *data)
 {
@@ -25,6 +29,11 @@ static void	clear_line(t_vshdata *data)
 	data->line->line = tmp;
 	tputs(data->termcaps->tc_clear_lines_str, 1, &ft_tputchar);
 }
+
+/*
+**  Clears the prompt and prints the basic ctrl+r prompt. Also initializes a new
+**  empty line.
+*/
 
 static int	init(t_vshdata *data)
 {
@@ -54,6 +63,16 @@ static int	init(t_vshdata *data)
 	return (FUNCT_SUCCESS);
 }
 
+/*
+**	Gets called after clearing the whole line, prints all the stuff again
+**  where `first` is the user input and `second` is the found match or the
+**  string that was already in line.
+**
+**  Does some magic with the variables that hold the length of line and prompt
+**  to make sure all the input_ functions actually do what they have to do.
+**  This is mostly needed to support multiline.
+*/
+
 void		input_print_ctrl_r(t_vshdata *data, char *first, char *second,
 int second_i)
 {
@@ -74,6 +93,12 @@ int second_i)
 	data->input->searchhistory.total_len = prompt_len + first_len + second_i;
 	data->line->index = first_len;
 }
+
+/*
+**  Get's called every time ctrl+r is pressed. The first time only the init
+**  function is executed. When pressed after the first time it wil find and
+**  display the next match.
+*/
 
 int			input_parse_ctrl_r(t_vshdata *data)
 {
