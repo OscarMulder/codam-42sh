@@ -6,7 +6,7 @@
 /*   By: omulder <omulder@student.codam.nl>           +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2019/10/23 15:01:03 by omulder        #+#    #+#                */
-/*   Updated: 2019/10/27 21:06:03 by omulder       ########   odam.nl         */
+/*   Updated: 2019/10/28 11:13:59 by mavan-he      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,9 +15,14 @@
 
 static void	clear_line(t_vshdata *data)
 {
+	char *tmp;
+
 	curs_move_n_left(data, data->line->index);
 	data->line->index = data->prompt->prompt_len;
+	tmp = data->line->line;
+	data->line->line = "";
 	curs_move_n_left(data, data->prompt->prompt_len);
+	data->line->line = tmp;
 	tputs(data->termcaps->tc_clear_lines_str, 1, &ft_tputchar);
 }
 
