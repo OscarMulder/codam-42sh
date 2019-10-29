@@ -6,7 +6,7 @@
 /*   By: omulder <omulder@student.codam.nl>           +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2019/04/10 20:29:42 by jbrinksm       #+#    #+#                */
-/*   Updated: 2019/10/29 13:55:23 by jbrinksm      ########   odam.nl         */
+/*   Updated: 2019/10/29 14:15:10 by jbrinksm      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -23,6 +23,8 @@
 # define SEPERATOR			">"
 # define PROMPT_NAME		SHELL " "
 # define PROMPT_SEPERATOR	SEPERATOR " "
+# define HIST_SRCH_FIRST	"(reverse-i-search)`"
+# define HIST_SRCH_LAST		"': "
 # define FUNCT_FAILURE 0
 # define FUNCT_SUCCESS 1
 # define NEW_PROMPT 2
@@ -301,8 +303,10 @@ typedef struct	s_fcdata
 # define INPUT_CTRL_E '\5'
 # define INPUT_CTRL_K '\v'
 # define INPUT_TAB '\t'
+# define INPUT_CTRL_R 18
 # define INPUT_CTRL_U 21
 # define INPUT_CTRL_Y 25
+# define INPUT_ESC 27
 # define TC_MAXRESPONSESIZE 42
 # define INPUT_BUF_READ_SIZE 100
 
@@ -588,9 +592,20 @@ typedef struct	s_dataprompt
 	int		cur_prompt_type;
 }				t_dataprompt;
 
-typedef struct	s_vshdatainput
+typedef struct	s_searchhistory
 {
-	char				c;
+	bool			active;
+	char			*search_str;
+	char			*result_str;
+	size_t			result_i;
+	size_t			total_len;
+	t_historyitem	*current;
+}				t_searchhistory;
+
+typedef struct	s_datainput
+{
+	char			c;
+	t_searchhistory	searchhistory;
 }				t_datainput;
 
 typedef struct	s_datahashtable
@@ -644,7 +659,8 @@ typedef enum	e_prompt_type
 	LINECONT_PROMPT,
 	QUOTE_PROMPT,
 	DQUOTE_PROMPT,
-	DLESS_PROMPT
+	DLESS_PROMPT,
+	HISTSEARCH_PROMPT
 }				t_prompt_type;
 
 /*
@@ -718,7 +734,7 @@ int				input_parse_char(t_vshdata *data);
 void			input_print_str(t_vshdata *data, char *str);
 int				ft_tputchar(int c);
 int				tools_isprintnotblank(int i);
-void			input_handle_backspace(t_vshdata *data);
+int				input_handle_backspace(t_vshdata *data);
 void			input_handle_delete(t_vshdata *data);
 void			curs_move_left(t_vshdata *data);
 void			curs_move_n_left(t_vshdata *data, size_t n);
@@ -746,6 +762,13 @@ int				input_add_chunk(t_vshdata *data, char *chunk,
 				int chunk_len);
 int				input_empty_buffer(t_vshdata *data, int n);
 int				input_read_from_buffer(t_vshdata *data);
+int				input_parse_ctrl_r(t_vshdata *data);
+int				input_parse_esc(t_vshdata *data);
+int				ctrlr_clear_line(t_vshdata *data);
+void			ctrlr_restore_shell(t_vshdata *data);
+void			input_print_ctrl_r(t_vshdata *data, char *first, char *second,
+				int second_i);
+int				input_parse_char_og(t_vshdata *data);
 
 /*
 **----------------------------------jobs----------------------------------------
@@ -1080,6 +1103,7 @@ int				history_insert_into_line(char **line,
 size_t			history_get_match_len(char *line, size_t i);
 int				history_count(t_historyitem *start, t_historyitem *end);
 void			history_free_item(t_historyitem **item);
+int				history_ctrl_r(t_vshdata *data, bool second);
 
 /*
 **--------------------------------hashtable-------------------------------------
