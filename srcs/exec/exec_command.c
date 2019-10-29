@@ -6,7 +6,7 @@
 /*   By: rkuijper <rkuijper@student.codam.nl>         +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2019/09/04 10:16:26 by rkuijper       #+#    #+#                */
-/*   Updated: 2019/10/28 23:05:16 by jbrinksm      ########   odam.nl         */
+/*   Updated: 2019/10/29 11:27:04 by rkuijper      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -110,7 +110,7 @@ int				exec_command(t_ast *ast, t_vshdata *data)
 	else if (ast->type == ASSIGN || tool_is_redirect_tk(ast->type) == true)
 	{
 		if (exec_redirs(ast) == FUNCT_ERROR)
-			return (FUNCT_ERROR); /* @rob, Deze moet alsnog runnen omdat hij een error moet geven, ookal zou hij normaal gesproken pas in de fork runnen */
+			return (FUNCT_ERROR);
 		if (exec_assigns(ast, data, ENV_LOCAL) == FUNCT_ERROR)
 			return (FUNCT_ERROR);
 	}

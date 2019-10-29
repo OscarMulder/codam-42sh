@@ -6,7 +6,7 @@
 /*   By: omulder <omulder@student.codam.nl>           +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2019/05/31 10:47:19 by tde-jong       #+#    #+#                */
-/*   Updated: 2019/10/28 23:13:02 by jbrinksm      ########   odam.nl         */
+/*   Updated: 2019/10/29 11:26:52 by rkuijper      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,43 +16,11 @@
 #include <termios.h>
 #include <sys/wait.h>
 
-// static void		exec_child(t_job *job, char *binary, char **args, char **env)
-// {
-// 	if (g_state->shell_type == SHELL_INTERACT)
-// 	{
-// 		setpgid(0, job->pgid);
-// 		if (!(g_data->exec_flags & EXEC_BG))
-// 			tcsetpgrp(STDIN_FILENO, job->pgid == 0 ? getpid() : job->pgid);
-// 		signal_reset();
-// 	}
-// 	execve(binary, args, env);
-// 	ft_eprintf(E_FAIL_EXEC_P, binary);
-// 	exit(EXIT_FAILURE);
-// }
-
-// static void		exec_parent(t_job *job, pid_t pid)
-// {
-// 	if (g_state->shell_type == SHELL_INTERACT)
-// 	{
-// 		if (job->pgid == 0)
-// 			job->pgid = pid;
-// 		setpgid(pid, job->pgid);
-// 	}
-// 	if (g_data->exec_flags & EXEC_WAIT)
-// 	{
-// 		if (g_data->exec_flags & EXEC_BG)
-// 			jobs_bg_job(job, false);
-// 		else
-// 			g_state->exit_code = jobs_fg_job(job, false);
-// 	}
-// }
-
 static void		exec_bin(char *binary, char **args, char **env,
 t_vshdata *data)
 {
 	t_job	*job;
 
-	//old_sig = signal(SIGCHLD, SIG_DFL);
 	if (exec_validate_binary(binary) == FUNCT_ERROR)
 		return ;
 	job = data->jobs->active_job;
@@ -70,23 +38,12 @@ t_vshdata *data)
 	job->last_proc->env = env;
 	job->last_proc->argv = args;
 	job->last_proc->binary = binary;
-	job->last_proc->redir_node = data->current_redirs; /* Save the current redir to the correct process */
+	job->last_proc->redir_node = data->current_redirs;
 	if (g_data->exec_flags & EXEC_BG)
 		job->bg = true;
 	else
 		job->bg = false;
-	
-	/*pid = fork();
-	if (pid < 0)
-		return (err_void_exit(E_FORK_STR, EXIT_FAILURE));
-	if (pid == 0)
-		exec_child(job, binary, args, env);
-	exec_parent(job, pid);
-	signal(SIGCHLD, old_sig);*/
 }
-
-/* @rob, volgens mij moeten we direct een `[1] 42424` message laten zien als
-we bijvoorbeeld `sleep 5 &` doen toch? Ik zie hem bij ons niet namelijk */
 
 void			exec_external(char **args, t_vshdata *data)
 {

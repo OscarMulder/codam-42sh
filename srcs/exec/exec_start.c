@@ -6,20 +6,11 @@
 /*   By: omulder <omulder@student.codam.nl>           +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2019/05/29 17:52:22 by omulder        #+#    #+#                */
-/*   Updated: 2019/10/28 23:09:11 by jbrinksm      ########   odam.nl         */
+/*   Updated: 2019/10/29 11:17:16 by rkuijper      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "vsh.h"
-
-/*
-**	Recursively runs commands of the whole pipesequence, and
-**	redirects their input and output according to the pipesequence.
-**
-**	The left of the last pipenode in the pipesequence is the first
-**	command in the pipesequence PIPE_START. All other commands will
-**	be siblings of pipenodes, and will thus be PIPE_EXTEND.
-*/
 
 int				exec_pipe_sequence(t_ast *ast, t_vshdata *data)
 {
@@ -48,7 +39,7 @@ int				exec_and_or(t_ast *ast, t_vshdata *data)
 	if (ast->type != AND_IF && ast->type != OR_IF)
 	{
 		if (data->jobs->active_job != NULL)
-			jobs_launch_job(data->jobs->active_job); /* @rob, why is this one necessary? We already have one after exec_complete_command */
+			jobs_launch_job(data->jobs->active_job);
 		data->jobs->active_job = NULL;
 		return (exec_pipe_sequence(ast, data));
 	}
@@ -87,10 +78,10 @@ int				exec_list(t_ast *ast, t_vshdata *data)
 int				exec_complete_command(t_ast *ast, t_vshdata *data)
 {
 	data->exec_flags = 0;
+	data->jobs->active_job = NULL;
 	if (ast == NULL || exec_list(ast, data) == FUNCT_ERROR)
 		return (FUNCT_ERROR);
 	if (data->jobs->active_job != NULL)
 		jobs_launch_job(data->jobs->active_job);
-	data->jobs->active_job = NULL;
 	return (FUNCT_SUCCESS);
 }
