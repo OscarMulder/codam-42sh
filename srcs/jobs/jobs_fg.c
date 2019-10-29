@@ -6,7 +6,7 @@
 /*   By: rkuijper <rkuijper@student.codam.nl>         +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2019/10/18 17:12:11 by rkuijper       #+#    #+#                */
-/*   Updated: 2019/10/24 15:03:21 by rkuijper      ########   odam.nl         */
+/*   Updated: 2019/10/29 11:48:24 by jbrinksm      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -42,9 +42,9 @@ int				jobs_fg_job(t_job *job, bool job_continued)
 	job->bg = false;
 	if (g_state->shell_type == SHELL_INTERACT)
 		tcsetpgrp(STDIN_FILENO, job->pgid);
+	tcsetattr(STDIN_FILENO, TCSADRAIN, g_data->term->old_termios_p);
 	if (job_continued == true)
 	{
-		tcsetattr(STDIN_FILENO, TCSADRAIN, job->tmode);
 		if (kill(-job->pgid, SIGCONT) < 0)
 			return (ft_eprintf("Could not SIGCONT job %i\n", job->pgid));
 	}
@@ -52,7 +52,6 @@ int				jobs_fg_job(t_job *job, bool job_continued)
 	if (g_state->shell_type == SHELL_INTERACT)
 	{
 		tcsetpgrp(STDIN_FILENO, g_state->pid);
-		tcgetattr(STDIN_FILENO, job->tmode);
 		tcsetattr(STDIN_FILENO, TCSADRAIN, g_data->term->termios_p);
 	}
 	if (jobs_stopped_job(job))

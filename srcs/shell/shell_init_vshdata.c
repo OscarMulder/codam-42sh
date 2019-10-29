@@ -6,7 +6,7 @@
 /*   By: mavan-he <mavan-he@student.codam.nl>         +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2019/07/29 12:42:44 by mavan-he       #+#    #+#                */
-/*   Updated: 2019/10/24 10:27:03 by rkuijper      ########   odam.nl         */
+/*   Updated: 2019/10/29 11:58:52 by jbrinksm      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -64,7 +64,7 @@ t_vshdata	*shell_init_vshdata(void)
 		return (NULL);
 	}
 	if (shell_init_files(data) == FUNCT_ERROR
-		|| history_get_file_content(data) == FUNCT_ERROR
+		|| history_get_file_content(data->history) == FUNCT_ERROR
 		|| alias_read_file(data) == FUNCT_ERROR
 		|| env_add_extern_value(data, "OLDPWD", "") == FUNCT_ERROR)
 		return (NULL);

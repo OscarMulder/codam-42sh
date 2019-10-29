@@ -6,7 +6,7 @@
 /*   By: omulder <omulder@student.codam.nl>           +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2019/04/17 14:03:16 by jbrinksm       #+#    #+#                */
-/*   Updated: 2019/10/28 12:45:00 by rkuijper      ########   odam.nl         */
+/*   Updated: 2019/10/29 11:59:30 by jbrinksm      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,55 +14,11 @@
 #include <unistd.h>
 #include <signal.h>
 
-void		input_reset_cursor_pos(void)
-{
-	size_t		i;
-	size_t		len;
-	int			output;
-	char		answer[TC_MAXRESPONSESIZE];
-
-	len = 0;
-	write(STDIN_FILENO, TC_GETCURSORPOS, 4);
-	while (len < TC_MAXRESPONSESIZE - 1 && read(1, answer + len, 1) == 1)
-	{
-		if (answer[len] == 'R')
-			break ;
-		len++;
-	}
-	answer[len] = '\0';
-	i = 1;
-	while (i < len && answer[i] != ';')
-		i++;
-	if (answer[i] != '\0')
-	{
-		i++;
-		output = ft_atoi(&answer[i]);
-		if (output > 1)
-			ft_putstr(WHITE_BG BLACK "%" RESET "\n");
-	}
-	g_data->curs->coords.x = 1;
-}
-
-static int	find_start(t_history **history)
-{
-	int i;
-	int start;
-	int largest;
-
-	i = 0;
-	start = 0;
-	largest = -1;
-	while (i < HISTORY_MAX && history[i]->str != NULL)
-	{
-		if (history[i]->number > largest)
-		{
-			start = i;
-			largest = history[i]->number;
-		}
-		i++;
-	}
-	return (start + 1);
-}
+/*
+**	Every time we return from input_read, we want to make sure that the content
+**	in the vshdata struct which is related to the current readloop and command
+**	line is cleared and/or reset or prepared for the next line.
+*/
 
 static int	reset_input_read_return(t_vshdata *data, int ret)
 {
@@ -71,16 +27,45 @@ static int	reset_input_read_return(t_vshdata *data, int ret)
 	data->line->len_max = 64;
 	data->line->len_cur = 0;
 	if (ret == 0)
-		data->curs->coords.y = get_curs_row();
+		data->curs->coords.y = input_get_curs_row();
 	data->curs->cur_relative_y = 1;
-	data->history->hist_index = find_start(data->history->history);
-	data->history->hist_start = data->history->hist_index - 1;
-	data->history->hist_isfirst = true;
+	data->history->current = NULL;
 	signal(SIGWINCH, SIG_DFL);
 	if (ret == 0)
 		resize_window_check(SIGWINCH);
 	return (ret);
 }
+
+/*
+**	First we check for the `signals`, of our input. If it is not one of those,
+**	we check if it is a '\e' character, which might indicate the start of a
+**	recognised ANSI escape sequence. If that is not the case, we will see
+**	if the character indicates something special like cursor movement. And
+**	Finally if that is not the case either, we will attempt to add the
+**	byte into our command line.
+**
+**	@return NEW_PROMPT
+**					This will be returned when a ctrl+c character is read
+**					('\3'). It lets the shell know that the current line
+**					is cancelled.
+**
+**	@return IR_EOF	This stands for "Input Read End Of File". It will occur
+**					when we read a ctrl+d ('\4') character, and the current
+**					line is empty, and the current prompt is not our main
+**					prompt (think of a `dquote >` for example). The reason
+**					IR_EOF is not returned if we are reading with our main
+**					prompt is that `builtin_exit` will have been called
+**					from within `input_parse_ctrl_d`, and thus the shell
+**					will have exited.
+**					(See `input_parse_ctrl_d` for more info.)
+**
+**	@return FUNCT_SUCCESS
+**					This will be returned when a byte is succesfully read.
+**
+**	@return FUNCT_ERROR
+**					This will be returned when an error occured during any stage
+**					of parsing the byte (e.g. allocation error).
+*/
 
 static int	input_parse(t_vshdata *data)
 {
@@ -93,16 +78,56 @@ static int	input_parse(t_vshdata *data)
 		return (IR_EOF);
 	else if (ret == FUNCT_SUCCESS)
 		return (FUNCT_SUCCESS);
-	else if (input_read_ansi(data) == FUNCT_FAILURE)
+	else
 	{
-		if (input_parse_special(data) == FUNCT_FAILURE)
+		ret = input_read_ansi(data);
+		if (ret == FUNCT_FAILURE)
 		{
-			if (input_parse_char(data) == FUNCT_ERROR)
-				return (reset_input_read_return(data, FUNCT_ERROR));
+			if (input_parse_special(data) == FUNCT_FAILURE)
+			{
+				if (input_parse_char(data) == FUNCT_ERROR)
+					return (reset_input_read_return(data, FUNCT_ERROR));
+			}
 		}
+		else if (ret == FUNCT_ERROR)
+			return (reset_input_read_return(data, NEW_PROMPT));
+		return (FUNCT_SUCCESS);
 	}
-	return (FUNCT_SUCCESS);
 }
+
+int			input_read_from_buffer(t_vshdata *data)
+{
+	if (data->line->buffer != NULL)
+	{
+		if (data->line->buffer[data->line->buffer_i] != '\0')
+		{
+			data->input->c = data->line->buffer[data->line->buffer_i];
+			data->line->buffer_i++;
+		}
+		else
+		{
+			ft_strdel(&data->line->buffer);
+			data->line->buffer = NULL;
+			data->line->buffer_i = 0;
+			return (FUNCT_FAILURE);
+		}
+		return (FUNCT_SUCCESS);
+	}
+	return (FUNCT_FAILURE);
+}
+
+/*
+**	During the readloop, signals will be ignored. This means that pressing
+**	ctrl+c will result in a `\3` char sent to the shell. Likewise, ctrl+d
+**	will result in a '\4' char being sent to the shell. Consequently, you
+**	are not able to send most common signals to the shell while input is being
+**	read.
+**
+**	Input will by read on a byte-by-byte basis. Each time a character is read,
+**	we will parse it in the function above. If the parsed char was an '\n', it
+**	means that input_read is done.
+*/
+
 int			input_read(t_vshdata *data)
 {
 	int		ret;

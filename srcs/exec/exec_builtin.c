@@ -6,7 +6,7 @@
 /*   By: omulder <omulder@student.codam.nl>           +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2019/05/29 16:59:41 by omulder        #+#    #+#                */
-/*   Updated: 2019/10/22 15:38:20 by rkuijper      ########   odam.nl         */
+/*   Updated: 2019/10/29 12:20:14 by jbrinksm      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,15 +14,7 @@
 
 static bool		exec_builtin_cont(char **args, t_vshdata *data)
 {
-	if (ft_strequ(args[0], "history"))
-		history_print(data->history->history);
-	else if (ft_strequ(args[0], "type"))
-		builtin_type(args, data->envlst, data->alias->aliaslst);
-	else if (ft_strequ(args[0], "alias"))
-		builtin_alias(args, &data->alias->aliaslst);
-	else if (ft_strequ(args[0], "unalias"))
-		builtin_unalias(args, &data->alias->aliaslst);
-	else if (ft_strequ(args[0], "jobs"))
+	if (ft_strequ(args[0], "jobs"))
 		builtin_jobs(args, data);
 	else if (ft_strequ(args[0], "fg"))
 		builtin_fg(args, data);
@@ -51,6 +43,8 @@ bool			exec_builtin(char **args, t_vshdata *data)
 		builtin_set(args, data->envlst);
 	else if (ft_strequ(args[0], "unset"))
 		builtin_unset(args, data->envlst);
+	else if (ft_strequ(args[0], "history"))
+		history_print(data->history);
 	else if (ft_strequ(args[0], "type"))
 		builtin_type(args, data->envlst, data->alias->aliaslst);
 	else if (ft_strequ(args[0], "alias"))

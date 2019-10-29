@@ -6,7 +6,7 @@
 /*   By: omulder <omulder@student.codam.nl>           +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2019/05/31 10:47:19 by tde-jong       #+#    #+#                */
-/*   Updated: 2019/10/29 11:26:52 by rkuijper      ########   odam.nl         */
+/*   Updated: 2019/10/29 12:02:34 by jbrinksm      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,7 +16,14 @@
 #include <termios.h>
 #include <sys/wait.h>
 
-static void		exec_bin(char *binary, char **args, char **env,
+/*
+**	Check if `char *binary` is valid.
+**	Set termios structure to default values.
+**	Run cmd_word, and wait for it to finish if the EXEC_WAIT flag is set.
+**	Set termios structure back to our special values.
+*/
+
+static void		exec_bin(char *binary, char **args, char **vshenviron,
 t_vshdata *data)
 {
 	t_job	*job;
@@ -35,7 +42,7 @@ t_vshdata *data)
 	jobs_add_process(job);
 	if (job->last_proc == NULL)
 		exit(1);
-	job->last_proc->env = env;
+	job->last_proc->env = vshenviron;
 	job->last_proc->argv = args;
 	job->last_proc->binary = binary;
 	job->last_proc->redir_node = data->current_redirs;
@@ -44,6 +51,14 @@ t_vshdata *data)
 	else
 		job->bg = false;
 }
+
+/*
+**	Create the environment for the command about to be executed.
+**	Use the cmd_word (see GRAMMAR) as binary name (+ optional relative path),
+**	or if cmd_word contains one or more slashes ('/'), fetch the absolute path
+**	from the PATH variable, and set `char *binary` equal to that instead.
+**	Then: call `exec_bin`.
+*/
 
 void			exec_external(char **args, t_vshdata *data)
 {
@@ -60,8 +75,7 @@ void			exec_external(char **args, t_vshdata *data)
 		g_state->exit_code = EXIT_FAILURE;
 		return ;
 	}
-	if (args[0][0] != '/' && ft_strnequ(args[0], "./", 2) == 0 &&
-		ft_strnequ(args[0], "../", 3) == 0)
+	if (ft_strchr(args[0], '/') == NULL)
 	{
 		ft_strdel(&binary);
 		if (exec_find_binary(args[0], data, &binary) == FUNCT_SUCCESS)
