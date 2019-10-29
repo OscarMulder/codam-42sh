@@ -6,7 +6,7 @@
 /*   By: rkuijper <rkuijper@student.codam.nl>         +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2019/10/29 11:20:31 by rkuijper       #+#    #+#                */
-/*   Updated: 2019/10/29 11:21:37 by rkuijper      ########   odam.nl         */
+/*   Updated: 2019/10/29 13:51:18 by jbrinksm      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -43,7 +43,7 @@ void		jobs_launch_proc(t_job *job, t_proc *proc, int fds[3], int pipes[2])
 		if (job->pgid == 0)
 			job->pgid = pid;
 		setpgid(0, job->pgid);
-		if (job->bg == true)
+		if (job->bg == false)
 			tcsetpgrp(STDIN_FILENO, job->pgid);
 		signal_reset();
 	}

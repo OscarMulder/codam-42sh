@@ -6,7 +6,7 @@
 /*   By: omulder <omulder@student.codam.nl>           +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2019/04/10 20:29:42 by jbrinksm       #+#    #+#                */
-/*   Updated: 2019/10/29 12:14:14 by jbrinksm      ########   odam.nl         */
+/*   Updated: 2019/10/29 13:55:23 by jbrinksm      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -303,7 +303,7 @@ typedef struct	s_fcdata
 # define INPUT_TAB '\t'
 # define INPUT_CTRL_U 21
 # define INPUT_CTRL_Y 25
-# define TC_MAXRESPONSESIZE 16
+# define TC_MAXRESPONSESIZE 42
 # define INPUT_BUF_READ_SIZE 100
 
 /*
