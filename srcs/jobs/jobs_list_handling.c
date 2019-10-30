@@ -6,7 +6,7 @@
 /*   By: omulder <omulder@student.codam.nl>           +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2019/05/31 10:47:19 by tde-jong       #+#    #+#                */
-/*   Updated: 2019/10/30 16:12:00 by rkuijper      ########   odam.nl         */
+/*   Updated: 2019/10/30 18:11:17 by rkuijper      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -30,21 +30,30 @@ void			jobs_flush_job(t_job *job)
 	ft_memdel((void**)&job);
 }
 
-t_job			*jobs_remove_job(t_job *joblist, pid_t pid)
+t_job			*jobs_remove_job(t_job **joblist, pid_t pgid)
 {
-	t_job *tmp;
+	t_job	*job;
+	t_job	*tmp;
 
-	if (joblist == NULL)
+	if (joblist == NULL || *joblist == NULL)
 		return (NULL);
-	if (joblist->pgid == pid)
+	job = *joblist;
+	if (job->pgid == pgid)
 	{
-		tmp = joblist->next;
-		ft_strdel(&joblist->command);
-		ft_memdel((void**)&joblist);
-		return (tmp);
+		*joblist = NULL;
+		return (job);
 	}
-	joblist->next = jobs_remove_job(joblist->next, pid);
-	return (joblist);
+	while (job->next)
+	{
+		if (job->next->pgid == pgid)
+		{
+			tmp = job->next;
+			job->next = tmp->next;
+			tmp->next = NULL;
+			return (tmp);
+		}
+	}
+	return (NULL);
 }
 
 t_job			*jobs_add_job(t_vshdata *data, t_job *job)
@@ -61,13 +70,13 @@ t_job			*jobs_add_job(t_vshdata *data, t_job *job)
 		jid = tmp->job_id;
 		while (tmp->next)
 		{
-			if (tmp == job)
+			if (tmp->pgid == job->pgid)
 				return (job);
 			tmp = tmp->next;
 			if (tmp->job_id > jid)
 				jid = tmp->job_id;
 		}
-		if (tmp == job)
+		if (tmp->pgid == job->pgid)
 			return (job);
 		tmp->next = job;
 	}

@@ -6,7 +6,7 @@
 /*   By: rkuijper <rkuijper@student.codam.nl>         +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2019/10/22 14:27:21 by rkuijper       #+#    #+#                */
-/*   Updated: 2019/10/30 16:37:02 by rkuijper      ########   odam.nl         */
+/*   Updated: 2019/10/30 18:11:26 by rkuijper      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -27,6 +27,7 @@ static void	fg(t_job *job)
 {
 	t_proc *proc;
 
+	jobs_remove_job(&g_data->jobs->joblist, job->pgid);
 	if (jobs_stopped_job(job))
 		jobs_continue_job(job, true);
 	else
@@ -58,7 +59,5 @@ void		builtin_fg(char **av, t_vshdata *data)
 		ft_eprintf(E_FG_NO_CUR);
 		return ;
 	}
-	job->current = builtin_jobs_new_current_val(data->jobs->joblist);
 	fg(job);
-	g_state->exit_code = EXIT_SUCCESS;
 }

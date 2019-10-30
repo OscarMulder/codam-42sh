@@ -6,7 +6,7 @@
 /*   By: rkuijper <rkuijper@student.codam.nl>         +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2019/10/21 14:30:58 by rkuijper       #+#    #+#                */
-/*   Updated: 2019/10/22 14:15:20 by rkuijper      ########   odam.nl         */
+/*   Updated: 2019/10/30 18:11:55 by rkuijper      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -24,8 +24,7 @@ void		jobs_handle_finished_jobs(void)
 		if (jobs_completed_job(job))
 		{
 			jobs_print_job_info(job, JOB_OPT_L, g_data->jobs->joblist);
-			g_data->jobs->joblist =
-				jobs_remove_job(g_data->jobs->joblist, job->pgid);
+			jobs_flush_job(jobs_remove_job(&g_data->jobs->joblist, job->pgid));
 			job = g_data->jobs->joblist;
 		}
 		else

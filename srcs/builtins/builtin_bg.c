@@ -6,7 +6,7 @@
 /*   By: rkuijper <rkuijper@student.codam.nl>         +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2019/10/30 16:22:05 by rkuijper       #+#    #+#                */
-/*   Updated: 2019/10/30 16:32:45 by rkuijper      ########   odam.nl         */
+/*   Updated: 2019/10/30 17:16:25 by rkuijper      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -36,7 +36,7 @@ void			builtin_bg(char **av, t_vshdata *data)
 		ft_eprintf(E_BG_NO_CUR);
 		return ;
 	}
-	if (tools_get_pid_state(-job->pgid) == PID_STATE_SUSPEND)
+	if (jobs_stopped_job(job))
 		jobs_continue_job(job, false);
 	else
 	{
