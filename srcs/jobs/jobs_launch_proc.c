@@ -6,13 +6,13 @@
 /*   By: rkuijper <rkuijper@student.codam.nl>         +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2019/10/29 11:20:31 by rkuijper       #+#    #+#                */
-/*   Updated: 2019/10/30 16:08:15 by rkuijper      ########   odam.nl         */
+/*   Updated: 2019/10/30 16:47:33 by rkuijper      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "vsh.h"
 
-static void	execute_builtin_continued(t_proc *proc)
+static void	jobs_exec_fork_builtin_continued(t_proc *proc)
 {
 	if (ft_strequ(proc->argv[0], "alias"))
 		builtin_alias(proc->argv, &g_data->alias->aliaslst);
@@ -28,7 +28,7 @@ static void	execute_builtin_continued(t_proc *proc)
 		builtin_hash(proc->argv, g_data);
 }
 
-void		jobs_execute_builtin(t_proc *proc, bool do_exit)
+static void	jobs_exec_fork_builtin(t_proc *proc, bool do_exit)
 {
 	if (ft_strequ(proc->argv[0], "echo"))
 		builtin_echo(proc->argv);
@@ -49,7 +49,7 @@ void		jobs_execute_builtin(t_proc *proc, bool do_exit)
 	else if (ft_strequ(proc->argv[0], "type"))
 		builtin_type(proc->argv, g_data->envlst, g_data->alias->aliaslst);
 	else
-		execute_builtin_continued(proc);
+		jobs_exec_fork_builtin_continued(proc);
 	if (do_exit == true)
 		exit(g_state->exit_code);
 }
@@ -85,7 +85,7 @@ static void	execute_proc(t_proc *proc)
 		ft_eprintf(E_BIN_PROC_LAUNCH, proc->binary);
 		exit(1);
 	}
-	jobs_execute_builtin(proc, true);
+	jobs_exec_fork_builtin(proc, true);
 }
 
 void		jobs_launch_proc(t_job *job, t_proc *proc, int fds[3], int pipes[2])
