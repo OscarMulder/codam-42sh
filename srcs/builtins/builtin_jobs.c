@@ -6,7 +6,7 @@
 /*   By: omulder <omulder@student.codam.nl>           +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2019/04/17 14:03:16 by rkuijper       #+#    #+#                */
-/*   Updated: 2019/10/30 16:37:40 by rkuijper      ########   odam.nl         */
+/*   Updated: 2019/10/30 21:43:09 by jbrinksm      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -70,7 +70,7 @@ static int		jobs_log_args(t_datajobs *jobs, int options, char **args)
 	return (FUNCT_SUCCESS);
 }
 
-static int		jobs_log_all(t_datajobs *jobs, int options)
+static void		jobs_log_all(t_datajobs *jobs, int options)
 {
 	t_job *job;
 
@@ -85,7 +85,6 @@ static int		jobs_log_all(t_datajobs *jobs, int options)
 		jobs_print_job_info(job, options, jobs->joblist);
 		job = job->next;
 	}
-	return (FUNCT_SUCCESS);
 }
 
 int				builtin_jobs(char **args, t_vshdata *data)
@@ -101,6 +100,6 @@ int				builtin_jobs(char **args, t_vshdata *data)
 	if (args[arg] != NULL)
 		jobs_log_args(data->jobs, options, args + arg);
 	else
-		return (jobs_log_all(data->jobs, options));
+		jobs_log_all(data->jobs, options);
 	return (FUNCT_SUCCESS);
 }

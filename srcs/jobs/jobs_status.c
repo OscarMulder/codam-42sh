@@ -6,7 +6,7 @@
 /*   By: rkuijper <rkuijper@student.codam.nl>         +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2019/10/21 11:25:18 by rkuijper       #+#    #+#                */
-/*   Updated: 2019/10/22 13:59:12 by rkuijper      ########   odam.nl         */
+/*   Updated: 2019/10/30 21:14:01 by jbrinksm      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -40,8 +40,11 @@ int			jobs_completed_job(t_job *job)
 	while (proc != NULL)
 	{
 		if (proc->state != PROC_COMPLETED)
-			return (0);
+			return (FUNCT_FAILURE);
 		proc = proc->next;
 	}
-	return (job->child ? jobs_completed_job(job->child) : 1);
+	if (job->child != NULL)
+		return (jobs_completed_job(job->child));
+	else
+		return (FUNCT_SUCCESS);
 }

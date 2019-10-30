@@ -6,7 +6,7 @@
 /*   By: omulder <omulder@student.codam.nl>           +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2019/05/31 10:47:19 by tde-jong       #+#    #+#                */
-/*   Updated: 2019/10/30 18:11:17 by rkuijper      ########   odam.nl         */
+/*   Updated: 2019/10/30 21:21:22 by jbrinksm      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -40,10 +40,11 @@ t_job			*jobs_remove_job(t_job **joblist, pid_t pgid)
 	job = *joblist;
 	if (job->pgid == pgid)
 	{
-		*joblist = NULL;
+		*joblist = job->next;
+		job->next = NULL;
 		return (job);
 	}
-	while (job->next)
+	while (job != NULL && job->next != NULL)
 	{
 		if (job->next->pgid == pgid)
 		{
@@ -52,6 +53,7 @@ t_job			*jobs_remove_job(t_job **joblist, pid_t pgid)
 			tmp->next = NULL;
 			return (tmp);
 		}
+		job = job->next;
 	}
 	return (NULL);
 }
@@ -67,14 +69,16 @@ t_job			*jobs_add_job(t_vshdata *data, t_job *job)
 	else
 	{
 		tmp = data->jobs->joblist;
-		jid = tmp->job_id;
+		jid = tmp->job_id + 1;
 		while (tmp->next)
 		{
 			if (tmp->pgid == job->pgid)
 				return (job);
 			tmp = tmp->next;
 			if (tmp->job_id > jid)
-				jid = tmp->job_id;
+				jid = tmp->job_id + 1;
+			else
+				jid++;
 		}
 		if (tmp->pgid == job->pgid)
 			return (job);
