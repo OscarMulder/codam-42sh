@@ -6,7 +6,7 @@
 /*   By: rkuijper <rkuijper@student.codam.nl>         +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2019/10/28 16:25:10 by rkuijper       #+#    #+#                */
-/*   Updated: 2019/10/30 14:14:49 by rkuijper      ########   odam.nl         */
+/*   Updated: 2019/10/30 15:54:46 by jbrinksm      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -60,6 +60,8 @@ void		jobs_launch_job(t_job *job)
 
 	fds[0] = STDIN_FILENO;
 	fds[2] = STDERR_FILENO;
+	pipes[0] = UNINIT;
+	pipes[1] = UNINIT;
 	proc = job->processes;
 	if (is_single_builtin_proc(proc))
 		execute_builtin(job->processes);
@@ -103,9 +105,9 @@ void		jobs_launch_job(t_job *job)
 					setpgid(pid, job->pgid);
 				}
 			}
-			if (fds[0] != STDIN_FILENO)
+			if (fds[0] != STDIN_FILENO && fds[0] != UNINIT)
 				close(fds[0]);
-			if (fds[1] != STDOUT_FILENO)
+			if (fds[1] != STDOUT_FILENO && fds[1] != UNINIT)
 				close(fds[1]);
 			fds[0] = pipes[0];
 

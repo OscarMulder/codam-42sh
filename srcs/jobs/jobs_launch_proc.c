@@ -6,7 +6,7 @@
 /*   By: rkuijper <rkuijper@student.codam.nl>         +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2019/10/29 11:20:31 by rkuijper       #+#    #+#                */
-/*   Updated: 2019/10/30 13:39:18 by jbrinksm      ########   odam.nl         */
+/*   Updated: 2019/10/30 15:54:30 by jbrinksm      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -55,7 +55,7 @@ static void	handle_filedescriptors(int fds[3], int pipes[2])
 		dup2(fds[0], STDIN_FILENO);
 		close(fds[0]);
 	}
-	else
+	else if (pipes[0] != UNINIT)
 		close(pipes[0]);
 	if (fds[1] != STDOUT_FILENO)
 	{
