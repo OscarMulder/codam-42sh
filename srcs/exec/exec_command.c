@@ -61,7 +61,7 @@ static char		**create_args(t_ast *ast)
 **	complete_command
 */
 
-static int		exec_assigns(t_ast *ast, t_vshdata *data,
+int		exec_assigns(t_ast *ast, t_vshdata *data,
 	int env_type)
 {
 	if (ast == NULL)
@@ -103,15 +103,12 @@ int				exec_command(t_ast *ast, t_vshdata *data)
 	if (ast->type == WORD || ast->type == ASSIGN
 		|| tool_is_redirect_tk(ast->type == true))
 	{
-		data->current_redirs = ast->right;
+		data->current_redir_and_assign = ast->right;
 		command = create_args(ast);
 		if (command == NULL)
 			return (FUNCT_ERROR);
-		if (ast->type != WORD && ft_strequ(command[0], "") == true
+		if (ast->type != WORD
 			&& exec_assigns(ast, data, ENV_LOCAL) == FUNCT_ERROR)
-			return (FUNCT_ERROR);
-		else if (ast->right
-			&& exec_assigns(ast->right, data, ENV_TEMP) == FUNCT_ERROR)
 			return (FUNCT_ERROR);
 		exec_cmd(command, data);
 	}

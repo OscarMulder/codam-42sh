@@ -84,7 +84,7 @@ static void	execute_proc(t_proc *proc)
 
 void		jobs_launch_proc(t_job *job, t_proc *proc, int fds[3], int pipes[2])
 {
-	pid_t pid;
+	pid_t	pid;
 
 	if (g_state->shell_type == SHELL_INTERACT)
 	{
@@ -96,8 +96,16 @@ void		jobs_launch_proc(t_job *job, t_proc *proc, int fds[3], int pipes[2])
 			tcsetpgrp(STDIN_FILENO, job->pgid);
 		signal_reset();
 	}
-	handle_filedescriptors(fds, pipes);
-	if (exec_redirs(proc->redir_node) == FUNCT_ERROR)
+	if (exec_assigns(proc->redir_and_assign, g_data, ENV_TEMP) == FUNCT_ERROR)
 		return ;
+	handle_filedescriptors(fds, pipes);
+	if (exec_redirs(proc->redir_and_assign) == FUNCT_ERROR)
+		return ;
+	proc->env = env_lsttoarr(g_data->envlst);
+	if (proc->env == NULL)
+	{
+		ft_eprintf(E_ALLOC_STR);
+		exit(1);
+	}
 	execute_proc(proc);
 }

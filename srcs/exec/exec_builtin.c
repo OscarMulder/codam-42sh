@@ -24,8 +24,8 @@ bool			exec_builtin(char **args, t_vshdata *data)
 		ft_strequ(args[0], "hash"))
 	{
 		jobs_last_child(data->jobs->active_job)->last_proc->is_builtin = true;
-		jobs_last_child(data->jobs->active_job)->last_proc->redir_node =
-			data->current_redirs;
+		jobs_last_child(data->jobs->active_job)->last_proc->redir_and_assign =
+			data->current_redir_and_assign;
 		return (true);
 	}
 	return (false);

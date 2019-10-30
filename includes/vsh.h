@@ -526,7 +526,7 @@ typedef struct	s_proc
 
 	bool			is_builtin;
 	bool			no_cmd;
-	t_ast			*redir_node;
+	t_ast			*redir_and_assign;
 }				t_proc;
 
 typedef struct	s_job
@@ -656,7 +656,7 @@ typedef struct	s_vshdata
 	t_dataalias		*alias;
 	t_datatermcaps	*termcaps;
 	t_datajobs		*jobs;
-	t_ast			*current_redirs;
+	t_ast			*current_redir_and_assign;
 	int				fc_flags;
 	int				exec_flags;
 }				t_vshdata;
@@ -1052,6 +1052,7 @@ int				exec_validate_binary(char *binary);
 int				exec_create_files(t_ast *ast);
 void			exec_add_pid_to_pipeseqlist(t_vshdata *data, pid_t pid);
 int				exec_redirs(t_ast *redirs);
+int				exec_assigns(t_ast *ast, t_vshdata *data, int env_type);
 
 /*
 **-----------------------------------signals------------------------------------

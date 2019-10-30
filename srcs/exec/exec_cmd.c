@@ -6,7 +6,7 @@
 /*   By: omulder <omulder@student.codam.nl>           +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2019/05/29 17:17:48 by omulder        #+#    #+#                */
-/*   Updated: 2019/10/30 14:34:50 by jbrinksm      ########   odam.nl         */
+/*   Updated: 2019/10/30 14:38:57 by jbrinksm      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -28,5 +28,4 @@ void		exec_cmd(char **args, t_vshdata *data)
 		job->last_proc->no_cmd = true;
 	if (exec_builtin(args, data) == false)
 		exec_external(args, data);
-	env_remove_tmp(data->envlst);
 }
