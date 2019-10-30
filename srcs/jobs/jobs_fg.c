@@ -6,7 +6,7 @@
 /*   By: rkuijper <rkuijper@student.codam.nl>         +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2019/10/18 17:12:11 by rkuijper       #+#    #+#                */
-/*   Updated: 2019/10/30 13:35:11 by rkuijper      ########   odam.nl         */
+/*   Updated: 2019/10/30 14:10:45 by rkuijper      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -20,6 +20,8 @@ static t_proc	*last_proc(t_job *job)
 {
 	t_proc *proc;
 
+	if (job == NULL || job->processes == NULL)
+		return (NULL);
 	proc = job->processes;
 	while (proc->next != NULL)
 		proc = proc->next;
@@ -40,6 +42,8 @@ static void		job_finished(t_job *job, bool check)
 {
 	t_job *child;
 
+	if (job == NULL)
+		return ;
 	child = job->child;
 	if (check && job->child != NULL &&
 		(job->andor == ANDOR_NONE ||
@@ -76,7 +80,8 @@ int				jobs_fg_job(t_job *job, bool job_continued)
 		g_state->exit_code = job_stop(job);
 	else
 	{
-		g_state->exit_code = last_proc(job)->exit_status;
+		if (last_proc(job) != NULL)
+			g_state->exit_code = last_proc(job)->exit_status;
 		job_finished(job, true);
 	}
 	return (g_state->exit_code);

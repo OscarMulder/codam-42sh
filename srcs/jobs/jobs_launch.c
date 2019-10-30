@@ -6,7 +6,7 @@
 /*   By: rkuijper <rkuijper@student.codam.nl>         +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2019/10/28 16:25:10 by rkuijper       #+#    #+#                */
-/*   Updated: 2019/10/30 13:37:30 by rkuijper      ########   odam.nl         */
+/*   Updated: 2019/10/30 14:14:49 by rkuijper      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -68,6 +68,12 @@ void		jobs_launch_job(t_job *job)
 		signal(SIGCHLD, SIG_DFL);
 		while (proc != NULL)
 		{
+			if (proc->binary == NULL)
+			{
+				jobs_flush_job(job);
+				g_state->exit_code = 1;
+				return ;
+			}
 			if (proc->next != NULL)
 			{
 				if (pipe(pipes) < 0)

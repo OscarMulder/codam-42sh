@@ -6,7 +6,7 @@
 /*   By: jbrinksm <jbrinksm@student.codam.nl>         +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2019/01/09 11:10:09 by omulder        #+#    #+#                */
-/*   Updated: 2019/10/18 16:35:25 by rkuijper      ########   odam.nl         */
+/*   Updated: 2019/10/30 13:49:06 by rkuijper      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -102,6 +102,6 @@ int					ft_aisint(char *n);
 char				*ft_strrnchr(const char *s, int c, int n);
 int					ft_tputchar(int c);
 
-uint8_t				ft_numlen(int64_t num, uint8_t base);
+short				ft_numlen(long num, short base);
 
 #endif

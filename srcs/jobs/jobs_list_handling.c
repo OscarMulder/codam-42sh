@@ -6,7 +6,7 @@
 /*   By: omulder <omulder@student.codam.nl>           +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2019/05/31 10:47:19 by tde-jong       #+#    #+#                */
-/*   Updated: 2019/10/30 13:14:31 by rkuijper      ########   odam.nl         */
+/*   Updated: 2019/10/30 14:03:28 by rkuijper      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -61,11 +61,15 @@ t_job				*jobs_add_job(t_vshdata *data, t_job *job)
 		jid = tmp->job_id;
 		while (tmp->next)
 		{
+			if (tmp == job)
+				return (job);
 			tmp = tmp->next;
 			if (tmp->job_id > jid)
 				jid = tmp->job_id;
 		}
-		job->next = job;
+		if (tmp == job)
+			return (job);
+		tmp->next = job;
 	}
 	job->job_id = jid;
 	job->current = builtin_jobs_new_current_val(data->jobs->joblist);

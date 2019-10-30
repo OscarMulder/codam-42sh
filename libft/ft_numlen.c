@@ -6,15 +6,15 @@
 /*   By: rkuijper <rkuijper@student.codam.nl>         +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2019/10/18 16:33:38 by rkuijper       #+#    #+#                */
-/*   Updated: 2019/10/18 16:36:02 by rkuijper      ########   odam.nl         */
+/*   Updated: 2019/10/30 13:49:22 by rkuijper      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "libft.h"
 
-uint8_t		ft_numlen(int64_t num, uint8_t base)
+short		ft_numlen(long num, short base)
 {
-	uint8_t res;
+	short res;
 
 	res = 0;
 	if (num < 0)

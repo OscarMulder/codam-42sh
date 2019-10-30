@@ -6,7 +6,7 @@
 /*   By: omulder <omulder@student.codam.nl>           +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2019/05/31 10:47:19 by tde-jong       #+#    #+#                */
-/*   Updated: 2019/10/30 13:27:09 by rkuijper      ########   odam.nl         */
+/*   Updated: 2019/10/30 14:19:00 by rkuijper      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -67,6 +67,8 @@ void			exec_external(char **args, t_vshdata *data)
 		ft_strdel(&binary);
 		if (exec_find_binary(args[0], data, &binary) == FUNCT_SUCCESS)
 			exec_bin(binary, vshenviron, data);
+		else
+			free(vshenviron);
 	}
 	else
 		exec_bin(binary, vshenviron, data);
