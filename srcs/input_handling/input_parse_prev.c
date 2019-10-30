@@ -6,7 +6,7 @@
 /*   By: omulder <omulder@student.codam.nl>           +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2019/05/16 13:39:59 by rkuijper       #+#    #+#                */
-/*   Updated: 2019/10/05 17:35:39 by jbrinksm      ########   odam.nl         */
+/*   Updated: 2019/10/30 11:34:44 by mavan-he      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -82,9 +82,6 @@ void		curs_move_n_left(t_vshdata *data, size_t n)
 	}
 	else
 		curs_move_n_left_hasnewlines(data, n);
-	#ifdef DEBUG
-	ft_eprintf("New cursor coordinates: [%d:%d]\n", data->curs->coords.x, data->curs->coords.y);
-	#endif
 }
 
 void		curs_move_left(t_vshdata *data)

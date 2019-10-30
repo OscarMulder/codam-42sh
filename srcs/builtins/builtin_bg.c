@@ -6,7 +6,7 @@
 /*   By: rkuijper <rkuijper@student.codam.nl>         +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2019/10/18 15:54:56 by rkuijper       #+#    #+#                */
-/*   Updated: 2019/10/21 12:18:14 by rkuijper      ########   odam.nl         */
+/*   Updated: 2019/10/30 11:31:27 by mavan-he      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -46,4 +46,3 @@ int			builtin_bg(char **av, t_vshdata *data)
 	}
 	return (FUNCT_SUCCESS);
 }
-
