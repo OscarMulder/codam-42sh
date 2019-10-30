@@ -68,7 +68,7 @@ void		jobs_launch_job(t_job *job)
 		signal(SIGCHLD, SIG_DFL);
 		while (proc != NULL)
 		{
-			if (proc->binary == NULL)
+			if (proc->is_builtin == false && proc->binary == NULL)
 			{
 				jobs_flush_job(job);
 				g_state->exit_code = 1;

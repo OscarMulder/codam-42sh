@@ -6,7 +6,7 @@
 /*   By: rkuijper <rkuijper@student.codam.nl>         +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2019/09/04 10:16:26 by rkuijper       #+#    #+#                */
-/*   Updated: 2019/10/30 11:26:28 by mavan-he      ########   odam.nl         */
+/*   Updated: 2019/10/30 14:33:33 by jbrinksm      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,7 +19,7 @@ static size_t	count_args(t_ast *ast)
 
 	i = 0;
 	probe = ast;
-	while (probe != NULL)
+	while (probe != NULL && probe->type == WORD)
 	{
 		i++;
 		probe = probe->left;
@@ -38,6 +38,8 @@ static char		**create_args(t_ast *ast)
 	args = (char**)ft_memalloc(sizeof(char*) * (total_args + 1));
 	if (args == NULL)
 		return (NULL);
+	if (total_args == 0)
+		*args = ft_strnew(0);
 	i = 0;
 	probe = ast;
 	while (i < total_args)
@@ -59,7 +61,7 @@ static char		**create_args(t_ast *ast)
 **	complete_command
 */
 
-static int		exec_assigns(t_ast *ast, t_vshdata *data,
+int		exec_assigns(t_ast *ast, t_vshdata *data,
 	int env_type)
 {
 	if (ast == NULL)
@@ -98,22 +100,17 @@ int				exec_command(t_ast *ast, t_vshdata *data)
 	if (ast->type == WORD && expan_pathname(ast) == FUNCT_ERROR)
 		return (FUNCT_ERROR);
 	exec_quote_remove(ast);
-	if (ast->type == WORD)
+	if (ast->type == WORD || ast->type == ASSIGN
+		|| tool_is_redirect_tk(ast->type == true))
 	{
-		data->current_redirs = ast->right;
-		if (ast->right &&
-		exec_assigns(ast->right, data, ENV_TEMP) == FUNCT_ERROR)
-			return (FUNCT_ERROR);
+		data->current_redir_and_assign = ast->right;
 		command = create_args(ast);
 		if (command == NULL)
 			return (FUNCT_ERROR);
-		exec_cmd(command, data);
-	}
-	else if (ast->type == ASSIGN || tool_is_redirect_tk(ast->type) == true)
-	{
-		if (exec_redirs(ast) == FUNCT_ERROR ||
-			exec_assigns(ast, data, ENV_LOCAL) == FUNCT_ERROR)
+		if (ast->type != WORD
+			&& exec_assigns(ast, data, ENV_LOCAL) == FUNCT_ERROR)
 			return (FUNCT_ERROR);
+		exec_cmd(command, data);
 	}
 	return (FUNCT_SUCCESS);
 }
