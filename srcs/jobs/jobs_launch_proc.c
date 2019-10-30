@@ -6,46 +6,52 @@
 /*   By: rkuijper <rkuijper@student.codam.nl>         +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2019/10/29 11:20:31 by rkuijper       #+#    #+#                */
-/*   Updated: 2019/10/30 15:27:53 by rkuijper      ########   odam.nl         */
+/*   Updated: 2019/10/30 15:42:58 by rkuijper      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "vsh.h"
 
-static void	execute_builtin(t_proc *proc)
+static void	execute_builtin_continued(t_proc *proc)
 {
-	// Execute builtins from fork and exit with the set exit code.
-	if (ft_strequ(proc->argv[0], "echo"))
-		builtin_echo(proc->argv);
-	if (ft_strequ(proc->argv[0], "exit"))
-		builtin_exit(proc->argv, g_data);
-	if (ft_strequ(proc->argv[0], "cd"))
-		builtin_cd(proc->argv, g_data);
-	if (ft_strequ(proc->argv[0], "fc"))
-		builtin_fc(proc->argv, g_data);
-	if (ft_strequ(proc->argv[0], "export"))
-		builtin_export(proc->argv, g_data);
-	if (ft_strequ(proc->argv[0], "set"))
-		builtin_set(proc->argv, g_data->envlst);
-	if (ft_strequ(proc->argv[0], "unset"))
-		builtin_unset(proc->argv, g_data->envlst);
-	if (ft_strequ(proc->argv[0], "history"))
-		history_print(g_data->history);
-	if (ft_strequ(proc->argv[0], "type"))
-		builtin_type(proc->argv, g_data->envlst, g_data->alias->aliaslst);
 	if (ft_strequ(proc->argv[0], "alias"))
 		builtin_alias(proc->argv, &g_data->alias->aliaslst);
-	if (ft_strequ(proc->argv[0], "unalias"))
+	else if (ft_strequ(proc->argv[0], "unalias"))
 		builtin_unalias(proc->argv, &g_data->alias->aliaslst);
-	if (ft_strequ(proc->argv[0], "jobs"))
+	else if (ft_strequ(proc->argv[0], "jobs"))
 		builtin_jobs(proc->argv, g_data);
-	if (ft_strequ(proc->argv[0], "fg"))
+	else if (ft_strequ(proc->argv[0], "fg"))
 		builtin_fg(proc->argv, g_data);
-	if (ft_strequ(proc->argv[0], "bg"))
+	else if (ft_strequ(proc->argv[0], "bg"))
 		builtin_bg(proc->argv, g_data);
-	if (ft_strequ(proc->argv[0], "hash"))
+	else if (ft_strequ(proc->argv[0], "hash"))
 		builtin_hash(proc->argv, g_data);
-	exit(g_state->exit_code);
+}
+
+void		jobs_execute_builtin(t_proc *proc, bool do_exit)
+{
+	if (ft_strequ(proc->argv[0], "echo"))
+		builtin_echo(proc->argv);
+	else if (ft_strequ(proc->argv[0], "exit"))
+		builtin_exit(proc->argv, g_data);
+	else if (ft_strequ(proc->argv[0], "cd"))
+		builtin_cd(proc->argv, g_data);
+	else if (ft_strequ(proc->argv[0], "fc"))
+		builtin_fc(proc->argv, g_data);
+	else if (ft_strequ(proc->argv[0], "export"))
+		builtin_export(proc->argv, g_data);
+	else if (ft_strequ(proc->argv[0], "set"))
+		builtin_set(proc->argv, g_data->envlst);
+	else if (ft_strequ(proc->argv[0], "unset"))
+		builtin_unset(proc->argv, g_data->envlst);
+	else if (ft_strequ(proc->argv[0], "history"))
+		history_print(g_data->history);
+	else if (ft_strequ(proc->argv[0], "type"))
+		builtin_type(proc->argv, g_data->envlst, g_data->alias->aliaslst);
+	else
+		execute_builtin_continued(proc);
+	if (do_exit == true)
+		exit(g_state->exit_code);
 }
 
 static void	handle_filedescriptors(int fds[3], int pipes[2])
@@ -79,7 +85,7 @@ static void	execute_proc(t_proc *proc)
 		ft_eprintf(E_BIN_PROC_LAUNCH, proc->binary);
 		exit(1);
 	}
-	execute_builtin(proc);
+	execute_builtin(proc, true);
 }
 
 void		jobs_launch_proc(t_job *job, t_proc *proc, int fds[3], int pipes[2])

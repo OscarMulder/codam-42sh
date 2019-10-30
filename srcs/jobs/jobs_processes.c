@@ -6,7 +6,7 @@
 /*   By: rkuijper <rkuijper@student.codam.nl>         +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2019/10/21 11:41:03 by rkuijper       #+#    #+#                */
-/*   Updated: 2019/10/30 14:15:39 by rkuijper      ########   odam.nl         */
+/*   Updated: 2019/10/30 15:33:14 by rkuijper      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -32,11 +32,6 @@ void		jobs_flush_process(t_proc *proc)
 			ft_strdel(&proc->binary);
 		if (proc->argv != NULL)
 			ft_strarrdel(&proc->argv);
-		// TODO: Reimplement when environment variables are working correctly.
-		// if (proc->env != NULL)
-		// 	ft_strarrdel(&proc->env);
-		if (proc->env != NULL)
-			ft_memdel((void**)&proc->env);
 		ft_memdel((void**)&proc);
 		proc = tmp;
 	}
