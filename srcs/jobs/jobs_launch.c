@@ -6,7 +6,7 @@
 /*   By: rkuijper <rkuijper@student.codam.nl>         +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2019/10/28 16:25:10 by rkuijper       #+#    #+#                */
-/*   Updated: 2019/10/30 10:48:42 by rkuijper      ########   odam.nl         */
+/*   Updated: 2019/10/30 13:37:30 by rkuijper      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -79,7 +79,6 @@ void		jobs_launch_job(t_job *job)
 			}
 			else
 				fds[1] = STDOUT_FILENO;
-
 			pid = fork();
 			if (pid < 0)
 			{
@@ -98,17 +97,25 @@ void		jobs_launch_job(t_job *job)
 					setpgid(pid, job->pgid);
 				}
 			}
-
 			if (fds[0] != STDIN_FILENO)
 				close(fds[0]);
 			if (fds[1] != STDOUT_FILENO)
 				close(fds[1]);
 			fds[0] = pipes[0];
 
+			if (proc->binary != NULL)
+				ft_strdel(&proc->binary);
+			if (proc->argv != NULL)
+				ft_strarrdel(&proc->argv);
+			if (proc->env)
+				ft_memdel((void**)&proc->env);
+			// TODO: Reimplement this when the environment is working!
+			// if (proc->env != NULL)
+			// 	ft_strarrdel(&proc->env);
+
 			proc = proc->next;
 		}
 	}
-
 	if (job->bg == true)
 		jobs_bg_job(job, false);
 	else

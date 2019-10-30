@@ -6,7 +6,7 @@
 /*   By: rkuijper <rkuijper@student.codam.nl>         +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2019/10/18 17:12:11 by rkuijper       #+#    #+#                */
-/*   Updated: 2019/10/29 11:48:24 by jbrinksm      ########   odam.nl         */
+/*   Updated: 2019/10/30 13:35:11 by rkuijper      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -36,6 +36,25 @@ static int		job_stop(t_job *job)
 	return (146);
 }
 
+static void		job_finished(t_job *job, bool check)
+{
+	t_job *child;
+
+	child = job->child;
+	if (check && job->child != NULL &&
+		(job->andor == ANDOR_NONE ||
+		(job->andor == ANDOR_AND && g_state->exit_code == 0) ||
+		(job->andor == ANDOR_OR && g_state->exit_code != 0)))
+	{
+		jobs_flush_job(job);
+		jobs_launch_job(child);
+		return ;
+	}
+	if (child != NULL)
+		job_finished(child, false);
+	jobs_flush_job(job);
+}
+
 int				jobs_fg_job(t_job *job, bool job_continued)
 {
 	job->bg = false;
@@ -58,11 +77,7 @@ int				jobs_fg_job(t_job *job, bool job_continued)
 	else
 	{
 		g_state->exit_code = last_proc(job)->exit_status;
-		if (job->child != NULL &&
-			(job->andor == ANDOR_NONE ||
-			(job->andor == ANDOR_AND && g_state->exit_code == 0) ||
-			(job->andor == ANDOR_OR && g_state->exit_code != 0)))
-			jobs_launch_job(job->child);
+		job_finished(job, true);
 	}
 	return (g_state->exit_code);
 }

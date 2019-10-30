@@ -6,7 +6,7 @@
 /*   By: omulder <omulder@student.codam.nl>           +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2019/05/31 10:47:19 by tde-jong       #+#    #+#                */
-/*   Updated: 2019/10/30 11:25:35 by mavan-he      ########   odam.nl         */
+/*   Updated: 2019/10/30 13:27:09 by rkuijper      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -30,8 +30,6 @@ static void		exec_bin(char *binary, char **vshenviron, t_vshdata *data)
 	if (exec_validate_binary(binary) == FUNCT_ERROR)
 		return ;
 	job = jobs_last_child(data->jobs->active_job);
-	if (job == NULL)
-		return ;
 	job->last_proc->env = vshenviron;
 	job->last_proc->binary = binary;
 	job->last_proc->redir_node = data->current_redirs;
