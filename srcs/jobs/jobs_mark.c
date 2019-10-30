@@ -6,12 +6,27 @@
 /*   By: rkuijper <rkuijper@student.codam.nl>         +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2019/10/21 11:51:41 by rkuijper       #+#    #+#                */
-/*   Updated: 2019/10/30 21:58:42 by jbrinksm      ########   odam.nl         */
+/*   Updated: 2019/10/30 22:00:45 by jbrinksm      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "vsh.h"
-#include <errno.h>
+#include <errno.h> // Remove this??
+
+int			change_status(int status, t_proc *proc)
+{
+	proc->exit_status = status;
+	if (WIFSTOPPED(status))
+		proc->state = PROC_STOPPED;
+	else
+	{
+		proc->state = PROC_COMPLETED;
+		if (WIFSIGNALED(status))
+			ft_eprintf("%d: Terminated by signal %d\n", proc->pid,
+				WTERMSIG(status));
+	}
+	return (0);
+}
 
 int			jobs_mark_process_status(pid_t pid, int status)
 {
@@ -27,25 +42,13 @@ int			jobs_mark_process_status(pid_t pid, int status)
 			while (proc != NULL)
 			{
 				if (proc->pid == pid)
-				{
-					proc->exit_status = status;
-					if (WIFSTOPPED(status))
-						proc->state = PROC_STOPPED;
-					else
-					{
-						proc->state = PROC_COMPLETED;
-						if (WIFSIGNALED(status))
-							ft_eprintf("%d: Terminated by signal %d\n", proc->pid,
-								WTERMSIG(status));
-					}
-					return (0);
-				}
+					return (change_status(status, proc));
 				proc = proc->next;
 			}
 			job = job->next;
 		}
 	}
-	else if (pid == 0 || errno == ECHILD)
+	else if (pid == 0 || errno == ECHILD) // and this??
 		return (FUNCT_ERROR);
 	return (FUNCT_ERROR);
 }

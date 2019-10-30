@@ -6,7 +6,7 @@
 /*   By: rkuijper <rkuijper@student.codam.nl>         +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2019/09/04 10:16:26 by rkuijper       #+#    #+#                */
-/*   Updated: 2019/10/30 14:33:33 by jbrinksm      ########   odam.nl         */
+/*   Updated: 2019/10/30 22:01:48 by jbrinksm      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -61,7 +61,7 @@ static char		**create_args(t_ast *ast)
 **	complete_command
 */
 
-int		exec_assigns(t_ast *ast, t_vshdata *data,
+int				exec_assigns(t_ast *ast, t_vshdata *data,
 	int env_type)
 {
 	if (ast == NULL)

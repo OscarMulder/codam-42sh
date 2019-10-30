@@ -6,11 +6,16 @@
 /*   By: rkuijper <rkuijper@student.codam.nl>         +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2019/10/30 16:42:54 by rkuijper       #+#    #+#                */
-/*   Updated: 2019/10/30 17:50:47 by jbrinksm      ########   odam.nl         */
+/*   Updated: 2019/10/30 22:10:47 by jbrinksm      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "vsh.h"
+
+int			jobs_exec_is_single_builtin_proc(t_proc *proc)
+{
+	return (proc != NULL && proc->is_builtin == true && proc->next == NULL);
+}
 
 static int	cleanup_non_forked_redirs(void)
 {
