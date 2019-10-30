@@ -6,7 +6,7 @@
 /*   By: omulder <omulder@student.codam.nl>           +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2019/04/17 14:03:16 by rkuijper       #+#    #+#                */
-/*   Updated: 2019/10/30 15:26:37 by rkuijper      ########   odam.nl         */
+/*   Updated: 2019/10/30 16:37:40 by rkuijper      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -38,7 +38,7 @@ static int		read_options(char **args, int *arg, int *options)
 				*options |= JOB_OPT_L;
 			else
 			{
-				ft_eprintf(E_JOBS_INV_OPT E_JOBS_USAGE, args[*arg][i]);
+				ft_eprintf(E_JOBS_USAGE, args[*arg][i]);
 				return (FUNCT_ERROR);
 			}
 			i++;

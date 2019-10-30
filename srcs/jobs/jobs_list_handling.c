@@ -6,7 +6,7 @@
 /*   By: omulder <omulder@student.codam.nl>           +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2019/05/31 10:47:19 by tde-jong       #+#    #+#                */
-/*   Updated: 2019/10/30 14:03:28 by rkuijper      ########   odam.nl         */
+/*   Updated: 2019/10/30 16:12:00 by rkuijper      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -47,7 +47,7 @@ t_job			*jobs_remove_job(t_job *joblist, pid_t pid)
 	return (joblist);
 }
 
-t_job				*jobs_add_job(t_vshdata *data, t_job *job)
+t_job			*jobs_add_job(t_vshdata *data, t_job *job)
 {
 	int		jid;
 	t_job	*tmp;
@@ -76,7 +76,7 @@ t_job				*jobs_add_job(t_vshdata *data, t_job *job)
 	return (job);
 }
 
-t_job				*jobs_last_child(t_job *job)
+t_job			*jobs_last_child(t_job *job)
 {
 	t_job *tmp;
 

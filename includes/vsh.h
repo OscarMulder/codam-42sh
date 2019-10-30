@@ -6,7 +6,7 @@
 /*   By: omulder <omulder@student.codam.nl>           +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2019/04/10 20:29:42 by jbrinksm       #+#    #+#                */
-/*   Updated: 2019/10/30 15:43:11 by rkuijper      ########   odam.nl         */
+/*   Updated: 2019/10/30 16:37:32 by rkuijper      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -98,14 +98,14 @@
 # define E_OPEN_DIR			SHELL ": error opening directory: %s\n"
 # define E_INVALID_USER		SHELL ": could not get working directory of: %s\n"
 # define E_BG_INV_OPT		SHELL ": bg: %c: invalid option\n"
-# define E_BG_USAGE			"bg: usage: bg [job_spec ...]\n"
+# define E_BG_USAGE			E_BG_INV_OPT "bg: usage: bg [job_spec ...]\n"
 # define E_BG_NO_CUR		"bg: no current job\n"
 # define E_BG_JOB_RUN		SHELL ": bg: job %s already running\n"
 # define E_FG_INV_OPT		SHELL ": fg: %c: invalid option\n"
-# define E_FG_USAGE			"fg: usage: fg [job_spec ...]\n"
+# define E_FG_USAGE			E_FG_INV_OPT "fg: usage: fg [job_spec ...]\n"
 # define E_FG_NO_CUR		"fg: no current job\n"
 # define E_JOBS_INV_OPT		SHELL ": jobs: bad option: %c\n"
-# define E_JOBS_USAGE		"jobs: usage: jobs [-lp] [job_spec ...]\n"
+# define E_JOBS_USAGE		E_JOBS_INV_OPT "jobs: usage: jobs [-lp] [job_spec ...]\n"
 # define E_JOBS_NO_JOB		"jobs: %s: no such job\n"
 # define E_BIN_PROC_LAUNCH	"Error executing %s\n"
 # define E_JOB_MARK_SIG		"%d: Terminated by signal %d\n"

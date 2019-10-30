@@ -6,7 +6,7 @@
 /*   By: omulder <omulder@student.codam.nl>           +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2019/05/31 10:47:19 by tde-jong       #+#    #+#                */
-/*   Updated: 2019/10/30 14:39:51 by jbrinksm      ########   odam.nl         */
+/*   Updated: 2019/10/30 16:09:35 by rkuijper      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -50,7 +50,6 @@ static void		exec_bin(char *binary, t_vshdata *data)
 void			exec_external(char **args, t_vshdata *data)
 {
 	char	*binary;
-
 
 	binary = ft_strdup(args[0]);
 	if (binary == NULL)

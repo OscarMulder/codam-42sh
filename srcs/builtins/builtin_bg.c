@@ -5,30 +5,22 @@
 /*                                                     +:+                    */
 /*   By: rkuijper <rkuijper@student.codam.nl>         +#+                     */
 /*                                                   +#+                      */
-/*   Created: 2019/10/18 15:54:56 by rkuijper       #+#    #+#                */
-/*   Updated: 2019/10/30 14:54:38 by rkuijper      ########   odam.nl         */
+/*   Created: 2019/10/30 16:22:05 by rkuijper       #+#    #+#                */
+/*   Updated: 2019/10/30 16:32:45 by rkuijper      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "vsh.h"
 
-static int	read_options(char **av)
+static int		read_options(char **av)
 {
 	if (av[1] == NULL || av[1][0] != '-')
 		return (FUNCT_SUCCESS);
-	else
-	{
-		ft_eprintf(E_BG_INV_OPT E_BG_USAGE, av[1][1]);
-		return (FUNCT_ERROR);
-	}
+	ft_eprintf(E_BG_USAGE, av[1][1]);
+	return (FUNCT_ERROR);
 }
 
-/*
-	TODO:
-	Calling bg on a suspended process does not continue the process correctly.
-*/
-
-void		builtin_bg(char **av, t_vshdata *data)
+void			builtin_bg(char **av, t_vshdata *data)
 {
 	t_job	*job;
 

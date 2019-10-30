@@ -6,7 +6,7 @@
 /*   By: rkuijper <rkuijper@student.codam.nl>         +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2019/10/22 14:27:21 by rkuijper       #+#    #+#                */
-/*   Updated: 2019/10/30 15:00:08 by rkuijper      ########   odam.nl         */
+/*   Updated: 2019/10/30 16:37:02 by rkuijper      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,7 +18,7 @@ static int	read_options(char **av)
 		return (FUNCT_SUCCESS);
 	else
 	{
-		ft_eprintf(E_FG_INV_OPT E_FG_USAGE, av[1][1]);
+		ft_eprintf(E_FG_USAGE, av[1][1]);
 		return (FUNCT_ERROR);
 	}
 }
