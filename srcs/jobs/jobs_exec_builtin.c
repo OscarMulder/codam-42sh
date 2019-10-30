@@ -6,7 +6,7 @@
 /*   By: rkuijper <rkuijper@student.codam.nl>         +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2019/10/30 16:42:54 by rkuijper       #+#    #+#                */
-/*   Updated: 2019/10/30 16:48:06 by rkuijper      ########   odam.nl         */
+/*   Updated: 2019/10/30 17:50:47 by jbrinksm      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -42,7 +42,9 @@ static int	backup_stdfds(void)
 
 static void	jobs_exec_builtin_continued(t_proc *proc)
 {
-	if (ft_strequ(proc->argv[0], "set"))
+	if (ft_strequ(proc->argv[0], "fc"))
+		builtin_fc(proc->argv, g_data);
+	else if (ft_strequ(proc->argv[0], "set"))
 		builtin_set(proc->argv, g_data->envlst);
 	else if (ft_strequ(proc->argv[0], "unset"))
 		builtin_unset(proc->argv, g_data->envlst);
@@ -68,6 +70,8 @@ static void	jobs_exec_builtin_continued(t_proc *proc)
 
 void		jobs_exec_builtin(t_proc *proc)
 {
+	if (exec_create_files(proc->redir_and_assign) == FUNCT_ERROR)
+		return ;
 	if (backup_stdfds() == FUNCT_ERROR)
 	{
 		g_state->exit_code = EXIT_FAILURE;
@@ -84,8 +88,6 @@ void		jobs_exec_builtin(t_proc *proc)
 		builtin_exit(proc->argv, g_data);
 	else if (ft_strequ(proc->argv[0], "cd"))
 		builtin_cd(proc->argv, g_data);
-	else if (ft_strequ(proc->argv[0], "fc"))
-		builtin_fc(proc->argv, g_data);
 	else
 		jobs_exec_builtin_continued(proc);
 	if (cleanup_non_forked_redirs() == FUNCT_ERROR)
