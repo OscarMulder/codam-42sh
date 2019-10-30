@@ -6,7 +6,7 @@
 /*   By: omulder <omulder@student.codam.nl>           +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2019/04/17 14:03:16 by jbrinksm       #+#    #+#                */
-/*   Updated: 2019/10/29 14:15:20 by jbrinksm      ########   odam.nl         */
+/*   Updated: 2019/10/30 14:29:06 by rkuijper      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -131,8 +131,6 @@ int			input_read(t_vshdata *data)
 
 	if (data == NULL)
 		return (FUNCT_ERROR);
-	if (tcgetpgrp(STDIN_FILENO) != g_state->pid)
-		tcsetpgrp(STDIN_FILENO, g_state->pid);
 	data->line->line = ft_strnew(data->line->len_max);
 	if (data->line->line == NULL)
 		return (reset_input_read_return(data, FUNCT_ERROR));

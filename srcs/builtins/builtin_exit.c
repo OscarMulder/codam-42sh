@@ -6,7 +6,7 @@
 /*   By: omulder <omulder@student.codam.nl>           +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2019/04/11 20:15:24 by jbrinksm       #+#    #+#                */
-/*   Updated: 2019/10/29 12:04:53 by jbrinksm      ########   odam.nl         */
+/*   Updated: 2019/10/30 11:31:52 by mavan-he      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -20,6 +20,7 @@ static void	reset_exit(int exit_code, t_vshdataterm *term_p)
 		ft_eprintf(E_NOT_RESET);
 	exit(exit_code);
 }
+
 static void	close_jobs(t_datajobs *jobs)
 {
 	t_job *job;

@@ -6,7 +6,7 @@
 /*   By: omulder <omulder@student.codam.nl>           +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2019/04/10 20:29:42 by jbrinksm       #+#    #+#                */
-/*   Updated: 2019/10/30 14:30:40 by jbrinksm      ########   odam.nl         */
+/*   Updated: 2019/10/30 14:34:55 by jbrinksm      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -537,7 +537,6 @@ typedef struct	s_job
 	struct s_job	*next;
 	t_andor			andor;
 	struct s_job	*child;
-	t_termios		*tmode;
 	int				job_id;
 	int				current;
 	char			*command;
@@ -791,7 +790,7 @@ void			print_job_info(t_job *job, int options, t_job *joblist);
 t_job			*jobs_add_job(t_vshdata *data, t_job *job);
 t_job			*jobs_new_job(void);
 t_job			*jobs_last_child(t_job *job);
-
+void			jobs_flush_job(t_job *job);
 
 void			jobs_continue_job(t_job *job, bool fg);
 void			jobs_bg_job(t_job *job, bool job_continued);
@@ -822,8 +821,10 @@ void			jobs_handle_finished_jobs(void);
 int				jobs_update_job_command(t_job *job, char **av);
 
 int				jobs_mark_process_status(pid_t pid, int status);
+void			jobs_flush_process(t_proc *proc);
 void			jobs_launch_job(t_job *job);
-void			jobs_launch_proc(t_job *job, t_proc *proc, int fds[3], int pipes[2]);
+void			jobs_launch_proc(t_job *job, t_proc *proc,
+	int fds[3], int pipes[2]);
 
 /*
 **----------------------------------shell---------------------------------------

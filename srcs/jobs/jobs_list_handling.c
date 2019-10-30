@@ -6,7 +6,7 @@
 /*   By: omulder <omulder@student.codam.nl>           +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2019/05/31 10:47:19 by tde-jong       #+#    #+#                */
-/*   Updated: 2019/10/30 10:48:53 by rkuijper      ########   odam.nl         */
+/*   Updated: 2019/10/30 14:03:28 by rkuijper      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -20,6 +20,14 @@ t_job			*jobs_new_job(void)
 	new->bg = false;
 	new->command = ft_strnew(1);
 	return (new);
+}
+
+void			jobs_flush_job(t_job *job)
+{
+	jobs_flush_process(job->processes);
+	if (job->command != NULL)
+		ft_strdel(&job->command);
+	ft_memdel((void**)&job);
 }
 
 t_job			*jobs_remove_job(t_job *joblist, pid_t pid)
@@ -53,11 +61,15 @@ t_job				*jobs_add_job(t_vshdata *data, t_job *job)
 		jid = tmp->job_id;
 		while (tmp->next)
 		{
+			if (tmp == job)
+				return (job);
 			tmp = tmp->next;
 			if (tmp->job_id > jid)
 				jid = tmp->job_id;
 		}
-		job->next = job;
+		if (tmp == job)
+			return (job);
+		tmp->next = job;
 	}
 	job->job_id = jid;
 	job->current = builtin_jobs_new_current_val(data->jobs->joblist);
