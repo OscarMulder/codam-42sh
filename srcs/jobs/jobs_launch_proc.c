@@ -6,7 +6,7 @@
 /*   By: rkuijper <rkuijper@student.codam.nl>         +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2019/10/29 11:20:31 by rkuijper       #+#    #+#                */
-/*   Updated: 2019/10/30 15:59:05 by rkuijper      ########   odam.nl         */
+/*   Updated: 2019/10/30 16:29:49 by jbrinksm      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -85,7 +85,7 @@ static void	execute_proc(t_proc *proc)
 		ft_eprintf(E_BIN_PROC_LAUNCH, proc->binary);
 		exit(1);
 	}
-	execute_builtin(proc, true);
+	jobs_execute_builtin(proc, true);
 }
 
 void		jobs_launch_proc(t_job *job, t_proc *proc, int fds[3], int pipes[2])

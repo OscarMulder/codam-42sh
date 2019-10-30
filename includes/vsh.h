@@ -6,7 +6,7 @@
 /*   By: omulder <omulder@student.codam.nl>           +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2019/04/10 20:29:42 by jbrinksm       #+#    #+#                */
-/*   Updated: 2019/10/30 16:20:01 by jbrinksm      ########   odam.nl         */
+/*   Updated: 2019/10/30 16:35:02 by jbrinksm      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -53,6 +53,7 @@
 # define E_P_CMD_NOT_FOUND	SHELL ": %s: command not found.\n"
 # define E_FAIL_OPEN_P		SHELL ": failed to open/create %s\n"
 # define E_FAIL_OPEN		SHELL ": failed to open file\n"
+# define E_ISDIR			SHELL ": %s: is a directory\n"
 # define E_FAIL_EXEC_P		SHELL ": failed to execute %s\n"
 # define E_NO_PIPE			SHELL ": unable to create pipe"
 # define E_P_BAD_REDIR		SHELL ": %s: bad redirect\n"
