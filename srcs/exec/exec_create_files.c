@@ -6,7 +6,7 @@
 /*   By: mavan-he <mavan-he@student.codam.nl>         +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2019/08/06 16:16:21 by mavan-he       #+#    #+#                */
-/*   Updated: 2019/10/30 16:51:01 by jbrinksm      ########   odam.nl         */
+/*   Updated: 2019/10/30 17:49:15 by jbrinksm      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -68,23 +68,6 @@ static int	find_files(t_ast *ast)
 
 int			exec_create_files(t_ast *ast)
 {
-	if (ast->left != NULL && ast->left->type != PIPE)
-	{
-		if (ast->left->type == WORD)
-		{
-			if (find_files(ast->left->right) == FUNCT_ERROR)
-				return (FUNCT_ERROR);
-		}
-		else if (find_files(ast->left) == FUNCT_ERROR)
-			return (FUNCT_ERROR);
-	}
-	if (ast->right != NULL && ast->right->type == WORD)
-	{
-		if (find_files(ast->right->right) == FUNCT_ERROR)
-			return (FUNCT_ERROR);
-	}
-	if (find_files(ast->right) == FUNCT_ERROR)
-		return (FUNCT_ERROR);
 	if (find_files(ast) == FUNCT_ERROR)
 		return (FUNCT_ERROR);
 	return (FUNCT_SUCCESS);

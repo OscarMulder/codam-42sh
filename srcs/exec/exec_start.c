@@ -6,7 +6,7 @@
 /*   By: omulder <omulder@student.codam.nl>           +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2019/05/29 17:52:22 by omulder        #+#    #+#                */
-/*   Updated: 2019/10/30 13:26:29 by rkuijper      ########   odam.nl         */
+/*   Updated: 2019/10/30 17:48:22 by jbrinksm      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,8 +14,6 @@
 
 int				exec_pipe_sequence(t_ast *ast, t_vshdata *data)
 {
-	if (exec_create_files(ast) == FUNCT_ERROR)
-		return (FUNCT_ERROR);
 	if (ast->type != PIPE)
 		return (exec_command(ast, data));
 	if (ast->left->type == PIPE)

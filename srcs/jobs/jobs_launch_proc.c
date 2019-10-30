@@ -6,7 +6,7 @@
 /*   By: rkuijper <rkuijper@student.codam.nl>         +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2019/10/29 11:20:31 by rkuijper       #+#    #+#                */
-/*   Updated: 2019/10/30 16:53:17 by jbrinksm      ########   odam.nl         */
+/*   Updated: 2019/10/30 17:56:56 by jbrinksm      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -54,25 +54,29 @@ static void	jobs_exec_fork_builtin(t_proc *proc, bool do_exit)
 		exit(g_state->exit_code);
 }
 
-static void	handle_filedescriptors(int fds[3], int pipes[2])
+static int	handle_filedescriptors(int fds[3], int pipes[2])
 {
 	if (fds[0] != STDIN_FILENO)
 	{
-		dup2(fds[0], STDIN_FILENO);
+		if (dup2(fds[0], STDIN_FILENO) == -1)
+			return (FUNCT_ERROR);
 		close(fds[0]);
 	}
 	else if (pipes[0] != UNINIT)
 		close(pipes[0]);
 	if (fds[1] != STDOUT_FILENO)
 	{
-		dup2(fds[1], STDOUT_FILENO);
+		if (dup2(fds[1], STDOUT_FILENO) == FUNCT_ERROR)
+			return (FUNCT_ERROR);
 		close(fds[1]);
 	}
 	if (fds[2] != STDERR_FILENO)
 	{
-		dup2(fds[2], STDERR_FILENO);
+		if (dup2(fds[2], STDERR_FILENO) == FUNCT_ERROR)
+			return (FUNCT_ERROR);
 		close(fds[2]);
 	}
+	return (FUNCT_SUCCESS);
 }
 
 static void	execute_proc(t_proc *proc)
@@ -102,11 +106,11 @@ void		jobs_launch_proc(t_job *job, t_proc *proc, int fds[3], int pipes[2])
 			tcsetpgrp(STDIN_FILENO, job->pgid);
 		signal_reset();
 	}
-	if (exec_assigns(proc->redir_and_assign, g_data, ENV_TEMP) == FUNCT_ERROR)
-		return ;
-	handle_filedescriptors(fds, pipes);
-	if (exec_redirs(proc->redir_and_assign) == FUNCT_ERROR)
-		return ;
+	if (exec_create_files(proc->redir_and_assign) == FUNCT_ERROR
+	|| exec_assigns(proc->redir_and_assign, g_data, ENV_TEMP) == FUNCT_ERROR
+	|| handle_filedescriptors(fds, pipes) == FUNCT_ERROR
+	|| exec_redirs(proc->redir_and_assign) == FUNCT_ERROR)
+		exit(1);
 	proc->env = env_lsttoarr(g_data->envlst);
 	if (proc->env == NULL)
 	{
