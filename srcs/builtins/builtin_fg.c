@@ -6,7 +6,7 @@
 /*   By: rkuijper <rkuijper@student.codam.nl>         +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2019/10/22 14:27:21 by rkuijper       #+#    #+#                */
-/*   Updated: 2019/10/22 14:34:19 by rkuijper      ########   odam.nl         */
+/*   Updated: 2019/10/30 15:00:08 by rkuijper      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,8 +18,7 @@ static int	read_options(char **av)
 		return (FUNCT_SUCCESS);
 	else
 	{
-		ft_eprintf("vsh: bg: %s: invalid option\n");
-		ft_eprintf("bg: usage: bg [job_spec ...]\n");
+		ft_eprintf(E_FG_INV_OPT E_FG_USAGE, av[1][1]);
 		return (FUNCT_ERROR);
 	}
 }
@@ -43,19 +42,23 @@ static void	fg(t_job *job)
 	}
 }
 
-int			builtin_fg(char **av, t_vshdata *data)
+void		builtin_fg(char **av, t_vshdata *data)
 {
 	t_job	*job;
 
+	g_state->exit_code = EXIT_FAILURE;
 	if (read_options(av) == FUNCT_ERROR)
-		return (FUNCT_ERROR);
+		return ;
 	if (av[1] == NULL)
 		job = jobs_find_job("%%", data->jobs->joblist);
 	else
 		job = jobs_find_job(av[1], data->jobs->joblist);
 	if (job == NULL)
-		return (err_ret("fg: no current job\n"));
+	{
+		ft_eprintf(E_FG_NO_CUR);
+		return ;
+	}
 	job->current = builtin_jobs_new_current_val(data->jobs->joblist);
 	fg(job);
-	return (FUNCT_SUCCESS);
+	g_state->exit_code = EXIT_SUCCESS;
 }

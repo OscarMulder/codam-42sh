@@ -6,7 +6,7 @@
 /*   By: rkuijper <rkuijper@student.codam.nl>         +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2019/10/29 11:20:31 by rkuijper       #+#    #+#                */
-/*   Updated: 2019/10/30 15:54:30 by jbrinksm      ########   odam.nl         */
+/*   Updated: 2019/10/30 15:56:55 by jbrinksm      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -76,7 +76,7 @@ static void	execute_proc(t_proc *proc)
 	if (proc->is_builtin == false)
 	{
 		execve(proc->binary, proc->argv, proc->env);
-		ft_eprintf("Error executing %s\n", proc->binary);
+		ft_eprintf(E_BIN_PROC_LAUNCH, proc->binary);
 		exit(1);
 	}
 	execute_builtin(proc);

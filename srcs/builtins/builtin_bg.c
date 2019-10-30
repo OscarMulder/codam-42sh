@@ -6,7 +6,7 @@
 /*   By: rkuijper <rkuijper@student.codam.nl>         +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2019/10/18 15:54:56 by rkuijper       #+#    #+#                */
-/*   Updated: 2019/10/30 11:31:27 by mavan-he      ########   odam.nl         */
+/*   Updated: 2019/10/30 14:54:38 by rkuijper      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,31 +18,38 @@ static int	read_options(char **av)
 		return (FUNCT_SUCCESS);
 	else
 	{
-		ft_eprintf("vsh: bg: %s: invalid option\n");
-		ft_eprintf("bg: usage: bg [job_spec ...]\n");
+		ft_eprintf(E_BG_INV_OPT E_BG_USAGE, av[1][1]);
 		return (FUNCT_ERROR);
 	}
 }
 
-int			builtin_bg(char **av, t_vshdata *data)
+/*
+	TODO:
+	Calling bg on a suspended process does not continue the process correctly.
+*/
+
+void		builtin_bg(char **av, t_vshdata *data)
 {
 	t_job	*job;
 
+	g_state->exit_code = EXIT_FAILURE;
 	if (read_options(av) == FUNCT_ERROR)
-		return (FUNCT_ERROR);
+		return ;
 	if (av[1] == NULL)
 		job = jobs_find_job("%%", data->jobs->joblist);
 	else
 		job = jobs_find_job(av[1], data->jobs->joblist);
 	if (job == NULL)
-		return (err_ret("bg: no current job\n"));
-	if (tools_get_pid_state(job->pgid) == PID_STATE_SUSPEND)
-		jobs_continue_job(job, 0);
+	{
+		ft_eprintf(E_BG_NO_CUR);
+		return ;
+	}
+	if (tools_get_pid_state(-job->pgid) == PID_STATE_SUSPEND)
+		jobs_continue_job(job, false);
 	else
 	{
-		ft_eprintf("vsh: bg: job %s already running\n",
-			av[1] == NULL ? "1" : av[1]);
-		return (FUNCT_ERROR);
+		ft_eprintf(E_BG_JOB_RUN, av[1] == NULL ? "1" : av[1]);
+		return ;
 	}
-	return (FUNCT_SUCCESS);
+	g_state->exit_code = EXIT_SUCCESS;
 }
