@@ -6,7 +6,7 @@
 /*   By: omulder <omulder@student.codam.nl>           +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2019/05/29 16:59:41 by omulder        #+#    #+#                */
-/*   Updated: 2019/10/29 12:20:14 by jbrinksm      ########   odam.nl         */
+/*   Updated: 2019/10/30 11:33:31 by jbrinksm      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -24,6 +24,7 @@ bool			exec_builtin(char **args, t_vshdata *data)
 		ft_strequ(args[0], "hash"))
 	{
 		data->jobs->active_job->last_proc->is_builtin = true;
+		data->jobs->active_job->last_proc->redir_node = data->current_redirs;
 		return (true);
 	}
 	return (false);
