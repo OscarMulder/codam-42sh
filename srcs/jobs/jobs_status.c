@@ -24,7 +24,7 @@ int			jobs_stopped_job(t_job *job)
 		if (proc->state != PROC_COMPLETED)
 		{
 			if (proc->state != PROC_STOPPED)
-				return (FUNCT_FAILURE);
+				return (0);
 			s++;
 		}
 		proc = proc->next;
@@ -40,8 +40,8 @@ int			jobs_completed_job(t_job *job)
 	while (proc != NULL)
 	{
 		if (proc->state != PROC_COMPLETED)
-			return (FUNCT_FAILURE);
+			return (0);
 		proc = proc->next;
 	}
-	return (FUNCT_SUCCESS);
+	return (job->child ? jobs_completed_job(job->child) : 1);
 }

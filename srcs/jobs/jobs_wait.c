@@ -18,16 +18,16 @@ void		jobs_wait_job(t_job *job)
 	pid_t	pid;
 	int		status;
 
-	while (42)
+	while (1)
 	{
-		pid = waitpid(job->pgid, &status, WUNTRACED);
+		pid = waitpid(-job->pgid, &status, WUNTRACED);
 		while (pid < 0)
 		{
 			if (errno != EINTR)
 				break ;
-			pid = waitpid(job->pgid, &status, WUNTRACED);
+			pid = waitpid(-job->pgid, &status, WUNTRACED);
 		}
-		if (!jobs_mark_job(job, pid, status) || jobs_stopped_job(job) ||
+		if (jobs_mark_job(job, pid, status) || jobs_stopped_job(job) ||
 			jobs_completed_job(job))
 			break ;
 	}

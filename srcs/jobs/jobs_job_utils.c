@@ -18,7 +18,7 @@ int		jobs_get_job_state(t_job *job)
 	int		status;
 	pid_t	result;
 
-	result = waitpid(job->pgid, &status, WNOHANG);
+	result = waitpid(-job->pgid, &status, WNOHANG);
 	if (WIFSTOPPED(status))
 		return (JOB_SUSPEND);
 	if (WIFCONTINUED(status))

@@ -23,27 +23,16 @@
 **	Set termios structure back to our special values.
 */
 
-static void		exec_bin(char *binary, char **args, char **vshenviron,
-t_vshdata *data)
+static void		exec_bin(char *binary,char **vshenviron, t_vshdata *data)
 {
 	t_job	*job;
 
 	if (exec_validate_binary(binary) == FUNCT_ERROR)
 		return ;
-	job = data->jobs->active_job;
-	if (job == NULL)
-	{
-		job = jobs_add_job(data, 0, "");
-		data->jobs->active_job = job;
-	}
+	job = jobs_last_child(data->jobs->active_job);
 	if (job == NULL)
 		return ;
-	jobs_update_job_command(job, args);
-	jobs_add_process(job);
-	if (job->last_proc == NULL)
-		exit(1);
 	job->last_proc->env = vshenviron;
-	job->last_proc->argv = args;
 	job->last_proc->binary = binary;
 	job->last_proc->redir_node = data->current_redirs;
 	if (g_data->exec_flags & EXEC_BG)
@@ -79,8 +68,8 @@ void			exec_external(char **args, t_vshdata *data)
 	{
 		ft_strdel(&binary);
 		if (exec_find_binary(args[0], data, &binary) == FUNCT_SUCCESS)
-			exec_bin(binary, args, vshenviron, data);
+			exec_bin(binary, vshenviron, data);
 	}
 	else
-		exec_bin(binary, args, vshenviron, data);
+		exec_bin(binary, vshenviron, data);
 }

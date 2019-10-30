@@ -28,6 +28,7 @@ static t_proc	*last_proc(t_job *job)
 
 static int		job_stop(t_job *job)
 {
+	jobs_add_job(g_data, job);
 	if (g_state->shell_type == SHELL_INTERACT)
 		ft_printf("\r\x1b[0K^Z\n");
 	job->bg = true;
@@ -37,8 +38,6 @@ static int		job_stop(t_job *job)
 
 int				jobs_fg_job(t_job *job, bool job_continued)
 {
-	int status;
-
 	job->bg = false;
 	if (g_state->shell_type == SHELL_INTERACT)
 		tcsetpgrp(STDIN_FILENO, job->pgid);
@@ -55,8 +54,15 @@ int				jobs_fg_job(t_job *job, bool job_continued)
 		tcsetattr(STDIN_FILENO, TCSADRAIN, g_data->term->termios_p);
 	}
 	if (jobs_stopped_job(job))
-		status = job_stop(job);
+		g_state->exit_code = job_stop(job);
 	else
-		status = last_proc(job)->exit_status;
-	return (status);
+	{
+		g_state->exit_code = last_proc(job)->exit_status;
+		if (job->child != NULL &&
+			(job->andor == ANDOR_NONE ||
+			(job->andor == ANDOR_AND && g_state->exit_code == 0) ||
+			(job->andor == ANDOR_OR && g_state->exit_code != 0)))
+			jobs_launch_job(job->child);
+	}
+	return (g_state->exit_code);
 }

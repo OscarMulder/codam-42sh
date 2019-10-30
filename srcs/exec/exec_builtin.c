@@ -12,46 +12,19 @@
 
 #include "vsh.h"
 
-static bool		exec_builtin_cont(char **args, t_vshdata *data)
-{
-	if (ft_strequ(args[0], "jobs"))
-		builtin_jobs(args, data);
-	else if (ft_strequ(args[0], "fg"))
-		builtin_fg(args, data);
-	else if (ft_strequ(args[0], "bg"))
-		builtin_bg(args, data);
-	else if (ft_strequ(args[0], "hash"))
-		builtin_hash(args, data);
-	else
-		return (false);
-	return (true);
-}
-
 bool			exec_builtin(char **args, t_vshdata *data)
 {
-	if (ft_strequ(args[0], "echo"))
-		builtin_echo(args);
-	else if (ft_strequ(args[0], "exit"))
-		builtin_exit(args, data);
-	else if (ft_strequ(args[0], "cd"))
-		builtin_cd(args, data);
-	else if (ft_strequ(args[0], "fc"))
-		builtin_fc(args, data);
-	else if (ft_strequ(args[0], "export"))
-		builtin_export(args, data);
-	else if (ft_strequ(args[0], "set"))
-		builtin_set(args, data->envlst);
-	else if (ft_strequ(args[0], "unset"))
-		builtin_unset(args, data->envlst);
-	else if (ft_strequ(args[0], "history"))
-		history_print(data->history);
-	else if (ft_strequ(args[0], "type"))
-		builtin_type(args, data->envlst, data->alias->aliaslst);
-	else if (ft_strequ(args[0], "alias"))
-		builtin_alias(args, &data->alias->aliaslst);
-	else if (ft_strequ(args[0], "unalias"))
-		builtin_unalias(args, &data->alias->aliaslst);
-	else
-		return (exec_builtin_cont(args, data));
-	return (true);
+	if (ft_strequ(args[0], "echo") || ft_strequ(args[0], "exit") ||
+		ft_strequ(args[0], "cd") || ft_strequ(args[0], "fc") ||
+		ft_strequ(args[0], "export") || ft_strequ(args[0], "set") ||
+		ft_strequ(args[0], "unset") || ft_strequ(args[0], "history") ||
+		ft_strequ(args[0], "type") || ft_strequ(args[0], "alias") ||
+		ft_strequ(args[0], "unalias") || ft_strequ(args[0], "jobs") ||
+		ft_strequ(args[0], "fg") || ft_strequ(args[0], "bg") ||
+		ft_strequ(args[0], "hash"))
+	{
+		data->jobs->active_job->last_proc->is_builtin = true;
+		return (true);
+	}
+	return (false);
 }

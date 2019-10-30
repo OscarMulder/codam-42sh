@@ -502,6 +502,13 @@ typedef enum			e_proc_state
 	PROC_RUNNING
 }						t_proc_state;
 
+typedef enum			e_andor
+{
+	ANDOR_NONE,
+	ANDOR_AND,
+	ANDOR_OR
+}						t_andor;
+
 typedef struct	s_proc
 {
 	pid_t			pid;
@@ -513,6 +520,7 @@ typedef struct	s_proc
 	char			**argv;
 	char			*binary;
 
+	bool			is_builtin;
 	t_ast			*redir_node;
 }				t_proc;
 
@@ -522,6 +530,8 @@ typedef struct	s_job
 	pid_t			pgid;
 	int				state;
 	struct s_job	*next;
+	t_andor			andor;
+	struct s_job	*child;
 	t_termios		*tmode;
 	int				job_id;
 	int				current;
@@ -754,7 +764,9 @@ int				input_read_from_buffer(t_vshdata *data);
 int				jobs_get_job_state(t_job *job);
 t_job			*jobs_remove_job(t_job *job, pid_t pid);
 void			print_job_info(t_job *job, int options, t_job *joblist);
-t_job			*jobs_add_job(t_vshdata *vshdata, pid_t pid, char *command);
+t_job			*jobs_add_job(t_vshdata *data, t_job *job);
+t_job			*jobs_new_job(void);
+t_job			*jobs_last_child(t_job *job);
 
 
 void			jobs_continue_job(t_job *job, bool fg);

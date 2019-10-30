@@ -73,7 +73,7 @@ int			jobs_mark_proc(t_proc *proc, int status)
 		else if (WTERMSIG(status) == SIGINT)
 			proc->exit_status = 130;
 	}
-	return (FUNCT_SUCCESS);
+	return (0);
 }
 
 int			jobs_mark_job(t_job *job, pid_t pid, int status)
@@ -89,9 +89,9 @@ int			jobs_mark_job(t_job *job, pid_t pid, int status)
 				return (jobs_mark_proc(proc, status));
 			proc = proc->next;
 		}
-		return (FUNCT_FAILURE);
+		return (FUNCT_SUCCESS);
 	}
-	return (FUNCT_FAILURE);
+	return (FUNCT_SUCCESS);
 }
 
 int			jobs_mark_pool(pid_t pid, int status)

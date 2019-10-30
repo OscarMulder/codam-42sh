@@ -15,7 +15,7 @@
 int				exec_pipe_sequence(t_ast *ast, t_vshdata *data)
 {
 	if (exec_create_files(ast) == FUNCT_ERROR)
-		return (FUNCT_ERROR); /* Volgens moet hij boven onderstaande rule, omdat het anders fout kan gaan als er alleen een foute redir wordt gegeven */
+		return (FUNCT_ERROR);
 	if (ast->type != PIPE)
 		return (exec_command(ast, data));
 	if (ast->left->type == PIPE)
@@ -23,11 +23,8 @@ int				exec_pipe_sequence(t_ast *ast, t_vshdata *data)
 		if (exec_pipe_sequence(ast->left, data) == FUNCT_ERROR)
 			return (FUNCT_ERROR);
 	}
-	else
-	{
-		if (exec_command(ast->left, data) == FUNCT_ERROR)
-			return (FUNCT_ERROR);
-	}
+	else if (exec_command(ast->left, data) == FUNCT_ERROR)
+		return (FUNCT_ERROR);
 	return (exec_command(ast->right, data));
 }
 
@@ -39,8 +36,9 @@ int				exec_and_or(t_ast *ast, t_vshdata *data)
 	if (ast->type != AND_IF && ast->type != OR_IF)
 	{
 		if (data->jobs->active_job != NULL)
-			jobs_launch_job(data->jobs->active_job);
-		data->jobs->active_job = NULL;
+			jobs_last_child(data->jobs->active_job)->child = jobs_new_job();
+		else
+			data->jobs->active_job = jobs_new_job();
 		return (exec_pipe_sequence(ast, data));
 	}
 	if (data->exec_flags & EXEC_BG)
@@ -48,10 +46,8 @@ int				exec_and_or(t_ast *ast, t_vshdata *data)
 	data->exec_flags &= ~EXEC_BG;
 	if (exec_and_or(ast->left, data) == FUNCT_ERROR)
 		return (FUNCT_ERROR);
-	if (ast->type == AND_IF && g_state->exit_code != EXIT_SUCCESS)
-		return (FUNCT_ERROR);
-	else if (ast->type == OR_IF && g_state->exit_code == EXIT_SUCCESS)
-		return (FUNCT_FAILURE);
+	if (ast->type == AND_IF || ast->type == OR_IF)
+		jobs_last_child(data->jobs->active_job)->andor = ast->type - 4;
 	if (bg == 1)
 		data->exec_flags |= EXEC_BG;
 	if (exec_and_or(ast->right, data) == FUNCT_ERROR)
