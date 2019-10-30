@@ -6,7 +6,7 @@
 /*   By: rkuijper <rkuijper@student.codam.nl>         +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2019/10/21 11:51:41 by rkuijper       #+#    #+#                */
-/*   Updated: 2019/10/28 15:48:45 by jbrinksm      ########   odam.nl         */
+/*   Updated: 2019/10/30 15:24:24 by rkuijper      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -66,7 +66,7 @@ int			jobs_mark_proc(t_proc *proc, int status)
 		else if (WIFSIGNALED(status) && WTERMSIG(status) != SIGINT)
 		{
 			if (WTERMSIG(status) != SIGPIPE)
-				ft_eprintf("%d: Terminated by signal %d\n", (int)proc->pid,
+				ft_eprintf(E_JOB_MARK_SIG, (int)proc->pid,
 					WTERMSIG(status));
 			proc->exit_status = 1;
 		}

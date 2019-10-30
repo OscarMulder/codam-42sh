@@ -6,7 +6,7 @@
 /*   By: omulder <omulder@student.codam.nl>           +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2019/04/10 20:29:42 by jbrinksm       #+#    #+#                */
-/*   Updated: 2019/10/30 13:13:35 by rkuijper      ########   odam.nl         */
+/*   Updated: 2019/10/30 15:26:35 by rkuijper      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -97,6 +97,18 @@
 # define E_BAD_PATTERN		SHELL ": bad pattern: %s\n"
 # define E_OPEN_DIR			SHELL ": error opening directory: %s\n"
 # define E_INVALID_USER		SHELL ": could not get working directory of: %s\n"
+# define E_BG_INV_OPT		SHELL ": bg: %c: invalid option\n"
+# define E_BG_USAGE			"bg: usage: bg [job_spec ...]\n"
+# define E_BG_NO_CUR		"bg: no current job\n"
+# define E_BG_JOB_RUN		SHELL ": bg: job %s already running\n"
+# define E_FG_INV_OPT		SHELL ": fg: %c: invalid option\n"
+# define E_FG_USAGE			"fg: usage: fg [job_spec ...]\n"
+# define E_FG_NO_CUR		"fg: no current job\n"
+# define E_JOBS_INV_OPT		SHELL ": jobs: bad option: %c\n"
+# define E_JOBS_USAGE		"jobs: usage: jobs [-lp] [job_spec ...]\n"
+# define E_JOBS_NO_JOB		"jobs: %s: no such job\n"
+# define E_BIN_PROC_LAUNCH	"Error executing %s\n"
+# define E_JOB_MARK_SIG		"%d: Terminated by signal %d\n"
 # define E_ALLOC 42
 # define E_DUP 100
 # define E_OPEN 101
@@ -969,8 +981,8 @@ int				builtin_jobs(char **args, t_vshdata *data);
 t_job			*builtin_jobs_find_job(char *job_id, t_job *joblist);
 int				builtin_jobs_new_current_val(t_job *joblist);
 
-int				builtin_fg(char **args, t_vshdata *data);
-int				builtin_bg(char **args, t_vshdata *data);
+void			builtin_fg(char **args, t_vshdata *data);
+void			builtin_bg(char **av, t_vshdata *data);
 
 void			builtin_cd(char **args, t_vshdata *data);
 void			builtin_cd_create_newpath(char **newpath, char *argpath);

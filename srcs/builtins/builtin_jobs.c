@@ -6,7 +6,7 @@
 /*   By: omulder <omulder@student.codam.nl>           +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2019/04/17 14:03:16 by rkuijper       #+#    #+#                */
-/*   Updated: 2019/10/24 10:39:57 by rkuijper      ########   odam.nl         */
+/*   Updated: 2019/10/30 15:26:37 by rkuijper      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -38,7 +38,7 @@ static int		read_options(char **args, int *arg, int *options)
 				*options |= JOB_OPT_L;
 			else
 			{
-				ft_eprintf("vsh: bad option: -%c\n", args[*arg][i]);
+				ft_eprintf(E_JOBS_INV_OPT E_JOBS_USAGE, args[*arg][i]);
 				return (FUNCT_ERROR);
 			}
 			i++;
@@ -55,7 +55,7 @@ static int		jobs_log_args(t_datajobs *jobs, int options, char **args)
 
 	if (jobs->joblist == NULL)
 	{
-		ft_eprintf("jobs: %s: no such job", args[0]);
+		ft_eprintf(E_JOBS_NO_JOB, args[0]);
 		return (FUNCT_ERROR);
 	}
 	i = 0;

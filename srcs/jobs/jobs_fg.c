@@ -6,13 +6,12 @@
 /*   By: rkuijper <rkuijper@student.codam.nl>         +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2019/10/18 17:12:11 by rkuijper       #+#    #+#                */
-/*   Updated: 2019/10/30 14:10:45 by rkuijper      ########   odam.nl         */
+/*   Updated: 2019/10/30 15:00:35 by rkuijper      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "vsh.h"
 #include <term.h>
-#include <errno.h>
 #include <signal.h>
 #include <stdio.h>
 
