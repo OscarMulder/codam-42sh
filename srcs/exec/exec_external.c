@@ -6,7 +6,7 @@
 /*   By: omulder <omulder@student.codam.nl>           +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2019/05/31 10:47:19 by tde-jong       #+#    #+#                */
-/*   Updated: 2019/10/29 12:02:34 by jbrinksm      ########   odam.nl         */
+/*   Updated: 2019/10/30 11:25:35 by mavan-he      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -23,7 +23,7 @@
 **	Set termios structure back to our special values.
 */
 
-static void		exec_bin(char *binary,char **vshenviron, t_vshdata *data)
+static void		exec_bin(char *binary, char **vshenviron, t_vshdata *data)
 {
 	t_job	*job;
 

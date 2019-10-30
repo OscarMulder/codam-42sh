@@ -6,7 +6,7 @@
 /*   By: mavan-he <mavan-he@student.codam.nl>         +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2019/08/06 16:16:21 by mavan-he       #+#    #+#                */
-/*   Updated: 2019/10/29 11:17:37 by rkuijper      ########   odam.nl         */
+/*   Updated: 2019/10/30 11:25:01 by mavan-he      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -38,8 +38,6 @@ static int	find_files(t_ast *ast)
 	}
 	return (FUNCT_SUCCESS);
 }
-
-/* @Rob or @Marijn Please make sure I didn't fuck this up :) */
 
 int			exec_create_files(t_ast *ast)
 {
