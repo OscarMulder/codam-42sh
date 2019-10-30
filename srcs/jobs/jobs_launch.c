@@ -6,7 +6,7 @@
 /*   By: rkuijper <rkuijper@student.codam.nl>         +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2019/10/28 16:25:10 by rkuijper       #+#    #+#                */
-/*   Updated: 2019/10/30 16:15:32 by jbrinksm      ########   odam.nl         */
+/*   Updated: 2019/10/30 16:21:41 by jbrinksm      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -21,10 +21,13 @@ static int	cleanup_non_forked_redirs(void)
 {
 	if (dup2(g_data->stdfds[0], STDIN_FILENO) == -1)
 		return (FUNCT_ERROR);
+	close(g_data->stdfds[0]);
 	if (dup2(g_data->stdfds[1], STDOUT_FILENO) == -1)
 		return (FUNCT_ERROR);
+	close(g_data->stdfds[1]);
 	if (dup2(g_data->stdfds[2], STDERR_FILENO) == -1)
 		return (FUNCT_ERROR);
+	close(g_data->stdfds[2]);
 	return (FUNCT_SUCCESS);
 }
 
