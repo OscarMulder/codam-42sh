@@ -6,7 +6,7 @@
 /*   By: omulder <omulder@student.codam.nl>           +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2019/04/10 20:29:42 by jbrinksm       #+#    #+#                */
-/*   Updated: 2019/10/29 14:15:10 by jbrinksm      ########   odam.nl         */
+/*   Updated: 2019/10/30 14:30:40 by jbrinksm      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -525,6 +525,7 @@ typedef struct	s_proc
 	char			*binary;
 
 	bool			is_builtin;
+	bool			no_cmd;
 	t_ast			*redir_node;
 }				t_proc;
 

@@ -6,7 +6,7 @@
 /*   By: rkuijper <rkuijper@student.codam.nl>         +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2019/10/29 11:20:31 by rkuijper       #+#    #+#                */
-/*   Updated: 2019/10/30 10:47:57 by rkuijper      ########   odam.nl         */
+/*   Updated: 2019/10/30 13:39:18 by jbrinksm      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -71,6 +71,8 @@ static void	handle_filedescriptors(int fds[3], int pipes[2])
 
 static void	execute_proc(t_proc *proc)
 {
+	if (proc->no_cmd == true)
+		exit(0);
 	if (proc->is_builtin == false)
 	{
 		execve(proc->binary, proc->argv, proc->env);

@@ -6,7 +6,7 @@
 /*   By: omulder <omulder@student.codam.nl>           +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2019/05/31 10:47:19 by tde-jong       #+#    #+#                */
-/*   Updated: 2019/10/30 11:25:35 by mavan-he      ########   odam.nl         */
+/*   Updated: 2019/10/30 13:18:17 by jbrinksm      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -27,7 +27,8 @@ static void		exec_bin(char *binary, char **vshenviron, t_vshdata *data)
 {
 	t_job	*job;
 
-	if (exec_validate_binary(binary) == FUNCT_ERROR)
+	if (data->jobs->active_job->last_proc->no_cmd == false
+		&& exec_validate_binary(binary) == FUNCT_ERROR)
 		return ;
 	job = jobs_last_child(data->jobs->active_job);
 	if (job == NULL)
@@ -64,7 +65,9 @@ void			exec_external(char **args, t_vshdata *data)
 		g_state->exit_code = EXIT_FAILURE;
 		return ;
 	}
-	if (ft_strchr(args[0], '/') == NULL)
+	if (data->jobs->active_job->last_proc->no_cmd == true)
+		exec_bin(binary, vshenviron, data);
+	else if (ft_strchr(args[0], '/') == NULL)
 	{
 		ft_strdel(&binary);
 		if (exec_find_binary(args[0], data, &binary) == FUNCT_SUCCESS)
