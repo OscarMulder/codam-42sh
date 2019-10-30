@@ -6,7 +6,7 @@
 /*   By: rkuijper <rkuijper@student.codam.nl>         +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2019/10/28 16:25:10 by rkuijper       #+#    #+#                */
-/*   Updated: 2019/10/30 15:54:46 by jbrinksm      ########   odam.nl         */
+/*   Updated: 2019/10/30 16:15:32 by jbrinksm      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,8 +17,43 @@ static int	is_single_builtin_proc(t_proc *proc)
 	return (proc != NULL && proc->is_builtin == true && proc->next == NULL);
 }
 
+static int	cleanup_non_forked_redirs(void)
+{
+	if (dup2(g_data->stdfds[0], STDIN_FILENO) == -1)
+		return (FUNCT_ERROR);
+	if (dup2(g_data->stdfds[1], STDOUT_FILENO) == -1)
+		return (FUNCT_ERROR);
+	if (dup2(g_data->stdfds[2], STDERR_FILENO) == -1)
+		return (FUNCT_ERROR);
+	return (FUNCT_SUCCESS);
+}
+
+static int	backup_stdfds(void)
+{
+	g_data->stdfds[0] = dup(STDIN_FILENO);
+	if (g_data->stdfds[0] == -1)
+		return (FUNCT_ERROR);
+	g_data->stdfds[1] = dup(STDOUT_FILENO);
+	if (g_data->stdfds[1] == -1)
+		return (FUNCT_ERROR);
+	g_data->stdfds[2] = dup(STDERR_FILENO);
+	if (g_data->stdfds[2] == -1)
+		return (FUNCT_ERROR);
+	return (FUNCT_SUCCESS);
+}
+
 static void	execute_builtin(t_proc *proc)
 {
+	if (backup_stdfds() == FUNCT_ERROR)
+	{
+		g_state->exit_code = EXIT_FAILURE;
+		ft_eprintf(E_FAIL_DUP_FD);
+	}
+	if (redir(proc->redir_and_assign) == FUNCT_ERROR)
+	{
+		g_state->exit_code = EXIT_FAILURE;
+		return ;
+	}
 	if (ft_strequ(proc->argv[0], "echo"))
 		builtin_echo(proc->argv);
 	if (ft_strequ(proc->argv[0], "exit"))
@@ -49,6 +84,11 @@ static void	execute_builtin(t_proc *proc)
 		builtin_bg(proc->argv, g_data);
 	if (ft_strequ(proc->argv[0], "hash"))
 		builtin_hash(proc->argv, g_data);
+	if (cleanup_non_forked_redirs() == FUNCT_ERROR)
+	{
+		g_state->exit_code = EXIT_FAILURE;
+		ft_eprintf(E_FD_RESET_STD);
+	}
 }
 
 void		jobs_launch_job(t_job *job)

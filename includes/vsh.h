@@ -6,7 +6,7 @@
 /*   By: omulder <omulder@student.codam.nl>           +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2019/04/10 20:29:42 by jbrinksm       #+#    #+#                */
-/*   Updated: 2019/10/30 15:28:04 by rkuijper      ########   odam.nl         */
+/*   Updated: 2019/10/30 16:18:38 by jbrinksm      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -45,6 +45,7 @@
 # define E_BAD_FD			SHELL ": %i: bad file descriptor\n"
 # define E_FAIL_DUP_FD		SHELL ": failed to duplicate file descriptor\n"
 # define E_FD_CLOSE			SHELL ": failed to close file descriptor\n"
+# define E_FD_RESET_STD	   SHELL ": failed to reset standard file descriptors\n"
 # define E_NO_PERM_NO_SUCH	SHELL ": no perm / no such file or directory\n"
 # define E_NO_SUCH_P		SHELL ": no such file or directory: %s\n"
 # define E_P_IS_DIR			SHELL ": %s: is a directory\n"
