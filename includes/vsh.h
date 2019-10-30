@@ -6,7 +6,7 @@
 /*   By: omulder <omulder@student.codam.nl>           +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2019/04/10 20:29:42 by jbrinksm       #+#    #+#                */
-/*   Updated: 2019/10/30 16:35:02 by jbrinksm      ########   odam.nl         */
+/*   Updated: 2019/10/30 16:52:37 by jbrinksm      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -100,14 +100,14 @@
 # define E_OPEN_DIR			SHELL ": error opening directory: %s\n"
 # define E_INVALID_USER		SHELL ": could not get working directory of: %s\n"
 # define E_BG_INV_OPT		SHELL ": bg: %c: invalid option\n"
-# define E_BG_USAGE			"bg: usage: bg [job_spec ...]\n"
+# define E_BG_USAGE			E_BG_INV_OPT "bg: usage: bg [job_spec ...]\n"
 # define E_BG_NO_CUR		"bg: no current job\n"
 # define E_BG_JOB_RUN		SHELL ": bg: job %s already running\n"
 # define E_FG_INV_OPT		SHELL ": fg: %c: invalid option\n"
-# define E_FG_USAGE			"fg: usage: fg [job_spec ...]\n"
+# define E_FG_USAGE			E_FG_INV_OPT "fg: usage: fg [job_spec ...]\n"
 # define E_FG_NO_CUR		"fg: no current job\n"
 # define E_JOBS_INV_OPT		SHELL ": jobs: bad option: %c\n"
-# define E_JOBS_USAGE		"jobs: usage: jobs [-lp] [job_spec ...]\n"
+# define E_JOBS_USAGE		E_JOBS_INV_OPT "jobs: usage: jobs [-lp] [job_spec ...]\n"
 # define E_JOBS_NO_JOB		"jobs: %s: no such job\n"
 # define E_BIN_PROC_LAUNCH	"Error executing %s\n"
 # define E_JOB_MARK_SIG		"%d: Terminated by signal %d\n"
@@ -839,7 +839,7 @@ void			jobs_flush_process(t_proc *proc);
 void			jobs_launch_job(t_job *job);
 void			jobs_launch_proc(t_job *job, t_proc *proc,
 	int fds[3], int pipes[2]);
-void			jobs_execute_builtin(t_proc *proc, bool do_exit);
+void			jobs_exec_builtin(t_proc *proc);
 
 /*
 **----------------------------------shell---------------------------------------
