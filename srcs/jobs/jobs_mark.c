@@ -6,12 +6,11 @@
 /*   By: rkuijper <rkuijper@student.codam.nl>         +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2019/10/21 11:51:41 by rkuijper       #+#    #+#                */
-/*   Updated: 2019/10/31 08:18:38 by omulder       ########   odam.nl         */
+/*   Updated: 2019/10/31 10:28:39 by rkuijper      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "vsh.h"
-#include <errno.h> // Remove this??
 #include <signal.h>
 
 int			change_status(int status, t_proc *proc)
@@ -49,7 +48,7 @@ int			jobs_mark_process_status(pid_t pid, int status)
 			job = job->next;
 		}
 	}
-	else if (pid == 0 || errno == ECHILD) // and this??
+	else if (pid == 0)
 		return (FUNCT_ERROR);
 	return (FUNCT_ERROR);
 }
