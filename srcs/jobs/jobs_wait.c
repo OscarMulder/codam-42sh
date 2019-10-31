@@ -6,12 +6,14 @@
 /*   By: rkuijper <rkuijper@student.codam.nl>         +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2019/10/21 11:22:46 by rkuijper       #+#    #+#                */
-/*   Updated: 2019/10/30 17:57:58 by rkuijper      ########   odam.nl         */
+/*   Updated: 2019/10/31 08:29:50 by omulder       ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "vsh.h"
 #include <errno.h>
+#include <sys/wait.h>
+#include <signal.h>
 
 void		jobs_wait_job(t_job *job)
 {
