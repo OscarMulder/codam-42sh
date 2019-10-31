@@ -6,12 +6,13 @@
 /*   By: rkuijper <rkuijper@student.codam.nl>         +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2019/10/21 11:51:41 by rkuijper       #+#    #+#                */
-/*   Updated: 2019/10/31 16:41:34 by rkuijper      ########   odam.nl         */
+/*   Updated: 2019/10/31 16:52:54 by rkuijper      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "vsh.h"
 #include <signal.h>
+#include <string.h>
 
 static int	change_status(t_proc *proc, int status)
 {
