@@ -6,11 +6,12 @@
 /*   By: rkuijper <rkuijper@student.codam.nl>         +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2019/10/21 11:25:18 by rkuijper       #+#    #+#                */
-/*   Updated: 2019/10/31 16:26:12 by rkuijper      ########   odam.nl         */
+/*   Updated: 2019/10/31 17:21:14 by rkuijper      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "vsh.h"
+#include <sys/wait.h>
 
 int			jobs_stopped_job(t_job *job)
 {
