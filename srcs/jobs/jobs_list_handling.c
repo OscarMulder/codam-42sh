@@ -6,7 +6,7 @@
 /*   By: omulder <omulder@student.codam.nl>           +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2019/05/31 10:47:19 by tde-jong       #+#    #+#                */
-/*   Updated: 2019/10/31 09:31:59 by rkuijper      ########   odam.nl         */
+/*   Updated: 2019/10/31 11:03:54 by rkuijper      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -20,14 +20,6 @@ t_job			*jobs_new_job(void)
 	new->bg = false;
 	new->command = ft_strnew(1);
 	return (new);
-}
-
-void			jobs_flush_job(t_job *job)
-{
-	jobs_flush_process(job->processes);
-	if (job->command != NULL)
-		ft_strdel(&job->command);
-	ft_memdel((void**)&job);
 }
 
 t_job			*jobs_remove_job(t_job **joblist, pid_t pgid)
@@ -58,31 +50,39 @@ t_job			*jobs_remove_job(t_job **joblist, pid_t pgid)
 	return (NULL);
 }
 
+static int		insert_job(t_vshdata *data, t_job *job, int *jid)
+{
+	t_job	*tmp;
+
+	tmp = data->jobs->joblist;
+	(*jid) = tmp->job_id + 1;
+	while (tmp->next)
+	{
+		if (tmp->pgid == job->pgid)
+			return (FUNCT_FAILURE);
+		tmp = tmp->next;
+		if (tmp->job_id > (*jid))
+			(*jid) = tmp->job_id + 1;
+		else
+			(*jid)++;
+	}
+	if (tmp->pgid == job->pgid)
+		return (FUNCT_FAILURE);
+	tmp->next = job;
+	return (FUNCT_SUCCESS);
+}
+
 t_job			*jobs_add_job(t_vshdata *data, t_job *job)
 {
 	int		jid;
-	t_job	*tmp;
 
 	jid = 1;
 	if (data->jobs->joblist == NULL)
 		data->jobs->joblist = job;
 	else
 	{
-		tmp = data->jobs->joblist;
-		jid = tmp->job_id + 1;
-		while (tmp->next)
-		{
-			if (tmp->pgid == job->pgid)
-				return (job);
-			tmp = tmp->next;
-			if (tmp->job_id > jid)
-				jid = tmp->job_id + 1;
-			else
-				jid++;
-		}
-		if (tmp->pgid == job->pgid)
+		if (insert_job(data, job, &jid) == FUNCT_FAILURE)
 			return (job);
-		tmp->next = job;
 	}
 	job->job_id = jid;
 	job->current = builtin_jobs_new_current_val(data->jobs->joblist);
