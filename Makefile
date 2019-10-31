@@ -6,7 +6,7 @@
 #    By: omulder <omulder@student.codam.nl>           +#+                      #
 #                                                    +#+                       #
 #    Created: 2019/04/10 20:30:07 by jbrinksm       #+#    #+#                 #
-#    Updated: 2019/10/31 11:00:00 by rkuijper      ########   odam.nl          #
+#    Updated: 2019/10/31 20:01:33 by jbrinksm      ########   odam.nl          #
 #                                                                              #
 # **************************************************************************** #
 
@@ -32,6 +32,7 @@ shell_init_files shell_init_vshdata shell_getcurrentdir \
 shell_handle_escaped_newlines shell_init_input shell_init_features \
 shell_args shell_get_path shell_init_line shell_one_line shell_stdin \
 shell_line_splitter shell_lines_exec shell_split_line \
+shell_close_quote_and_esc \
 input_read input_parse_char input_parse_home \
 input_parse_end input_parse_prev input_parse_next input_parse_backspace \
 input_parse_delete input_parse_ctrl_c input_parse_ctrl_d input_parse_ctrl_k \
@@ -59,6 +60,7 @@ builtin_cd_pathparsing_tools builtin_cd_changedir \
 builtin_type builtin_hash builtin_jobs builtin_fg builtin_bg \
 lexer lexer_utils lexer_debug lexer_scanner \
 lexer_state_if_else lexer_state_single lexer_state_start lexer_state_strings \
+lexer_tokenlstiter \
 parser_start parser_debug parser_utils parser_command parser_error \
 parser_astdel \
 alias_expansion alias_replace alias_read_file alias_add_expanded \
