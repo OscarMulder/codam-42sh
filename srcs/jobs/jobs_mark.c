@@ -6,7 +6,7 @@
 /*   By: rkuijper <rkuijper@student.codam.nl>         +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2019/10/21 11:51:41 by rkuijper       #+#    #+#                */
-/*   Updated: 2019/10/31 16:52:54 by rkuijper      ########   odam.nl         */
+/*   Updated: 2019/10/31 17:16:05 by rkuijper      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -24,8 +24,8 @@ static int	change_status(t_proc *proc, int status)
 	else
 	{
 		if (WIFSIGNALED(status))
-			ft_eprintf("%d: Terminated by sig%s\n", proc->pid,
-				sys_signame[WTERMSIG(status)]);
+			ft_eprintf("%d: %s\n", proc->pid,
+				strsignal(WTERMSIG(status)));
 		proc->state = PROC_COMPLETED;
 	}
 	return (FUNCT_FAILURE);
