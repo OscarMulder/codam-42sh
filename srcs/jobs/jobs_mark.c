@@ -6,12 +6,13 @@
 /*   By: rkuijper <rkuijper@student.codam.nl>         +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2019/10/21 11:51:41 by rkuijper       #+#    #+#                */
-/*   Updated: 2019/10/30 22:00:45 by jbrinksm      ########   odam.nl         */
+/*   Updated: 2019/10/31 08:18:38 by omulder       ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "vsh.h"
 #include <errno.h> // Remove this??
+#include <signal.h>
 
 int			change_status(int status, t_proc *proc)
 {
