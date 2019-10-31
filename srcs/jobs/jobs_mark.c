@@ -6,13 +6,12 @@
 /*   By: rkuijper <rkuijper@student.codam.nl>         +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2019/10/21 11:51:41 by rkuijper       #+#    #+#                */
-/*   Updated: 2019/10/31 17:16:05 by rkuijper      ########   odam.nl         */
+/*   Updated: 2019/10/31 17:18:19 by rkuijper      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "vsh.h"
 #include <signal.h>
-#include <string.h>
 
 static int	change_status(t_proc *proc, int status)
 {
@@ -24,8 +23,8 @@ static int	change_status(t_proc *proc, int status)
 	else
 	{
 		if (WIFSIGNALED(status))
-			ft_eprintf("%d: %s\n", proc->pid,
-				strsignal(WTERMSIG(status)));
+			ft_eprintf("%d: %s: %i\n", proc->pid,
+				sys_siglist[WTERMSIG(status)], WTERMSIG(status));
 		proc->state = PROC_COMPLETED;
 	}
 	return (FUNCT_FAILURE);
