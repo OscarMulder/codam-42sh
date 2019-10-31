@@ -31,7 +31,7 @@ static int		fg_wait_and_reset(t_job *job, bool job_continued)
 	if (g_state->shell_type == SHELL_INTERACT)
 	{
 		tcsetpgrp(STDIN_FILENO, g_state->pid);
-		tcsetattr(STDIN_FILENO, TCSAFLUSH, g_data->term->termios_p);
+		tcsetattr(STDIN_FILENO, TCSADRAIN, g_data->term->termios_p);
 	}
 	if (jobs_stopped_job(job))
 		job_stop(job);
@@ -45,7 +45,7 @@ int				jobs_fg_job(t_job *job, bool job_continued)
 	job->bg = false;
 	if (g_state->shell_type == SHELL_INTERACT)
 		tcsetpgrp(STDIN_FILENO, job->pgid);
-	tcsetattr(STDIN_FILENO, TCSAFLUSH, g_data->term->old_termios_p);
+	tcsetattr(STDIN_FILENO, TCSADRAIN, g_data->term->old_termios_p);
 	if (job_continued == true)
 	{
 		if (kill(-job->pgid, SIGCONT) < 0)
