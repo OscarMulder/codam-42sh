@@ -6,7 +6,7 @@
 /*   By: rkuijper <rkuijper@student.codam.nl>         +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2019/10/28 16:25:10 by rkuijper       #+#    #+#                */
-/*   Updated: 2019/10/31 10:48:02 by rkuijper      ########   odam.nl         */
+/*   Updated: 2019/10/31 11:06:00 by mavan-he      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -99,6 +99,7 @@ void		jobs_launch_job(t_job *job)
 	if (job->bg == false && jobs_exec_is_single_builtin_proc(job->processes))
 	{
 		jobs_exec_builtin(job->processes);
+		env_remove_tmp(g_data->envlst);
 		jobs_finished_job(job, true);
 		return ;
 	}

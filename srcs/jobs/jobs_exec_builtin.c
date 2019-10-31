@@ -6,7 +6,7 @@
 /*   By: rkuijper <rkuijper@student.codam.nl>         +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2019/10/30 16:42:54 by rkuijper       #+#    #+#                */
-/*   Updated: 2019/10/30 22:10:47 by jbrinksm      ########   odam.nl         */
+/*   Updated: 2019/10/31 11:06:36 by mavan-he      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -75,7 +75,8 @@ static void	jobs_exec_builtin_continued(t_proc *proc)
 
 void		jobs_exec_builtin(t_proc *proc)
 {
-	if (exec_create_files(proc->redir_and_assign) == FUNCT_ERROR)
+	if (exec_create_files(proc->redir_and_assign) == FUNCT_ERROR ||
+		exec_assigns(proc->redir_and_assign, g_data, ENV_TEMP) == FUNCT_ERROR)
 		return ;
 	if (backup_stdfds() == FUNCT_ERROR)
 	{
@@ -96,8 +97,5 @@ void		jobs_exec_builtin(t_proc *proc)
 	else
 		jobs_exec_builtin_continued(proc);
 	if (cleanup_non_forked_redirs() == FUNCT_ERROR)
-	{
-		g_state->exit_code = EXIT_FAILURE;
-		ft_eprintf(E_FD_RESET_STD);
-	}
+		err_void_exit(E_FD_RESET_STD, EXIT_FAILURE);
 }
