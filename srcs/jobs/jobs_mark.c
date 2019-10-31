@@ -6,26 +6,28 @@
 /*   By: rkuijper <rkuijper@student.codam.nl>         +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2019/10/21 11:51:41 by rkuijper       #+#    #+#                */
-/*   Updated: 2019/10/31 13:40:58 by rkuijper      ########   odam.nl         */
+/*   Updated: 2019/10/31 16:41:34 by rkuijper      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "vsh.h"
 #include <signal.h>
 
-int			change_status(int status, t_proc *proc)
+static int	change_status(t_proc *proc, int status)
 {
 	proc->exit_status = status;
-	if (WIFSTOPPED(status))
+	if (WIFCONTINUED(status))
+		proc->state = PROC_CONTINUED;
+	else if (WIFSTOPPED(status))
 		proc->state = PROC_STOPPED;
 	else
 	{
-		proc->state = PROC_COMPLETED;
 		if (WIFSIGNALED(status))
-			ft_eprintf("%d: Terminated by signal %d\n", proc->pid,
-				WTERMSIG(status));
+			ft_eprintf("%d: Terminated by sig%s\n", proc->pid,
+				sys_signame[WTERMSIG(status)]);
+		proc->state = PROC_COMPLETED;
 	}
-	return (0);
+	return (FUNCT_FAILURE);
 }
 
 int			jobs_mark_process_status(pid_t pid, int status)
@@ -42,98 +44,11 @@ int			jobs_mark_process_status(pid_t pid, int status)
 			while (proc != NULL)
 			{
 				if (proc->pid == pid)
-					return (change_status(status, proc));
+					return (change_status(proc, status));
 				proc = proc->next;
 			}
 			job = job->next;
 		}
 	}
-	else if (pid == 0)
-		return (FUNCT_ERROR);
 	return (FUNCT_ERROR);
-}
-
-int			jobs_mark_proc(t_proc *proc, int status)
-{
-	if (WIFSTOPPED(status))
-	{
-		proc->exit_status = 0;
-		proc->state = PROC_STOPPED;
-	}
-	else
-	{
-		proc->exit_status = status;
-		proc->state = PROC_COMPLETED;
-		if (WIFEXITED(status))
-			proc->exit_status = WEXITSTATUS(status);
-		else if (WIFSIGNALED(status) && WTERMSIG(status) != SIGINT)
-		{
-			if (WTERMSIG(status) != SIGPIPE)
-				ft_eprintf(E_JOB_MARK_SIG, (int)proc->pid,
-					WTERMSIG(status));
-			proc->exit_status = 1;
-		}
-		else if (WTERMSIG(status) == SIGINT)
-			proc->exit_status = 130;
-	}
-	return (0);
-}
-
-int			jobs_mark_job(t_job *job, pid_t pid, int status)
-{
-	t_proc	*proc;
-
-	if (pid > 0)
-	{
-		proc = job->processes;
-		while (proc)
-		{
-			if (proc->pid == pid)
-				return (jobs_mark_proc(proc, status));
-			proc = proc->next;
-		}
-		return (FUNCT_SUCCESS);
-	}
-	return (FUNCT_SUCCESS);
-}
-
-static void	force_job_state(t_job *job, t_proc_state state)
-{
-	t_proc *proc;
-
-	proc = job->processes;
-	while (proc != NULL)
-	{
-		proc->state = state;
-		proc = proc->next;
-	}
-}
-
-int			jobs_mark_pool(pid_t pid, int status)
-{
-	t_job	*job;
-	t_proc	*proc;
-
-	if (pid > 0)
-	{
-		job = g_data->jobs->joblist;
-		while (job != NULL)
-		{
-			proc = job->processes;
-			while (proc != NULL)
-			{
-				if (proc->pid == pid)
-				{
-					jobs_mark_proc(proc, status);
-					if (job->bg == false && proc->state == PROC_STOPPED)
-						job->bg = true;
-					force_job_state(job, proc->state);
-				}
-				proc = proc->next;
-			}
-			job = job->next;
-		}
-		return (FUNCT_SUCCESS);
-	}
-	return (FUNCT_SUCCESS);
 }

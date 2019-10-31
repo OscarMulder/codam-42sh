@@ -6,7 +6,7 @@
 /*   By: omulder <omulder@student.codam.nl>           +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2019/04/18 16:44:50 by omulder        #+#    #+#                */
-/*   Updated: 2019/10/31 13:33:35 by jbrinksm      ########   odam.nl         */
+/*   Updated: 2019/10/31 16:29:29 by rkuijper      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -90,7 +90,6 @@ void		shell_start(t_vshdata *data)
 	backup_stdfds();
 	while (true)
 	{
-		jobs_handle_finished_jobs();
 		shell_clear_input_data(&data->line->line, &ast, &token_lst);
 		shell_display_prompt(data, REGULAR_PROMPT);
 		if (pre_lexer_reading(data) != FUNCT_SUCCESS)
@@ -106,5 +105,6 @@ void		shell_start(t_vshdata *data)
 			|| parser_start(&token_lst, &ast) != FUNCT_SUCCESS)
 			continue ;
 		exec_complete_command(ast, data);
+		jobs_notify_pool();
 	}
 }

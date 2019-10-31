@@ -6,7 +6,7 @@
 /*   By: omulder <omulder@student.codam.nl>           +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2019/04/10 20:29:42 by jbrinksm       #+#    #+#                */
-/*   Updated: 2019/10/31 13:25:05 by jbrinksm      ########   odam.nl         */
+/*   Updated: 2019/10/31 16:26:28 by rkuijper      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -821,13 +821,9 @@ t_job			*jobs_find_startswith_str(char *str, t_job *joblist);
 
 int				jobs_add_process(t_job *job);
 
-void			jobs_wait_job(t_job *job);
+int				jobs_wait_job(t_job *job, int wait_opt);
 int				jobs_stopped_job(t_job *job);
 int				jobs_completed_job(t_job *job);
-
-int				jobs_mark_pool(pid_t pid, int status);
-int				jobs_mark_proc(t_proc *proc, int status);
-int				jobs_mark_job(t_job *job, pid_t pid, int status);
 
 void			jobs_notify_pool(void);
 void			jobs_handle_finished_jobs(void);
@@ -842,6 +838,10 @@ void			jobs_launch_proc(t_job *job, t_proc *proc,
 void			jobs_exec_builtin(t_proc *proc);
 int				jobs_exec_is_single_builtin_proc(t_proc *proc);
 void			jobs_finished_job(t_job *job, bool check);
+
+void			jobs_force_job_state(t_job *job, t_proc_state state);
+
+void			jobs_update_pool_status(void);
 
 /*
 **----------------------------------shell---------------------------------------
