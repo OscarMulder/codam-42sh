@@ -100,7 +100,7 @@ void		jobs_launch_job(t_job *job)
 	{
 		jobs_exec_builtin(job->processes);
 		env_remove_tmp(g_data->envlst);
-		jobs_finished_job(job, true);
+		jobs_finished_job(job);
 		return ;
 	}
 	if (launch_forked_job(job, fds, pipes) == FUNCT_FAILURE)

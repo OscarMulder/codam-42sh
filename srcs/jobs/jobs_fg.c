@@ -36,7 +36,7 @@ static int		fg_wait_and_reset(t_job *job, bool job_continued)
 	if (jobs_stopped_job(job))
 		job_stop(job);
 	else
-		jobs_finished_job(job, true);
+		jobs_finished_job(job);
 	return (g_state->exit_code);
 }
 

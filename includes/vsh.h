@@ -837,7 +837,7 @@ void			jobs_launch_proc(t_job *job, t_proc *proc,
 	int fds[3], int pipes[2]);
 void			jobs_exec_builtin(t_proc *proc);
 int				jobs_exec_is_single_builtin_proc(t_proc *proc);
-void			jobs_finished_job(t_job *job, bool check);
+void			jobs_finished_job(t_job *job);
 
 void			jobs_force_job_state(t_job *job, t_proc_state state);
 
