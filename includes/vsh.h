@@ -6,7 +6,7 @@
 /*   By: omulder <omulder@student.codam.nl>           +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2019/04/10 20:29:42 by jbrinksm       #+#    #+#                */
-/*   Updated: 2019/10/31 16:26:28 by rkuijper      ########   odam.nl         */
+/*   Updated: 2019/10/31 16:47:53 by rkuijper      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -1076,7 +1076,6 @@ int				exec_assigns(t_ast *ast, t_vshdata *data, int env_type);
 */
 
 void			signal_reset(void);
-void			signal_handle_child_death(int signum);
 
 /*
 **------------------------------------expan-------------------------------------
