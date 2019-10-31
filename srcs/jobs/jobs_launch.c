@@ -6,7 +6,7 @@
 /*   By: rkuijper <rkuijper@student.codam.nl>         +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2019/10/28 16:25:10 by rkuijper       #+#    #+#                */
-/*   Updated: 2019/10/31 08:35:01 by omulder       ########   odam.nl         */
+/*   Updated: 2019/10/31 09:46:27 by rkuijper      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -95,7 +95,6 @@
 /* Was al bezig om deze norm proof te maken, zorg dat je goed kijkt dat de fds
 en pipes worden geinitialiseerd/aangepast */
 
-
 void		jobs_launch_job(t_job *job)
 {
 	pid_t	pid;
@@ -105,14 +104,16 @@ void		jobs_launch_job(t_job *job)
 
 	fds[0] = STDIN_FILENO;
 	fds[2] = STDERR_FILENO;
-	pipes[0] = UNINIT;
-	pipes[1] = UNINIT;
+	ft_memset(pipes, UNINIT, sizeof(pipes));
 	proc = job->processes;
-	if (jobs_exec_is_single_builtin_proc(proc))
+	if (job->bg == false && jobs_exec_is_single_builtin_proc(proc))
+	{
 		jobs_exec_builtin(job->processes);
+		jobs_finished_job(job, true);
+		return ;
+	}
 	else
 	{
-		signal(SIGCHLD, SIG_DFL);
 		while (proc != NULL)
 		{
 			if (proc->is_builtin == false && proc->binary == NULL)
@@ -155,17 +156,12 @@ void		jobs_launch_job(t_job *job)
 			if (fds[1] != STDOUT_FILENO && fds[1] != UNINIT)
 				close(fds[1]);
 			fds[0] = pipes[0];
-
 			if (proc->binary != NULL)
 				ft_strdel(&proc->binary);
 			if (proc->argv != NULL)
 				ft_strarrdel(&proc->argv);
 			if (proc->env)
 				ft_memdel((void**)&proc->env);
-			// TODO: Reimplement this when the environment is working!
-			// if (proc->env != NULL)
-			// 	ft_strarrdel(&proc->env);
-
 			proc = proc->next;
 		}
 	}
@@ -173,5 +169,4 @@ void		jobs_launch_job(t_job *job)
 		jobs_bg_job(job, false);
 	else
 		g_state->exit_code = jobs_fg_job(job, false);
-	signal(SIGCHLD, signal_handle_child_death);
 }

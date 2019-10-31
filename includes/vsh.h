@@ -6,7 +6,7 @@
 /*   By: omulder <omulder@student.codam.nl>           +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2019/04/10 20:29:42 by jbrinksm       #+#    #+#                */
-/*   Updated: 2019/10/30 22:11:18 by jbrinksm      ########   odam.nl         */
+/*   Updated: 2019/10/31 09:40:17 by rkuijper      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -841,6 +841,7 @@ void			jobs_launch_proc(t_job *job, t_proc *proc,
 	int fds[3], int pipes[2]);
 void			jobs_exec_builtin(t_proc *proc);
 int				jobs_exec_is_single_builtin_proc(t_proc *proc);
+void			jobs_finished_job(t_job *job, bool check);
 
 /*
 **----------------------------------shell---------------------------------------
