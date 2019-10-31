@@ -6,7 +6,7 @@
 /*   By: omulder <omulder@student.codam.nl>           +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2019/04/11 20:15:24 by jbrinksm       #+#    #+#                */
-/*   Updated: 2019/10/30 11:31:52 by mavan-he      ########   odam.nl         */
+/*   Updated: 2019/10/31 17:19:26 by jbrinksm      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -35,6 +35,9 @@ static void	close_jobs(t_datajobs *jobs)
 
 void		builtin_exit(char **args, t_vshdata *data)
 {
+	if (reset_stdfds() == FUNCT_ERROR)
+		ft_eprintf(E_FD_RESET_STD);
+	close(data->term_fd);
 	ft_eprintf("exit\n");
 	history_to_file(data->history);
 	while (data->history->head != NULL)

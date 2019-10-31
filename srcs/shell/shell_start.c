@@ -6,7 +6,7 @@
 /*   By: omulder <omulder@student.codam.nl>           +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2019/04/18 16:44:50 by omulder        #+#    #+#                */
-/*   Updated: 2019/10/31 13:33:35 by jbrinksm      ########   odam.nl         */
+/*   Updated: 2019/10/31 17:28:51 by jbrinksm      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -80,6 +80,20 @@ static int	pre_lexer_reading(t_vshdata *data)
 	return (ret);
 }
 
+static void	shell_start_new_prompt(t_vshdata *data, t_ast *ast,
+				t_tokenlst *token_lst)
+{
+	jobs_handle_finished_jobs();
+	shell_clear_input_data(&data->line->line, &ast, &token_lst);
+	shell_display_prompt(data, REGULAR_PROMPT);
+}
+
+static void	shell_start_failed(void)
+{
+	g_state->exit_code = EXIT_FATAL;
+	ft_eprintf(E_FAIL_DUP_FD);
+}
+
 void		shell_start(t_vshdata *data)
 {
 	t_tokenlst	*token_lst;
@@ -87,12 +101,11 @@ void		shell_start(t_vshdata *data)
 
 	token_lst = NULL;
 	ast = NULL;
-	backup_stdfds();
+	if (backup_stdfds() == FUNCT_ERROR)
+		return (shell_start_failed());
 	while (true)
 	{
-		jobs_handle_finished_jobs();
-		shell_clear_input_data(&data->line->line, &ast, &token_lst);
-		shell_display_prompt(data, REGULAR_PROMPT);
+		shell_start_new_prompt(data, ast, token_lst);
 		if (pre_lexer_reading(data) != FUNCT_SUCCESS)
 			continue ;
 		if (history_expansion(data) != FUNCT_SUCCESS ||
