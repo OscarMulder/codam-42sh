@@ -6,7 +6,7 @@
 /*   By: rkuijper <rkuijper@student.codam.nl>         +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2019/09/04 10:16:26 by rkuijper       #+#    #+#                */
-/*   Updated: 2019/10/30 22:01:48 by jbrinksm      ########   odam.nl         */
+/*   Updated: 2019/10/31 09:54:44 by mavan-he      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,7 +19,7 @@ static size_t	count_args(t_ast *ast)
 
 	i = 0;
 	probe = ast;
-	while (probe != NULL && probe->type == WORD)
+	while (probe != NULL && (probe->type == WORD || probe->type == ASSIGN))
 	{
 		i++;
 		probe = probe->left;
@@ -93,24 +93,22 @@ int				exec_redirs(t_ast *redirs)
 
 int				exec_command(t_ast *ast, t_vshdata *data)
 {
-	char	**command;
+	char	**argv;
 
 	if (expan_handle_variables(ast, data->envlst) == FUNCT_ERROR)
 		return (FUNCT_ERROR);
 	if (ast->type == WORD && expan_pathname(ast) == FUNCT_ERROR)
 		return (FUNCT_ERROR);
 	exec_quote_remove(ast);
-	if (ast->type == WORD || ast->type == ASSIGN
-		|| tool_is_redirect_tk(ast->type == true))
+	if (ast->type == WORD)
 	{
 		data->current_redir_and_assign = ast->right;
-		command = create_args(ast);
-		if (command == NULL)
+		argv = create_args(ast);
+		if (argv == NULL)
 			return (FUNCT_ERROR);
-		if (ast->type != WORD
-			&& exec_assigns(ast, data, ENV_LOCAL) == FUNCT_ERROR)
-			return (FUNCT_ERROR);
-		exec_cmd(command, data);
+		exec_cmd(argv, data);
 	}
+	else if (exec_assigns(ast, data, ENV_LOCAL) == FUNCT_ERROR)
+		return (FUNCT_ERROR);
 	return (FUNCT_SUCCESS);
 }
