@@ -6,12 +6,13 @@
 /*   By: rkuijper <rkuijper@student.codam.nl>         +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2019/10/21 14:30:58 by rkuijper       #+#    #+#                */
-/*   Updated: 2019/10/30 18:11:55 by rkuijper      ########   odam.nl         */
+/*   Updated: 2019/10/31 08:34:10 by omulder       ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "vsh.h"
 #include <errno.h>
+#include <sys/wait.h>
 #include <signal.h>
 
 void		jobs_handle_finished_jobs(void)

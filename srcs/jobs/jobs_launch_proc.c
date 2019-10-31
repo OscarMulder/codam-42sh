@@ -6,11 +6,13 @@
 /*   By: rkuijper <rkuijper@student.codam.nl>         +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2019/10/29 11:20:31 by rkuijper       #+#    #+#                */
-/*   Updated: 2019/10/30 17:56:56 by jbrinksm      ########   odam.nl         */
+/*   Updated: 2019/10/31 08:35:57 by omulder       ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "vsh.h"
+#include <unistd.h>
+#include <signal.h>
 
 static void	jobs_exec_fork_builtin_continued(t_proc *proc)
 {

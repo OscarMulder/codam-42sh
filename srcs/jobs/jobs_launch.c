@@ -6,11 +6,14 @@
 /*   By: rkuijper <rkuijper@student.codam.nl>         +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2019/10/28 16:25:10 by rkuijper       #+#    #+#                */
-/*   Updated: 2019/10/30 22:43:16 by jbrinksm      ########   odam.nl         */
+/*   Updated: 2019/10/31 08:35:01 by omulder       ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "vsh.h"
+#include "signal.h"
+#include <unistd.h>
+
 // static int	jobs_launch_pipe(t_job *job, t_proc *proc, int *fds, int *pipes)
 // {
 // 	if (proc->is_builtin == false && proc->binary == NULL)
