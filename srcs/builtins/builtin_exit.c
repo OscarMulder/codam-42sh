@@ -15,6 +15,9 @@
 
 static void	reset_exit(int exit_code, t_vshdataterm *term_p)
 {
+	if (reset_stdfds() == FUNCT_ERROR)
+		ft_eprintf(E_FD_RESET_STD);
+	close(g_data->term_fd);
 	if (g_state->shell_type == SHELL_INTERACT &&
 		term_reset(term_p) == FUNCT_FAILURE)
 		ft_eprintf(E_NOT_RESET);
@@ -35,9 +38,6 @@ static void	close_jobs(t_datajobs *jobs)
 
 void		builtin_exit(char **args, t_vshdata *data)
 {
-	if (reset_stdfds() == FUNCT_ERROR)
-		ft_eprintf(E_FD_RESET_STD);
-	close(data->term_fd);
 	ft_eprintf("exit\n");
 	history_to_file(data->history);
 	while (data->history->head != NULL)
