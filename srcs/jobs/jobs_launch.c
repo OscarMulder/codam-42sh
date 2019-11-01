@@ -6,7 +6,7 @@
 /*   By: rkuijper <rkuijper@student.codam.nl>         +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2019/10/28 16:25:10 by rkuijper       #+#    #+#                */
-/*   Updated: 2019/11/01 11:28:02 by rkuijper      ########   odam.nl         */
+/*   Updated: 2019/11/01 12:05:28 by rkuijper      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -112,5 +112,5 @@ void		jobs_launch_job(t_job *job)
 		g_state->exit_code = jobs_fg_job(job, false);
 	if (WIFSIGNALED(g_state->exit_code) &&
 		WTERMSIG(g_state->exit_code) && job != NULL)
-			g_state->exit_code = job->last_proc->exit_status;
+		g_state->exit_code = job->last_proc->exit_status;
 }

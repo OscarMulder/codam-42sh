@@ -6,12 +6,11 @@
 /*   By: rkuijper <rkuijper@student.codam.nl>         +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2019/10/31 09:39:34 by rkuijper       #+#    #+#                */
-/*   Updated: 2019/10/31 09:43:49 by rkuijper      ########   odam.nl         */
+/*   Updated: 2019/11/01 12:05:19 by rkuijper      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "vsh.h"
-
 
 void		jobs_finished_job(t_job *job)
 {
