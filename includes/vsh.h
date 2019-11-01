@@ -6,7 +6,7 @@
 /*   By: omulder <omulder@student.codam.nl>           +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2019/04/10 20:29:42 by jbrinksm       #+#    #+#                */
-/*   Updated: 2019/10/31 17:16:49 by jbrinksm      ########   odam.nl         */
+/*   Updated: 2019/11/01 13:30:13 by rkuijper      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -120,6 +120,7 @@
 # define CTRLD -1
 # define CR 0
 # define UNINIT -1
+# define RESET_CLEAR_LINE	"\e[2K\e[0E"
 
 /*
 **=================================exit codes===================================
@@ -134,13 +135,13 @@
 **================================shell colors==================================
 */
 
-# define RESET			"\e[0m"
-# define RED			"\e[1;31m"
-# define YEL			"\e[1;33m"
-# define BLU			"\e[1;36m"
-# define WHITE_BG		"\e[47m"
-# define BLACK			"\e[30m"
-# define WHITE_BG_BLACK	"\e[47;30m"
+# define RESET				"\e[0m"
+# define RED				"\e[1;31m"
+# define YEL				"\e[1;33m"
+# define BLU				"\e[1;36m"
+# define WHITE_BG			"\e[47m"
+# define BLACK				"\e[30m"
+# define WHITE_BG_BLACK		"\e[47;30m"
 
 /*
 **------------------------------------shell-------------------------------------

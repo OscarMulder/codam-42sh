@@ -6,7 +6,7 @@
 /*   By: rkuijper <rkuijper@student.codam.nl>         +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2019/10/18 17:12:11 by rkuijper       #+#    #+#                */
-/*   Updated: 2019/10/31 16:32:12 by rkuijper      ########   odam.nl         */
+/*   Updated: 2019/11/01 13:30:35 by rkuijper      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,7 +18,7 @@
 static int		job_stop(t_job *job)
 {
 	if (g_state->shell_type == SHELL_INTERACT)
-		ft_printf("\r\x1b[0K^Z\n");
+		ft_printf("\r" RESET_CLEAR_LINE "\n");
 	job->bg = true;
 	jobs_print_job_info(job, JOB_OPT_L, g_data->jobs->joblist);
 	return (146);

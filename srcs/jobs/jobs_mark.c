@@ -6,7 +6,7 @@
 /*   By: rkuijper <rkuijper@student.codam.nl>         +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2019/10/21 11:51:41 by rkuijper       #+#    #+#                */
-/*   Updated: 2019/11/01 09:49:31 by rkuijper      ########   odam.nl         */
+/*   Updated: 2019/11/01 13:31:06 by rkuijper      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -23,7 +23,7 @@ static int	change_status(t_proc *proc, int status)
 	else
 	{
 		if (WIFSIGNALED(status) && WTERMSIG(status) != SIGPIPE)
-			ft_eprintf("%d: %s: %i\n", proc->pid,
+			ft_eprintf(RESET_CLEAR_LINE "%d: %s: %i\n", proc->pid,
 				sys_siglist[WTERMSIG(status)], WTERMSIG(status));
 		proc->state = PROC_COMPLETED;
 	}
