@@ -6,13 +6,73 @@
 /*   By: rkuijper <rkuijper@student.codam.nl>         +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2019/10/28 16:25:10 by rkuijper       #+#    #+#                */
-/*   Updated: 2019/11/01 12:05:28 by rkuijper      ########   odam.nl         */
+/*   Updated: 2019/11/04 16:53:00 by jbrinksm      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "vsh.h"
 #include "signal.h"
 #include <unistd.h>
+
+static size_t	count_args(t_ast *ast)
+{
+	t_ast	*probe;
+	size_t	i;
+
+	i = 0;
+	probe = ast;
+	while (probe != NULL && (probe->type == WORD || probe->type == ASSIGN))
+	{
+		i++;
+		probe = probe->left;
+	}
+	return (i);
+}
+
+static char		**malloc_args(int total_args)
+{
+	char	**args;
+
+	if (total_args > 0)
+		args = (char**)ft_memalloc(sizeof(char*) * (total_args + 1));
+	else
+	{
+		args = (char**)ft_memalloc(sizeof(char*) * 2);
+		if (args == NULL)
+			return (NULL);
+		*args = ft_strnew(0);
+		if (*args == NULL)
+			ft_strarrdel(&args);
+	}
+	return (args);
+}
+
+static char		**create_args(t_ast *ast)
+{
+	char	**args;
+	t_ast	*probe;
+	size_t	total_args;
+	size_t	i;
+
+	total_args = count_args(ast);
+	args = malloc_args(total_args);
+	if (args == NULL)
+		return (NULL);
+	i = 0;
+	probe = ast;
+	while (i < total_args)
+	{
+		args[i] = ft_strdup(probe->value);
+		if (args[i] == NULL)
+		{
+			ft_strarrdel(&args);
+			return (NULL);
+		}
+		probe = probe->left;
+		i++;
+	}
+	return (args);
+}
 
 static void	setup_stds(t_proc *proc, int fds[3], int pipes[2])
 {
@@ -64,14 +124,89 @@ static void	setup_fork(t_job *job, t_proc *proc, int fds[3], int pipes[2])
 	}
 }
 
+static bool		exec_command_contains_only_assign(t_ast *ast)
+{
+	t_ast	*probe;
+
+	if (ast->type == WORD)
+		return (false);
+	probe = ast;
+	while (probe != NULL)
+	{
+		if (tool_is_redirect_tk(probe->type) == true)
+			return (false);
+		probe = probe->left;
+	}
+	return (true);
+}
+
 static int	launch_forked_job(t_job *job, int fds[3], int pipes[2])
 {
 	pid_t	pid;
 	t_proc	*proc;
+	char	**argv;
+	t_ast	*node;
 
 	proc = job->processes;
+	ft_printf("DID YOU FUCK ME [%i]?\n", job->job_id);
 	while (proc != NULL)
 	{
+
+		/* */
+		node = proc->node;
+		if (expan_handle_variables(node, g_data->envlst) == FUNCT_ERROR)
+		{
+			//ERROR
+			ft_eprintf("ERROR3!\n");
+			return (FUNCT_ERROR);
+		}
+		if (node->type == WORD && expan_pathname(node) == FUNCT_ERROR)
+		{
+			//ERROR
+			ft_eprintf("ERROR4!\n");
+			return (FUNCT_ERROR);
+		}
+		exec_quote_remove(node);
+		if (node->type == WORD)
+			proc->redir_and_assign = node->right;
+		else
+			proc->redir_and_assign = node;
+		argv = create_args(node);
+		if (argv == NULL)
+		{
+			//ERROR
+			ft_eprintf("ERROR1!\n");
+			return (FUNCT_ERROR);
+		}
+		if (exec_command_contains_only_assign(node) == true)
+			proc->no_fork = true;
+		if (proc->no_fork == true)
+		{
+			if (exec_assigns(proc->redir_and_assign, g_data, ENV_LOCAL)
+				== FUNCT_ERROR)
+			{
+				//ERROR
+				ft_eprintf("ERROR2!\n");
+				return (FUNCT_ERROR);
+			}
+		}
+		jobs_update_job_command(job, argv);
+		proc->argv = argv;
+		if (ft_strequ(proc->argv[0], "") == true)
+			proc->no_cmd = true;
+		if (exec_builtin(argv, proc) == false)
+			exec_external(argv, g_data, proc);
+		// ft_printf("DID YOU FUCK ME [%s]?\n", proc->binary);
+		/* */
+
+		if (job->bg == false && jobs_exec_is_single_builtin_proc(job->processes))
+		{
+			jobs_exec_builtin(job->processes);
+			env_remove_tmp(g_data->envlst);
+			jobs_finished_job(job);
+			return (FUNCT_SUCCESS);
+		}
+
 		if (proc->is_builtin == false && proc->binary == NULL)
 		{
 			jobs_flush_job(job);
@@ -95,14 +230,17 @@ void		jobs_launch_job(t_job *job)
 
 	fds[0] = STDIN_FILENO;
 	fds[2] = STDERR_FILENO;
+
+	// t_job 	*probe = job;
+	// int		i = 1;
+	// while (probe != NULL)
+	// {
+	// 	ft_printf(">>>>>>>>>>>>>>>>>%i\n", i);
+	// 	i++;
+	// 	probe = probe->child;
+	// }
+
 	ft_memset(pipes, UNINIT, sizeof(pipes));
-	if (job->bg == false && jobs_exec_is_single_builtin_proc(job->processes))
-	{
-		jobs_exec_builtin(job->processes);
-		env_remove_tmp(g_data->envlst);
-		jobs_finished_job(job);
-		return ;
-	}
 	if (launch_forked_job(job, fds, pipes) == FUNCT_FAILURE)
 		return ;
 	jobs_add_job(g_data, job);

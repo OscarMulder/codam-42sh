@@ -6,7 +6,7 @@
 /*   By: omulder <omulder@student.codam.nl>           +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2019/04/10 20:29:42 by jbrinksm       #+#    #+#                */
-/*   Updated: 2019/11/01 13:30:13 by rkuijper      ########   odam.nl         */
+/*   Updated: 2019/11/04 16:52:49 by jbrinksm      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -542,6 +542,8 @@ typedef struct	s_proc
 	bool			is_builtin;
 	bool			no_cmd;
 	t_ast			*redir_and_assign;
+	t_ast			*node;
+	bool			no_fork;
 }				t_proc;
 
 typedef struct	s_job
@@ -671,7 +673,7 @@ typedef struct	s_vshdata
 	t_dataalias		*alias;
 	t_datatermcaps	*termcaps;
 	t_datajobs		*jobs;
-	t_ast			*current_redir_and_assign;
+	t_ast			*cur_node;
 	int				fc_flags;
 	int				exec_flags;
 }				t_vshdata;
@@ -1059,9 +1061,9 @@ int				exec_list(t_ast *ast, t_vshdata *data);
 int				exec_and_or(t_ast *ast, t_vshdata *data);
 int				exec_pipe_sequence(t_ast *ast, t_vshdata *data);
 int				exec_command(t_ast *ast, t_vshdata *g_data);
-void			exec_cmd(char **args, t_vshdata *data);
-bool			exec_builtin(char **args, t_vshdata *data);
-void			exec_external(char **args, t_vshdata *data);
+void			exec_cmd(/*char **args, */t_vshdata *data);
+bool			exec_builtin(char **args, t_proc *proc);
+void			exec_external(char **args, t_vshdata *data, t_proc *proc);
 int				exec_find_binary(char *filename, t_vshdata *data,
 				char **binary);
 int				find_binary(char *filename, t_envlst *envlst, char **binary);
