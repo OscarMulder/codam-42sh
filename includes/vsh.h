@@ -6,7 +6,7 @@
 /*   By: omulder <omulder@student.codam.nl>           +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2019/04/10 20:29:42 by jbrinksm       #+#    #+#                */
-/*   Updated: 2019/11/04 13:20:57 by rkuijper      ########   odam.nl         */
+/*   Updated: 2019/11/04 13:22:16 by rkuijper      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -841,7 +841,6 @@ void			jobs_exec_builtin(t_proc *proc);
 int				jobs_exec_is_single_builtin_proc(t_proc *proc);
 
 void			jobs_force_job_state(t_job *job, t_proc_state state);
-
 
 /*
 **----------------------------------shell---------------------------------------
