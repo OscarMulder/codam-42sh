@@ -6,7 +6,7 @@
 /*   By: rkuijper <rkuijper@student.codam.nl>         +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2019/10/28 16:25:10 by rkuijper       #+#    #+#                */
-/*   Updated: 2019/11/04 16:53:00 by jbrinksm      ########   odam.nl         */
+/*   Updated: 2019/11/04 17:54:30 by jbrinksm      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -20,6 +20,8 @@ static size_t	count_args(t_ast *ast)
 	size_t	i;
 
 	i = 0;
+	if (ast == NULL || ast->type != WORD)
+		return (0);
 	probe = ast;
 	while (probe != NULL && (probe->type == WORD || probe->type == ASSIGN))
 	{
@@ -148,7 +150,6 @@ static int	launch_forked_job(t_job *job, int fds[3], int pipes[2])
 	t_ast	*node;
 
 	proc = job->processes;
-	ft_printf("DID YOU FUCK ME [%i]?\n", job->job_id);
 	while (proc != NULL)
 	{
 
@@ -196,15 +197,14 @@ static int	launch_forked_job(t_job *job, int fds[3], int pipes[2])
 			proc->no_cmd = true;
 		if (exec_builtin(argv, proc) == false)
 			exec_external(argv, g_data, proc);
-		// ft_printf("DID YOU FUCK ME [%s]?\n", proc->binary);
 		/* */
 
 		if (job->bg == false && jobs_exec_is_single_builtin_proc(job->processes))
 		{
 			jobs_exec_builtin(job->processes);
 			env_remove_tmp(g_data->envlst);
-			jobs_finished_job(job);
-			return (FUNCT_SUCCESS);
+			jobs_finished_job(job, true);
+			return (FUNCT_FAILURE);
 		}
 
 		if (proc->is_builtin == false && proc->binary == NULL)
@@ -227,28 +227,17 @@ void		jobs_launch_job(t_job *job)
 {
 	int		fds[3];
 	int		pipes[2];
+	int		ret;
 
 	fds[0] = STDIN_FILENO;
 	fds[2] = STDERR_FILENO;
-
-	// t_job 	*probe = job;
-	// int		i = 1;
-	// while (probe != NULL)
-	// {
-	// 	ft_printf(">>>>>>>>>>>>>>>>>%i\n", i);
-	// 	i++;
-	// 	probe = probe->child;
-	// }
-
 	ft_memset(pipes, UNINIT, sizeof(pipes));
-	if (launch_forked_job(job, fds, pipes) == FUNCT_FAILURE)
+	ret = launch_forked_job(job, fds, pipes);
+	if (ret == FUNCT_FAILURE || ret == FUNCT_ERROR)
 		return ;
 	jobs_add_job(g_data, job);
 	if (job->bg == true)
 		jobs_bg_job(job, false);
 	else
 		g_state->exit_code = jobs_fg_job(job, false);
-	if (WIFSIGNALED(g_state->exit_code) &&
-		WTERMSIG(g_state->exit_code) && job != NULL)
-		g_state->exit_code = job->last_proc->exit_status;
 }

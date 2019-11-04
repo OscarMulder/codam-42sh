@@ -6,7 +6,7 @@
 /*   By: omulder <omulder@student.codam.nl>           +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2019/04/10 20:29:42 by jbrinksm       #+#    #+#                */
-/*   Updated: 2019/11/04 16:52:49 by jbrinksm      ########   odam.nl         */
+/*   Updated: 2019/11/04 17:29:23 by jbrinksm      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -67,6 +67,7 @@
 # define E_N_TOO_MANY		SHELL ": %s: too many arguments\n"
 # define E_N_P_NOT_VAL_ID	SHELL ": %s: '%s': not a valid identifier\n"
 # define E_N_FAIL_HOME		SHELL ": %s: failed to get home directory\n"
+# define E_FAIL_HOME		SHELL ": failed to get home directory\n"
 # define E_NOT_CUR_DIR		SHELL ": cannot get current working directory\n"
 # define E_NOT_RESET		SHELL ": could not reset terminal settings\n"
 # define E_STAT_STR			SHELL ": could not get stat info of file\n"
@@ -346,8 +347,6 @@ typedef struct	s_fcdata
 # define HISTFILENAME	".vsh_history"
 # define HIST_SEPARATE	-1
 # define HIST_EXPANDED	(1 << 2)
-
-
 
 /*
 **===============================personal headers===============================
@@ -733,6 +732,7 @@ void			env_remove_tmp(t_envlst *env);
 void			env_sort(t_envlst *head);
 void			env_lstadd_to_sortlst(t_envlst *envlst, t_envlst *new);
 int				env_add_extern_value(t_vshdata *data, char *name, char *value);
+int				env_init_envlst(t_vshdata *vshdata);
 
 /*
 **----------------------------------terminal------------------------------------
@@ -801,15 +801,14 @@ int				input_parse_char_og(t_vshdata *data);
 **----------------------------------jobs----------------------------------------
 */
 
-int				jobs_get_job_state(t_job *job);
 t_job			*jobs_remove_job(t_job **joblist, pid_t pid);
-void			print_job_info(t_job *job, int options, t_job *joblist);
 t_job			*jobs_add_job(t_vshdata *data, t_job *job);
 t_job			*jobs_new_job(void);
 t_job			*jobs_last_child(t_job *job);
 void			jobs_flush_job(t_job *job);
 
 void			jobs_continue_job(t_job *job, bool fg);
+int				jobs_wait_job(t_job *job, int wait_opt);
 void			jobs_bg_job(t_job *job, bool job_continued);
 int				jobs_fg_job(t_job *job, bool job_continued);
 
@@ -823,12 +822,14 @@ t_job			*jobs_find_contains_str(char *str, t_job *joblist);
 t_job			*jobs_find_startswith_str(char *str, t_job *joblist);
 
 int				jobs_add_process(t_job *job);
+int				jobs_exit_status(t_job *job);
 
-int				jobs_wait_job(t_job *job, int wait_opt);
 int				jobs_stopped_job(t_job *job);
 int				jobs_completed_job(t_job *job);
+void			jobs_finished_job(t_job *job, bool flush);
 
 void			jobs_notify_pool(void);
+void			jobs_update_pool_status(void);
 void			jobs_handle_finished_jobs(void);
 
 int				jobs_update_job_command(t_job *job, char **av);
@@ -840,11 +841,8 @@ void			jobs_launch_proc(t_job *job, t_proc *proc,
 	int fds[3], int pipes[2]);
 void			jobs_exec_builtin(t_proc *proc);
 int				jobs_exec_is_single_builtin_proc(t_proc *proc);
-void			jobs_finished_job(t_job *job);
 
 void			jobs_force_job_state(t_job *job, t_proc_state state);
-
-void			jobs_update_pool_status(void);
 
 /*
 **----------------------------------shell---------------------------------------
@@ -1051,6 +1049,8 @@ void			tools_remove_quotes_etc(char *str, bool is_heredoc);
 int				tools_get_pid_state(pid_t pid);
 bool			tools_contains_quoted_chars(char *str);
 bool			tools_is_cmd_seperator(t_tokens type);
+bool			tools_is_valid_name(char *str);
+bool			tools_is_valid_name_char(char c);
 
 /*
 **----------------------------------execution-----------------------------------
