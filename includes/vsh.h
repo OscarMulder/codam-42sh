@@ -66,7 +66,6 @@
 # define E_N_P_NUM_REQ		SHELL ": %s: %s: numeric argument required\n"
 # define E_N_TOO_MANY		SHELL ": %s: too many arguments\n"
 # define E_N_P_NOT_VAL_ID	SHELL ": %s: '%s': not a valid identifier\n"
-# define E_N_FAIL_HOME		SHELL ": %s: failed to get home directory\n"
 # define E_NOT_CUR_DIR		SHELL ": cannot get current working directory\n"
 # define E_NOT_RESET		SHELL ": could not reset terminal settings\n"
 # define E_STAT_STR			SHELL ": could not get stat info of file\n"
