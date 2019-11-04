@@ -6,7 +6,7 @@
 /*   By: rkuijper <rkuijper@student.codam.nl>         +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2019/10/18 17:12:11 by rkuijper       #+#    #+#                */
-/*   Updated: 2019/11/04 12:26:06 by rkuijper      ########   odam.nl         */
+/*   Updated: 2019/11/04 12:34:35 by rkuijper      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -34,7 +34,7 @@ static int		fg_wait_and_reset(t_job *job, bool job_continued)
 		tcsetpgrp(STDIN_FILENO, g_state->pid);
 		tcsetattr(STDIN_FILENO, TCSADRAIN, g_data->term->termios_p);
 	}
-	g_state->exit_code = job->last_proc->exit_status;
+	g_state->exit_code = jobs_exit_status(job);
 	if (jobs_stopped_job(job))
 		job_stop(job);
 	else

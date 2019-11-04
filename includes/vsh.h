@@ -6,7 +6,7 @@
 /*   By: omulder <omulder@student.codam.nl>           +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2019/04/10 20:29:42 by jbrinksm       #+#    #+#                */
-/*   Updated: 2019/11/04 11:43:52 by rkuijper      ########   odam.nl         */
+/*   Updated: 2019/11/04 12:34:13 by rkuijper      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -843,6 +843,7 @@ void			jobs_finished_job(t_job *job, bool flush);
 void			jobs_force_job_state(t_job *job, t_proc_state state);
 
 void			jobs_update_pool_status(void);
+int				jobs_exit_status(t_job *job);
 
 /*
 **----------------------------------shell---------------------------------------
