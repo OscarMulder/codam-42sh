@@ -6,7 +6,7 @@
 /*   By: rkuijper <rkuijper@student.codam.nl>         +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2019/10/22 14:27:21 by rkuijper       #+#    #+#                */
-/*   Updated: 2019/11/04 11:57:05 by rkuijper      ########   odam.nl         */
+/*   Updated: 2019/11/04 12:43:14 by rkuijper      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -29,7 +29,7 @@ static void	fg(t_job *job)
 		jobs_continue_job(job, true);
 	else
 	{
-		jobs_force_job_state(job, PROC_CONTINUED);
+		jobs_force_job_state(job, PROC_RUNNING);
 		jobs_print_job_info(job, JOB_OPT_L, g_data->jobs->joblist);
 		jobs_fg_job(job, 0);
 	}
