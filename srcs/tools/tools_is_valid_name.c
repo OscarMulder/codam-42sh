@@ -13,6 +13,7 @@
 #include "vsh.h"
 
 bool	tools_is_valid_name_char(char c)
+=======
 {
 	return (ft_isalnum(c) == true || ft_strchr("*-_~!@#$%^.,[]+/?", c) != NULL);
 }
