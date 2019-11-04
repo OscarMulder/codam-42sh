@@ -6,7 +6,7 @@
 /*   By: omulder <omulder@student.codam.nl>           +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2019/04/10 20:29:42 by jbrinksm       #+#    #+#                */
-/*   Updated: 2019/11/04 10:50:00 by rkuijper      ########   odam.nl         */
+/*   Updated: 2019/11/04 11:43:52 by rkuijper      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -805,7 +805,7 @@ void			print_job_info(t_job *job, int options, t_job *joblist);
 t_job			*jobs_add_job(t_vshdata *data, t_job *job);
 t_job			*jobs_new_job(void);
 t_job			*jobs_last_child(t_job *job);
-void			jobs_flush_job(t_job *job, bool flush_children);
+void			jobs_flush_job(t_job *job);
 
 void			jobs_continue_job(t_job *job, bool fg);
 void			jobs_bg_job(t_job *job, bool job_continued);
@@ -838,7 +838,7 @@ void			jobs_launch_proc(t_job *job, t_proc *proc,
 	int fds[3], int pipes[2]);
 void			jobs_exec_builtin(t_proc *proc);
 int				jobs_exec_is_single_builtin_proc(t_proc *proc);
-void			jobs_finished_job(t_job *job);
+void			jobs_finished_job(t_job *job, bool flush);
 
 void			jobs_force_job_state(t_job *job, t_proc_state state);
 

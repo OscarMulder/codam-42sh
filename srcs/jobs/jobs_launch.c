@@ -6,7 +6,7 @@
 /*   By: rkuijper <rkuijper@student.codam.nl>         +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2019/10/28 16:25:10 by rkuijper       #+#    #+#                */
-/*   Updated: 2019/11/04 10:50:25 by rkuijper      ########   odam.nl         */
+/*   Updated: 2019/11/04 11:45:28 by rkuijper      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -74,7 +74,7 @@ static int	launch_forked_job(t_job *job, int fds[3], int pipes[2])
 	{
 		if (proc->is_builtin == false && proc->binary == NULL)
 		{
-			jobs_flush_job(job, false);
+			jobs_flush_job(job);
 			g_state->exit_code = 1;
 			return (FUNCT_FAILURE);
 		}
@@ -100,7 +100,7 @@ void		jobs_launch_job(t_job *job)
 	{
 		jobs_exec_builtin(job->processes);
 		env_remove_tmp(g_data->envlst);
-		jobs_finished_job(job);
+		jobs_finished_job(job, true);
 		return ;
 	}
 	if (launch_forked_job(job, fds, pipes) == FUNCT_FAILURE)
