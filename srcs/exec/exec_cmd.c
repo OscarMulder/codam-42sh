@@ -45,7 +45,7 @@ void		exec_cmd(t_vshdata *data)
 		return ;
 	jobs_add_process(job);
 	if (job->last_proc == NULL)
-		exit(1); // This is not right
+		exit(1);
 	job->last_proc->node = data->cur_node;
 	if (g_data->exec_flags & EXEC_BG)
 		job->bg = true;
