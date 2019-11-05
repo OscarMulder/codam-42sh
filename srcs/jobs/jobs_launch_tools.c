@@ -6,7 +6,7 @@
 /*   By: jbrinksm <jbrinksm@student.codam.nl>         +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2019/11/05 11:00:24 by jbrinksm       #+#    #+#                */
-/*   Updated: 2019/11/05 11:04:02 by jbrinksm      ########   odam.nl         */
+/*   Updated: 2019/11/05 13:19:41 by jbrinksm      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -40,20 +40,4 @@ void	jobs_launch_cleanup_after_proc(t_proc *proc, int fds[3], int pipes[2])
 		ft_strarrdel(&proc->argv);
 	if (proc->env)
 		ft_memdel((void**)&proc->env);
-}
-
-bool	exec_command_contains_only_assign(t_ast *ast)
-{
-	t_ast	*probe;
-
-	if (ast->type == WORD)
-		return (false);
-	probe = ast;
-	while (probe != NULL)
-	{
-		if (tool_is_redirect_tk(probe->type) == true)
-			return (false);
-		probe = probe->left;
-	}
-	return (true);
 }

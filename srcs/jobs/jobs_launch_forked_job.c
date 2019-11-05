@@ -1,12 +1,12 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        ::::::::            */
-/*   jobs_launch.c                                      :+:    :+:            */
+/*   jobs_launch_forked_job.c                           :+:    :+:            */
 /*                                                     +:+                    */
 /*   By: rkuijper <rkuijper@student.codam.nl>         +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2019/10/28 16:25:10 by rkuijper       #+#    #+#                */
-/*   Updated: 2019/11/05 11:57:35 by jbrinksm      ########   odam.nl         */
+/*   Updated: 2019/11/05 13:25:58 by jbrinksm      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -37,17 +37,9 @@ static void	setup_fork(t_job *job, t_proc *proc, int fds[3], int pipes[2])
 static int	prepare_arguments_proc(t_ast *node, t_proc *proc, char ***argv)
 {
 	if (expan_handle_variables(node, g_data->envlst) == FUNCT_ERROR)
-	{
-		//ERROR
-		ft_eprintf("ERROR3!\n");
 		return (FUNCT_ERROR);
-	}
 	if (node->type == WORD && expan_pathname(node) == FUNCT_ERROR)
-	{
-		//ERROR
-		ft_eprintf("ERROR4!\n");
 		return (FUNCT_ERROR);
-	}
 	exec_quote_remove(node);
 	if (node->type == WORD)
 		proc->redir_and_assign = node->right;
@@ -56,29 +48,21 @@ static int	prepare_arguments_proc(t_ast *node, t_proc *proc, char ***argv)
 	*argv = exec_create_process_args(node);
 	if (*argv == NULL)
 	{
-		//ERROR
-		ft_eprintf("ERROR1!\n");
+		ft_eprintf(E_N_ALLOC_STR, "process");
 		return (FUNCT_ERROR);
 	}
 	return (FUNCT_SUCCESS);
 }
 
-static int	prepare_settings_proc(t_job *job, t_proc *proc, t_ast *node,
-				char **argv)
+static int	prepare_settings_proc(t_job *job, t_proc *proc, char **argv)
 {
-	if (exec_command_contains_only_assign(node) == true)
-		proc->no_fork = true;
-	if (proc->no_fork == true && exec_assigns(proc->redir_and_assign,
-		g_data, ENV_LOCAL) == FUNCT_ERROR)
-	{
-		//ERROR
-		ft_eprintf("ERROR2!\n");
-		return (FUNCT_ERROR);
-	}
-	jobs_update_job_command(job, argv);
 	proc->argv = argv;
 	if (ft_strequ(proc->argv[0], "") == true)
 		proc->no_cmd = true;
+	if (proc->no_cmd == true && exec_assigns(proc->redir_and_assign,
+		g_data, ENV_LOCAL) == FUNCT_ERROR)
+		return (FUNCT_ERROR);
+	jobs_update_job_command(job, argv);
 	if (exec_builtin(argv, proc) == false)
 		exec_external(argv, g_data, proc);
 	return (FUNCT_SUCCESS);
@@ -102,7 +86,7 @@ static int	handle_nonforked_builtin(t_job *job, t_proc *proc)
 	return (FUNCT_SUCCESS);
 }
 
-static int	launch_forked_job(t_job *job, int fds[3], int pipes[2])
+int			jobs_launch_forked_job(t_job *job, int fds[3], int pipes[2])
 {
 	pid_t	pid;
 	t_proc	*proc;
@@ -116,7 +100,7 @@ static int	launch_forked_job(t_job *job, int fds[3], int pipes[2])
 		node = proc->node;
 		if (prepare_arguments_proc(node, proc, &argv) == FUNCT_ERROR)
 			return (FUNCT_ERROR);
-		if (prepare_settings_proc(job, proc, node, argv) == FUNCT_ERROR)
+		if (prepare_settings_proc(job, proc, argv) == FUNCT_ERROR)
 			return (FUNCT_ERROR);
 		if (handle_nonforked_builtin(job, proc) != FUNCT_SUCCESS)
 			return (FUNCT_ERROR);
@@ -128,23 +112,4 @@ static int	launch_forked_job(t_job *job, int fds[3], int pipes[2])
 		proc = proc->next;
 	}
 	return (FUNCT_SUCCESS);
-}
-
-void		jobs_launch_job(t_job *job)
-{
-	int		fds[3];
-	int		pipes[2];
-	int		ret;
-
-	fds[0] = STDIN_FILENO;
-	fds[2] = STDERR_FILENO;
-	ft_memset(pipes, UNINIT, sizeof(pipes));
-	ret = launch_forked_job(job, fds, pipes);
-	if (ret == FUNCT_FAILURE || ret == FUNCT_ERROR)
-		return ;
-	jobs_add_job(g_data, job);
-	if (job->bg == true)
-		jobs_bg_job(job, false);
-	else
-		g_state->exit_code = jobs_fg_job(job, false);
 }

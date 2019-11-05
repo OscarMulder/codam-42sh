@@ -6,7 +6,7 @@
 /*   By: omulder <omulder@student.codam.nl>           +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2019/04/10 20:29:42 by jbrinksm       #+#    #+#                */
-/*   Updated: 2019/11/05 11:03:50 by jbrinksm      ########   odam.nl         */
+/*   Updated: 2019/11/05 13:19:15 by jbrinksm      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -542,7 +542,6 @@ typedef struct	s_proc
 	bool			no_cmd;
 	t_ast			*redir_and_assign;
 	t_ast			*node;
-	bool			no_fork;
 }				t_proc;
 
 typedef struct	s_job
@@ -846,6 +845,7 @@ void			jobs_force_job_state(t_job *job, t_proc_state state);
 void			jobs_launch_cleanup_after_proc(t_proc *proc, int fds[3],
 					int pipes[2]);
 void			jobs_launch_setup_stds(t_proc *proc, int fds[3], int pipes[2]);
+int				jobs_launch_forked_job(t_job *job, int fds[3], int pipes[2]);
 
 /*
 **----------------------------------shell---------------------------------------

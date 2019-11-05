@@ -6,7 +6,7 @@
 #    By: omulder <omulder@student.codam.nl>           +#+                      #
 #                                                    +#+                       #
 #    Created: 2019/04/10 20:30:07 by jbrinksm       #+#    #+#                 #
-#    Updated: 2019/11/05 11:04:18 by jbrinksm      ########   odam.nl          #
+#    Updated: 2019/11/05 13:00:40 by jbrinksm      ########   odam.nl          #
 #                                                                              #
 # **************************************************************************** #
 
@@ -83,7 +83,8 @@ auto_handle_matchlst auto_small_lst auto_big_lst auto_lst_print \
 auto_lst_print_helpers auto_check_dups \
 jobs_list_handling jobs_job_utils jobs_find jobs_cont jobs_bg \
 jobs_fg jobs_info jobs_mark jobs_processes jobs_status jobs_wait \
-jobs_notify jobs_command jobs_launch jobs_launch_proc jobs_exec_builtin \
+jobs_notify jobs_command jobs_launch_forked_job jobs_launch_proc \
+jobs_exec_builtin jobs_launch_job \
 jobs_finished_job jobs_flush_job jobs_force_job_state jobs_launch_tools \
 builtin_fc builtin_fc_options builtin_fc_init builtin_fc_list \
 builtin_fc_print_helpers builint_fc_find_index builtin_fc_substitute \
