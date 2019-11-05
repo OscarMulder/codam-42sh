@@ -6,7 +6,7 @@
 /*   By: jbrinksm <jbrinksm@student.codam.nl>         +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2019/11/05 13:02:41 by jbrinksm       #+#    #+#                */
-/*   Updated: 2019/11/05 13:02:41 by jbrinksm      ########   odam.nl         */
+/*   Updated: 2019/11/05 15:59:25 by jbrinksm      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -23,8 +23,10 @@ void		jobs_launch_job(t_job *job)
 	ft_memset(pipes, UNINIT, sizeof(pipes));
 	ret = jobs_launch_forked_job(job, fds, pipes);
 	if (ret == FUNCT_FAILURE || ret == FUNCT_ERROR)
+	{
+		jobs_flush_job(job);
 		return ;
-	jobs_add_job(g_data, job);
+	}
 	if (job->bg == true)
 		jobs_bg_job(job, false);
 	else
