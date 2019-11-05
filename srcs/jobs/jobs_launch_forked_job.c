@@ -6,7 +6,7 @@
 /*   By: rkuijper <rkuijper@student.codam.nl>         +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2019/10/28 16:25:10 by rkuijper       #+#    #+#                */
-/*   Updated: 2019/11/05 13:25:58 by jbrinksm      ########   odam.nl         */
+/*   Updated: 2019/11/05 14:46:35 by jbrinksm      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,7 +19,7 @@ static void	setup_fork(t_job *job, t_proc *proc, int fds[3], int pipes[2])
 	if (proc->pid < 0)
 	{
 		ft_eprintf("Could not fork.\n");
-		exit(1);
+		exit(1); // this is very bad
 	}
 	if (proc->pid == 0)
 		jobs_launch_proc(job, proc, fds, pipes);
@@ -79,7 +79,7 @@ static int	handle_nonforked_builtin(t_job *job, t_proc *proc)
 	}
 	if (proc->is_builtin == false && proc->binary == NULL)
 	{
-		jobs_flush_job(job);
+		jobs_finished_job(job, true);
 		g_state->exit_code = 1;
 		return (FUNCT_FAILURE);
 	}

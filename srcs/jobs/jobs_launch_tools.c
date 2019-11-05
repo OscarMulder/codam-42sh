@@ -6,7 +6,7 @@
 /*   By: jbrinksm <jbrinksm@student.codam.nl>         +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2019/11/05 11:00:24 by jbrinksm       #+#    #+#                */
-/*   Updated: 2019/11/05 13:19:41 by jbrinksm      ########   odam.nl         */
+/*   Updated: 2019/11/05 13:57:56 by jbrinksm      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,7 +19,7 @@ void	jobs_launch_setup_stds(t_proc *proc, int fds[3], int pipes[2])
 		if (pipe(pipes) < 0)
 		{
 			ft_eprintf("Could not pipe.\n");
-			exit(1);
+			exit(1); // this is very bad
 		}
 		fds[1] = pipes[1];
 	}
