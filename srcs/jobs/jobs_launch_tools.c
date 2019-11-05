@@ -19,7 +19,7 @@ void	jobs_launch_setup_stds(t_proc *proc, int fds[3], int pipes[2])
 		if (pipe(pipes) < 0)
 		{
 			ft_eprintf(E_NO_PIPE);
-			exit(1); // this is very bad
+			exit(1);
 		}
 		fds[1] = pipes[1];
 	}
