@@ -55,7 +55,7 @@
 # define E_FAIL_OPEN		SHELL ": failed to open file\n"
 # define E_ISDIR			SHELL ": %s: is a directory\n"
 # define E_FAIL_EXEC_P		SHELL ": failed to execute %s\n"
-# define E_NO_PIPE			SHELL ": unable to create pipe"
+# define E_NO_PIPE			SHELL ": unable to create pipe\n"
 # define E_P_BAD_REDIR		SHELL ": %s: bad redirect\n"
 # define E_N_P_INV_OPT		SHELL ": %s: -%c: invalid option\n"
 # define E_ALLOC_STR		SHELL ": failed to allocate enough memory\n"

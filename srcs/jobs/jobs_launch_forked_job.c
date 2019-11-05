@@ -18,7 +18,7 @@ static void	setup_fork(t_job *job, t_proc *proc, int fds[3], int pipes[2])
 {
 	if (proc->pid < 0)
 	{
-		ft_eprintf("Could not fork.\n");
+		ft_eprintf(E_FORK_STR);
 		exit(1); // this is very bad
 	}
 	if (proc->pid == 0)
