@@ -35,8 +35,7 @@ static int	check_if_valid_file(char *file)
 	fd = open(file, O_RDONLY | O_CREAT | O_NONBLOCK, REG_PERM);
 	if (fd == -1)
 	{
-		if (fd == -1)
-			ft_eprintf(E_FAIL_OPEN_P, file);
+		ft_eprintf(E_FAIL_OPEN_P, file);
 		g_state->exit_code = EXIT_FAILURE;
 		return (FUNCT_ERROR);
 	}
