@@ -6,7 +6,7 @@
 /*   By: omulder <omulder@student.codam.nl>           +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2019/04/10 20:29:42 by jbrinksm       #+#    #+#                */
-/*   Updated: 2019/11/06 14:01:44 by rkuijper      ########   odam.nl         */
+/*   Updated: 2019/11/06 14:08:16 by rkuijper      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -799,12 +799,9 @@ int				jobs_fg_job(t_job *job, bool job_continued);
 
 void			jobs_print_job_info(t_job *job, int options, t_job *joblist);
 
-t_job			*jobs_find_n(char *n, t_job *joblist);
 t_job			*jobs_find_current_job(t_job *joblist);
 t_job			*jobs_find_previous_job(t_job *joblist);
 t_job			*jobs_find_job(char *job_id, t_job *joblist);
-t_job			*jobs_find_contains_str(char *str, t_job *joblist);
-t_job			*jobs_find_startswith_str(char *str, t_job *joblist);
 
 int				jobs_add_process(t_job *job);
 int				jobs_exit_status(t_job *job);
@@ -815,7 +812,6 @@ void			jobs_finished_job(t_job *job, bool flush);
 
 void			jobs_notify_pool(void);
 void			jobs_update_pool_status(void);
-void			jobs_handle_finished_jobs(void);
 
 int				jobs_update_job_command(t_job *job, char **av);
 
