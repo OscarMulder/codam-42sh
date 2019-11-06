@@ -6,7 +6,7 @@
 /*   By: omulder <omulder@student.codam.nl>           +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2019/04/10 20:29:42 by jbrinksm       #+#    #+#                */
-/*   Updated: 2019/11/06 13:45:15 by rkuijper      ########   odam.nl         */
+/*   Updated: 2019/11/06 13:49:22 by rkuijper      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -1034,10 +1034,7 @@ void			fc_edit(t_vshdata *data, t_datahistory *history, t_fcdata *fc);
 
 bool			tools_is_redirect_tk(t_tokens type);
 bool			tools_is_char_escaped(char *line, int i);
-int				tools_update_quote_status(char *line, int cur_index,
-					char *quote);
-bool			tools_is_redirect_tk(t_tokens type);
-bool			tools_isidentifierchar(char c);
+bool			tools_is_identifier_char(char c);
 bool			tools_is_valid_identifier(char *str);
 bool			tools_is_builtin(char *exec_name);
 bool			tools_is_fdnumstr(char *str);
