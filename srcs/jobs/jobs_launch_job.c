@@ -6,7 +6,7 @@
 /*   By: jbrinksm <jbrinksm@student.codam.nl>         +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2019/11/05 13:02:41 by jbrinksm       #+#    #+#                */
-/*   Updated: 2019/11/05 16:02:28 by jbrinksm      ########   odam.nl         */
+/*   Updated: 2019/11/06 11:09:22 by rkuijper      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -24,7 +24,7 @@ void		jobs_launch_job(t_job *job)
 	ret = jobs_launch_forked_job(job, fds, pipes);
 	if (ret == FUNCT_FAILURE || ret == FUNCT_ERROR)
 	{
-		jobs_flush_job(job);
+		jobs_finished_job(job, true);
 		return ;
 	}
 	jobs_add_job(g_data, job);

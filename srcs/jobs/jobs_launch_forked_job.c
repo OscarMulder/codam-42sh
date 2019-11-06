@@ -6,7 +6,7 @@
 /*   By: rkuijper <rkuijper@student.codam.nl>         +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2019/10/28 16:25:10 by rkuijper       #+#    #+#                */
-/*   Updated: 2019/11/05 14:46:35 by jbrinksm      ########   odam.nl         */
+/*   Updated: 2019/11/06 11:09:19 by rkuijper      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -68,19 +68,12 @@ static int	prepare_settings_proc(t_job *job, t_proc *proc, char **argv)
 	return (FUNCT_SUCCESS);
 }
 
-static int	handle_nonforked_builtin(t_job *job, t_proc *proc)
+static int	handle_nonforked_builtin(t_job *job)
 {
 	if (job->bg == false && jobs_exec_is_single_builtin_proc(job->processes))
 	{
 		jobs_exec_builtin(job->processes);
 		env_remove_tmp(g_data->envlst);
-		jobs_finished_job(job, true);
-		return (FUNCT_FAILURE);
-	}
-	if (proc->is_builtin == false && proc->binary == NULL)
-	{
-		jobs_finished_job(job, true);
-		g_state->exit_code = 1;
 		return (FUNCT_FAILURE);
 	}
 	return (FUNCT_SUCCESS);
@@ -102,7 +95,7 @@ int			jobs_launch_forked_job(t_job *job, int fds[3], int pipes[2])
 			return (FUNCT_ERROR);
 		if (prepare_settings_proc(job, proc, argv) == FUNCT_ERROR)
 			return (FUNCT_ERROR);
-		if (handle_nonforked_builtin(job, proc) != FUNCT_SUCCESS)
+		if (handle_nonforked_builtin(job) != FUNCT_SUCCESS)
 			return (FUNCT_ERROR);
 		jobs_launch_setup_stds(proc, fds, pipes);
 		pid = fork();
