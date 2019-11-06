@@ -6,7 +6,7 @@
 /*   By: omulder <omulder@student.codam.nl>           +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2019/04/10 20:29:42 by jbrinksm       #+#    #+#                */
-/*   Updated: 2019/11/04 13:36:46 by mavan-he      ########   odam.nl         */
+/*   Updated: 2019/11/06 13:33:53 by rkuijper      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -1176,7 +1176,7 @@ int				auto_get_varlst(char *match, int match_len, t_envlst *envlst,
 				t_list **matchlst);
 int				auto_find_state(char *line, ssize_t i);
 void			auto_start(t_vshdata *data);
-int				auto_add_match_toline(char *match, char *to_add,
+int				auto_add_match_to_line(char *match, char *to_add,
 				t_vshdata *data);
 int				auto_find_matches(t_vshdata *data, char **match,
 				t_list **matchlst, int state);
@@ -1258,7 +1258,7 @@ int				glob_add_scanned_token(t_globtoken **lst,
 				t_globscanner *scanner);
 int				glob_matcher(t_globtoken *tokenprobe,
 				t_globmatchlst match);
-int				glob_matchlstadd(t_globmatchlst **lst, char *word);
+int				glob_match_lst_add(t_globmatchlst **lst, char *word);
 int				glob_add_dotslash_to_path(t_globtoken **tokenlst, char **path);
 void			glob_delmatch(t_globmatchlst **match);
 int				glob_dir_match_loop(t_glob *glob_data, t_globtoken *tokenlst,
