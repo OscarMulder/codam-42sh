@@ -6,7 +6,7 @@
 /*   By: omulder <omulder@student.codam.nl>           +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2019/04/10 20:29:42 by jbrinksm       #+#    #+#                */
-/*   Updated: 2019/11/04 13:36:46 by mavan-he      ########   odam.nl         */
+/*   Updated: 2019/11/06 16:15:10 by rkuijper      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -574,6 +574,8 @@ typedef struct	s_datatermcaps
 {
 	char	*tc_clear_lines_str;
 	char	*tc_scroll_down_str;
+	char	*tc_curs_invis_str;
+	char	*tc_curs_vis_str;
 }				t_datatermcaps;
 
 typedef struct	s_vshdataterm

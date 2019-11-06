@@ -6,11 +6,12 @@
 /*   By: omulder <omulder@student.codam.nl>           +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2019/04/17 14:03:16 by jbrinksm       #+#    #+#                */
-/*   Updated: 2019/10/30 14:29:06 by rkuijper      ########   odam.nl         */
+/*   Updated: 2019/11/06 16:16:42 by rkuijper      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "vsh.h"
+#include <term.h>
 #include <unistd.h>
 #include <signal.h>
 
@@ -30,6 +31,7 @@ static int	reset_input_read_return(t_vshdata *data, int ret)
 		data->curs->coords.y = input_get_curs_row();
 	data->curs->cur_relative_y = 1;
 	data->history->current = NULL;
+	tputs(data->termcaps->tc_curs_vis_str, 0, &ft_tputchar);
 	signal(SIGWINCH, SIG_DFL);
 	if (ret == 0)
 		resize_window_check(SIGWINCH);
@@ -71,6 +73,7 @@ static int	input_parse(t_vshdata *data)
 {
 	int		ret;
 
+	tputs(data->termcaps->tc_curs_invis_str, 0, &ft_tputchar);
 	if (input_parse_ctrl_c(data) == FUNCT_SUCCESS)
 		return (reset_input_read_return(data, NEW_PROMPT));
 	ret = input_parse_ctrl_d(data);
@@ -89,6 +92,7 @@ static int	input_parse(t_vshdata *data)
 		if (ret == FUNCT_ERROR)
 			return (reset_input_read_return(data, FUNCT_ERROR));
 	}
+	tputs(data->termcaps->tc_curs_vis_str, 0, &ft_tputchar);
 	return (FUNCT_SUCCESS);
 }
 

@@ -6,7 +6,7 @@
 /*   By: rkuijper <rkuijper@student.codam.nl>         +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2019/09/04 10:22:44 by rkuijper       #+#    #+#                */
-/*   Updated: 2019/09/04 11:45:48 by mavan-he      ########   odam.nl         */
+/*   Updated: 2019/11/06 16:15:41 by rkuijper      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -76,5 +76,7 @@ t_datatermcaps	*shell_init_vshdatatermcaps(void)
 		return (NULL);
 	termcaps->tc_clear_lines_str = tgetstr("cd", NULL);
 	termcaps->tc_scroll_down_str = tgetstr("sf", NULL);
+	termcaps->tc_curs_invis_str = tgetstr("vi", NULL);
+	termcaps->tc_curs_vis_str = tgetstr("ve", NULL);
 	return (termcaps);
 }
