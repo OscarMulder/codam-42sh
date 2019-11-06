@@ -6,7 +6,7 @@
 /*   By: jbrinksm <jbrinksm@student.codam.nl>         +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2019/06/18 16:31:00 by jbrinksm       #+#    #+#                */
-/*   Updated: 2019/11/06 11:42:45 by rkuijper      ########   odam.nl         */
+/*   Updated: 2019/11/06 14:08:20 by jbrinksm      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,7 +14,7 @@
 
 bool		tools_is_valid_name_char(char c)
 {
-	return (ft_isalnum(c) == true || ft_strchr("*-_~!@#$%^.,[]+/?", c) != NULL);
+	return (ft_isalnum(c) == true || ft_strchr("*-_~!@#$%^.,[]+?", c) != NULL);
 }
 
 bool		tools_is_valid_name(char *str)
