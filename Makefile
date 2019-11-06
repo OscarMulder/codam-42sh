@@ -6,7 +6,7 @@
 #    By: omulder <omulder@student.codam.nl>           +#+                      #
 #                                                    +#+                       #
 #    Created: 2019/04/10 20:30:07 by jbrinksm       #+#    #+#                 #
-#    Updated: 2019/11/06 13:41:27 by rkuijper      ########   odam.nl          #
+#    Updated: 2019/11/06 13:45:12 by rkuijper      ########   odam.nl          #
 #                                                                              #
 # **************************************************************************** #
 
@@ -51,7 +51,7 @@ exec_assigns \
 tools_is_char_escaped tools_is_redirect_tk tools_is_valid_identifier \
 tools_is_builtin tools_is_special tools_check_for_special tools_is_fdnumstr \
 tools_isidentifierchar tools_check_for_whitespace tools_get_paths \
-tools_isprintnotblank tools_get_pid_state tools_contains_quoted_chars \
+tools_isprintnotblank tools_contains_quoted_chars \
 tools_is_cmd_seperator tools_remove_quotes_etc tools_is_valid_name \
 builtin_echo builtin_echo_set_flags builtin_exit builtin_assign \
 builtin_export builtin_export_print builtin_set builtin_unset \

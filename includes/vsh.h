@@ -6,7 +6,7 @@
 /*   By: omulder <omulder@student.codam.nl>           +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2019/04/10 20:29:42 by jbrinksm       #+#    #+#                */
-/*   Updated: 2019/11/06 13:41:27 by rkuijper      ########   odam.nl         */
+/*   Updated: 2019/11/06 13:45:15 by rkuijper      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -1046,7 +1046,6 @@ bool			tools_check_for_special(char *str);
 bool			tools_check_for_whitespace(char *str);
 int				tools_get_paths(t_envlst *envlst, char ***paths);
 void			tools_remove_quotes_etc(char *str, bool is_heredoc);
-int				tools_get_pid_state(pid_t pid);
 bool			tools_contains_quoted_chars(char *str);
 bool			tools_is_cmd_seperator(t_tokens type);
 bool			tools_is_valid_name(char *str);
@@ -1070,7 +1069,6 @@ int				find_binary(char *filename, t_envlst *envlst, char **binary);
 void			exec_quote_remove(t_ast *node);
 int				exec_validate_binary(char *binary);
 int				exec_create_files(t_ast *ast);
-void			exec_add_pid_to_pipeseqlist(t_vshdata *data, pid_t pid);
 int				exec_redirs(t_ast *redirs);
 int				exec_assigns(t_ast *ast, t_vshdata *data, int env_type);
 
