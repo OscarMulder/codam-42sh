@@ -6,7 +6,7 @@
 /*   By: mavan-he <mavan-he@student.codam.nl>         +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2019/07/22 11:31:54 by mavan-he       #+#    #+#                */
-/*   Updated: 2019/11/06 15:33:07 by mavan-he      ########   odam.nl         */
+/*   Updated: 2019/11/06 17:23:02 by mavan-he      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,5 +14,5 @@
 
 bool	tool_is_special(char c)
 {
-	return (ft_strchr("/*-~!@#$%^.,[]+?\\'\"", c));
+	return (ft_strchr("/*-~!@#$%^.,[]+?\\'\"", c) != NULL);
 }
