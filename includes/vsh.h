@@ -6,7 +6,7 @@
 /*   By: omulder <omulder@student.codam.nl>           +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2019/04/10 20:29:42 by jbrinksm       #+#    #+#                */
-/*   Updated: 2019/11/06 13:33:53 by rkuijper      ########   odam.nl         */
+/*   Updated: 2019/11/06 13:41:27 by rkuijper      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -1032,19 +1032,19 @@ void			fc_edit(t_vshdata *data, t_datahistory *history, t_fcdata *fc);
 **---------------------------------tools----------------------------------------
 */
 
-bool			tool_is_redirect_tk(t_tokens type);
+bool			tools_is_redirect_tk(t_tokens type);
 bool			tools_is_char_escaped(char *line, int i);
 int				tools_update_quote_status(char *line, int cur_index,
 					char *quote);
-bool			tool_is_redirect_tk(t_tokens type);
+bool			tools_is_redirect_tk(t_tokens type);
 bool			tools_isidentifierchar(char c);
 bool			tools_is_valid_identifier(char *str);
 bool			tools_is_builtin(char *exec_name);
 bool			tools_is_fdnumstr(char *str);
-bool			tool_is_special(char c);
-bool			tool_check_for_special(char *str);
-bool			tool_check_for_whitespace(char *str);
-int				tool_get_paths(t_envlst *envlst, char ***paths);
+bool			tools_is_special(char c);
+bool			tools_check_for_special(char *str);
+bool			tools_check_for_whitespace(char *str);
+int				tools_get_paths(t_envlst *envlst, char ***paths);
 void			tools_remove_quotes_etc(char *str, bool is_heredoc);
 int				tools_get_pid_state(pid_t pid);
 bool			tools_contains_quoted_chars(char *str);

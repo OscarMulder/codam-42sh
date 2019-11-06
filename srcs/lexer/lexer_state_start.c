@@ -6,7 +6,7 @@
 /*   By: mavan-he <mavan-he@student.codam.nl>         +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2019/05/19 12:10:51 by mavan-he       #+#    #+#                */
-/*   Updated: 2019/11/06 13:37:26 by rkuijper      ########   odam.nl         */
+/*   Updated: 2019/11/06 13:41:27 by rkuijper      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -29,7 +29,7 @@ void		lexer_state_orif(t_scanner *scanner)
 
 static void	lexer_set_flags(t_scanner *scanner, char c)
 {
-	if (tool_is_special(c) == true)
+	if (tools_is_special(c) == true)
 		scanner->flags |= T_FLAG_HASSPECIAL;
 	if (c == '"')
 		scanner->flags ^= T_STATE_DQUOTE;

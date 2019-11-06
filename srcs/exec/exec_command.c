@@ -6,7 +6,7 @@
 /*   By: rkuijper <rkuijper@student.codam.nl>         +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2019/09/04 10:16:26 by rkuijper       #+#    #+#                */
-/*   Updated: 2019/10/31 21:16:07 by jbrinksm      ########   odam.nl         */
+/*   Updated: 2019/11/06 13:41:04 by rkuijper      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -81,7 +81,7 @@ static bool		exec_command_contains_only_assign(t_ast *ast)
 	probe = ast;
 	while (probe != NULL)
 	{
-		if (tool_is_redirect_tk(probe->type) == true)
+		if (tools_is_redirect_tk(probe->type) == true)
 			return (false);
 		probe = probe->left;
 	}
