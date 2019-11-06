@@ -6,18 +6,17 @@
 /*   By: omulder <omulder@student.codam.nl>           +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2019/04/10 20:29:42 by jbrinksm       #+#    #+#                */
-/*   Updated: 2019/11/06 13:58:34 by rkuijper      ########   odam.nl         */
+/*   Updated: 2019/11/06 14:01:44 by rkuijper      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
 #ifndef VSH_H
 # define VSH_H
-# include <sys/stat.h>
-# include <fcntl.h>
 
-/*
-**==================================defines=====================================
-*/
+# include "libft.h"
+# include <fcntl.h>
+# include <stdbool.h>
+# include <sys/stat.h>
 
 # define SHELL				"vsh"
 # define SEPERATOR			">"
@@ -107,8 +106,8 @@
 # define E_FG_INV_OPT		SHELL ": fg: %c: invalid option\n"
 # define E_FG_USAGE			E_FG_INV_OPT "fg: usage: fg [job_spec ...]\n"
 # define E_FG_NO_CUR		"fg: no current job\n"
-# define E_JOBS_INV_OPT		SHELL ": jobs: bad option: %c\n"
-# define E_JOBS_USAGE		E_JOBS_INV_OPT "jobs: usage: jobs [-lp] [job_spec ...]\n"
+# define E_J_I_OPT			SHELL ": jobs: bad option: %c\n"
+# define E_JOBS_USAGE		E_J_I_OPT "jobs: usage: jobs [-lp] [job_spec ...]\n"
 # define E_JOBS_NO_JOB		"jobs: %s: no such job\n"
 # define E_BIN_PROC_LAUNCH	"Error executing %s\n"
 # define E_JOB_MARK_SIG		"%d: Terminated by signal %d\n"
@@ -347,20 +346,6 @@ typedef struct	s_fcdata
 # define HISTFILENAME	".vsh_history"
 # define HIST_SEPARATE	-1
 # define HIST_EXPANDED	(1 << 2)
-
-
-
-/*
-**===============================personal headers===============================
-*/
-
-# include "libft.h"
-
-/*
-**==================================headers=====================================
-*/
-
-# include <stdbool.h>
 
 /*
 **----------------------------------lexer--------------------------------------
