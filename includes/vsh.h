@@ -6,7 +6,7 @@
 /*   By: omulder <omulder@student.codam.nl>           +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2019/04/10 20:29:42 by jbrinksm       #+#    #+#                */
-/*   Updated: 2019/11/06 13:49:22 by rkuijper      ########   odam.nl         */
+/*   Updated: 2019/11/06 13:58:34 by rkuijper      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -985,7 +985,6 @@ void			builtin_type(char **args, t_envlst *envlst,
 				t_aliaslst *aliaslst);
 
 void			builtin_jobs(char **args, t_vshdata *data);
-t_job			*builtin_jobs_find_job(char *job_id, t_job *joblist);
 int				builtin_jobs_new_current_val(t_job *joblist);
 
 void			builtin_fg(char **args, t_vshdata *data);
@@ -1192,8 +1191,8 @@ bool			auto_check_dups(t_list *matchlst, char *filename);
 **----------------------------------globbing------------------------------------
 */
 
-#define	GLOB_CUR_CHAR (scanner->word[scanner->word_index])
-#define GLOB_F_NEG	(1 << 0)
+# define GLOB_CUR_CHAR	(scanner->word[scanner->word_index])
+# define GLOB_F_NEG		(1 << 0)
 
 typedef enum	e_globtokens
 {
