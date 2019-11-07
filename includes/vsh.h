@@ -416,6 +416,7 @@ typedef struct	s_scanner
 
 typedef struct	s_ast
 {
+	bool			is_expanded;
 	t_tokens		type;
 	char			flags;
 	char			*value;
@@ -1210,6 +1211,7 @@ typedef struct	s_globscanner
 	char					*word;
 	int						word_index;
 	int						flags;
+	char					quote;
 }				t_globscanner;
 
 typedef struct	s_globmatchlst
