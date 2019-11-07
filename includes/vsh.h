@@ -6,7 +6,7 @@
 /*   By: omulder <omulder@student.codam.nl>           +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2019/04/10 20:29:42 by jbrinksm       #+#    #+#                */
-/*   Updated: 2019/11/05 13:32:10 by jbrinksm      ########   odam.nl         */
+/*   Updated: 2019/11/07 12:50:29 by mavan-he      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -1233,6 +1233,7 @@ typedef struct	s_globscanner
 	char					*word;
 	int						word_index;
 	int						flags;
+	char					quote;
 }				t_globscanner;
 
 typedef struct	s_globmatchlst
