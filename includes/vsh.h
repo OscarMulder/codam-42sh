@@ -561,6 +561,8 @@ typedef struct	s_datatermcaps
 {
 	char	*tc_clear_lines_str;
 	char	*tc_scroll_down_str;
+	char	*tc_curs_invis_str;
+	char	*tc_curs_vis_str;
 }				t_datatermcaps;
 
 typedef struct	s_vshdataterm
