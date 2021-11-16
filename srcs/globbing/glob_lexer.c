@@ -6,7 +6,7 @@
 /*   By: mavan-he <mavan-he@student.codam.nl>         +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2019/10/13 17:38:55 by mavan-he       #+#    #+#                */
-/*   Updated: 2019/10/22 11:29:57 by mavan-he      ########   odam.nl         */
+/*   Updated: 2019/11/07 16:08:48 by mavan-he      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,6 +17,12 @@ static void		reset_glob_scanner(t_globscanner *scanner)
 	scanner->tk_len = 0;
 	scanner->tk_type = GLOB_ERROR;
 	scanner->flags = 0;
+}
+
+static void		glob_skip_quote(t_globscanner *scanner)
+{
+	scanner->word_index++;
+	scanner->quote = 0;
 }
 
 int				glob_add_scanned_token(t_globtoken **lst,
@@ -55,9 +61,12 @@ int				glob_lexer(t_globtoken **lst, char *word)
 		glob_lexer_state_start(scanner);
 		if (glob_add_scanned_token(lst, scanner) == FUNCT_ERROR)
 		{
+			glob_del_tokenlst(lst);
 			free(scanner);
 			return (FUNCT_ERROR);
 		}
+		if (scanner->quote != 0)
+			glob_skip_quote(scanner);
 		reset_glob_scanner(scanner);
 	}
 	free(scanner);
